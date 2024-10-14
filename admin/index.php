@@ -13087,13 +13087,14 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
 }
 }
         else if ($seccion == "lms_reportes_sgd_por_criterio_resultados_geneles") {
+			$PRINCIPAL="";
     $id_empresa = $_SESSION["id_empresa"];
     $criterio = $_GET["campo_criterio"];
     $miarray = $_GET["array_post"];
     $nombre_campo = $_GET["nombre_campo"];
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $arreglo_post = unserialize($array_para_recibir_via_url);
+    //$arreglo_post = unserialize($array_para_recibir_via_url);
 //$PRINCIPAL=ReporteResultadosGeneralesConsolidadoSGD(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_consolidado_resultados_generales.html")),$id_empresa, $arreglo_post, $criterio, $nombre_campo);
 
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
@@ -13107,7 +13108,7 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
 //echo "<br>$nombre_campo,$criterio";
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $arreglo_post = unserialize($array_para_recibir_via_url);
+    $arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
 //$PRINCIPAL=ReporteCapacitacion(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_por_criterio.html")),$id_empresa, $arreglo_post, $criterio);
     $PRINCIPAL = ReporteCapacitacionPorcriterioSGD(FuncionesTransversalesAdmin(file_get_contents("views/sgd/entorno_capacitacion_por_criterio.html")), $id_empresa, $arreglo_post, $criterio, $nombre_campo, "si");
 
@@ -13178,7 +13179,7 @@ else if ($seccion == "lms_reportes_capacitacion_por_criterio_resultados_genelesP
 
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $arreglo_post = unserialize($array_para_recibir_via_url);
+    $arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
     if ($arreglo_post["foco"] or $arreglo_post["programabbdd"] or $arreglo_post["malla"]) {
         $malla = REL_MALLA_CURSO_TraeMallasDadoFoco($id_empresa, $arreglo_post);
 
