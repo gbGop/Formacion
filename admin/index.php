@@ -10502,7 +10502,7 @@ location.href='?sw=listProcesosCorreos';
     $miarray = $_GET["arra"];
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $matriz_completa = unserialize($array_para_recibir_via_url);
+    $matriz_completa = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
     if ($matriz_completa) {
         $arreglo_post = $matriz_completa;
     }
@@ -10858,7 +10858,7 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
     $miarray = $_GET["arra"];
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $matriz_completa = unserialize($array_para_recibir_via_url);
+    $matriz_completa = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
     if ($matriz_completa) {
         $arreglo_post = $matriz_completa;
     }
@@ -10889,7 +10889,7 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
     $miarray = $_GET["arra"];
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $matriz_completa = unserialize($array_para_recibir_via_url);
+    $matriz_completa = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
     if ($matriz_completa) {
         $arreglo_post = $matriz_completa;
     }
@@ -11126,7 +11126,7 @@ location.href='?sw=ContenidosImportante';
     $miarray = $_GET["arra"];
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $matriz_completa = unserialize($array_para_recibir_via_url);
+    $matriz_completa = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
     if ($matriz_completa) {
         $arreglo_post = $matriz_completa;
     }
@@ -11162,7 +11162,7 @@ location.href='?sw=ContenidosImportante';
     $miarray = $_GET["arra"];
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $matriz_completa = unserialize($array_para_recibir_via_url);
+    $matriz_completa = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
     if ($matriz_completa) {
         $arreglo_post = $matriz_completa;
     }
@@ -11249,7 +11249,7 @@ else if ($seccion == "veEvaluadorPorProcesoResultados") {
     $miarray = $_GET["arra"];
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $matriz_completa = unserialize($array_para_recibir_via_url);
+    $matriz_completa = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
     if ($matriz_completa) {
         $arreglo_post = $matriz_completa;
     }
@@ -11284,7 +11284,7 @@ $pagina = $_GET["p"];
 $miarray = $_GET["arra"];
 $array_para_recibir_via_url = stripslashes($miarray);
 $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-$matriz_completa = unserialize($array_para_recibir_via_url);
+$matriz_completa = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
 if ($matriz_completa) {
     $arreglo_post = $matriz_completa;
 }
@@ -11359,7 +11359,7 @@ $pagina = $_GET["p"];
 $miarray = $_GET["arra"];
 $array_para_recibir_via_url = stripslashes($miarray);
 $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-$matriz_completa = unserialize($array_para_recibir_via_url);
+$matriz_completa = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
 if ($matriz_completa) {
     $arreglo_post = $matriz_completa;
 }
@@ -11431,7 +11431,7 @@ $pagina = $_GET["p"];
 $miarray = $_GET["arra"];
 $array_para_recibir_via_url = stripslashes($miarray);
 $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-$matriz_completa = unserialize($array_para_recibir_via_url);
+$matriz_completa = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
 if ($matriz_completa) {
     $arreglo_post = $matriz_completa;
 }
@@ -11480,7 +11480,7 @@ else if ($seccion == "veEvaluadorPorProceso") {
     $miarray = $_GET["arra"];
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $matriz_completa = unserialize($array_para_recibir_via_url);
+    $matriz_completa = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
     if ($matriz_completa) {
         $arreglo_post = $matriz_completa;
     }
@@ -11541,7 +11541,7 @@ $pagina = $_GET["p"];
 $miarray = $_GET["arra"];
 $array_para_recibir_via_url = stripslashes($miarray);
 $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-$matriz_completa = unserialize($array_para_recibir_via_url);
+$matriz_completa = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
 if ($matriz_completa) {
     $arreglo_post = $matriz_completa;
 }
@@ -13094,7 +13094,7 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
     $nombre_campo = $_GET["nombre_campo"];
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    //$arreglo_post = unserialize($array_para_recibir_via_url);
+    //$arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
 //$PRINCIPAL=ReporteResultadosGeneralesConsolidadoSGD(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_consolidado_resultados_generales.html")),$id_empresa, $arreglo_post, $criterio, $nombre_campo);
 
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
@@ -13123,7 +13123,7 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
 //echo "<br>$nombre_campo,$criterio";
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $arreglo_post = unserialize($array_para_recibir_via_url);
+    $arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
 //$PRINCIPAL=ReporteCapacitacion(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_por_criterio.html")),$id_empresa, $arreglo_post, $criterio);
     $PRINCIPAL = ReporteCapacitacionPorcriterioSGDResultados(FuncionesTransversalesAdmin(file_get_contents("views/sgd/entorno_resultados_por_criterio.html")), $id_empresa, $arreglo_post, $criterio, $nombre_campo, "si");
 
@@ -13137,7 +13137,7 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
 
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $arreglo_post = unserialize($array_para_recibir_via_url);
+    $arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
 //$PRINCIPAL=ReporteCapacitacion(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_por_criterio.html")),$id_empresa, $arreglo_post, $criterio);
     $PRINCIPAL = ReporteCapacitacionPorcriterio(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_por_criterio.html")), $id_empresa, $arreglo_post, $criterio, $nombre_campo, "si");
 
@@ -13151,7 +13151,7 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
 
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $arreglo_post = unserialize($array_para_recibir_via_url);
+    $arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
 //$PRINCIPAL=ReporteResultadosGeneralesConsolidadoTrivias(FuncionesTransversalesAdmin(file_get_contents("views/sgd/box/principal.html")),$id_empresa, $arreglo_post, $criterio, $nombre_campo);
 
     $PRINCIPAL = ReporteSGDResultadosEvaluadoEvaluador(FuncionesTransversalesAdmin(file_get_contents("views/sgd/box/principal.html")), $id_empresa, $arreglo_post, "", "", "box");
@@ -13166,7 +13166,7 @@ else if ($seccion == "lms_reportes_capacitacion_por_criterio_resultados_genelesT
 
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $arreglo_post = unserialize($array_para_recibir_via_url);
+    $arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
     $PRINCIPAL = ReporteResultadosGeneralesConsolidadoTrivias(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_consolidado_resultados_trivias.html")), $id_empresa, $arreglo_post, $criterio, $nombre_campo);
 
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
@@ -13213,7 +13213,7 @@ else if ($seccion == "lms_reportes_capacitacion_por_criterio_resultados_geneles"
 
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    $arreglo_post = unserialize($array_para_recibir_via_url);
+    $arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
     if ($id_empresa == 52) {
         $PRINCIPAL = ReporteResultadosGeneralesConsolidado(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/52_entorno_consolidado_resultados_generales.html")), $id_empresa, $arreglo_post, $criterio, $nombre_campo);
     } else {
@@ -14038,12 +14038,12 @@ else if ($seccion == "Lms_reporte_MuestraInformeEncParticipantesExcel") {
     $miarray_objeto = $_GET["arreglo_objeto"];
     $array_para_recibir_via_url_objeto = stripslashes($miarray_objeto);
     $array_para_recibir_via_url_objeto = urldecode($array_para_recibir_via_url_objeto);
-    $arreglo_post_objetos = unserialize($array_para_recibir_via_url_objeto);
+    $arreglo_post_objetos = unserialize($array_para_recibir_via_url_objeto,['allowed_classes' => false]);
 
     $miarray = $_GET["arreglo_post"];
     $array_para_recibir_via_url_post = stripslashes($miarray);
     $array_para_recibir_via_url_post = urldecode($array_para_recibir_via_url_post);
-    $arreglo_post = unserialize($array_para_recibir_via_url_post);
+    $arreglo_post = unserialize($array_para_recibir_via_url_post,['allowed_classes' => false]);
 
     if ($arreglo_post["imparticion"]) {
         $nombre_archivo = $arreglo_post["imparticion"];
@@ -22396,9 +22396,10 @@ else if ($seccion == "MuestraBloqueCursoSeleccionado") {
         $formulario = file_get_contents("views/capacitacion/imparticion/formulario_ingresa_presencial.html");
     }
 
-    $formulario = FormularioImparticion(FuncionesTransversalesAdmin($formulario), $id_empresa);
-    $formulario = ListadoCursosAdmin2(FuncionesTransversalesAdmin($formulario), $id_empresa, "", $id_curso);
+    $formulario = FormularioImparticion(FuncionesTransversalesAdmin($formulario), $id_empresa,'');
+    $formulario = ListadoCursosAdmin2(FuncionesTransversalesAdmin($formulario), $id_empresa, "", $id_curso,'');
     $formulario = str_replace("{VALUE_COD_CURSO}", $id_curso, $formulario);
+	header('Content-Type: text/plain');
     echo $formulario;
 }
 else if ($seccion == "demo_post") {
