@@ -1,7 +1,7 @@
 <?php
 session_start();
 error_reporting(0);
-	ini_set('max_execution_time', 300);
+	ini_set('max_execution_time', 400);
 	//ini_set('display_errors', 0);ini_set('display_startup_errors', 0);
     ini_set('display_errors', 1);ini_set('display_startup_errors', 1);error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
 
