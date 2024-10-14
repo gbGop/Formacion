@@ -1,0 +1,149 @@
+<script>
+	$(function() {
+
+		$(".date-input-css").datepicker();
+
+		//Timepicker
+		$(".timepicker").timepicker({
+			showInputs : false,
+		});
+	})
+</script>
+<!--
+<table id="tabla_cursos" class="table table-bordered table-hover sortable">
+	<thead>
+		<tr style="font-weight:bold";>
+
+										<th></th>
+										<th >CODIGO_MALLA</th>
+										<th >NOMBRE_MALLA</th>
+										<th >TIPO_MALLA</th>
+										<th >TOTAL_CURSOS</th>
+										
+																				<th></th>
+									</tr>
+	</thead>
+	<tfoot style="display: table-header-group;">
+
+	</tfoot>
+	<tbody>
+		{ROW_LISTADO_MALLAS}
+	</tbody>
+	<tfoot>
+
+	</tfoot>
+</table>
+-->
+<script type="text/javascript">
+	$('#tabla_cursos').DataTable({
+
+		"oLanguage" : {
+			"sProcessing" : "Procesando...",
+			"sLengthMenu" : "Mostrar _MENU_ registros",
+			"sZeroRecords" : "No se encontraron resultados",
+			"sEmptyTable" : "Ningún dato disponible en esta tabla",
+			"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+			"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+			"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+			"sInfoPostFix" : "",
+			"sSearch" : "Buscar: ",
+			"sUrl" : "",
+			"sInfoThousands" : ",",
+			"sLoadingRecords" : "Cargando...",
+			"oPaginate" : {
+				"sFirst" : "Primero",
+				"sLast" : "Último",
+				"sNext" : "Siguiente",
+				"sPrevious" : "Anterior"
+			},
+			"oAria" : {
+				"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+				"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+			}
+		},
+
+		"bAutoWidth" : false,
+		"pageLength" : 50,
+		"order" : [0, 'desc'],
+		"columnDefs" : [{
+			"targets" : [0],
+			"searchable" : false
+		}],
+
+		initComplete : function() {
+			this.api().columns('.select-filter').every(function() {
+				var column = this;
+				var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+					var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+					column.search( val ? '^' + val + '$' : '', true, false).draw();
+				});
+
+				column.data().unique().sort().each(function(d, j) {
+					select.append('<option value="' + d + '">' + d + '</option>')
+				});
+			});
+		}
+	});
+
+</script>
+
+<form action="?sw=adimpartiEl" method="POST" name="FormCurso" enctype="multipart/form-data"  >
+	Codigo Programa
+	&nbsp;
+	<input required="required"  type="text" class="form-control" name="idprograma" value="{VALUE_PROGRAMA_BBDD}" />
+	<br>
+	
+
+
+	Codigo Malla
+	&nbsp;
+	<input required="required"  type="text" class="form-control" name="idmalla" value="{VALUE_MALLA}" />
+	<br>
+	
+	Codigo Impartición
+	&nbsp;
+	<input required="required"  type="text" class="form-control" name="cod_imparticion" value="{VALUE_COD_IMPARTICION}" />
+	
+	<br>
+	Seleccionar audiencia
+	&nbsp;
+	<select name="id_audiencia" id="id_audiencia" class="form-control" onchange="FuncionMuestraAudiencia(this.value);">
+		<option value="">-Seleccione-</option>
+		{LISTADO_AUDIENCIAS_POR_EMPRESA}
+	</select>
+	
+	<br>
+	<span class="btn btn-info"><a href="rut_audiencias.xlsx"><span class="blanco">Descargar Excel</span></a></span>
+	<br>
+	<br>
+	<br>
+	Adjuntar Excel con Usuarios
+	&nbsp;
+	<input type="file"  style="width: 101%;" name="excel" id="excel">
+	
+	
+	<span id="bloqueMuestraAudienciasDetalle">
+		
+	</span>
+	
+
+	<br>
+
+	
+	
+	
+	
+														
+														
+														
+
+	<a href="?sw=listaInscripciones2">
+	<button id="send" type="button" class="btn btn-primary">
+		Volver
+	</button> </a>&nbsp;
+	<button type="submit" class="btn btn-primary">
+		Ingresar Imparticion
+	</button>
+
+</form>

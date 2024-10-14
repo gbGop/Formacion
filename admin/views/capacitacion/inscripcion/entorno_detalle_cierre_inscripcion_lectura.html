@@ -1,0 +1,244 @@
+
+<br>
+<br>
+
+                              	<a name="seccionCierreParticipantes"></a><div class="small-box bg-blue ">
+                                <div class="Txtinner">
+                                    <p>
+                                        DATOS REALES - INSCRIPCION FINALIZADA 
+                                    </p>  
+								</div>
+                              	</div>
+                              
+                              
+                              
+                             									
+                                  &nbsp; &nbsp; &nbsp; &nbsp;
+<!--<a href="formato/basepersonas_cierre_inscripcion_masivo.xlsx" class='btn btn-default btn-sm'>Descargar Plantilla </a>-->
+
+<a href="?sw=plantillaCierre&ii={ID_INSCRIPCION_ENCODEADO}" class='btn btn-default btn-sm'>Descargar Plantilla </a>
+<form name="importa" method="post" action="?sw=procesa_excel_cierre_inscripciones" enctype="multipart/form-data" style="display:inline" >
+<input type="file" name="excel" />
+<input type="hidden" name="idi" value="{ID_INSCRIPCION_ENCODEADO}">
+<button type="submit" class='btn btn-default btn-sm' >Subir Masivamente y Cerrar Inscripcion</button> 
+<input type="hidden" value="upload" name="action" />
+</form>
+		
+
+                              
+<br>
+<br>                              
+                              
+								<div class="small-box bg-blue">
+                                <div class="Txtinner">
+                                    <p>
+                                        DETALLE DE PARTICIPANTES FINALIZADOS
+                                    </p>
+                                </div>
+                                </div>                              
+                              
+   <div class="box-body table-responsive">
+                                    <table id="example2" class="table table-bordered table-hover sortable">
+                                        <thead>
+                                            <tr>
+                                                <th class="width40 bg_gray">RUT</th>
+                                                <th class="width140 bg_gray">NOMBRE COMPLETO</th>
+                                 
+
+												
+												<th class="width80 bg_gray">PORCENTAJE ASISTENCIA</th> 
+												<th class="width80 bg_gray">CASO ESPECIAL</th> 
+												<th class="width80 bg_gray">NOTA</th> 
+												<th class="width80 bg_gray">ESTADO</th> 
+                                                <th class="width80 bg_gray">VIATICO<br><button type="button" class="botonAdmin" data-toggle="tooltip" data-placement="right" title="Viatico: Corresponde a la suma de dinero razonable que se paga por concepto de alojamiento y alimentación motivo de la asistencia de capacitación (siempre que deban ausentarse de su lugar de trabajo)
+
+No se considera viatico: Coffe Break, llamadas telefónicas, bebidas alcohólicas, regalos, medicamentos o lavandería."><i class="fa fa-question-circle"></i>
+</button></th>
+                                                <th class="width80 bg_gray">MOVILIZACION<br><button type="button" class="botonAdmin" data-toggle="tooltip" data-placement="right" title="Movilidad:  Corresponde a tipo de movilidad pública,  que el trabajador deba acceder a la actividad de capacitación. (no se consideran gastos de compra de combustible, peaje, mantención y/o lavado de vehículo y compra de tarjeta bip.)
+"><i class="fa fa-question-circle"></i>
+</button></th>
+												                                                <th class="width60 bg_gray">MONTO PERSONA</th>
+
+												<th class="width60 bg_gray">MONTO FRANQUICIA</th>
+												<th class="width80 bg_gray">MONTO EMPRESA</th> 
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+{LISTADO_CIERRE_INSCRITOS_POR_CAPACITACION}
+
+
+											
+		<!--
+        <form name="FormIngresaUsuario" method="post" action="?sw=addusuxins">
+        <input type="hidden" value="{ID_INSCRIPCION_ENCODEADO}" name="ii" />
+        <tr>
+                                                <td class="miniSt" colspan="2"><select name="usuario"><option>-Seleccione Usuario-</option></select></td>
+
+                                                <td class="miniSt"><input type="text" name="porcentaje_asistencia" placeholder="% de Asistencia" /></td>
+                                                <td class="miniSt"><select name="case_especial"><option>-Seleccione-</option></select></td>
+                                                <td class="miniSt"><input type="text" size="10" name="nota" placeholder="Ingrese Nota" /></td>
+                                                <td class="miniSt"><input type="text" size="10" name="estado" placeholder="Estado" /></td>
+                                                <td class="miniSt"><input type="text" size="12" name="viatico_utilizado" placeholder="Viático utilizado" /></td>
+                                                <td class="miniSt"><input type="text" size="12" name="movilziacion_utilizado" placeholder="Movilizacion utilizado" /></td>
+                                                <td class="miniSt" colspan="3"><button type="submit" class="btn btn-primary">Agregar Usuario</button></td>
+                                            </tr>
+                                            
+                                            </form>
+                                            
+            -->                                									
+											
+                                        </tbody>
+                                        <tfoot>
+
+
+
+                                          
+                                        </tfoot>
+                                    </table>
+                                </div>                           
+                              
+          <div class="small-box bg-blue">
+                                <div class="Txtinner">
+                                    <p>
+                                        DATOS REALES INSCRIPCION
+                                    </p>
+                                </div>
+                                </div>                              
+                              
+   <div class="box-body table-responsive">
+                                    <table id="example2" class="table table-bordered table-hover sortable">
+                                        <thead>
+										
+										
+										
+                                            <tr>
+                                                <th class="width40 bg_gray">ID inscripción</th>
+                                                <th class="width140 bg_gray">NUM PARTICIPANTES</th>
+
+                                                <th class="width80 bg_gray">MONTO VIATICO</th>
+                                                <th class="width60 bg_gray">MONTO MOVILIZACION</th>
+
+                                                <th class="width80 bg_gray">MONTO FRANQUICIA</th>
+                                                <th class="width60 bg_gray">MONTO EMPRESA</th>
+                                                <th class="width140 bg_gray">MONTO TOTAL</th>
+                                            </tr>
+                                        </thead>
+										
+
+
+  											<tr>
+                                                <td class="miniSt">{ID_INSCRIPCION}</td>
+                                                <td class="miniSt">{NUM_PARTICIPANTES}</td>
+                                                <td class="miniSt">{MONTO_VIATICO}</td>
+                                                <td class="miniSt">{MONTO_MOVILIZACION}</td>
+                                                <td class="miniSt">{MONTO_SENCE}</td>
+                                                <td class="miniSt">{MONOT_EMPRESA}</td>
+                                                <td class="miniSt">{MONTO_TOTAL}</td>
+												
+                                            </tr>
+	
+<!--{ROW_LISTADO_INSCRIPCIONES_RESUMEN}	-->
+											
+                                        </tbody>
+                                        <tfoot>
+
+
+
+                                          
+                                        </tfoot>
+                                    </table>
+                                </div> 
+
+
+<a name="FormDatosRelevantes"></a>
+  <div class="small-box bg-blue">
+                                <div class="Txtinner">
+                                    <p>
+                                        DATOS RELEVANTES DE INSCRIPCION FINALIZADA
+                                    </p>
+                                </div>
+                                </div>  
+
+<div class="box-body table-responsive">
+                                    <table id="example2" class="table table-bordered table-hover sortable">
+                         <form name="ForFinal" method="POST" action="?sw=gdatfin">
+										
+
+<input type="hidden" name="ii" value="{ID_INSCRIPCION_ENCODEADO}">
+  											<tr>
+                                                <td class="width40 bg_gray" width="33%">ALUMNO DESTACADO</td>
+                                                <td class="miniSt" width="33%">{NOMBRE_MEJOR_ALUMNO}</td>
+                                                <td class="miniSt" width="33%">{COENTARIO_MEJOR_ALUMNO}</td>
+												
+                                            </tr>
+											
+											
+														<tr>
+                                                <td class="width40 bg_gray">ALUMNO DESTACADO</td>
+                                                <td class="miniSt">{NOMBRE_ALUMNO_DESTACADO}</option></td>
+                                                <td class="miniSt">{COMENTARIO_ALUMNO_DESTACADO}</td>
+												
+                                            </tr>
+											
+											
+											
+														<tr>
+                                                <td class="width40 bg_gray">MEJORA CONTINUA</td>
+                                                <td class="miniSt">{NOMBRE_MEJORA_CONTINUA}</td>
+                                                <td class="miniSt">{COMENTARIO_MEJORA_CONTINUA}</td>
+												
+                                            </tr>
+											
+											
+								
+											
+														<tr>
+                                                <td class="width40 bg_gray">PORCENTAJE DE SATISFACCION </td>
+                                                <td class="miniSt">{PORCENTAJE}%
+												
+												</td>
+												<td class="miniSt">
+                                                {COMENTARIO_PORCENTAJE}</td>
+												
+                                            </tr>
+										
+										<tr><td colspan="3" align="center"><a href="?sw=eddatre&ii={ID_INSCRIPCION_ENCODEADO}"><button type="button" class="btn btn-success">GUARDAR CAMBIOS DE CIERRE DE INSCRIPCION</button></a></td></tr>
+
+                                    </form>
+                                    </table>
+                                </div> 
+
+
+
+
+
+
+								
+                              
+
+</div>
+
+                            
+                           
+						   <!-- /.box -->
+                        </div>
+                    </div>
+					
+					
+					
+
+
+                       
+					   
+					  
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								

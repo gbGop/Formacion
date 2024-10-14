@@ -1,0 +1,21 @@
+
+</script>	
+	<div class="row" id="sesion{ID_SESION}">
+		<div class="col-xs-3 col-sm-3"><br><input  type="date"  size="20" class="form-control date-input-css{ID_SESION}" id="fecha{ID_SESION}"  name="fecha{ID_SESION}" value="{VALUE_FECHA}"  /></div>
+		<div class="col-xs-2 col-sm-2">
+		    <small>AM DESDE</small>
+            <input  onchange="ColocaHora({ID_SESION})" class="form form-control" type="time" size="20" id="desde_am{ID_SESION}" name="desde_am{ID_SESION}" value="{DESDE_AM}" />
+			 <small>AM HASTA </small>
+            <input  onchange="ColocaHora({ID_SESION})" class="form form-control" type="time" size="20"  id="hasta_am{ID_SESION}" name="hasta_am{ID_SESION}" value="{HASTA_AM}" />
+		</div>
+        <div class="col-xs-2 col-sm-2">
+			 <small>PM DESDE </small>
+            <input  onchange="ColocaHora({ID_SESION})"  class="form form-control" type="time" size="20" id="desde_pm{ID_SESION}" name="desde_pm{ID_SESION}"  value="{DESDE_PM}"/>
+			 <small>PM HASTA  </small>
+            <input  onchange="ColocaHora({ID_SESION})"  class="form form-control" type="time" size="20" id="hasta_pm{ID_SESION}" name="hasta_pm{ID_SESION}"  value="{HASTA_PM}"/>
+		</div>
+		<div class="col-xs-2 col-sm-2"><br><input type="text" readonly id="nume_horas{ID_SESION}" name="nume_horas{ID_SESION}" class="form-control" value="{TIEMPO_TOTAL}"></div>
+		<div class="col-xs-2 col-sm-2"><br><select class="form-control" name="rut_relator{ID_SESION}">{OPTIONS_RELATORES}</select></div>
+		<div class="col-xs-1 col-sm-1"><br><a href="?sw=editImparticion&i={ID_IMPARTICION_ENCODEAR}&sesdel={ID_SESION_ENCODEAR}"><small>Eliminar Sesi&oacute;n</small></a></div>
+	</div>
+<hr>

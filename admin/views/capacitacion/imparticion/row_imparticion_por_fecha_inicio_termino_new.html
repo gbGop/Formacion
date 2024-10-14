@@ -1,0 +1,71 @@
+	<div class="panel-heading">			
+			<div class="row">
+			  <div class="col-xs-2 col-sm-2"> Fecha Inicio </div>
+			  <div class="col-xs-2 col-sm-2"> Fecha T&eacute;rmino </div>
+			  <div class="col-xs-2 col-sm-2"> Hora Desde </div>
+			  <div class="col-xs-2 col-sm-2"> Hora Hasta </div>
+			  <div class="col-xs-2 col-sm-2"> Relator </div>
+			  <!--<div class="col-xs-2 col-sm-2"> Observaciones </div>-->
+			  <div class="col-xs-2 col-sm-2"></div>
+			  
+			    <div class="col-xs-2 col-sm-2 ">
+			      <input required="required" type="date" class="form-control" name="fecha_desde_new_2" id="fecha_desde_new_2" value="{VALUE_COD_IMPARTICION_FECHA_DESDE_NEW2}" />
+			    </div>
+			    <div class="col-xs-2 col-sm-2">
+			      <input required="required" type="date" class="form-control" name="fecha_hasta_new_2" id="fecha_hasta_new_2" value="{VALUE_COD_IMPARTICION_FECHA_HASTA_NEW2}" />
+			    </div>
+			    <div class="col-xs-2 col-sm-2">
+			      <input required="required" type="time" class="form-control" name="hora_desde_new_2" value="{VALUE_COD_IMPARTICION_HORA_DESDE_NEW2}" />
+			    </div>
+			    <div class="col-xs-2 col-sm-2">
+			      <input required="required" type="time" class="form-control" name="hora_hasta_new_2" value="{VALUE_COD_IMPARTICION_HORA_HASTA_NEW2}" />
+			    </div>
+					<div class="col-xs-2 col-sm-2">
+
+						<select name="relator" id="relator" class="form-control">
+							<option value="{RELATOR}">{RELATOR_nombre}</option>
+							<option disabled>--------------</option>
+							{OPTION_RELATOR_NOMBRE_TIPO}
+						</select>
+
+			      <!--<select name="relator" id="relator" class="form form-control">
+			      	<option value="{RELATOR}">{RELATOR_nombre}</option>
+			      	<option disable>--------------</option>
+			      	{OPTION_RELATOR_NOMBRE_TIPO}
+			      </select>-->
+			    </div>    
+			    
+			   <!-- <div class="col-xs-2 col-sm-2">
+			      <!--<input type="text" class="form-control" name="observacion" value="{VALUE_COD_IMPARTICION_OBSERVACION_NEW2}" />-->
+			    <!--</div>-->
+			    <div class="col-xs-2 col-sm-2">
+			      <input type="submit" class="btn btn-link" name="guardar" value="Guardar" />
+			      <input type="hidden" class="" name="id_curso_enc" value="{ID_CURSO_ENC}" />
+						<input type="hidden" class="" name="sesion_NEW2" 		value="1" />
+
+			      <input type="hidden" class="" name="id_imparticion_enc" 	value="{ID_IMPARTICION_ENC}" />
+
+			    </div>
+			</div>
+</div>
+
+	<script>
+		document.getElementById("fecha_desde_new_2").addEventListener("input", function() {
+			var inputDate = new Date(this.value);
+			var day = inputDate.getDay();
+
+			/*if (day === 5 || day === 6) {
+				alert("Recuerda que debes seleccionar solo fechas de Lunes a Viernes");
+				this.value = "";
+			}*/
+		});
+		document.getElementById("fecha_hasta_new_2").addEventListener("input", function() {
+			var inputDate = new Date(this.value);
+			var day = inputDate.getDay();
+
+			/*if (day === 5 || day === 6) {
+				alert("Recuerda que debes seleccionar solo fechas de Lunes a Viernes");
+				this.value = "";
+			}*/
+		});
+	</script>

@@ -1,0 +1,129 @@
+
+<form action="?sw=adimparti" method="POST" name="FormCurso" enctype="multipart/form-data"  >
+
+	<span class="label label-sm label-info"> Curso Autoinscripci&oacute;n</span><br>
+	<input required="required"  type="text" class="form-control" name="curso" readonly value="{VALUE_COD_CURSO}" 
+			style="    width: 95px;display: inline;margin-right: 15px;" required/>
+			<strong>{NOMBRE_CURSO_imparticion}</strong>
+	<br>
+	<br>
+	<span class="label label-sm label-danger"> Codigo Impartici&oacute;n</strong></span>
+			<input required="required"  type="number" class="form-control" name="cod_imparticion" readonly
+			value="{VALUE_COD_IMPARTICION}"/>
+		<br>
+	{ALERTA_HORAS_SESIONES_FECHA_INICIO_TERMINO_CURSO_ID_IMPARTICION}
+	
+	<div class="panel-heading" style="    color: #31708f;background-color: #d9edf7;border-color: #bce8f1;">
+		<h3 class="panel-title">Campos Obligatorios</h3>
+	</div>
+	<br>
+									
+	<br>
+	<span class="label label-sm label-info"> Cupos (0 es ilimitado)</span>
+	&nbsp;
+	<input   type="number" class="form-control" name="cupos" value="{VALUE_CUPOS}" size="5" maxlength="5" required/>
+		<br>										
+		<span class="label label-sm label-info"> Tipo de Horario</span>
+	<br>
+	<input type="radio" name="tipo_horario"  id="radio_fecha_sesiones" value="fecha_sesiones" required> Fechas por Sesiones
+		<br>
+	<input type="radio" name="tipo_horario" id="radio_fecha_inicio_termino" value="fecha_inicio_termino" required> Fecha Inicio y T&eacute;rmino
+		<br>	
+		<br>
+		
+		<script>
+			$('#radio_fecha_sesiones').on('click', function () {
+								$("#content_fecha_inicio_termino input").prop('required', false);
+			        	$("#content_fecha_sesiones input[data-requerido='requerido']").prop('required', true);
+
+			          $("#content_fecha_inicio_termino").addClass("d-none");
+		            $("#content_fecha_sesiones").removeClass("d-none");
+		        });
+		  $('#radio_fecha_inicio_termino').on('click', function () {
+			        	$("#content_fecha_sesiones input").prop('required', false);
+			        	$("#content_fecha_inicio_termino input").prop('required', true);
+
+	            	$("#content_fecha_inicio_termino").removeClass("d-none");
+		            $("#content_fecha_sesiones").addClass("d-none");
+		        });
+			{SCRIPT_ACTIVA_TIPO_HORARIO_BOTONES}		        
+		</script>
+	
+	<div id="content_fecha_sesiones" class="d-none">
+	<span class="label label-sm label-info"> Fechas Por Sesiones</span>
+		<div class="panel-heading">
+					<div>
+							{FORMULARIO_HORARIOS_LINEA_1}
+							{FORMULARIO_HORARIOS_LINEA_2}
+							{FORMULARIO_HORARIOS_LINEA_3}
+							{FORMULARIO_HORARIOS_LINEA_4}
+							{FORMULARIO_HORARIOS_LINEA_5}
+							{FORMULARIO_HORARIOS_LINEA_6}
+							{FORMULARIO_HORARIOS_LINEA_7}
+							{FORMULARIO_HORARIOS_LINEA_8}
+							{FORMULARIO_HORARIOS_LINEA_9}
+							{FORMULARIO_HORARIOS_LINEA_10}
+							{FORMULARIO_HORARIOS_LINEA_11}
+							{FORMULARIO_HORARIOS_LINEA_12}
+
+							{FORMULARIO_HORARIOS_LINEA_AGREGAR_MAS}
+					</div>
+		</div>			
+		<BR>
+	</div>
+	
+	<div id="content_fecha_inicio_termino" class="d-none">
+	<span class="label label-sm label-info"> Fecha Inicio y T&eacute;rmino</span>
+		<div class="panel-heading">
+					<div>
+							{FORMULARIO_HORARIOS_LINEA_FECHA_INICIO_TERMINO}
+					</div>
+		</div>			
+		<BR>
+	</div>
+	<BR>
+
+	<div class="panel-heading" style="    color: #31708f;background-color: #d9edf7;border-color: #bce8f1;">
+		<h3 class="panel-title">Campos Opcionales</h3>
+	</div>
+	<br>
+
+	<span class="label label-sm label-info"> Nombre Impartici&oacute;n</span>
+	&nbsp;
+	<input  type="text" class="form-control" name="nombre"  value="{VALUE_NOMBRE}" />
+	<br>
+	<span class="label label-sm label-info"> Analista Capacitaci&oacute;n</span>
+	<br>
+	<select class="form-control" name="ejecutivo">
+		<option value=""></option>
+		{OPTIONS_EJECUTIVOS}
+	</select>
+	</br>
+
+	<span class="label label-sm label-info"> Direcci&oacute;n F&iacute;sica / Streaming</span>
+	&nbsp;
+	<input  type="text" class="form-control" name="direccion"  value="{VALUE_DIRECCION}" />
+	<br>
+	<span class="label label-sm label-info"> Proveedor</span>
+	&nbsp;
+	<br>
+	<select class="form-control" name="ciudad">
+		<option value=""></option>
+		{OPTIONS_OTEC}
+	</select>
+
+	<br>
+	<hr>
+	<br>
+	<span class="label label-sm label-info"> Observaciones </span>
+	<br>
+	<textarea class="form-control" name="comentarios">{COMENTARIOS}</textarea>
+	<br>
+
+					<center><br>
+								<button type="submit" class="btn btn-primary">
+									Crear Impartici&oacute;n
+								</button>
+					</center> 
+</form>
+

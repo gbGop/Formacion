@@ -1,0 +1,23 @@
+<tr class="even" role="row" {bgcolor}="">
+<form action="?sw=proveedores_ejecutivos_save" method="post" name="{ID_ENC}"> 
+   <td class="mp_txt_small">
+        
+            <input aria-describedby="" class="form-control" id="direccion" name="direccion" required
+                   type="text" value="{DIRECCION}" readonly>
+            <span style="font-size:2px; color:#fff">{DIRECCION}</span>
+    </td>
+    <td class="mp_txt_small">
+        <input aria-describedby="" class="form-control" id="nombre" name="nombre" required type="text" value="{NOMBRE}">
+        <span style="font-size:2px; color:#fff">{NOMBRE}</span>
+    </td>
+    <td class="mp_txt_small">
+        <input class="btn btn-link" type="submit" value="Editar">
+        <input id="id" name="id" type="hidden" value="{ID_ENC}">
+        <input id="tipo" name="tipo" type="hidden" value="{ID_TIPO}">
+        
+        <a class="btn btn-link" href="?sw=lista_proveedores_otec&tipo={ID_TIPO}&del={ID_ENC}">
+            Eliminar
+        </a>
+    </td>
+</form>	
+</tr>

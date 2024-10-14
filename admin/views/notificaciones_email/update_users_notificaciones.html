@@ -1,0 +1,29 @@
+<div class="col-md-12">
+	<div class="box">
+		<div class="box-header">
+			<h3 class="box-title">NOTIFICACION ID {ID_NOTIFICACION}: <strong> {NOMBRE_NOTIFICACION} </strong></h3>
+		<a href="?sw=notificaciones_email" class="btn btn-link"><i class="fas fa-chevron-left"></i> Volver </a>
+		</div>
+	</div>
+</div>
+<br><br><br>
+<div class="col-md-12">
+<div class="panel panel-info">
+	<div class="panel-heading">
+  	<h3 class="panel-title">Actualizar Usuarios</h3>
+  </div>
+  <div class="panel-body">
+		<a href="?sw=notificaciones_email_descargar_usuarios&id={ID_NOTIFICACION_ENC}" class="btn btn-link">
+			Descargar Usuarios ({NUM_USUARIOS})
+		</a>
+		<br><br>
+		<form name="form" method="POST" enctype="multipart/form-data" action="?sw=notificaciones_email_usuarios_update">
+					<input type="file" name="excel" class="form-control">
+					<input type="hidden" name="id_notificacion" 	id="id_notificacion" 	value="{ID_NOTIFICACION_ENC}">
+					<br>
+					<center><input type="submit" class="btn btn-info" value="Actualizar Inscritos"></center>
+		</form>  	
+	</div>
+</div>    
+</div>                                    
+

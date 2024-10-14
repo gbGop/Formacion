@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Administrador</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        {HEAD}
+
+        <body class="skin-blue">
+            <!-- header logo: style can be found in header.less -->
+            {HEADER}
+            <div class="wrapper row-offcanvas row-offcanvas-left">
+                <!-- Left side column. contains the logo and sidebar -->
+                <aside class="left-side sidebar-offcanvas">
+                    <!-- sidebar: style can be found in sidebar.less -->
+                    {MENU_IZQUIERDO}
+                    <!-- /.sidebar -->
+                </aside>
+
+                <!-- Right side column. Contains the navbar and content of the page -->
+                <aside class="right-side">
+                    <!-- Content Header (Page header) -->
+                    {NAVEGACION}
+                    <!-- Main content -->
+                    <section class="content">
+                        <div class="row">
+                            <!-- left column -->
+                            <!--/.col (left) -->
+                            <div class="col-md-12">
+
+                                <div class="box boxheader">
+                                    <div class="box-header">
+                                        <a href="?sw=listusu&ex=1" class="btn btn-success btn-sm pull-right flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;"><i class="fa fa-plus"></i> Exportar Audiencias a Excel</a>&nbsp; <a href="?sw=accionbasepersonas" class="btn btn-success btn-sm pull-right flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;"><i class="fa fa-plus"></i> Crear Nueva Audiencia</a>&nbsp; <a href="?sw=listusu&exe=1" class="btn btn-success btn-sm pull-right flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;"><i class="fa fa-plus"></i> Listar Audiencias</a>&nbsp;
+                                    </div>
+                                    <br>
+                                    <div class="row"></div>
+                                    <div class="box">
+                                        <div class="boxsubtitle" style="border-bottom: 1px solid #F4F4F4;">
+                                            <h6 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Nueva Audiencia</h6>
+                                        </div>
+                                        <br>
+                                        Nombre Audiencia
+                                        <br>
+                                        <input class="form-control" style="width: 50%;" name="rut" id="rut" placeholder="Ingrese los datos" type="text" required="">
+                                        <br>
+                                        Descripción Audiencia
+                                        <br>
+                                        <input class="form-control" style="width: 50%;" name="rut" id="rut" placeholder="Ingrese los datos" type="text" required="">
+
+                                        <div class="row">
+
+                                            <form class="form-horizontal" style="margin-top:30px;padding-bottom:30px" name="FormPersonas" id="FormPersonas" action="{ACTION}" method="POST" enctype="multipart/form-data">
+                                                <input name="id_empresa" id="id_empresa"  type="hidden" value="{ID_EMPRESA}">
+
+                                                <div class="col-md-6">
+                                                    <div class="panel panel-info">
+                                                        <div class="panel-heading">
+                                                            <h3 class="panel-title">Familia de Cargos</h3>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Familia1 </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Familia2 </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Familia3 </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Familia4 </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Familia5 </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Familia6 </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="panel panel-info">
+                                                        <div class="panel-heading">
+                                                            <h3 class="panel-title">Niveles Cargos</h3>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Gerente </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Subgerente </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Líder </label>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Operaciones </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Administrativos </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox">
+                                                                            Trainee </label>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="panel panel-info">
+                                                        <div class="panel-heading">
+                                                            <h3 class="panel-title">Personas</h3>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="row">
+
+                                                                <p>
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;Subir XLS con ID's de personas.
+                                                                </p>
+
+                                                                <div class="form-group">
+                                                                    <label for="foto" class="col-sm-2 control-label">Usuarios</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="file" style="width: 101%;" name="foto1" id="foto1">
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 ">
+                                                    <div class="panel panel-info">
+                                                        <div class="panel-heading">
+                                                            <h3 class="panel-title">Cargos</h3>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="panel-body">
+
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo1 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo2 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo3 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo4 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo5 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo6 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo7 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo8 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo9 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo10 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo11 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo12 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo13 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo14 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox">
+                                                                                Cargo15 </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+
+                                                    <div class="box-body">
+
+                                                    </div>
+
+                                                </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 "></div>
+                                    <div class="col-md-4 ">
+                                        <button type="submit" class="btn btn-primary">
+                                            Aceptar
+                                        </button>
+
+                                        <a href="?sw=listusu">
+                                        <button type="button" class="btn btn-gray">
+                                            Volver
+                                        </button></a>
+
+                                    </div>
+                                    <div class="col-md-4 "></div>
+
+                                    </form>
+
+                                </div><!--/.col (right) -->
+                            </div>
+                            <!-- /.row -->
+                    </section><!-- /.content -->
+                </aside><!-- /.right-side -->
+            </div><!-- ./wrapper -->
+
+            {FOOTER_ADMIN}
+
+            <script>
+                $('#foto1').change(function(e) {
+                    //alert(e);
+                    addImageP(e);
+
+                });
+
+                function addImageP(e) {
+                    var file = e.target.files[0],
+                        imageType = /image.*/;
+
+                    if (!file.type.match(imageType))
+                        return;
+
+                    var reader = new FileReader();
+                    reader.onload = fileOnloadP;
+                    reader.readAsDataURL(file);
+
+                }
+
+                function fileOnloadP(e) {
+                    var result = e.target.result;
+                    $('#imagenPerfil').attr("src", result);
+
+                }
+
+
+                $("#FormPersonas").submit(function() {
+
+                    $("#back").show();
+                    $("#loader").show();
+
+                });
+
+            </script>
+
+            <div id="back" class="modal-backdrop fade in" style="display:none;"></div>
+            <div id="loader" style="display:none;z-index:99999;color:#fff;position:fixed;width:200px;top: 50%; left: 47%;"><img src="img/ajax-loader.gif">
+            </div>
+
+        </body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{TITTLE}</title>
+        
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>{HEAD}</head>
+        
+    <body class="skin-blue">
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <aside class="left-side sidebar-offcanvas">                
+                {MENU_IZQUIERDO}
+            </aside>
+            <aside class="right-side">                
+                {NAVEGACION}
+								<link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+											      <div class="box">
+											          <div class="box-header">
+											              <h3 class="box-title">Id Inscripci&oacute;n</h3>
+										            </div> 
+														</div> 			
+
+ 			<div class="label_titulo_02" style="{display_id_inscripcion_rut_cursos_v2}">
+          <strong>Lista Cursos con Id_Inscripcion</strong> 
+      </div>
+      <div class="box-body table-responsive"  style="{display_id_inscripcion_rut_cursos_v2}">
+          <table id="example4" class="table table-bordered table-hover sortable">
+              <thead>
+                  <tr>
+                      <th class=" " 				style="    width: 15%;">ID CURSO</th>
+                      <th class="width140 " style="    width: 30%;">CURSO</th>
+                      <th class="width140 " style="    width: 30%;">PROGRAMA / MALLA</th>
+                      
+											<th class="width60 " 	style="    width: 45%;">ID_INSCRIPCION</th> 
+                  </tr>
+              </thead>
+              <tbody>
+                  {ROW_LISTADO_CURSO_IDINSCRIPCION}
+              </tbody>
+          </table>
+      </div>
+	<br>
+			 <div class="label_titulo_02" style="{display_id_inscripcion_rut_cursos_v2}">
+          Filtro por RUT
+      </div>					
+			<div class="row"  style="{display_id_inscripcion_rut_cursos_v2}">
+				<form name="filtros" id="filtros" action="?sw=rel_id_inscripcion_rut_curso" method="post">
+
+				<div class="col-lg-2">
+				</div>
+				<div class="col-lg-2">
+				</div>
+				<div class="col-lg-2">
+				</div>
+				
+				<div class="col-lg-2">
+				</div>
+				<div class="col-lg-2">RUT_COLABORADOR
+					<input type="number" name="rut_colaborador" id="rut_colaborador" class="form form-control" value="{RUT_COL_GET}">
+				</div>				
+				<div class="col-lg-2">
+						<br>
+						<input type="submit" value="Filtrar" name="filtro" id="filtro" class="btn btn-info">
+						<input type="hidden" value="1" name="create_filter" id="create_filter" class="btn btn-info">
+					</form>
+
+				</div>
+			</div>
+			<div style="{display_id_inscripcion_rut_cursos}">
+					<a href="?sw=rel_id_inscripcion_rut_curso&clean=1" class="btn btn-link pull-left">Volver al Inicio</a>
+											</a>
+			</div>
+			
+			<br>
+      <div class="label_titulo_02" style="{display_id_inscripcion_rut_cursos}">
+          <strong>Id_Inscripcion por Rut / Cursos</strong> {FILTROS_REALIZADOS_FILTRO_SUPERIOR}
+      </div>
+
+<div style="{display_id_inscripcion_rut_cursos}">
+      
+			<div class="row">
+				<div class="col-lg-3">				
+				</div>
+				<div class="col-lg-3">
+				    <h2 class="accordion-header" id="headingTwo">
+				      <button class="btn btn-link " type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+				       Gesti&oacute;n Inscripciones
+				      </button>
+				    </h2>
+				    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+				      <div class="accordion-body " style="    display: inline-block;    padding: 0px;">
+
+																					<form name='gestion' id='gestion' action='?sw=usuarios_update_tbl_rel_id_inscripcion_rut_curso' method='post' style='display: inline-block;' enctype='multipart/form-data'>
+																	        	Tipo de acci&oacute;n:<br>
+																	        	<select name="tipo_accion" id="tipo_accion" class="form form-control" required>
+																	        		<option value=""></option>
+																	        		<option value="Agregar">Agregar</option>
+																	        		<option value="Eliminar">Eliminar</option>
+																	        	</select>
+																	        	
+																	        	<input type='hidden' name='accion_id_inscripcion' id='accion_id_inscripcion' value='1' >
+																	        	<input type='hidden' name='id_inscripcion' id='id_inscripcion' value='{ID_INSCRIPCION_GET}' >
+																						
+																						<br>Sube el archivo aqu&iacute <a href='rut.csv' class='btn btn-link'>Descarga Plantilla</a>;
+														                <input type='file' name='file' required/> 
+														                <input type='hidden' value='upload' name='action' /> 
+																	        	<input type='submit' class='btn btn-link' value='Actualizar'>
+																	        </form>
+				      </div>
+				    </div> 					
+				</div>				
+				<div class="col-lg-3">
+					<div class="accordion" id="accordionExample">
+					  <div class="accordion-item" style="border: none;">
+					    <h2 class="accordion-header" id="headingOne">
+					      <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+					        Editar Fechas
+					      </button>
+					    </h2>
+					    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+					      <div class="accordion-body" style="    display: inline-block;    padding: 0px;">
+
+					<form name='{ID_INSCRIPCION_GET}' id='{ID_INSCRIPCION_GET}' action='?sw=usuarios_update_tbl_rel_id_inscripcion_rut_curso' method='post' style='display: inline-block;'>
+																		        	Id Inscripci&oacute;n:<br>
+																		        	<input type='text' 	name='id_inscripcion' id='id_inscripcion'  	class='form form-control' value='{ID_INSCRIPCION_GET}' required >
+																		        	
+																		        	Fecha Inicio:<br>
+																		        	<input type='date' name='fecha_inicio' id='fecha_inicio' 			class='form form-control' required >
+																		        	
+																		        	Fecha T&eacute;rmino:<br>
+																		        	<input type='date' name='fecha_termino' id='fecha_termino' 		class='form form-control' required>
+
+																		        	Ejecutivo (Rut):<br>
+																		        	<input type='number' name='rut_ejecutivo' id='rut_ejecutivo' 		class='form form-control'>
+																	        	  <input type='hidden' name='accion_editar_fecha' id='accion_editar_fecha' value='1' >
+																							
+																		        	<input type='submit' class='btn btn-link' value='Actualizar'>
+																		        </form>
+					      </div>
+					    </div>
+					   
+					  </div>
+					</div>					
+				</div>
+				<div class="col-lg-3">
+					<a href="?sw=usuarios_update_tbl_rel_id_inscripcion_rut_curso&del_id_inscripcion_del={ID_INSCRIPCION_GET}" onClick="alert('Si presionas Aceptar eliminaras el Id de Inscripcion y todos los inscritos.')"  class="btn btn-link pull-right">Eliminar</a>
+
+					<a href="?sw=rel_id_inscripcion_rut_curso&id_inscripcion={ID_INSCRIPCION_GET}&id_curso={ID_CURSO_GET}&rut_colaborador={RUT_COL_GET}&excel=1" class="btn btn-link pull-right">Descargar en Excel</a>
+				</div>
+			</div>
+
+		
+</div>
+      <div class="box-body table-responsive" style="{display_id_inscripcion_rut_cursos}">
+          <table id="example2" class="table table-bordered table-hover sortable">
+              <thead>
+                  <tr>
+                  		<th class="width40">RUT</th>
+                  		<th class="width40">ID_INSCRIPCION</th>
+                      <th class="width40">ID_CURSO</th>
+                      <th class="width40">FECHA_INICIO</th>
+                      <th class="width40">FECHA_TERMINO</th>
+                      <th class="width40">ACTIVO</th>
+                      <th class="width140">EJECUTIVO</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {ROW_LISTADO_ID_INSCRIPCION_RUT_CURSOS}
+              </tbody>
+          </table>
+      </div>
+		</div>	
+			<br>
+													 </div>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </div>
+
+     {FOOTER_ADMIN}
+
+       	<script type="text/javascript">
+		$('#example2').DataTable({
+			"oLanguage" : {
+				"sProcessing" : "Procesando...",
+				"sLengthMenu" : "Mostrar _MENU_ registros",
+				"sZeroRecords" : "No se encontraron resultados",
+				"sEmptyTable" : "Ning?n dato disponible en esta tabla",
+				"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+				"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+				"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+				"sInfoPostFix" : "",
+				"sSearch" : "Buscar: ",
+				"sUrl" : "",
+				"sInfoThousands" : ",",
+				"sLoadingRecords" : "Cargando...",
+				"oPaginate" : {
+					"sFirst" : "Primero",
+					"sLast" : "?ltimo",
+					"sNext" : "Siguiente",
+					"sPrevious" : "Anterior"
+				},
+				"oAria" : {
+					"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+					"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+				}
+			},
+			"bAutoWidth" : false,
+			"pageLength" : 25,
+			"order" : [],
+			"columnDefs" : [{
+				"targets" : [0],
+				"searchable" : true
+			}],
+			initComplete : function() {
+				this.api().columns('.select-filter').every(function() {
+					var column = this;
+					var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+						var val = $.fn.dataTable.util.escapeRegex($(this).val());
+						column.search( val ? '^' + val + '$' : '', true, false).draw();
+					});
+					column.data().unique().sort().each(function(d, j) {
+						select.append('<option value="' + d + '">' + d + '</option>')
+					});
+				});
+			}
+		});
+	</script>
+<script type="text/javascript">
+		$('#example3').DataTable({
+			"oLanguage" : {
+				"sProcessing" : "Procesando...",
+				"sLengthMenu" : "Mostrar _MENU_ registros",
+				"sZeroRecords" : "No se encontraron resultados",
+				"sEmptyTable" : "Ning?n dato disponible en esta tabla",
+				"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+				"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+				"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+				"sInfoPostFix" : "",
+				"sSearch" : "Buscar: ",
+				"sUrl" : "",
+				"sInfoThousands" : ",",
+				"sLoadingRecords" : "Cargando...",
+				"oPaginate" : {
+					"sFirst" : "Primero",
+					"sLast" : "?ltimo",
+					"sNext" : "Siguiente",
+					"sPrevious" : "Anterior"
+				},
+				"oAria" : {
+					"sSortAscending" : 	": Activar para ordenar la columna de manera ascendente",
+					"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+				}
+			},
+			"bAutoWidth" : false,
+			"pageLength" : 5,
+			"order" : [],
+			"columnDefs" : [{
+				"targets" : [0],
+				"searchable" : true
+			}],
+			initComplete : function() {
+				this.api().columns('.select-filter').every(function() {
+					var column = this;
+					var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+						var val = $.fn.dataTable.util.escapeRegex($(this).val());
+						column.search( val ? '^' + val + '$' : '', true, false).draw();
+					});
+					column.data().unique().sort().each(function(d, j) {
+						select.append('<option value="' + d + '">' + d + '</option>')
+					});
+				});
+			}
+		});
+	</script>
+
+<script type="text/javascript">
+		$('#example4').DataTable({
+			"oLanguage" : {
+				"sProcessing" : "Procesando...",
+				"sLengthMenu" : "Mostrar _MENU_ registros",
+				"sZeroRecords" : "No se encontraron resultados",
+				"sEmptyTable" : "Ning?n dato disponible en esta tabla",
+				"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+				"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+				"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+				"sInfoPostFix" : "",
+				"sSearch" : "Buscar: ",
+				"sUrl" : "",
+				"sInfoThousands" : ",",
+				"sLoadingRecords" : "Cargando...",
+				"oPaginate" : {
+					"sFirst" : "Primero",
+					"sLast" : "?ltimo",
+					"sNext" : "Siguiente",
+					"sPrevious" : "Anterior"
+				},
+				"oAria" : {
+					"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+					"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+				}
+			},
+			"bAutoWidth" : false,
+			"pageLength" : 5,
+			"order" : [],
+			"columnDefs" : [{
+				"targets" : [0],
+				"searchable" : true
+			}],
+			initComplete : function() {
+				this.api().columns('.select-filter').every(function() {
+					var column = this;
+					var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+						var val = $.fn.dataTable.util.escapeRegex($(this).val());
+						column.search( val ? '^' + val + '$' : '', true, false).draw();
+					});
+					column.data().unique().sort().each(function(d, j) {
+						select.append('<option value="' + d + '">' + d + '</option>')
+					});
+				});
+			}
+		});
+	</script>
+	
+		
+    </body>
+</html>

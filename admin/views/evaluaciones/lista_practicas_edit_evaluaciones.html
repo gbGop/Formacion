@@ -1,0 +1,18 @@
+<tr {BGCOLOR}>
+    <form name="" action="?sw=MP_SaveEditEvaluacion" method="post">
+        <td class="mp_txt_small"> {ID_EVALUACION} </td>
+        <input type="hidden" name="id_evaluacion" value="{ID_EVALUACION}">
+        <td class="mp_txt_small">
+            <input type="text" class="form-control" id="nombre_evaluacion" value="{NOMBRE_EVALUACION}" name="nombre_evaluacion" aria-describedby="" placeholder="Ingresa Nombre" required>
+        </td>
+        <td class="mp_txt_small"> {NUM_PREGUNTAS} </td>
+        <td class="mp_txt_small"> {CURSOS_UTILIZADOS} </td>
+        <td class="mp_txt_small"><a href="?sw=viewEval&idEval={ID_EVALUACION}&programa={ID_PROGRAMA}" class="btn btn-primary btn-xs" style="margin-bottom: 5px">Gestionar Preguntas</a>
+            <br>
+            <br>
+            <input type="submit" class="btn btn-link" value="Editar Nombre Evaluacion" style="margin-bottom: 5px">
+    </form>
+    <br>
+    <a href="?sw=Download_Respuestas_Eval&idEval={ID_EVALUACION}&ido={ID_OBJETO_ENCODEADO}&idc={ID_CURSO_ENCODEADO}" class="btn btn-link ">Descargar Respuestas</a>
+    </td>
+</tr>

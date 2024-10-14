@@ -1,0 +1,44 @@
+<tr>
+	<td class="miniSt"><strong>{CURSO}</strong></td>
+	<td class="miniSt">{CODIGOINCRIPCION}</td>
+	<td class="miniSt">{ID_CURSO}</td>
+
+
+	<td class="miniSt">{EJECUTIVO}</td>
+
+	<td class="miniSt">{DIRECCION} {CIUDAD}</td>
+	<td class="miniSt">{FECHA_INICIO}
+	<br>
+	{FECHA_TERMINO}</td>
+	<!--<td class="miniSt">{DETALLE_OBJETOS}</td>-->
+
+	<!--<td class="miniSt">{NUMSESIONES}</td>-->
+	<td class="miniSt">{DETALLE_SESIONES}</td>
+	<td class="miniSt">
+		{CHEQUEADOS} {DESCARGA_PARTICIPANTES}
+		{INSCRITOS} {DESCARGA_PARTICIPANTES}
+			 
+	{PREINSCRITOS} <a href="?sw=descargaPreInscritos&ci={ID_INSCRIPCION_ENCODEADO}" title="Descargar PreInscritos"><i class="fa fa-cloud-download"></i></a>
+	{POSTULANTES}  
+	{CUPOS}
+	</td>
+
+<td class="miniSt">
+	Nota Enc.: <strong>{PROMEDIO_NOTAS_VISTA_IMPARTICION}</strong>
+	<br >
+	Resultado <a href="?sw=Lms_reporte_MuestraInformeEncParticipantesExcel&arreglo_objeto={ARREGLO_OBJETO}&arreglo_post={ARREGLO_POST}&tipo_reporte=resultadosencsatisfaccion&valor={VALOR}" class=""><i class="fa fa-cloud-download"></i></a>
+	<br>
+	Por Pregunta <a href="?sw=Lms_reporte_MuestraInformeEncParticipantesExcel&arreglo_objeto={ARREGLO_OBJETO}&arreglo_post={ARREGLO_POST}&tipo_reporte=detallePreguntas&valor={VALOR}" class=""><i class="fa fa-cloud-download"></i></a>
+	<br>
+	Literales <a href="?sw=Lms_reporte_MuestraInformeEncParticipantesExcel&arreglo_objeto={ARREGLO_OBJETO}&arreglo_post={ARREGLO_POST}&tipo_reporte=resultadosencLiterales&valor={VALOR}" class=""><i class="fa fa-cloud-download"></i></a></td>
+
+
+	<td class="miniSt"> 
+	<a href="?sw=editImparticion&i={ID_INSCRIPCION_ENCODEADO}" title="Editar Imparticion">Editar</a><br>
+	<a href="?sw=VeSesionXImp&i={ID_INSCRIPCION_ENCODEADO}"  >Sesiones</a><br>
+	<a href="?sw=VeColaboradoresXImpXsess&i={ID_INSCRIPCION_ENCODEADO}"  >Subir_Asistencia</a><br>
+	<a href="?sw=subeNotasPorImparticion&i={ID_INSCRIPCION_ENCODEADO}"  >Subir_Notas</a><br>
+	<a href="?sw=dltImpart&i={ID_INSCRIPCION_ENCODEADO}"  onclick = "if (! confirm('Seguro que deseas eliminar esta Imparticion?')) return false;">Eliminar</a>
+	 
+	 </td>
+</tr>

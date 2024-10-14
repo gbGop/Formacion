@@ -1,0 +1,92 @@
+<div class="row">
+					<form name="FormReprotes" method="POST" action="?sw=procesa_reporteObjConsolidado">
+                       
+                       
+                        <div class="col-lg-3 col-xs-3">
+                            <!-- small box -->
+                            <div class="small-box bg-aqua">
+                                <div class="inner">
+                                    <p>
+                                       REPORTES
+                                    </p>
+									<div class="col-lg-4 col-xs-3 texto_admin_mini">
+										Tipos
+									</div>
+									<div class="col-lg-8 col-xs-9">									
+                                            <select class="form-control texto_admin_mini" name="tipo_reporte">
+											
+											<option value="1" {VALUE1}>Consolidado por Evaluador</option>
+											<option value="2" {VALUE2}>Detalle Evaluado - Evaluador</option>
+											<option value="3" {VALUE3}>Detalle de Objetivos</option>
+
+
+											</select>
+									</div>
+									
+									
+									
+                                </div>
+								
+								
+
+
+                            </div>
+                        </div><!-- ./col -->
+                       
+                       
+                        <!-- ./col -->
+                       
+                       <div class="col-lg-4 col-xs-4">
+                            <!-- small box -->
+                            <div class="small-box bg-aqua">
+                                <div class="inner">
+                                    <p>
+                                        FILTRO ORGANIZACIONAL 
+                                    </p>
+									
+									
+									
+									
+									<div class="col-lg-4 col-xs-3 texto_admin_mini">
+										Area
+									</div>
+									<div class="col-lg-8 col-xs-9">									
+                                            <select class="form-control texto_admin_mini" name="area">
+												<option value="">Todas</option>
+                                                {OPTIONS_AREAS}
+                                               
+
+											</select>
+									</div>
+									
+                                </div>
+								
+								
+
+
+                            </div>
+                        </div><!-- ./col -->
+                        
+                       
+                       
+
+					<br>
+<p align="center">
+				<button type="button" class="btn btn-primary" onclick="Submit();">Ejecutar</button> 
+				<button class="btn btn-default btn-sm" onclick="SubmitExcel();"><i class="fa fa-cloud-download"></i> Exportar Excel</button>
+				<script>
+					function SubmitExcel(){
+						document.FormReprotes.exc.value="1";
+						document.FormReprotes.submit();
+					}
+					
+					function Submit(){
+						document.FormReprotes.exc.value="0";
+						document.FormReprotes.submit();
+							
+					}
+					
+				</script>
+				<input type="hidden" name="exc" id="exc">
+				</p>
+</form>	

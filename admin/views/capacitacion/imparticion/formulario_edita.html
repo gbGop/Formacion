@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{TITTLE}</title>
+		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+		<!-- bootstrap 3.0.2 -->
+		{HEAD}
+
+		<body class="skin-blue">
+			<!-- header logo: style can be found in header.less -->
+			{HEADER}
+			<div class="wrapper row-offcanvas row-offcanvas-left">
+				<!-- Left side column. contains the logo and sidebar -->
+				<aside class="left-side sidebar-offcanvas">
+					<!-- sidebar: style can be found in sidebar.less -->
+					{MENU_IZQUIERDO}
+					<!-- /.sidebar -->
+				</aside>
+
+				<!-- Right side column. Contains the navbar and content of the page -->
+				<aside class="right-side">
+					<!-- Content Header (Page header) -->
+					{NAVEGACION}
+					<!-- Main content -->
+					<script src="script/ajax.googleapis.com_ajax_libs_jquery_3.6.0_jquery.min.js"></script>
+					<script src="script/global.js"></script>
+					<script>
+						function CodCurFun(sel) {
+							if (sel.value == "si") {
+								divC = document.getElementById("nTExtoS");
+								divC.style.display = "";
+
+								divT = document.getElementById("nTExtoI");
+								divT.style.display = "none";
+
+							} else {
+
+								divC = document.getElementById("nTExtoS");
+								divC.style.display = "none";
+
+								divT = document.getElementById("nTExtoI");
+								divT.style.display = "";
+							}
+
+						}
+
+						function BuscaBloqueListadoCursos(valor) {
+
+							var campos = {
+								"id_curso" : valor,
+								"id_empresa" : "{ID_EMPRESA}"
+
+							};
+
+							$.ajax({
+								data : campos,
+								url : '?sw=MuestraBloqueDetalleCurso',
+								type : 'post',
+								beforeSend : function() {
+
+								},
+								success : function(response) {
+									let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+									$("#BloqueDetalleCurso").html(cleanResponse);
+								}
+							});
+						}
+
+						function BloqueCursoSeleccionado(valor) {
+
+							var campos = {
+								"id_curso" : valor,
+								"id_empresa" : "{ID_EMPRESA}"
+
+							};
+
+							$.ajax({
+								data : campos,
+								url : '?sw=MuestraBloqueCursoSeleccionado',
+								type : 'post',
+								beforeSend : function() {
+
+								},
+								success : function(response) {
+									$('#myModal').modal('toggle');
+									let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+									$("#BloqueCursoSeleccionado").html(cleanResponse);
+								}
+							});
+						}
+
+						function BloqueMallaSeleccionada(valor) {
+
+							var campos = {
+								"id_malla" : valor,
+								"id_empresa" : "{ID_EMPRESA}"
+
+							};
+
+							$.ajax({
+								data : campos,
+								url : '?sw=MuestraBloqueMallaSeleccionado',
+								type : 'post',
+								beforeSend : function() {
+
+								},
+								success : function(response) {
+									let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+									$('#myModalMallas').modal('toggle');
+									$("#BloqueCursoSeleccionado").html(cleanResponse);
+								}
+							});
+						}
+
+						function BloqueMallaProgramaSeleccionada() {
+							var programa = document.getElementById("programabbdd").value;
+							var malla = document.getElementById("malla").value;
+
+							var campos = {
+								"id_malla" : malla,
+								"id_programa_bbdd" : programa,
+								"id_empresa" : "{ID_EMPRESA}"
+
+							};
+
+							$.ajax({
+								data : campos,
+								url : '?sw=MuestraBloqueProgramaMallaSeleccionado',
+								type : 'post',
+								beforeSend : function() {
+
+								},
+								success : function(response) {
+									let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+									$('#myModalMallasV2').modal('toggle');
+									$("#BloqueCursoSeleccionado").html(cleanResponse);
+								}
+							});
+						}
+
+					</script>
+					<section class="content">
+						<div class="row">
+							<div class="col-md-12">
+								
+								
+								
+								<div class="box">
+									<div class="box-header box boxheader">
+										<div class="box-header">
+											<h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Edición de Impartición</h3>
+
+										</div>
+									</div>
+								</div>
+
+								<!-- text input -->
+							
+							
+								<div class="col-md-12">
+									
+									
+									<a href="?sw=listcursos2#" class="btn btn-link">Volver</a>
+									<br>	<br>								
+									<div class="panel panel-info">
+										<div class="panel-heading">
+											<h3 class="panel-title">{NOMBRE_CURSO_imparticion} - Edici&oacute;n Impartición</h3>
+										</div>
+
+										<br>
+										<div class="panel-body">
+											<span id="BloqueCursoSeleccionado"> {BLOQUE_FORMULARIO} </span>
+										</div>
+									</div>
+
+								</div>
+
+							</div>
+						</div>
+			</div>
+			</section>
+
+			</aside><!-- /.right-side -->
+			</div><!-- ./wrapper -->
+
+			{FOOTER_ADMIN}
+
+			<script>
+				function requiere() {
+
+					if ($('#modalidad').val() == "2") {
+						$(".requiere").attr("required", true);
+
+					} else {
+
+						$(".requiere").attr("required", false);
+					}
+
+					//$("#codigo").attr("required", true);
+				}
+
+			</script>
+
+			<script type="text/javascript">
+				$('#tabla_selecciona_mallas').DataTable({
+
+					"oLanguage" : {
+						"sProcessing" : "Procesando...",
+						"sLengthMenu" : "Mostrar _MENU_ registros",
+						"sZeroRecords" : "No se encontraron resultados",
+						"sEmptyTable" : "Ningún dato disponible en esta tabla",
+						"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+						"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+						"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+						"sInfoPostFix" : "",
+						"sSearch" : "Buscar: ",
+						"sUrl" : "",
+						"sInfoThousands" : ",",
+						"sLoadingRecords" : "Cargando...",
+						"oPaginate" : {
+							"sFirst" : "Primero",
+							"sLast" : "Último",
+							"sNext" : "Siguiente",
+							"sPrevious" : "Anterior"
+						},
+						"oAria" : {
+							"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+							"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+						}
+					},
+
+					"bAutoWidth" : false,
+					"pageLength" : 50,
+					"order" : [0, 'desc'],
+					"columnDefs" : [{
+						"targets" : [0],
+						"searchable" : false
+					}],
+
+					initComplete : function() {
+						this.api().columns('.select-filter').every(function() {
+							var column = this;
+							var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+								var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+								column.search( val ? '^' + val + '$' : '', true, false).draw();
+							});
+
+							column.data().unique().sort().each(function(d, j) {
+								select.append('<option value="' + d + '">' + d + '</option>')
+							});
+						});
+					}
+				});
+
+				$('#tabla_selecciona_cursos').DataTable({
+
+					"oLanguage" : {
+						"sProcessing" : "Procesando...",
+						"sLengthMenu" : "Mostrar _MENU_ registros",
+						"sZeroRecords" : "No se encontraron resultados",
+						"sEmptyTable" : "Ningún dato disponible en esta tabla",
+						"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+						"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+						"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+						"sInfoPostFix" : "",
+						"sSearch" : "Buscar: ",
+						"sUrl" : "",
+						"sInfoThousands" : ",",
+						"sLoadingRecords" : "Cargando...",
+						"oPaginate" : {
+							"sFirst" : "Primero",
+							"sLast" : "Último",
+							"sNext" : "Siguiente",
+							"sPrevious" : "Anterior"
+						},
+						"oAria" : {
+							"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+							"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+						}
+					},
+
+					"bAutoWidth" : false,
+					"pageLength" : 50,
+					"order" : [0, 'desc'],
+					"columnDefs" : [{
+						"targets" : [0],
+						"searchable" : false
+					}],
+
+					initComplete : function() {
+						this.api().columns('.select-filter').every(function() {
+							var column = this;
+							var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+								var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+								column.search( val ? '^' + val + '$' : '', true, false).draw();
+							});
+
+							column.data().unique().sort().each(function(d, j) {
+								select.append('<option value="' + d + '">' + d + '</option>')
+							});
+						});
+					}
+				});
+
+			</script>
+
+		</body>
+</html>
+

@@ -1,0 +1,32 @@
+
+
+<tr {BGCOLOR}>
+    <form name="" action="?sw=notificaciones_email_notificaciones_Save" method="post">
+        <td class="sorting_1" style="border-top: 1px solid #36c6d3;">
+            <input type="hidden" id="id" name="id" value="{ID_ENCODE}">
+            <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="" placeholder="" value="{NOMBRE}" required>
+
+        </td>
+        <td class="sorting_1" style="border-top: 1px solid #36c6d3;">
+            <span class="label label-sm label-info"> Asunto</span>
+            <input type="text" class="form-control" style='width: 70%;' id="subject" name="subject" value="{SUBJECT}" aria-describedby="" placeholder="" required>
+            <br>
+            <span class="label label-sm label-info"> Titulo</span>
+            <input type="text" class="form-control" style='width: 70%;' id="titulo" name="titulo" value="{TITULO}" aria-describedby="" placeholder="" required>
+            <br>
+            <span class="label label-sm label-info"> Texto</span>
+            <input type="text" class="form-control" style='width: 70%;' id="texto" name="texto" value="{TEXTO}" aria-describedby="" placeholder="" required>
+        </td>
+        <td class="mp_txt_small" style="border-top: 1px solid #36c6d3;">
+            <input type="submit" class="btn btn-link" value="Editar Notificacion">
+            
+            <br>{AGREGAR_USUARIOS}
+            <br><span style="font-size: 14px;padding-left: 12px;color: #428bca;">Envíos: {ENVIADOS}</span>
+            <br>{ENVIAR_A_NUEVOS}
+            <br>{ENVIAR_A_TODOS}
+            
+            
+            
+        </td>
+    </form>
+</tr>

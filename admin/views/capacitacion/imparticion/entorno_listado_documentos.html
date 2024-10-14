@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{TITTLE}</title>
+    <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+    <style>
+        .dataTables_filter input {
+            line-height: 20px;
+        }
+        .selecfiltro {
+            width: 100%;
+            line-height: 15px;
+            font-size: 12px;
+        }
+        .label {
+            min-width: 115px;
+        }
+
+        .modal-backdrop fade in {
+            z-index: 0 !important;
+            opacity: 0.7;
+        }
+
+    </style>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    {HEAD}
+</head>
+<body class="skin-blue">
+{HEADER}
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <aside class="left-side sidebar-offcanvas">
+        {MENU_IZQUIERDO}
+    </aside>
+    <aside class="right-side">
+        {NAVEGACION}
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+
+
+
+
+                    <div class="box">
+                        <div class="box-header box boxheader">
+                            <div class="box-header">
+                                <h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Documentos</h3>
+                                <span class="pull-left btn btn-link">
+                                            <a href="?sw=listaInscripciones2&i={ID_CURSO_ENCODEADO}" class="btn btn-link pull-left"><span class="negro">Volver</span></a>
+                                    </span>
+                                <span class="pull-right">
+										<a href="?sw=VeColaboradoresXImp2021&i={ID_INSCRIPCION_ENCODEADO}" class="btn btn-link btn-link-2"  >Participantes</a>
+                                        <a class="btn btn-link btn-link-2" href="?sw=VeProveedoresXImp2021&i={ID_INSCRIPCION_ENCODEADO}">Proveedores</a>
+										<a href="?sw=VeReportesXImp2021&i={ID_INSCRIPCION_ENCODEADO}" class="btn btn-link btn-link-2"  style="{DISPLAY_MODALIDAD2}">Reportes</a>
+										<a href="?sw=QR_2023&i={ID_INSCRIPCION_ENCODEADO}" class="btn btn-link btn-link-2"  style="{DISPLAY_MODALIDAD2}">Encuesta Satisfacci&oacute;n</a>
+										<a href="?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i={ID_CURSO_ENCODEADO}&id_imparticion={ID_INSCRIPCION_ENCODEADO}" class="btn btn-link btn-link-2" title="Editar Imparticion">Editar Imparticion</a>
+									 </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Curso</h3>
+                            </div>
+                            <div class="panel-body">
+                                <span class="label label-sm label-info"> Curso {NOMBRE_MODALIDAD_DOC} </span>
+                                {ID_CURSO_DOC}  {NOMBRE_CURSO_DOC}
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Impartici&oacute;n</h3>
+                            </div>
+                            <div class="panel-body">
+                                <span class="label label-sm label-info" style="    margin-bottom: 1px;"> Imparticion
+                                </span> {ID_IMPARTICION_DOC}  {NOMBRE_IMPARTICION}
+                                <br>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Documentos</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+
+
+                                        {LISTA_DOCUMENTOS_POR_IMPARTICION}
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-info" style="{DISPLAY_OTA_ABIERTA}">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Nuevo Documento</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+
+                                            <form name="Form_Vm0wd2VFMUdiRmRpUm1SWFYwZDRWRmx0ZUV0WFJteDBaRWhrVmxKc2NEQmFWV1JIVmpKS1IyTkliRmRXTTFKTVZsVmFWMVpWTVVWaGVqQTk=" method="POST"
+                                                  action="?sw=accionSubedocPorImparticion_2021" enctype="multipart/form-data" style="display: inline;"><br>
+
+
+                                                <label>Nombre Documento</label><br>
+                                                <input type="text" name="nombre" class="form form-control" required>
+                                                <br>
+                                                <label>Documento</label><br>
+                                                <input type="file" value="Subir Excel" name="archivo"  style="display: inline;" required>
+                                                <input type="hidden" name="ci" value="{ID_IMPARTICION_ENCODEADO}"  style="display: inline;">
+                                                <br><br>
+                                                <input type="submit" class="btn btn-success" value="Subir Documento"  style="display: inline;">
+
+                                            </form>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </aside>
+</div>
+{FOOTER_ADMIN}
+
+<script type="text/javascript">
+    $('#example2').DataTable({
+        "oLanguage" : {
+            "sProcessing" : "Procesando...",
+            "sLengthMenu" : "Mostrar _MENU_ registros",
+            "sZeroRecords" : "No se encontraron resultados",
+            "sEmptyTable" : "Ningún dato disponible en esta tabla",
+            "sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix" : "",
+            "sSearch" : "Buscar: ",
+            "sUrl" : "",
+            "sInfoThousands" : ",",
+            "sLoadingRecords" : "Cargando...",
+            "oPaginate" : {
+                "sFirst" : "Primero",
+                "sLast" : "Último",
+                "sNext" : "Siguiente",
+                "sPrevious" : "Anterior"
+            },
+            "oAria" : {
+                "sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+        "bAutoWidth" : false,
+        "pageLength" : 50,
+        "order" : [],
+        "columnDefs" : [{
+            "targets" : [0],
+            "searchable" : true
+        }],
+        initComplete : function() {
+            this.api().columns('.select-filter').every(function() {
+                var column = this;
+                var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                    column.search( val ? '^' + val + '$' : '', true, false).draw();
+                });
+                column.data().unique().sort().each(function(d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<script>
+    function LmsDesactivaCurso_{CODIGO_CURSO}_{ID_MALLA}_{ID_CLASIFICACION}() {
+        alert("Se ha Desactivado el Curso {CODIGO_CURSO}");
+        var campos = {
+            "id_curso" : "{CODIGO_CURSO}",
+            "id_malla" : "{ID_MALLA}",
+            "id_clasificacion" : "{ID_CLASIFICACION}",
+            "id_empresa" : "{ID_EMPRESA}"
+        };
+        $.ajax({
+            data : campos,
+            url : '?sw=LMS_DesactivaCurso',
+            type : 'post',
+            beforeSend : function() {
+                /*$("#back").show();
+                 $("#loader").show();*/
+            },
+            success : function(response) {
+                /*$("#back").hide();
+                 $("#loader").hide();*/
+                $("#resultado_desactiva_curso{CODIGO_CURSO}_{ID_MALLA}_{ID_CLASIFICACION}").html(response);
+            }
+        });
+    }
+    function LmsActivaCurso_{CODIGO_CURSO}_{ID_MALLA}_{ID_CLASIFICACION}() {
+        alert("Se ha dejado Activo el Curso {CODIGO_CURSO}");
+        var campos = {
+            "id_curso" : "{CODIGO_CURSO}",
+            "id_malla" : "{ID_MALLA}",
+            "id_clasificacion" : "{ID_CLASIFICACION}",
+            "id_empresa" : "{ID_EMPRESA}"
+        };
+        $.ajax({
+            data : campos,
+            url : '?sw=LMS_ActivaCurso',
+            type : 'post',
+            beforeSend : function() {
+                /*$("#back").show();
+                 $("#loader").show();*/
+            },
+            success : function(response) {
+                /*$("#back").hide();
+                 $("#loader").hide();*/
+                $("#resultado_activa_curso{CODIGO_CURSO}_{ID_MALLA}_{ID_CLASIFICACION}").html(response);
+            }
+        });
+    }
+</script>
+<tr style="background-color: #d9edf7 !important;">
+    <td class=""><span class="lms_vista_curso"> <span class="label label-sm label-info lms_text_white_sm">Curso</span> {DOT} {NOMBRE_CURSO}</span></td>
+    <td class="">{DATOS_PARAMETROS}</td>
+    <!--<td class="">{TIPO_CURSO}</td>-->
+    <td class="">{CODIGO_CURSO}</td>
+    <td class=""><span id="id="resultado_activa_curso{CODIGO_CURSO}_{ID_MALLA}_{ID_CLASIFICACION}"">
+        <button type="button" class="btn btn-link btn-sm"
+        data-toggle="modal"
+        data-id_malla="{ID_MALLA}"
+        data-target="#NuevoObjeto{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}">
+            Crear nuevo M&oacute;dulo
+        </button>
+        <button type="button" class="btn btn-link btn-sm"
+        data-toggle="modal"
+        data-id_malla="{ID_MALLA}"
+        data-target="#NuevoObjetoeV{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}">
+            Crear nueva Evaluaci&oacute;n
+        </button> <a  {DISPLAY_ACTIVA} class="btn btn-link btn-sm"     onclick="LmsActivaCurso_{CODIGO_CURSO}_{ID_MALLA}_{ID_CLASIFICACION}();">Activar</a></span><span  id="resultado_desactiva_curso{CODIGO_CURSO}_{ID_MALLA}_{ID_CLASIFICACION}"><a {DISPLAY_DESACTIVA} class="btn btn-link btn-sm"     onclick="LmsDesactivaCurso_{CODIGO_CURSO}_{ID_MALLA}_{ID_CLASIFICACION}();">Desactivar</a></span><!--<a  class="btn btn-danger btn-xs"  href="javascript: if (confirm('Seguro que desas eliminar?')) { window.location.href='?sw=dltrelcurmallacla&idc={CODIGO_CURSO}&idm={ID_MALLA}&idclas={ID_CLASIFICACION}' } else { void('') }; " >Eliminar Curso</a>--><!-- Button trigger modal --></td>
+</tr>
+<!-- Modal oBJETO -->
+<div class="modal fade" id="NuevoObjeto{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <STRONG>Nuevo M&oacute;dulo para Curso {CODIGO_CURSO} / Programa {CODIGO_PROGRAMA}</STRONG>
+                <br>
+                ID Sugerido:{ID_OBJETO_SUGERIDO} / ID Evaluacion Sugerida :{ID_OBJETO_EVALUACION}
+                <hr>
+                <form  action="?sw=vista_mallas_clasificaciones_cursos_objetos_saveObj" method="post" name="formObjeto_{ID_OBJETO_SUGERIDO}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}" enctype="multipart/form-data">
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label"> Nombre M&oacute;dulo</label>
+                        <div class="col-xs-9">
+
+                                <input class="form-control" type="text" value="{OBJETO_NOMBRE}"
+                                id="objeto_nombre" name="objeto_nombre" required>
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label"> Descripci&oacute;n Instrucciones (*opcional)</label>
+                        <div class="col-xs-9">
+
+                                <input class="form-control" type="text" value="{OBJETO_DESCRIPCION}"
+                                id="objeto_descripcion" name="objeto_descripcion" >
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label"> Tipo </label>
+                        <div class="col-xs-4">
+
+                                <select class="form-control" id="objeto_tipo" name="objeto_tipo" required>
+                                    <option value=""></option>
+                                    <option value="3-25">PDF</option>
+                                    <option value="3-7">Video MP4</option>
+                                </select>
+                        </div>
+                        <label for="example-text-input" class="col-xs-3 col-form-label"> Orden M&oacute;dulo
+                                <br>
+                                (no repetir)</label>
+                        <div class="col-xs-2">
+
+                                <input class="form-control" type="number" value="{OBJETO_ORDEN}" id="objeto_orden" name="objeto_orden">
+
+                        </div>
+                    </div>
+                    <hr>
+                    <span class="label label-sm label-info lms_text_white_sm1">* Subir Videos MP4 en resolucion 480</span>
+                    <br>
+                    <input class="form-control" type="hidden" value="{OBJETO_URL}"
+                    id="objeto_url" name="objeto_url" >
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label"> Subir Archivo</label>
+                        <label for="example-text-input" class="col-xs-9 col-form-label">
+                            <input type="file" name="archivo" id="archivo" class="form-control">
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label"> Duraci&oacute;n (horas:minutos)</label>
+                        <div class="col-xs-3">
+
+                                <input class="form-control" type="time" value="00:05:00" id="objeto_duracion" name="objeto_duracion" required>
+
+                        </div>
+                    </div>
+                    <hr>
+            </div>
+            <input type="hidden" id="id_curso" name="id_curso" value="{CODIGO_CURSO}">
+            <input type="hidden" id="id_programa" name="id_programa" value="{CODIGO_PROGRAMA}">
+            <input type="hidden" id="id_objeto" name="id_objeto" value="{ID_OBJETO_SUGERIDO}">
+            <input type="hidden" id="id_evaluacion" name="id_evaluacion" value="{ID_OBJETO_EVALUACION}">
+            <CENTER>
+                <script>
+function GuardaObjeto_{ID_OBJETO_SUGERIDO}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}() {
+if(document.formObjeto_{ID_OBJETO_SUGERIDO}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}.objeto_nombre.value==""){
+alert("Ingresa Nombre");
+}else if(document.formObjeto_{ID_OBJETO_SUGERIDO}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}.objeto_tipo.value==""){
+alert("Ingresa Tipo");
+}else{
+document.formObjeto_{ID_OBJETO_SUGERIDO}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}.submit();
+}
+}
+                </script>
+                <button type="button" onclick="GuardaObjeto_{ID_OBJETO_SUGERIDO}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}();" class="btn btn-info">
+                    Guardar M&oacute;dulo
+                </button>
+            </CENTER>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+                Cerrar Ventana
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal oBJETO2 -->
+<div class="modal fade" id="NuevoObjetoeV{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-body">
+                <STRONG>Nueva Evaluaci&oacute;n para Curso {CODIGO_CURSO} / Programa {CODIGO_PROGRAMA}</STRONG>
+                <br>
+                ID Sugerido:{ID_OBJETO_SUGERIDO_EVALUACION} / ID Evaluacion Sugerida :{ID_OBJETO_EVALUACION}
+                <hr>
+                <form  action="?sw=vista_mallas_clasificaciones_cursos_objetos_saveObj" method="post" name="formObjetoEvaluacion_{ID_OBJETO_SUGERIDO}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}" enctype="multipart/form-data">
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label"> Nombre M&oacute;dulo</label>
+                        <div class="col-xs-9">
+
+                                <input class="form-control" type="text" value="{OBJETO_NOMBRE}"
+                                id="objeto_nombre_evaluacion" name="objeto_nombre_evaluacion" required>
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label"> Descripci&oacute;n Instrucciones (*opcional)</label>
+                        <div class="col-xs-9">
+
+                                <input class="form-control" type="text" value="{OBJETO_DESCRIPCION}"
+                                id="objeto_descripcion" name="objeto_descripcion" >
+
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Tipo </label>
+                        <div class="col-xs-2">
+
+                                <select class="" id="objeto_tipo_evaluacion" name="objeto_tipo_evaluacion" required>
+                                    <option value="5-">Evaluaci&oacute;n</option>
+                                </select>
+                        </div>
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Orden M&oacute;dulo
+                                <br>
+                                (no repetir)</label>
+                        <div class="col-xs-2">
+
+                                <input class="form-control" type="number" value="{OBJETO_ORDEN}" id="objeto_orden" name="objeto_orden">
+
+                        </div>
+
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Numero Intentos</label>
+                        <div class="col-xs-2">
+
+                                <select class="form-control" id="objeto_intentos" name="objeto_intentos"required>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> N&uacute;mero de Preguntas
+                                <br>
+                                a realizar</label>
+                        <div class="col-xs-2">
+
+                                <input class="form-control" type="number" value="1" id="objeto_numpreguntas" name="objeto_numpreguntas">
+
+                        </div>
+
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Tiempo total
+                                <br>
+                                (Horas:Minutos)</label>
+                        <div class="col-xs-2">
+
+                                    <input class="form-control" type="time" value="00:15:00" id="objeto_duracion_evaluacion_total" name="objeto_duracion_evaluacion_total" required>
+
+                        </div>
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Nota Aprobaci&oacute;n
+                                <br>(0 a 100)</label>
+                        <div class="col-xs-2">
+
+                                <input class="form-control" type="number" value="80" id="objeto_aprobacion" name="objeto_aprobacion">
+
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Distribuci&oacute;n de Opciones</label>
+                        <div class="col-xs-2">
+
+                                <select class="form-control" id="objeto_distribucion_opciones" name="objeto_distribucion_opciones"required>
+                                    <option value="1">Normal</option>
+                                    <option value="2">Aleatoria</option>
+                                    <option value="3">Aleatoria con ultima fija</option>
+                                </select>
+                        </div>
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Recalcular Nota</label>
+                        <div class="col-xs-2">
+
+                                <select class="form-control" id="objeto_recalcular_notas" name="objeto_recalcular_notas"required>
+                                    <option value="1">SI</option>
+                                    <option value="2">NO</option>
+                                </select>
+                        </div>
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Ver Nota</label>
+                        <div class="col-xs-2">
+
+                                <select class="form-control" id="objeto_permitir_ver_nota" name="objeto_permitir_ver_nota"required>
+                                    <option value="1">SI Sin Feedback</option>
+                                    <option value="0">SI</option>
+                                    <option value="2">NO</option>
+                                </select>
+                        </div>
+                    </div>
+
+
+            <hr>
+
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Fecha Activaci&oacute;n</label>
+                        <div class="col-xs-4">
+                                <input id="fecha_inicio" name="fecha_inicio" class="form-control"  type="date">
+                        </div>
+
+
+
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Hora Activaci&oacute;n</label>
+                        <div class="col-xs-4">
+                                <input id="hora_inicio" name="hora_inicio" class="form-control"  type="time">
+                        </div>
+
+
+
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Fecha Finalizaci&oacute;n</label>
+                        <div class="col-xs-4">
+                                <input id="fecha_termino" name="fecha_termino" class="form-control"  type="date">
+                        </div>
+
+
+
+                        <label for="example-text-input" class="col-xs-2 col-form-label"> Hora Finalizaci&oacute;n</label>
+                        <div class="col-xs-4">
+                                <input id="hora_termino" name="hora_termino" class="form-control"  type="time">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label"> Mensaje Final Correcto</label>
+                        <div class="col-xs-9">
+
+                                <input class="form-control" type="text" value="{OBJETO_TITULO_CIERRE}"
+                                id="titulo_cierre" name="titulo_cierre" required>
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label"> Mensaje Final Incorrecto</label>
+                        <div class="col-xs-9">
+
+                                <input class="form-control" type="text" value="{OBJETO_TEXTO_CIERRE}"
+                                id="texto_cierre" name="texto_cierre" >
+
+                        </div>
+                    </div>
+            </div>
+            <input type="hidden" id="id_curso" name="id_curso" value="{CODIGO_CURSO}">
+            <input type="hidden" id="id_programa" name="id_programa" value="{CODIGO_PROGRAMA}">
+            <input type="hidden" id="id_objeto" name="id_objeto" value="{ID_OBJETO_SUGERIDO}">
+            <input type="hidden" id="id_evaluacion" name="id_evaluacion" value="{ID_OBJETO_EVALUACION}">
+            <CENTER>
+                <script>
+function GuardaObjetoEvaluacion_{ID_OBJETO_SUGERIDO_EVALUACION}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}() {
+if(document.formObjetoEvaluacion_{ID_OBJETO_SUGERIDO_EVALUACION}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}.objeto_nombre_evaluacion.value==""){
+alert("Ingresa Nombre");
+}else if(document.formObjetoEvaluacion_{ID_OBJETO_SUGERIDO_EVALUACION}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}.objeto_tipo_evaluacion.value==""){
+alert("Ingresa Tipo");
+}else{
+document.formObjetoEvaluacion_{ID_OBJETO_SUGERIDO_EVALUACION}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}.submit();
+}
+}
+                </script>
+                <button type="button" onclick="GuardaObjetoEvaluacion_{ID_OBJETO_SUGERIDO_EVALUACION}_{CODIGO_CURSO}_{ID_CLASIFICACION}_{ID_MALLA}();" class="btn btn-info">
+                    Guardar M&oacute;dulo
+                </button>
+            </CENTER>
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+                Cerrar Ventana
+            </button>
+        </div>
+    </div>
+</div>
+
+{ROW_LISTADO_OBJETOS}

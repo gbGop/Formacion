@@ -1,0 +1,53 @@
+<script>
+    function generaPlantilla2() {
+        $("#FormPlantilla2").submit();
+    }
+</script>
+<form action="?sw=gestion_usuario_clave" method="post" id="FormPlantilla2" name="FormPlantilla2"></form>
+<script>
+    function generaPlantilla() {
+        $("#FormPlantilla").submit();
+    }
+</script>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">ACTUALIZAR DOTACION DIA A DIA 2021
+        </h3>
+    </div>
+    <div class="panel-body">
+    	<div class="col-lg-12">
+    		<a href="?sw=actualizacion_control_dotacion_2021_dia&descargar_xls=1" class="btn btn-primary  pull-right">Descargar Base Actual Dotacion Dia a dia 2021</a>
+    	</div>
+    		<br><br>
+ 
+        <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+ <form name="importa" method="post" action="?sw=usuarios_update_tbl_contingencia_dia_dia_2021" id="importa" enctype="multipart/form-data" style="display:{DISPLAYFORM2}">
+            <div class="panel-body">
+                 RUT (solo cuerpo de RUT, por ejemplo 12123123)
+                <p> <input type="text" name="rut" id="rut" class="form form-control" required style="width: 300px;"/>  </p>
+
+                Fecha a modificar Desde<br>
+                <p> <input type="date" name="fecha" id="fecha" class="form form-control" required  style="width: 300px;"/>  </p>
+                
+                Fecha a modificar Hasta<br>
+                <p> <input type="date" name="fecha_hasta" id="fecha_hasta" class="form form-control" required  style="width: 300px;"/>  </p>
+
+                 R&eacute;gimen - Motivo
+                 <br>
+                 	<select name="regimenmotivo" id="regimenmotivo" class="form form-control" required>
+                 		<option value=""></option>
+                 		{options_regimen_motivo}
+                 	</select>
+                <!--<p> <input type="text" name="regimen" id="regimen" class="form form-control" required  style="width: 300px;"/>  </p>
+
+                 Motivo
+                <p> <input type="text" name="motivo" id="motivo" class="form form-control" required  style="width: 300px;"/>  </p>
+-->
+                	<br>
+                	<input type="submit" name="action" class="btn btn-info" value="Actualizar" />
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+

@@ -1,0 +1,35 @@
+				<tr {bgcolor}="" role="row" class="even">
+				<form name="{ID_ENC}" action="?sw=proveedores_ejecutivos_save" method="post">					
+					<td class="mp_txt_small">
+							
+									<input type="text" class="form-control" id="rut" name="rut" aria-describedby="" value="{RUT}" required>
+									<span style="font-size:2px; color:#fff">{ID}</span>
+									<span style="font-size:2px; color:#fff">{RUT}</span>
+						</td>
+						<td class="mp_txt_small">
+									<input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="" value="{NOMBRE}" required>
+									<span style="font-size:2px; color:#fff">{NOMBRE}</span>
+						</td>
+						<td class="mp_txt_small">
+									<input type="text" class="form-control" id="direccion" name="direccion" value="{DIRECCION}" aria-describedby="">
+						</td>
+						<td class="mp_txt_small">
+									<input type="text" class="form-control" id="telefono" name="telefono" value="{TELEFONO}" aria-describedby="">
+						</td>
+						<td class="mp_txt_small">
+									<input type="email" class="form-control" id="email" name="email" aria-describedby="" value="{EMAIL}">
+						</td>
+						<td class="mp_txt_small">
+									<input type="text" class="form-control" id="contacto" name="contacto" aria-describedby="" value="{CONTACTO}" >
+						</td>
+						<td class="mp_txt_small">
+									<input type="submit" class="btn btn-link"  value="Guardar">
+									<input type="hidden" id="id" name="id" value="{ID_ENC}">
+									<input type="hidden" id="tipo" name="tipo" value="{ID_TIPO}">
+									
+							<a href="?sw=lista_proveedores_otec&tipo={ID_TIPO}&del={ID_ENC}" class="btn btn-link">
+									Eliminar						
+							</a>
+						</td>
+				</form>			
+				</tr>

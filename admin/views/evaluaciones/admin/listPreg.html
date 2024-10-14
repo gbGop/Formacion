@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{TITTLE}</title>
+		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+		{HEAD}
+        <style>
+
+        .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+            border-top: unset;
+        }
+
+ .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    border-top: unset;
+    border: 1px solid #afebf1;
+}
+.lms_preg_texto_eval {
+    margin: 0 0 10px;
+    color: #444;
+    font-weight: 600;
+    font-size: 16px;
+    background-color: rgba(255,255,255,0.15);
+    border-top: unset;
+    font-family: "Open Sans";
+    padding-bottom: 120px;
+}
+.lms_preg_alternativas_eval {
+    margin: 0 0 10px;
+    color: #444444;
+    font-weight: 400;
+    font-size: 16px;
+    padding-left: 20px !important;
+}
+.lms_preg_alternativa_correcta_eval {
+    margin: 0 0 10px;
+    color: #ffffff;
+    background-color: #00c0ef;
+    font-weight: 400;
+    font-size: 14px;
+    padding-left: 20px !important;
+}
+
+
+        </style>
+	</head>
+	<body class="skin-blue">
+		<!-- header logo: style can be found in header.less -->
+		{HEADER}
+		<div class="wrapper row-offcanvas row-offcanvas-left">
+			<!-- Left side column. contains the logo and sidebar -->
+			<aside class="left-side sidebar-offcanvas">
+				<!-- sidebar: style can be found in sidebar.less -->
+				{MENU_IZQUIERDO}
+				<!-- /.sidebar -->
+			</aside>
+
+			<!-- Right side column. Contains the navbar and content of the page -->
+			<aside class="right-side">
+				<!-- Content Header (Page header) -->
+				{NAVEGACION}
+				<!-- Main content -->
+				<section class="content">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="box boxheader">
+								<div class="box-header with-border" style="border-bottom: 1px solid #F4F4F4;">
+									<h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Evaluación {EVALUACION}</h3>
+							
+							<a href="?sw=vista_mallas_clasificaciones_cursos_objetos&programa={PROGRAMA}" class="btn btn-link pull-left"><span class="negro"><i class="fa fa-reply"></i> Volver a Programas</span></a>		
+							
+							<a href="?sw=addPreg&idEval={ID_EVAL}&programa={PROGRAMA}"  class="btn btn-success btn-sm pull-right flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;">Agregar Preguntas </a>
+							
+							<a href="?sw=subirPreg&idEval={ID_EVAL}&programa={PROGRAMA}"  class="btn btn-success btn-sm pull-right flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;">Subida de Preguntas Masiva</a>
+
+								 	
+								</div>
+							</div>
+
+							<div class="box">
+
+								
+								<!-- /.box-header -->
+								<div class="box-body table-responsive">
+									<table id="listPreg" name="listPreg" class="table">
+
+										<tbody>
+											{LISTADO_PREGUNTAS}
+										</tbody>
+									</table>
+								</div>
+								<!-- /.box-body -->
+							</div>
+							<!-- /.box -->
+
+							<!-- /.box -->
+						</div>
+					</div>
+
+				</section><!-- /.content -->
+			</aside><!-- /.right-side -->
+		</div><!-- ./wrapper -->
+
+		{FOOTER_ADMIN}
+
+		{LIST_PREG_JS}
+
+		<!-- 		<script type="text/javascript">
+
+		$('#listPreg').DataTable({
+
+		"oLanguage": {
+		"sProcessing":     "Procesando...",
+		"sLengthMenu":     "Mostrar _MENU_ registros",
+		"sZeroRecords":    "No se encontraron resultados",
+		"sEmptyTable":     "Ning�n dato disponible en esta tabla",
+		"sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+		"sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+		"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+		"sInfoPostFix":    "",
+		"sSearch":         "Buscar: ",
+		"sUrl":            "",
+		"sInfoThousands":  ",",
+		"sLoadingRecords": "Cargando...",
+		"oPaginate": {
+		"sFirst":    "Primero",
+		"sLast":     "�ltimo",
+		"sNext":     "Siguiente",
+		"sPrevious": "Anterior"
+		},
+		"oAria": {
+		"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+		"sSortDescending": ": Activar para ordenar la columna de manera descendente"
+		}
+		},
+
+		"order" : [0, 'asc'],
+		"columnDefs": [{"targets": 2,"orderable": false}],
+		"bAutoWidth" : true,
+		"bFilter" : true,
+		"bPaginate" : true,
+		"bLengthChange" : true,
+		"aLengthMenu" : [5,10,20,30,60,100],
+		"bProcessing": true,
+		"bSort" : true,
+		"bInfo" : true,
+
+		});
+
+		</script> -->
+
+	</body>
+
+</html>

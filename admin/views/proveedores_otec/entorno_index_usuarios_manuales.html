@@ -1,0 +1,169 @@
+<div class="col-md-12">
+	<div class="box">
+		<div class="box-header">
+			<h3 class="box-title">Usuarios Manuales </h3>
+		</div>
+	</div>
+</div>
+<div class="">
+	<div class="col-lg-12 col-md-12">
+		<link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+		<br>
+		<br>
+<style>
+	table.dataTable thead>tr>th.sorting_asc, table.dataTable thead>tr>th.sorting_desc, table.dataTable thead>tr>th.sorting, table.dataTable thead>tr>td.sorting_asc, table.dataTable thead>tr>td.sorting_desc, table.dataTable thead>tr>td.sorting {
+    padding-right: 20px!important;
+    BACKGROUND-COLOR: none;
+    color: none;
+    background-color: #ffffff !important;
+    font-weight: 600;
+    color: #283252 !important;
+    margin-bottom: 12 px;
+    font-size: 15px;
+}
+</style>
+
+
+		<br><br>
+			<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Usuarios Manuales</h3>
+					</div>
+					<div class="panel-body">
+						
+						
+						<div class="row">
+							<div class="col-lg-12">
+								<label>Crear Usuario Manual</label>
+								<table id="" class="table table-bordered" style="background-color: #fff;">
+									<input type="hidden" name="id_emp" value="{ID_EMPRESA_ENCODEADO}" />
+									<thead>
+										<tr>
+											<th>RUT</th>
+											<th>Nombre</th>
+											<th>Apellido</th>
+											<th>Email</th>
+											<th>Empresa</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr {bgcolor}="" role="row" class="even">
+											<form name="manual" id="manual" action="?sw=proveedores_ejecutivos_save" method="post">
+												<td class="mp_txt_small">
+													<input type="text" class="form-control" id="rut" name="rut" aria-describedby="" required>
+												</td>
+												<td class="mp_txt_small">
+													<input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="" required>
+												</td>
+												<td class="mp_txt_small">
+													<input type="text" class="form-control" id="apellido" name="apellido" aria-describedby="" required>
+												</td>
+												<td class="mp_txt_small">
+													<input type="email" class="form-control" id="email" name="email" aria-describedby="" required>
+												</td>
+												<td class="mp_txt_small">
+													<input type="text" class="form-control" id="empresa" name="empresa" aria-describedby="" required>
+												</td>
+												<td class="mp_txt_small">
+														<input type="submit" class="btn btn-success"  value="Guardar">
+														<input type="hidden" id="id" name="id" value="">
+														<input type="hidden" id="tipo" name="tipo" value="{ID_TIPO}">
+												</td>
+											</form>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>						
+						<div class="row">
+							<div class="col-lg-12">
+								<br>
+								<label>Crear Usuario Manual Masivo</label>
+							</div>
+							<div class="col-lg-4">
+											<span class="label label-sm label-info">1. Descargar Plantilla</span>
+											<br><a href="?sw=descargarUsuariosManuales_2022" class="btn btn-link "><span class="negro">Descargar Plantilla</span></a><br>
+							</div>
+							<div class="col-lg-4">
+											<span class="label label-sm label-info">2. Ingresa datos y s&uacute;belo aqu&iacute;</span>
+                      <form name="Form_Vm0wd2VFMUdiRmRpUm1SWFYwZDRWRmx0ZUV0WFJteDBaRWhrVmxKc2NEQmFWV1JIVmpKS1IyTkliRmRXTTFKTVZsVmFWMVpWTVVWaGVqQTk=" method="POST" action="?sw=accionSube_descargarUsuariosManuales_2022" enctype="multipart/form-data" style="display: inline;"><br>
+                          <input type="file" value="Subir Excel" name="file" style="display: inline;">
+                          <input type="hidden" name="ci" value="Umh1cWRZaC9FL1RkeXIzeUZJRU8xZz09" style="display: inline;">
+                          <br><br>
+											
+							</div>
+							<div class="col-lg-4">
+                          <input type="submit" class="btn btn-success" value="Subir Nuevos Usuarios" style="display: inline;">
+                      </form>
+							</div>
+						</div>
+				</div>
+    	</div>
+
+		
+		<table id="example2" class="table table-bordered">
+			<input type="hidden" name="id_emp" value="{ID_EMPRESA_ENCODEADO}" />
+			<thead>
+				<tr>
+					<th>RUT</th>
+					<th>Nombre</th>
+					<th>Apellido</th>
+					<th>Email</th>
+					<th>Empresa</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{LISTA}
+			</tbody>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#example2').DataTable({
+		"oLanguage" : {
+			"sProcessing" : "Procesando...",
+			"sLengthMenu" : "Mostrar _MENU_ registros",
+			"sZeroRecords" : "No se encontraron resultados",
+			"sEmptyTable" : "No existe dato disponible en esta tabla",
+			"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+			"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+			"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+			"sInfoPostFix" : "",
+			"sSearch" : "Buscar: ",
+			"sUrl" : "",
+			"sInfoThousands" : ",",
+			"sLoadingRecords" : "Cargando...",
+			"oPaginate" : {
+				"sFirst" : "Primero",
+				"sLast" : "Último",
+				"sNext" : "Siguiente",
+				"sPrevious" : "Anterior"
+			},
+			"oAria" : {
+				"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+				"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+			}
+		},
+		"bAutoWidth" : false,
+		"pageLength" : 50,
+		"order": [[ 1, "asc" ]],
+		"columnDefs" : [{
+			"targets" : [0],
+			"searchable" : true
+		}],
+		initComplete : function() {
+			this.api().columns('.select-filter').every(function() {
+				var column = this;
+				var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+					var val = $.fn.dataTable.util.escapeRegex($(this).val());
+					column.search( val ? '^' + val + '$' : '', true, false).draw();
+				});
+				column.data().unique().sort().each(function(d, j) {
+					select.append('<option value="' + d + '">' + d + '</option>')
+				});
+			});
+		}
+	});
+</script>

@@ -1,0 +1,85 @@
+<tr>
+    <td class="miniSt"><strong>{NOMBRE_COMPLETO}</strong>
+        <br>{RUT_COMPLETO} {TIPO_VIGENCIA}
+    </td>
+    <script>
+        $(document).ready (function() {$('input[type="checkbox"][disabled]').css('background-color','#002884');});
+    </script>
+    {SESIONES_1_td}
+    {SESIONES_2_td}
+    {SESIONES_3_td}
+    {SESIONES_4_td}
+    {SESIONES_5_td}
+    {SESIONES_6_td}
+    {SESIONES_7_td}
+    {SESIONES_8_td}
+    {SESIONES_9_td}
+    {SESIONES_10_td}
+    {SESIONES_11_td}
+    {SESIONES_12_td}
+    <td class="miniSt">
+        <span id="barra_{RUT_COLABORADOR}">
+           	<input class="form form-control" id="value_{RUT_COLABORADOR}" max="100" min="0"
+                   name="avance_{RUT_COLABORADOR}" readonly
+                   size="3" style="    width: 100px;" type="number"
+                   value="{AVANCE_ACTUAL}" {readonly_asistencia}>
+    </td>
+    <td class="miniSt" style="{display_notas}">
+        <span id="barra_{RUT_COLABORADOR}">
+           	<input class="form form-control" id="value_nota_diagnostico_{RUT_COLABORADOR}" max="100" min="0"
+                   name="nota_diagnostico_{RUT_COLABORADOR}" readonly
+                   size="3" style="    width: 100px;" type="number"
+                   value="{NOTA_DIAGNOSTICO_ACTUAL}"></span>
+    </td>
+    <td class="miniSt" style="{display_notas}">
+        <span id="barra_{RUT_COLABORADOR}">
+           	<input class="form form-control" id="value_nota_{RUT_COLABORADOR}" max="100" min="0"
+                   name="nota_{RUT_COLABORADOR}" readonly
+                   size="3" style="    width: 100px;" type="number"
+                   value="{NOTA_ACTUAL}"></span>
+    </td>
+    <td class="miniSt">
+        <span id="barra_{RUT_COLABORADOR}">
+        	<select class="form form-control" id="value_estado_{RUT_COLABORADOR}" name="estado_{RUT_COLABORADOR}">
+        		<option value="">SIN ESTADO</option>
+        		<option value="APROBADO" {select_aprobado}>APROBADO</option>
+        		<option value="REPROBADO" {select_reprobado}>REPROBADO</option>
+        		<option value="DESISTE" {select_desiste}>DESISTE</option>
+        		<option value="JUSTIFICADO" {select_justificado}>JUSTIFICADO</option>
+        	</select>
+    </td>
+    <td>
+        {ROW_CERTIFICADO_2021_INDIVIDUAL}
+    </td>
+    <td>
+        <a class="btn btn-link" href="?sw=VeColaboradoresXImp2021&i={ID_IMPARTICION_ENC}&del_rut_enc={RUT_COL_ENC}">
+            
+            <i class="bi bi-trash"></i></a>
+        <!-- Button trigger modal -->
+        <button class="btn btn-link " data-bs-target="#exampleModal{ID_IMPARTICION_ENC}{RUT_COL_ENC}" data-bs-toggle="modal" type="button">
+            {ICON_OBS_SVG_2023}
+        </button>
+        <!--// Modal -->
+        <div aria-hidden="true" aria-labelledby="exampleModalLabel{ID_IMPARTICION_ENC}{RUT_COL_ENC}" class="modal fade"
+             id="exampleModal{ID_IMPARTICION_ENC}{RUT_COL_ENC}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Observaciones {NOMBRE_COMPLETO}</h5>
+                        <button aria-label="Close" class="btn-close" data-dismiss="modal" type="button"></button>
+                    </div>
+                    <div class="modal-body">
+                            <label>Observaciones</label>
+                            <br>
+                            <textarea class="form form-control"
+                                      id="observaciones_{RUT_COLABORADOR}_{ID_IMPARTICION_ENC}"
+                                      name="observaciones_{RUT_COLABORADOR}_{ID_IMPARTICION_ENC}" style=" height: 100px;">{TEXT_AREA_OBS_2023}</textarea>
+                            <input type="hidden" name="sob" value="1">
+                            <input type="submit" class="btn btn-info" value="Guardar">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--// Modal -->
+    </td>
+</tr>

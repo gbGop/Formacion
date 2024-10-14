@@ -1,0 +1,20 @@
+<tr>
+	<td class="panel-body" ><strong>{NOMBRE}</strong></td>
+	<td class="panel-body"><small>{DESCRIPCION}</small></td>
+	<td class="panel-body">{DATOS_PARAMETRO}</td>
+	
+	<td class="panel-body">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<h3 class="panel-title">{CANTIDAD}</h3>
+		</div>
+	</div></td>
+	<td class="panel-body">
+		<a href="?sw=excAudie&ia={ID_AUDIENCIA_ENCODEADA}" class="btn btn-info"> <i class="fa fa-cloud-download"></i> Descargar Excel</a>
+		<br><br>
+		<a onclick = "if (! confirm('Seguro que deseas duplicar esta Audiencia?')) return false;" href="?sw=duplicaAudiencia&ia={ID_AUDIENCIA_ENCODEADA}"class="btn btn-info"> <i class="fa fa-cloud-download"></i> Duplicar Audiencia</a>
+		</td>
+	
+	<a href="#"  class="btn btn-info><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+
+</tr>

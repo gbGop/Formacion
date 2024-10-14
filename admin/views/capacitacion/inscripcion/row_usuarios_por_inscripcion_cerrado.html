@@ -1,0 +1,55 @@
+<!--<tr>
+                                                <td class="miniSt">{RUT}</td>
+                                                <td class="miniSt">{NOMBRE_USUARIO}</td>
+
+                                               
+                                                <td class="miniSt">{PORCENTAJE_ASISTENCIA}</td>
+                                                <td class="miniSt">{CASO_ESPECIAL}</td>
+                                                <td class="miniSt">{NOTA}</td>
+                                                <td class="miniSt">{ESTADO}</td>
+                                                <td class="miniSt">{VIATICO_UTILIZADO}</td>
+                                                <td class="miniSt">{MOVILIZCION}</td>
+												                                                <td class="miniSt">{MONTO_PERSONA}</td>
+
+												 <td class="miniSt">{MONTO_FRANQUICIA}</td>
+                                                <td class="miniSt">{MONTO_EMPRESA}</td>
+												
+                                            </tr>
+                                            -->
+                                            
+                                            
+                                            <tr>
+                                                <td class="miniSt">{RUT}</td>
+                                                <td class="miniSt">{NOMBRE_USUARIO}</td>
+
+                                               
+                                                <td class="miniSt"><select name="porcentaje_asistencia{IDINSCRIPCIONRUT}" class="form_control_admin">{OPTIONS__POR_ASIS}</select>{PORCENTAJE_ASISTENCIA}</td>
+												
+                                                <td class="miniSt"><select name="caso_especial{IDINSCRIPCIONRUT}"  class="form_control_admin"><option value="">-Sel-</option>{OPTIONS_CASOS_ESPECIALES}</select></td>
+												
+												
+                                                <td class="miniSt"><input type="text" value="{NOTA}"  class="form_control_admin" size="4" name="nota{IDINSCRIPCIONRUT}" /></td>
+												
+												
+                                                <td class="miniSt"><select  class="form_control_admin" name="estado{IDINSCRIPCIONRUT}"><option value="">-Sel-</option>
+                                                <option value="1" {OKAPROBADO}>Aprobado</option>
+                                                <option value="0" {OKREPROPROBADO}>Reprobado</option>
+                                                <option></option>
+                                                </select>{ESTADO}</td>
+												
+												
+                                                
+												                                                <td class="miniSt">{MONTO_PERSONA}</td>
+
+												 <td class="miniSt">{MONTO_FRANQUICIA}</td>
+                                                <td class="miniSt">{MONTO_EMPRESA}</td>
+												
+												
+												<td class="miniSt"><input  class="form_control_admin" type="text" size="4" value="{VIATICO_UTILIZADO}" name="viatico_utilizado{IDINSCRIPCIONRUT}" /></td>
+                                                <td class="miniSt"><input  class="form_control_admin" type="text" size="4" value="{MOVILIZCION}" name="movilizacion_utilizado{IDINSCRIPCIONRUT}" /></td>
+												
+												
+                                            </tr>
+                                            
+                                            
+                                            

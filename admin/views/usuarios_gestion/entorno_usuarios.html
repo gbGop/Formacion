@@ -1,0 +1,109 @@
+<script>
+    function generaPlantilla2() {
+        $("#FormPlantilla2").submit();
+    }
+</script>
+<form action="?sw=gestion_usuario_clave" method="post" id="FormPlantilla2" name="FormPlantilla2"></form>
+<script>
+    function generaPlantilla() {
+        $("#FormPlantilla").submit();
+    }
+</script>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Base de Usuarios</h3>
+    </div>
+    <div class="panel-body">
+    	<div class="col-lg-12">
+    		<a href="?sw=actualizacion_usuarios&descargar_xls=1" class="btn btn-primary  pull-left">Descargar Base Actual de Usuarios</a>
+    	</div>
+    	<!--
+    		<br><br>
+    		
+        {ACTUALIZACION_REALIZADA} {TITULO_TOTAL_LISTA_TODOS} {PROCESAR} {TITULO_TOTAL_LISTA_NUEVOS} {LISTA_NUEVOS} {TITULO_TOTAL_LISTA_ELIMINADOS} {LISTA_ELIMINADOS}
+        <br><br>
+        <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+        <form name="importa" method="post" action="?sw=usuarios_insert_tbl_usuario_temporal_empresa" id="importa" enctype="multipart/form-data" style="display:{DISPLAYFORM2}">
+            <div class="panel-body">
+                <br>Sube el archivo aquí
+                <p> <input type="file" name="excel" /> <br> <button type="submit" class='btn btn-info '>
+                <i class="fas fa-upload"></i> Subir a Tabla Temporal                   </button> <input type="hidden" value="upload" name="action"
+                    /> </p>
+            </div>
+        </form>-->
+    </div>
+</div>
+<br>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Consulta por RUT / IDSap <small>(S&oacute;lo cuerpo de RUT sin DV)</small></h3>
+    </div>
+    <div class="panel-body">
+    	<div class="col-lg-12">
+        <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+            <div class="panel-body">
+								<form action="?sw=actualizacion_usuarios" name="VClRutIDSap" method="post">
+									Rut
+										<br>
+											<input type="text" class="form form-control" name="idSap" placeholder="" id="idSap" style="width:200px">
+											<input  type="submit" class="btn btn-info" value="Buscar">
+										<br>
+								</form>   
+								{DATOS_USUARIOS}           
+            </div>    		
+    	</div>
+    	<!--
+    		<br><br>
+    		
+        {ACTUALIZACION_REALIZADA} {TITULO_TOTAL_LISTA_TODOS} {PROCESAR} {TITULO_TOTAL_LISTA_NUEVOS} {LISTA_NUEVOS} {TITULO_TOTAL_LISTA_ELIMINADOS} {LISTA_ELIMINADOS}
+        <br><br>
+        <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+        <form name="importa" method="post" action="?sw=usuarios_insert_tbl_usuario_temporal_empresa" id="importa" enctype="multipart/form-data" style="display:{DISPLAYFORM2}">
+            <div class="panel-body">
+                <br>Sube el archivo aquí
+                <p> <input type="file" name="excel" /> <br> <button type="submit" class='btn btn-info '>
+                <i class="fas fa-upload"></i> Subir a Tabla Temporal                   </button> <input type="hidden" value="upload" name="action"
+                    /> </p>
+            </div>
+        </form>-->
+    </div>
+</div>
+<br>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Desbloqueo de Claves</h3>
+    </div>
+    <div class="panel-body">
+    	<div class="col-lg-12">
+        <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+            <div class="panel-body">
+								<form action="?sw=actualizacion_usuarios" name="VCl" method="post">
+									Rut
+										<br>
+											<input type="text" class="form form-control" name="bc" placeholder="" id="bc" style="width:200px">
+											<input  type="submit" class="btn btn-info" value="Buscar">
+										<br>
+								</form>   
+								{BLOQUEO}             
+            </div>    		
+    	</div>
+    	<!--
+    		<br><br>
+    		
+        {ACTUALIZACION_REALIZADA} {TITULO_TOTAL_LISTA_TODOS} {PROCESAR} {TITULO_TOTAL_LISTA_NUEVOS} {LISTA_NUEVOS} {TITULO_TOTAL_LISTA_ELIMINADOS} {LISTA_ELIMINADOS}
+        <br><br>
+        <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+        <form name="importa" method="post" action="?sw=usuarios_insert_tbl_usuario_temporal_empresa" id="importa" enctype="multipart/form-data" style="display:{DISPLAYFORM2}">
+            <div class="panel-body">
+                <br>Sube el archivo aquí
+                <p> <input type="file" name="excel" /> <br> <button type="submit" class='btn btn-info '>
+                <i class="fas fa-upload"></i> Subir a Tabla Temporal                   </button> <input type="hidden" value="upload" name="action"
+                    /> </p>
+            </div>
+        </form>-->
+    </div>
+</div>
+
+
+
+

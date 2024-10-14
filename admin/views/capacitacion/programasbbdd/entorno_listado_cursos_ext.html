@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>{TITTLE}</title>
+    <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+    <style>
+        .dataTables_filter input {
+
+            line-height: 20px;
+        }
+
+        .selecfiltro {
+            width: 100%;
+            line-height: 15px;
+            font-size: 12px;
+        }
+    </style>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'> {HEAD}
+</head>
+
+<body class="skin-blue">
+    <!-- header logo: style can be found in header.less -->
+    {HEADER}
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="left-side sidebar-offcanvas">
+            <!-- sidebar: style can be found in sidebar.less -->
+            {MENU_IZQUIERDO}
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Right side column. Contains the navbar and content of the page -->
+        <aside class="right-side">
+            <!-- Content Header (Page header) -->
+            {NAVEGACION}
+<script>
+    function generaPlantilla() {
+        $("#FormPlantilla").submit();
+    }
+</script>
+
+<section class="content">
+
+
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-md-12">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title"> Asignación de Notas y Asistencia a Cursos Externos&nbsp;</h3>
+
+        </div>
+    </div>
+</div>
+
+<form action="?sw=Cursos_Ext_Descarga_notas" method="post" id="FormPlantilla" name="FormPlantilla">
+    <input type="hidden" value={ID_CURSO} id="id_curso" name="id_curso" />
+</form>
+
+<div class="row gutter">
+
+    <div class="col-lg-12 col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Descarga Inscritos para Actualizar</h3>
+            </div>
+            <form name="importa" method="post" action="?sw=update_Cursos_Externos" id="importa" enctype="multipart/form-data" style="display:{DISPLAYFORM2}">
+                <div class="panel-body">
+                    <a onclick="generaPlantilla()" class="btn btn-primary btn-sm pull-left flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;"><i class="fa fa-download"></i> Descargar Plantilla Inscripción</a>
+                    <br><br><br>Sube el archivo aqu&iacute;
+                    <p>
+                        <input type="file" name="excel" style="display: inline" />
+                        <button type="submit" class='btn btn-success btn-sm'>
+                        <i class="fas fa-upload"></i> Subir y Actualizar
+                    </button>
+                        <input type="hidden" value="upload" name="action" />
+                        <input type="hidden" value="{ID_CURSO}" name="id_curso" id="id_curso" />
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+            <section class="content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="box">
+                            <div class="row">
+                                <form name="FormReprotes" method="POST" action="?sw=listcursos">
+                                    <div class="col-lg-12 ">
+                                        <p align="center">
+                                            <input type="hidden" name="ex">
+                                        </p>
+                                    </div>
+                            </div>
+                            <br>
+                            </form>
+                            <script>
+                                function FormExcel() {
+                                    document.FormReprotes.ex.value = "1";
+                                    document.FormReprotes.submit();
+                                }
+                            </script>
+                            <div class="box-body table-responsive">
+                                <table id="example2" class="table table-bordered table-hover sortable">
+                                    <thead>
+                                        <tr>
+                                            <th class="bg_gray">Rut</th>
+                                            <th class="bg_gray">Nombre</th>
+                                            <th class="bg_gray">Curso</th>
+                                            <th class="bg_gray">Estado</th>
+                                            <th class="bg_gray">Avance</th>
+                                            <th class="bg_gray">Nota</th>
+                                            <th class="bg_gray">Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot style="display: table-header-group;">
+                                    </tfoot>
+                                    <tbody>
+                                        {LISTADO_LINEAS_DATA}
+                                    </tbody>
+                                    <tfoot>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                        <!-- /.box -->
+                        <!-- /.box -->
+                    </div>
+                </div>
+            </section>
+            <!-- /.content -->
+        </aside>
+        <!-- /.right-side -->
+    </div>
+    <!-- ./wrapper -->
+    {FOOTER_ADMIN}
+    <!-- page script -->
+    <script type="text/javascript">
+        $('#example2').DataTable({
+
+            "oLanguage": {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sSearch": "Buscar: ",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Ultimo",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            },
+
+            "bAutoWidth": false,
+            "pageLength": 50,
+            "order": [],
+            "columnDefs": [{
+                "targets": [0],
+                "searchable": true
+            }],
+
+            initComplete: function() {
+                this.api().columns('.select-filter').every(function() {
+                    var column = this;
+                    var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+                        var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                        column.search(val ? '^' + val + '$' : '', true, false).draw();
+                    });
+
+                    column.data().unique().sort().each(function(d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

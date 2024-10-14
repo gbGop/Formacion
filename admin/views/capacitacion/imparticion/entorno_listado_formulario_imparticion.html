@@ -1,0 +1,84 @@
+
+									<table id="tabla_audiencias_form_imparticion" class="table table-bordered table-hover sortable">
+										<thead>
+											<tr>
+												<th class="width140 bg_gray">COD</th>
+												<th class="width140 bg_gray">NOMBRE</th>
+												<th class="width80 bg_gray select-filter" >CURSO</th>
+												
+												<th class="width60 bg_gray">FECHA INICIO</th>
+												<th class="width60 bg_gray">FECHA TERMINO</th>
+												<th class="width60 bg_gray">DIRECCION</th>
+												<th class="width60 bg_gray">CIUDAD</th>
+												<th class="width60 bg_gray">CUPOS</th>
+												
+											</tr>
+										</thead>
+										<tfoot style="display: table-header-group;">
+											
+										</tfoot>
+										<tbody>
+											{ROW_LISTADO_AUDIENCIA}
+										</tbody>
+										<tfoot>
+
+										</tfoot>
+									</table>
+								
+		<!-- page script -->
+		<script type="text/javascript">
+		
+			$('#tabla_audiencias_form_imparticion').DataTable({
+			
+				"oLanguage": {
+						"sProcessing":     "Procesando...",
+						"sLengthMenu":     "Mostrar _MENU_ registros",
+						"sZeroRecords":    "No se encontraron resultados",
+						"sEmptyTable":     "Ningún dato disponible en esta tabla",
+						"sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+						"sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+						"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+						"sInfoPostFix":    "",
+						"sSearch":         "Buscar: ",
+						"sUrl":            "",
+						"sInfoThousands":  ",",
+						"sLoadingRecords": "Cargando...",
+						"oPaginate": {
+							"sFirst":    "Primero",
+							"sLast":     "Último",
+							"sNext":     "Siguiente",
+							"sPrevious": "Anterior"
+						},
+						"oAria": {
+							"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+							"sSortDescending": ": Activar para ordenar la columna de manera descendente"
+						}
+				},
+				
+				"bAutoWidth" : false,
+				"pageLength" : 50,
+				"order" : [0, 'desc'],
+				"columnDefs" : [{
+									"targets" : [0],
+									"searchable" : false
+				}],				
+				
+				initComplete : function() {
+					this.api().columns('.select-filter').every(function() {
+						var column = this;
+						var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+							var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+							column.search( val ? '^' + val + '$' : '', true, false).draw();
+						});
+
+						column.data().unique().sort().each(function(d, j) {
+							select.append('<option value="' + d + '">' + d + '</option>')
+						});
+					});
+				}
+			});
+
+		</script>
+
+	

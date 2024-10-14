@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>AdminLTE | Data Tables</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+{HEAD}
+    </head>
+    <body class="skin-blue">
+        <!-- header logo: style can be found in header.less -->
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="left-side sidebar-offcanvas">
+                <!-- sidebar: style can be found in sidebar.less -->
+                {MENU_IZQUIERDO}
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">                
+                <!-- Content Header (Page header) -->
+                {NAVEGACION}
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">Listado de Evaluaciones</h3>        
+                                    <a href="?sw=accionEvaluacion">Agregar Nueva Evaluacion</a>
+									
+                                </div><!-- /.box-header -->
+                                <div class="box-body table-responsive">
+                                    <table id="example2" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>N°</th>
+                                                <th>Nombre de Evaluaci&oacute;n</th>
+                                                <th>Descripci&oacute;n</th>
+                                                <th>N&uacute;mero de preguntas</th>
+                                                <th>Acciones</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {ROW_LISTADO_EVALUACIONES}
+                                        </tbody>
+                                        <tfoot>
+                                          
+                                        </tfoot>
+                                    </table>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                            
+                           
+						   <!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->
+
+
+     {HEAD}
+
+        <!-- page script -->
+        <script type="text/javascript">
+            $(function() {
+                $("#example1").dataTable();
+                $('#example2').dataTable({
+                    "bPaginate": true,
+                    "bLengthChange": false,
+                    "bFilter": false,
+                    "bSort": true,
+                    "bInfo": true,
+                    "bAutoWidth": false
+                });
+            });
+        </script>
+
+    </body>
+</html>

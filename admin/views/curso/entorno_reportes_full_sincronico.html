@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{TITTLE}</title>
+    <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+    <style>
+        .dataTables_filter input {
+
+            line-height: 20px;
+        }
+        .selecfiltro {
+            width: 100%;
+            line-height: 15px;
+            font-size: 12px;
+        }
+
+
+
+    </style>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    {HEAD}
+</head>
+<body class="skin-blue">
+{HEADER}
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <aside class="left-side sidebar-offcanvas">
+        {MENU_IZQUIERDO}
+    </aside>
+
+    <aside class="right-side">
+        {NAVEGACION}
+        <script language="Javascript">
+            function generaPlantilla() {
+                $("#FormPlantilla").submit();
+            }
+        </script>
+
+        <script language="Javascript">
+            function generaPlantilla2() {
+                $("#FormPlantilla2").submit();
+            }
+        </script>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header box boxheader">
+                            <div class="box-header">
+                                <h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Reportes Full Sincr&oacute;nico</h3>
+                                <!--<a href="?sw=listcursos2&excel=1" class="btn btn-success btn-sm pull-right flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;"> <i class="fa fa-plus"></i> Exportar Cursos a Excel</a>&nbsp;
+                                <a href="?sw=accioncurso2" class="btn btn-success btn-sm pull-right flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;"><i class="fa fa-plus"></i> Crear Nuevo Curso</a>&nbsp;-->
+
+                            </div>
+
+                        </div>
+                        <br>
+                        <div class="container">
+                            <div class="row">
+                                <form name="FormReprotes" method="POST" action="?sw=reporte_full_sincronico&excel=1">
+                                  <div class="row">
+                                      <div class="col-lg-12 "><label><strong>Reporte Sincrónico de Participantes</strong></label></div>
+                                      <div class="col-lg-4 "><br><label>Fecha Inicio</label>          <input type="date" class="form form-control" name="fecha_inicio" required style="width:200px"></div>
+                                        <div class="col-lg-4 "><label>Fecha T&eacute;rmino</label>  <input type="date" class="form form-control" name="fecha_termino" required style="width:200px"></div>
+                                        <div class="col-lg-4 "><label>Filtrar</label>               <br><input type="submit" class="btn btn-info" value="Filtrar"></div>
+                                    <input type="hidden" name="ex">
+                                      </div>
+                                </form>
+                            </div>
+                        </div>
+                        <br>
+                        <hr>
+                        <div class="container">
+                            <div class="row">
+                                <form name="FormReprotes" method="POST" action="?sw=reporte_full_sincronico&excel=2">
+                                    <div class="row">
+                                        <div class="col-lg-12 "><label><strong>Reporte Sincrónico de Eventos</strong></label></div>
+                                        <div class="col-lg-4 "><label>Fecha Inicio</label>          <input type="date" class="form form-control" name="fecha_inicio" required style="width:200px"></div>
+                                        <div class="col-lg-4 "><label>Fecha T&eacute;rmino</label>  <input type="date" class="form form-control" name="fecha_termino" required style="width:200px"></div>
+                                        <div class="col-lg-4 "><label>Filtrar</label>               <br><input type="submit" class="btn btn-info" value="Filtrar"></div>
+                                        <input type="hidden" name="ex">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <br>
+                        <hr>
+                        <div class="container">
+                            <div class="row">
+                                <form name="FormReprotes" method="POST" action="?sw=reporte_full_sincronico&excel=3">
+                                    <div class="row">
+                                        <div class="col-lg-12 "><label><strong>Reporte Encuesta Satisfacci&oacute;n Participantes</strong></label></div>
+                                        <div class="col-lg-4 "><label>Fecha Inicio</label>          <input type="date" class="form form-control" name="fecha_inicio" required style="width:200px"></div>
+                                        <div class="col-lg-4 "><label>Fecha T&eacute;rmino</label>  <input type="date" class="form form-control" name="fecha_termino" required style="width:200px"></div>
+                                        <div class="col-lg-4 "><label>Filtrar</label>               <br><input type="submit" class="btn btn-info" value="Filtrar"></div>
+                                        <input type="hidden" name="ex">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <br>
+                        <hr>
+                        <div class="container">
+                            <div class="row">
+                                <form name="FormReprotes" method="POST" action="?sw=reporte_full_sincronico&excel=4">
+                                    <div class="row">
+                                        <div class="col-lg-12 "><label><strong>Reporte Encuesta Satisfacci&oacute;n Eventos</strong></label></div>
+                                        <div class="col-lg-4 "><label>Fecha Inicio</label>          <input type="date" class="form form-control" name="fecha_inicio" required style="width:200px"></div>
+                                        <div class="col-lg-4 "><label>Fecha T&eacute;rmino</label>  <input type="date" class="form form-control" name="fecha_termino" required style="width:200px"></div>
+                                        <div class="col-lg-4 "><label>Filtrar</label>               <br><input type="submit" class="btn btn-info" value="Filtrar"></div>
+                                        <input type="hidden" name="ex">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <script>
+                            function FormExcel() {
+                                document.FormReprotes.ex.value = "1";
+                                document.FormReprotes.submit();
+                            }
+
+                        </script>
+                        <!--<div class="box-body table-responsive">
+                            <table id="example2" class="table table-bordered table-hover sortable">
+                                <thead>
+                                <tr>
+                                    <th class="bg_gray lms_th_150px">Codigo</th>
+                                    <th class="bg_gray">Nombre Curso</th>
+                                    <th class="bg_gray lms_th_150px">{Texto_Pilar}</th>
+                                    <th class="bg_gray lms_th_150px">{Texto_Programa}</th>
+                                    <th class="bg_gray "><small>Imparticiones</small></th>
+                                    <th class="bg_gray lms_th_150px"><small>Participantes</small></th>
+                                    <th class="bg_gray ">Opciones</th>
+                                </tr>
+                                </thead>
+                                <tfoot style="display: table-header-group;">
+
+                                </tfoot>
+                                <tbody>
+                                {ROW_LISTADO}
+                                </tbody>
+                                <tfoot>
+
+                                </tfoot>
+                            </table>
+                        </div>-->
+
+                    </div><!-- /.box -->
+
+                    <!-- /.box -->
+                </div>
+            </div>
+
+        </section><!-- /.content -->
+    </aside><!-- /.right-side -->
+</div><!-- ./wrapper -->
+
+{FOOTER_ADMIN}
+
+<!-- page script -->
+<script type="text/javascript">
+    $('#example2').DataTable({
+
+        "oLanguage" : {
+            "sProcessing" : "Procesando...",
+            "sLengthMenu" : "Mostrar _MENU_ registros",
+            "sZeroRecords" : "No se encontraron resultados",
+            "sEmptyTable" : "Ning?n dato disponible en esta tabla",
+            "sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix" : "",
+            "sSearch" : "Buscar: ",
+            "sUrl" : "",
+            "sInfoThousands" : ",",
+            "sLoadingRecords" : "Cargando...",
+            "oPaginate" : {
+                "sFirst" : "Primero",
+                "sLast" : "?ltimo",
+                "sNext" : "Siguiente",
+                "sPrevious" : "Anterior"
+            },
+            "oAria" : {
+                "sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+
+        "bAutoWidth" : false,
+        "pageLength" : 25,
+        "order" : [],
+        "columnDefs" : [{
+            "targets" : [0],
+            "searchable" : true
+        }],
+
+        initComplete : function() {
+            this.api().columns('.select-filter').every(function() {
+                var column = this;
+                var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                    column.search( val ? '^' + val + '$' : '', true, false).draw();
+                });
+
+                column.data().unique().sort().each(function(d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
+        }
+    });
+
+</script>
+
+</body>
+</html>

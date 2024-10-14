@@ -1,0 +1,613 @@
+<style>
+	.dt-button {
+		color: white !important;
+	}
+
+	.modal-xl {
+		max-width: 90% !important;
+		width: 90% !important;
+	}
+
+	.form-control {
+		height: auto !important;
+	}
+
+	.close {
+		background-color: transparent;
+		border: 0;
+	}
+
+	.file-zoom-dialog .btn-navigate {
+		width: 2.4rem !important;
+	}
+
+	.featured-info .btn.btn-default {
+		width: auto !important;
+	}
+
+	.kv-zoom-actions .btn.btn-default {
+		width: auto !important;
+	}
+</style>
+<form id="frmreportexcel" method="post" action="?sw=reportExcelFacturas" class="d-none">
+</form>
+<div class="toast-container">
+	<div class="toast basic-toast position-fixed top-0 end-0 m-2 p-2" role="alert" aria-live="assertive"
+		 aria-atomic="true">
+		<div class="toast-header">
+			<strong class="me-auto">Información</strong>
+			<small class="text-muted">en este momento</small>
+			<button type="button" class="ms-1 btn-close" data-bs-dismiss="toast"
+					aria-label="Close"></button>
+		</div>
+		<div class="toast-body fs-5"></div>
+	</div>
+</div>
+<div class="col-md-12 pt-4">
+	<div id="contentfilters" class="col-md-12 d-flex fd-row p-4" style="justify-content: center"></div>
+	<table id="tblFacturas" class="table border dt_basic_table" style="width:100%">
+		<thead>
+		<tr>
+			<th>N° Documento</th>
+			<th>Rut Proveedor</th>
+			<th>Nombre Proveedor</th>
+			<th>Tipo Documento</th>
+			<th>Monto Total</th>
+			<th>Fecha emisión</th>
+			<th>N° OTA</th>
+			<th>Estado</th>
+			<th>Año</th>
+			<th>Responsable</th>
+			<th>Acciones</th>
+		</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+	<div class="modal" id="modalFacturas" tabindex="-1" role="dialog" aria-labelledby="modalFacturasLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="toast basic-toast-modal position-fixed top-0 end-0 m-2 p-2" role="alert"
+					 aria-live="assertive"
+					 aria-atomic="true">
+					<div class="toast-header">
+						<strong class="me-auto">Información</strong>
+						<small class="text-muted">en este momento</small>
+						<button type="button" class="ms-1 btn-close" data-bs-dismiss="toast"
+								aria-label="Close"></button>
+					</div>
+					<div class="toast-body fs-5"></div>
+				</div>
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalFacturasLabel">Nuevo Documento</h5>
+					<button id="btnCloseModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<ul class="nav nav-tabs pt-4" id=tabsfacturas" role="tablist">
+					<li class="nav-item" role="presentation">
+						<button type="button" class="nav-link active" id="ex1-tab-1" data-bs-toggle="tab"
+								data-bs-target="#contentgen" role="tab" aria-controls="contentgen" aria-selected="true">
+							Datos generales
+						</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button type="button" class="nav-link" id="ex1-tab-2" data-bs-toggle="tab"
+								data-bs-target="#contentdoc" role="tab" aria-controls="contentdoc"
+								aria-selected="false">Documentos
+						</button>
+					</li>
+				</ul>
+
+				<form name="frmFactura" id="frmFactura"
+					  method="post"
+					  action="javascript:void(0);"
+					  enctype="multipart/form-data">
+					<div class="tab-content">
+						<div class="tab-pane pt-4 active" id="contentgen" role="tabpanel"
+							 aria-labelledby="contentgen">
+
+							<div class="modal-body">
+								<input id="idFact" name="idFact" hidden>
+								<div class="row">
+									<div class="col-md-2">
+										<label for="numdoc" class="form-label">N° Documento</label>
+										<input id="numdoc" name="numdoc" type="text" class="form-control" required
+											   autocomplete="false">
+									</div>
+									<div class="col-md-2">
+										<label for="tipoDoc" class="form-label">Tipo de documento</label>
+										<select id="tipoDoc" name="tipoDoc" class="form-control" required>
+											<option value="">Seleccione un tipo</option>
+											{OPTIONS_SELECT_TIPO_DOCUM}
+										</select>
+									</div>
+									<div class="col-md-2">
+										<label for="montoNet" class="form-label">Monto neto</label>
+										<input id="montoNet" name="montoNet" type="number" class="form-control" required
+											   readonly>
+									</div>
+									<div class="col-md-2">
+										<label for="montoImp" class="form-label">Impuesto</label>
+										<input id="montoImp" name="montoImp" type="number" class="form-control"
+											   readonly>
+									</div>
+									<div class="col-md-2">
+										<label for="montoTot" class="form-label">Monto total</label>
+										<input id="montoTot" name="montotot" type="number" class="form-control" required
+											   readonly>
+									</div>
+									<div class="col-md-2">
+										<label for="fechaEmision" class="form-label">Fecha Emisión</label>
+										<input id="fechaEmision" name="fechaEmision" type="date" class="form-control"
+											   required>
+									</div>
+									<div class="col-md-2">
+										<label for="rutProvee" class="form-label">Rut proveedor (Sin Dv)</label>
+										<input id="rutProvee" name="rutProvee" type="text" class="form-control"
+											   required>
+									</div>
+									<div class="col-md-1">
+										<button id="btnsearchprov" type="button" class="btn btn-success mt-4">Buscar
+										</button>
+									</div>
+									<div class="col-md-2">
+										<label for="nombreProvee" class="form-label">Nombre proveedor</label>
+										<input type="text" class="form-control" id="nombreProvee" name="nombreProvee"
+											   readonly>
+									</div>
+									<div class="col-md-3">
+										<label for="servOtor" class="form-label">Servicios otorgados</label>
+										<select id="servOtor" name="servOtor" class="form-control" required>
+											<option value="">Seleccione un servicio</option>
+											{OPTIONS_SELECT_SERVIC}
+										</select>
+									</div>
+									<div class="col-md-3 d-none contentservOtorOtro">
+										<label for="servOtorOtro" class="form-label">Otro servicio</label>
+										<input type="text" id="servOtorOtro" name="servOtorOtro" class="form-control">
+									</div>
+									<div class="col-md-2">
+										<label for="anualCon" class="form-label">Año contable</label>
+										<select id="anualCon" name="anualCon" class="form-control" required>
+											<option value="">Seleccione un año</option>
+											{OPTIONS_ANUAL}
+										</select>
+									</div>
+									<div class="col-md-2">
+										<label for="mesCon" class="form-label">Mes contable</label>
+										<select id="mesCon" name="mesCon" class="form-control" required>
+											<option value="">Seleccione un mes</option>
+											<option value="1">Enero</option>
+											<option value="2">Febrero</option>
+											<option value="3">Marzo</option>
+											<option value="4">Abril</option>
+											<option value="5">Mayo</option>
+											<option value="6">Junio</option>
+											<option value="7">Julio</option>
+											<option value="8">Agosto</option>
+											<option value="9">Septiembre</option>
+											<option value="10">Octubre</option>
+											<option value="11">Noviembre</option>
+											<option value="12">Diciembre</option>
+										</select>
+									</div>
+								</div>
+								<div class="row mt-4">
+									<div class="col-md-1">
+										<div class="form-check form-switch">
+											<input class="form-check-input" type="checkbox" role="switch" id="conOta"
+												   name="conOta">
+											<label class="form-check-label" for="conOta">Posee OTA</label>
+										</div>
+									</div>
+									<div class="contenOta col-md-10 d-none">
+										<div class="row">
+											<div class="col-md-2 wtota">
+												<label for="numOta" class="form-label">Número OTA</label>
+												<input id="numOta" name="numOta" type="text" class="form-control">
+											</div>
+											<div class="col-md-1 wtota">
+												<button id="btnsearchota" type="button" class="btn btn-success mt-4">
+													Buscar
+												</button>
+											</div>
+											<div class="col-md-4 wtota">
+												<label for="curso" class="form-label">Nombre curso</label>
+												<input type="text" class="form-control" id="curso" name="curso">
+											</div>
+											<div class="col-md-5">
+												<label for="nombOta" class="form-label">Nombre OTA</label>
+												<input type="text" class="form-control" id="nombOta" name="nombOta">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row mt-4">
+									<div class="col-md-1 mr-2">
+										<button id="btnbusCuenta" type="button" class="btn btn-success mt-4">Buscar
+										</button>
+									</div>
+									<div class="col-md-2">
+										<label for="cuenta" class="form-label">Cuenta</label>
+										<input id="cuenta" name="cuenta" type="text" class="form-control">
+									</div>
+									<div class="col-md-4">
+										<label for="cuentanom" class="form-label">Nombre cuenta</label>
+										<input id="cuentanom" name="cuentanom" type="text" class="form-control">
+									</div>
+									<div class="col-md-4">
+										<label for="proyecto" class="form-label">Proyecto</label>
+										<input id="proyecto" name="proyecto" type="text" class="form-control">
+									</div>
+									<div class="col-md-2">
+										<label for="cui" class="form-label">CUI</label>
+										<select id="cui" name="cui" class="form-control" required>
+											<option value="">Seleccione una opción</option>
+											{OPTIONS_CUI}
+										</select>
+									</div>
+									<div class="col-md-2">
+										<label for="respGast" class="form-label">Responsable gasto</label>
+										<select id="respGast" name="respGast" class="form-control" required>
+											<option value="">Seleccione un responsable</option>
+											{OPTIONS_CONSULTOR}
+										</select>
+									</div>
+									<div class="col-md-2">
+										<label for="estdoc" class="form-label">Estado</label>
+										<select id="estdoc" name="estdoc" class="form-control" required>
+											<option value="">Seleccione un estado</option>
+											<option value="1">Aprobado</option>
+											<option value="3">Anulado</option>
+											<option value="4">En Aprobación</option>
+										</select>
+									</div>
+								</div>
+								<div class="row mt-4">
+									<div class="col-md-12">
+										<label for="observaciones" class="form-label">Observaciones</label>
+										<textarea id="observaciones" name="observaciones" class="form-control"
+												  rows="5"></textarea>
+									</div>
+								</div>
+								<div class="row mt-4">
+									<div class="col-xs-12">
+										<table class="table" id="tblResponsables">
+											<thead>
+											<tr>
+												<th>Aplica</th>
+												<th>Responsable</th>
+												<th>Recepción</th>
+												<th>Envío</th>
+												<th>Vencimiento</th>
+												<th>SLA definido</th>
+												<th>SLA real</th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr>
+												<td>
+													<div class="form-check form-switch">
+														<input class="form-check-input switchresp" type="checkbox"
+															   role="switch"
+															   id="aplicaSup" name="aplicaSup" data-resp="sup">
+														<label class="form-check-label"
+															   for="aplicaSup">Supervisor</label>
+													</div>
+												</td>
+												<td>
+													<select id="selrespSup" name="selrespsup"
+															class="form-control inputresp" readonly data-resp="sup">
+														<option value="">Seleccione responsable</option>
+														{OPTIONS_SUPERVISOR}
+													</select>
+												</td>
+												<td>
+													<input id="dateRecepSup" name="dateRecepsup" type="date"
+														   class="form-control inputrecep" data-resp="sup"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateEnvioSup" name="dateEnviosup" type="date"
+														   class="form-control inputenvio" data-resp="sup"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateVenSup" type="date"
+														   class="form-control inputvenc dateVensup"
+														   data-resp="sup"
+														   readonly>
+												</td>
+												<td class="text-center">
+													<h4><span id="sladefSup"
+															  class="badge badge-pill badge-success sladefsup">{SLA_DEFINIDO_SUP}</span>
+													</h4>
+												</td>
+												<td>
+													<h4><span id="slarealsup"
+															  class="badge badge-pill badge-success text-withe">0</span>
+													</h4>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<div class="form-check form-switch">
+														<input class="form-check-input switchresp" type="checkbox"
+															   role="switch"
+															   id="aplicaEje" name="aplicaEje" data-resp="Ejec">
+														<label class="form-check-label"
+															   for="aplicaEje">Ejecutivo</label>
+													</div>
+												</td>
+												<td>
+													<select id="selrespEje" name="selrespejec"
+															class="form-control inputresp" readonly data-resp="Ejec">
+														<option value="">Seleccione responsable</option>
+														{OPTIONS_EJECUTIVO}
+													</select>
+												</td>
+												<td>
+													<input id="dateRecepEje" name="dateRecepeje" type="date"
+														   class="form-control inputrecep" data-resp="Ejec"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateEnvioEje" name="dateEnvioEje" type="date"
+														   class="form-control inputenvio" data-resp="Ejec"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateVenEjec" type="date"
+														   class="form-control inputvenc dateVenEjec"
+														   data-resp="Ejec"
+														   readonly>
+												</td>
+												<td class="text-center">
+													<h4><span id="sladefEjec"
+															  class="badge badge-pill badge-success sladefEjec">{SLA_DEFINIDO_EJE}</span>
+													</h4>
+												</td>
+												<td>
+													<h4><span id="slarealEjec"
+															  class="badge badge-pill badge-success slarealEjec">0</span>
+													</h4>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<div class="form-check form-switch">
+														<input class="form-check-input switchresp" type="checkbox"
+															   role="switch"
+															   id="aplicaCon" name="aplicaCon" data-resp="Con">
+														<label class="form-check-label"
+															   for="aplicaCon">Consultor</label>
+													</div>
+												</td>
+												<td>
+													<select id="selrespCon" name="selrespcon"
+															class="form-control inputresp" readonly data-resp="Con">
+														<option value="">Seleccione responsable</option>
+														{OPTIONS_CONSULTOR}
+													</select>
+												</td>
+												<td>
+													<input id="dateRecepCon" name="dateRecepCon" type="date"
+														   class="form-control inputrecep" data-resp="Con"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateEnvioCon" name="dateEnvioCon" type="date"
+														   class="form-control inputenvio" data-resp="Con"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateVenCon" type="date"
+														   class="form-control inputvenc dateVenCon"
+														   data-resp="Con"
+														   readonly>
+												</td>
+												<td class="text-center">
+													<h4><span id="sladefCon"
+															  class="badge badge-pill badge-success sladefCon">{SLA_DEFINIDO_CON}</span>
+													</h4>
+												</td>
+												<td>
+													<h4><span id="slarealCon"
+															  class="badge badge-pill badge-success slarealCon">0</span>
+													</h4>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<div class="form-check form-switch">
+														<input class="form-check-input switchresp" type="checkbox"
+															   role="switch"
+															   id="aplicaJef" name="aplicaJef" data-resp="Jef">
+														<label class="form-check-label" for="aplicaJef">Jefatura</label>
+													</div>
+												</td>
+												<td>
+													<select id="selrespJef" name="selrespjef"
+															class="form-control inputresp" readonly data-resp="Jef">
+														<option value="">Seleccione responsable</option>
+														{OPTIONS_JEFE}
+													</select>
+												</td>
+												<td>
+													<input id="dateRecepJef" name="dateRecepJef" type="date"
+														   class="form-control inputrecep" data-resp="Jef"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateEnvioJef" name="dateEnvioJef" type="date"
+														   class="form-control inputenvio" data-resp="Jef"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateVenJef" type="date"
+														   class="form-control inputvenc dateVenJef"
+														   data-resp="Jef"
+														   readonly>
+												</td>
+												<td class="text-center">
+													<h4><span id="sladefJef"
+															  class="badge badge-pill badge-success sladefJef">{SLA_DEFINIDO_JEF}</span>
+													</h4>
+												</td>
+												<td>
+													<h4><span id="slarealJef"
+															  class="badge badge-pill badge-success">0</span>
+													</h4>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<div class="form-check form-switch">
+														<input class="form-check-input switchresp" type="checkbox"
+															   role="switch"
+															   id="aplicaJef1" name="aplicaJef1" data-resp="Jef1">
+														<label class="form-check-label" for="aplicaJef1">Jefatura
+															2</label>
+													</div>
+												</td>
+												<td>
+													<select id="selrespJef1" name="selrespjef1"
+															class="form-control inputresp" readonly data-resp="Jef1">
+														<option value="">Seleccione responsable</option>
+														{OPTIONS_JEFE1}
+													</select>
+												</td>
+												<td>
+													<input id="dateRecepJef1" name="dateRecepJef1" type="date"
+														   class="form-control inputrecep" data-resp="Jef1"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateEnvioJef1" name="dateEnvioJef1" type="date"
+														   class="form-control inputenvio" data-resp="Jef1"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateVenJef1" type="date"
+														   class="form-control inputvenc dateVenJef1"
+														   data-resp="Jef1"
+														   readonly>
+												</td>
+												<td class="text-center">
+													<h4><span id="sladefJef1"
+															  class="badge badge-pill badge-success sladefJef1">{SLA_DEFINIDO_JEF1}</span>
+													</h4>
+												</td>
+												<td>
+													<h4><span id="slarealJef1"
+															  class="badge badge-pill badge-success">0</span>
+													</h4>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<div class="form-check form-switch">
+														<input class="form-check-input switchresp " type="checkbox"
+															   role="switch"
+															   id="aplicaJef2" name="aplicaJef2" data-resp="Jef2">
+														<label class="form-check-label" for="aplicaJef2">Jefatura
+															3</label>
+													</div>
+												</td>
+												<td>
+													<select id="selrespJef2" name="selrespjef2"
+															class="form-control inputresp" readonly data-resp="Jef2">
+														<option value="">Seleccione responsable</option>
+														{OPTIONS_JEFE2}
+													</select>
+												</td>
+												<td>
+													<input id="dateRecepJef2" name="dateRecepJef2" type="date"
+														   class="form-control inputrecep" data-resp="Jef2"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateEnvioJef2" name="dateEnvioJef2" type="date"
+														   class="form-control inputenvio" data-resp="Jef2"
+														   readonly>
+												</td>
+												<td>
+													<input id="dateVenJef2" type="date"
+														   class="form-control inputvenc dateVenJef2"
+														   data-resp="Jef2"
+														   readonly>
+												</td>
+												<td class="text-center">
+													<h4><span id="sladefJef2"
+															  class="badge badge-pill badge-success sladefJef2">{SLA_DEFINIDO_JEF2}</span>
+													</h4>
+												</td>
+												<td>
+													<h4><span id="slarealJef2"
+															  class="badge badge-pill badge-success">0</span>
+													</h4>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+
+						</div>
+						<div class="tab-pane pt-4" id="contentdoc" role="tabpanel" aria-labelledby="contentdoc">
+							<div class="row">
+								<div class="col-xs-12 mb-2">
+									<h4 class="mb-1">Documentos</h4>
+									<div class="col-12">
+										<div class="featured-info w-100">
+											<div class="d-inline-block w-100">
+												<input id="multimediaFiles" name="multimediaFiles[]" type="file"
+													   multiple="" accept=".pdf">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary btncancel" data-dismiss="modal">Cancelar</button>
+						<input id="btnsavefactura" type="submit" class="btn btn-primary" value="Guardar">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="modal" id="modalCuentProy" tabindex="-1" role="dialog" aria-labelledby="modalCuentProyLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<div class="modal-header d-flex" style="justify-content: right">
+					<button id="btnCloseModalCuenProy" type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="col-12">
+						<label class="label-control" for="selcuenta">Cuenta</label>
+						<select id="selcuenta" class="form-control">
+							<option value="">Seleccione cuenta</option>
+							{OPTIONS_CUENTA}
+						</select>
+					</div>
+					<div class="col-12">
+						<label class="label-control" for="selproyecto">Proyecto</label>
+						<select id="selproyecto" class="form-control">
+							<option value="">Seleccione proyecto</option>
+							{OPTIONS_PROYECTO}
+						</select>
+					</div>
+					<button id="btnaddCuentProy" class="btn btn-success mt-4">Agregar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

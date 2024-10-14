@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>AdminLTE | Dashboard</title>
+		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+		<!-- bootstrap 3.0.2 -->
+		{HEAD}
+
+		<!--<link rel="stylesheet" href="././../css/froalaEditor/froala_editor.css">
+		<script type="text/javascript" src="./././js/ckeditor/ckeditor.js"></script>-->
+		<!-- 		<script type="text/javascript" src="./././js/ckeditor/adapters/jquery.js"></script>
+		<script type="text/javascript" src="./././js/ckeditor/build-config.js"></script>
+		<script type="text/javascript" src="./././js/ckeditor/styles.js"></script> -->
+
+		<body class="skin-blue">
+			<!-- header logo: style can be found in header.less -->
+			{HEADER}
+			<div class="wrapper row-offcanvas row-offcanvas-left">
+				<!-- Left side column. contains the logo and sidebar -->
+				<aside class="left-side sidebar-offcanvas">
+					<!-- sidebar: style can be found in sidebar.less -->
+					{MENU_IZQUIERDO}
+					<!-- /.sidebar -->
+				</aside>
+
+				<!-- Right side column. Contains the navbar and content of the page -->
+				<aside class="right-side">
+					<!-- Content Header (Page header) -->
+					{NAVEGACION}
+					<!-- Main content -->
+					<section class="content">
+						<div class="row">
+							<!-- left column -->
+							<!--/.col (left) -->
+							<!-- right column -->
+							<div class="col-md-12">
+								<!-- general form elements disabled -->
+
+								<div class="box box-warning">
+
+									<div class="box-header">
+										<h3 class="box-title">{TITULO}</h3>
+									</div><!-- /.box-header -->
+
+									<div class="box-body">
+
+										<a href="?sw=viewEval&idEval={ID_EVAL}&programa={ID_PROGRAMA}" class="btn btn-link pull-left"><span class="negro"><i class="fa fa-reply"></i> Volver a Programas</span></a><br><br><br>
+
+										<form action="jhonatan_funciones_post.php" method="POST" name="EditPregunta">
+											<input type="hidden"  value="6"  name="accion"/>
+											<input type="hidden"  value="{ID_EVAL}"  name="idEval" id="idEval"/>
+											<input type="hidden"  value="{ID_GRUPO}"  name="idGrupo" id="idGrupo"/>
+											<input type="hidden"  value="{TOT_ALTER}"  name="totalAlter" id="totalAlter"/>
+
+											<div class="form-group">
+												<label>Pregunta</label>
+												<input type="textarea" class="form-control" name="pregunta" id="pregunta" value="{PREGUNTA}"/>
+											</div>
+
+											<div class="panel panel-default col-md-12">
+												<div class="panel-heading" >
+													<p class="">
+														A continuaci&oacuten seleccione la alternativa correcta:
+													</p>
+												</div>
+												<div class="panel-body" id="alterBody">
+
+													{ALTERNATIVAS}
+
+												</div>
+												<div class="panel-footer">
+													<a title='Agregar Alternativa' class='btn btn-success btn-sm' onclick="agregarAlternativa()" > <i class='glyphicon glyphicon-plus'></i> Agregar Alternativa </a>
+												</div>
+											</div>
+
+											<div class="box-footer" align="right">
+												<center>
+													<button onclick="enviarFormulario()" type="button" class="btn btn-primary">
+														{BOTON}
+													</button>
+												</center>
+											</div>
+
+										</form>
+									</div><!-- /.box-body -->
+								</div><!-- /.box -->
+							</div><!--/.col (right) -->
+						</div>
+						<!-- /.row -->
+					</section><!-- /.content -->
+				</aside><!-- /.right-side -->
+			</div><!-- ./wrapper -->
+
+			<script type="text/javascript">
+				window.onload = function() {
+					CKEDITOR.replace('pregunta');
+					CKEDITOR.instances.pregunta.setData(buscarValor());
+				};
+
+				function buscarValor() {
+
+					return document.getElementById("pregunta").value;
+				}
+
+				function enviarFormulario() {
+
+				
+					EditPregunta.submit();
+				}
+
+				function agregarAlternativa() {
+
+					var totAlter = parseInt($("#totalAlter").val());
+
+					var newAlter = "<div class='form-group col-md-6'>";
+					newAlter += "<label style='font-weight:bold'>Alternativa " + (totAlter + 1) + " </label>";
+					newAlter += "<div class='input-group'>";
+					newAlter += "<span class='input-group-addon'><input onchange='cambiarCorrecta(this)' type='radio' name=correcta[] value='" + (totAlter + 1) + "'></span>";
+					newAlter += "<input type='text' class='form-control' name='alternativa_" + (totAlter + 1) + "' value='' />";
+					newAlter += "</div>";
+					newAlter += "<input type='hidden' value='0' name='idAlter_" + (totAlter + 1) + "'/>";
+					newAlter += "</div>";
+
+					$("#totalAlter").val(totAlter + 1);
+					$("#alterBody").append(newAlter);
+				}
+
+				function cambiarCorrecta(obj) {
+					$("#alternativaCorrecta").val(obj.value);
+				}
+
+			</script>
+
+		</body>
+</html>

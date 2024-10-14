@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>AdminLTE | Dashboard</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        {HEAD}
+    
+    <body class="skin-blue">
+        <!-- header logo: style can be found in header.less -->
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+                <aside class="left-side sidebar-offcanvas">
+                <!-- sidebar: style can be found in sidebar.less -->
+                {MENU_IZQUIERDO}
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                {NAVEGACION}
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <!-- left column -->
+                       <!--/.col (left) -->
+                        <!-- right column -->
+                        <div class="col-md-6">
+                            <!-- general form elements disabled -->
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">{TITULO}</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <form action="{ACTION}" method="POST" name="{NOMBRE_FORMULARIO}">
+                                        <!-- text input -->
+										
+										
+																				
+										<input type="hidden" name="id" value="{ID_OBJETO_ENCODEADO}"> 
+                                        				
+										
+                                         <div class="form-group">
+                                            <label>Nombre Evaluaci&oacute;n</label>
+                                            <input type="text" class="form-control" name="nombre_evaluacion" value="{NOM_EVALUACION}" />
+                                        </div>
+										
+										
+									
+										
+										 <div class="form-group">
+                                            <label>Descripci&oacute;n</label>
+                                            <textarea rows="6" class="form-control" name="descripcion_evaluacion" >{DES_EVALUACION}</textarea>
+                                        </div>
+										
+										<div class="box-footer">
+                                        <button type="submit" class="btn btn-primary">{VALOR_BOTON}</button>
+                                    </div>
+                                    </form>
+
+                                    <h3 class="box-title">Preguntas </h3>
+
+									<div class="form-group">
+                                            <label>Tipo de Pregunta</label>
+                                            <select class="form-control" name="tipo_pregunta" onChange="pagoOnChange(this)">
+                                                <option value="-">Seleccione</option>
+                                                {OPTIONS_TIPO_PREGUNTAS}
+                                            </select>
+                                    </div>
+									
+									
+										
+										
+									<div id="nTExto" style="display:none;">
+										<form name="Texto" method="POST" action="?sw=adtexto&i={ID_EVALUACION_ENCODEADA}">
+										<div class="form-group">
+												<label>Descripci&oacute;n Pregunta</label>
+												<textarea rows="3" class="form-control" name="descripcion_pregunta" ></textarea>
+												<input type="hidden" name="tippre">
+										</div>
+										
+										<div class="form-group">
+												<label>Alternativas</label>
+												<table border="1" class="table table-bordered table-hover dataTable">
+												<tr>
+												<td>Correcta</td><td>Alternativa</td>
+												<br>
+												<tr>
+												<td><input type="radio" name="correcta" value="1" ></td><td><textarea rows="1" cols="50" name="alternativa1" ></textarea></td>
+												</tr>
+												
+												<tr>
+												<td><input type="radio" name="correcta" value="2"></td><td><textarea rows="1" cols="50" name="alternativa2" ></textarea></td>
+												</tr>
+												
+												<tr>
+												<td><input type="radio" name="correcta" value="3"></td><td><textarea rows="1" cols="50" name="alternativa3" ></textarea></td>
+												</tr>
+												
+												<tr>
+												<td><input type="radio" name="correcta" value="4"></td><td><textarea rows="1" cols="50" name="alternativa4" ></textarea></td>
+												</tr>
+												
+												<tr>
+												<td><input type="radio" name="correcta" value="5"></td><td><textarea rows="1" cols="50" name="alternativa5" ></textarea></td>
+												</tr>
+												
+												<tr>
+												<td><input type="radio" name="correcta" value="6"></td><td><textarea rows="1" cols="50" name="alternativa6" ></textarea></td>
+												</tr>
+												</table>
+												
+												
+										</div>
+										
+										
+										<input type="submit" value="Ingresar Pregunta">
+										</form>
+									</div>	
+									
+									<div id="nImagen" style="display:none;">
+										<form name="Imagen" method="POST" action="?sw=adimagen&i={ID_EVALUACION_ENCODEADA}" enctype="multipart/form-data">
+										<div class="form-group">
+												<label>Descripci&oacute;n Pregunta</label>
+												<textarea rows="3" class="form-control" name="descripcion_pregunta" ></textarea>
+												<input type="hidden" name="tippre">
+										</div>
+										
+										
+										
+										
+										<div class="form-group">
+                                            <label>Archivo</label>
+                                            <input type="file" name="archivo">
+                                        </div>
+										
+										<input type="submit" class="btn btn-primary" value="Ingresar Pregunta">
+										</form>
+									</div>	
+                                      
+
+									<table id="example2" class="table table-bordered table-hover dataTable" aria-describedby="example2_info">
+                                        <thead>
+                                            <tr role="row">
+											<th class="sorting_asc" role="columnheader" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">Numero</th>
+											<th class="sorting" role="columnheader" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Pregunta</th>
+											<th class="sorting" role="columnheader" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Tipo de Pregunta</th>
+											</tr>
+                                        </thead>
+                                        
+										<div class="box-header">
+											<h3 class="box-title">Listado de Preguntas</h3>
+										</div>
+                                        <tfoot>
+                                            
+                                        </tfoot>
+                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+									
+									
+										{LISTADO_PREGUNTAS_POR_EVALUACION}
+									
+									</tbody></table>
+
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div><!--/.col (right) -->
+                    </div>   <!-- /.row -->
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->
+     
+	 	<script>
+	
+		function pagoOnChange(sel) {
+      if (sel.value=="1"){
+			document.Texto.tippre.value="1";
+           divC = document.getElementById("nTExto");
+           divC.style.display = "";
+
+           divT = document.getElementById("nImagen");
+           divT.style.display = "none";
+		   
+
+      }else{
+			document.Imagen.tippre.value="2";
+
+           divC = document.getElementById("nTExto");
+           divC.style.display="none";
+
+           divT = document.getElementById("nImagen");
+           divT.style.display = "";
+      }
+}
+	
+	</script>
+	
+	
+    </body>
+</html>

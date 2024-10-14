@@ -1,0 +1,33 @@
+	<div class="panel-heading">			
+			<div class="row">
+			  <div class="col-xs-2 col-sm-3"> Fecha Inicio </div>
+			  <div class="col-xs-2 col-sm-3"> Fecha T&eacute;rmino </div>
+			  <div class="col-xs-2 col-sm-3"> Modalidad </div>
+			  <!--<div class="col-xs-2 col-sm-2"> Observaciones </div>-->
+			  <div class="col-xs-2 col-sm-3"></div>
+			  
+			    <div class="col-xs-2 col-sm-3 ">
+			      <input required="required" type="date" class="form-control" name="fecha_desde_new_2" value="{VALUE_COD_IMPARTICION_FECHA_DESDE_NEW2}" />
+			    </div>
+			    <div class="col-xs-2 col-sm-3">
+			      <input required="required" type="date" class="form-control" name="fecha_hasta_new_2" value="{VALUE_COD_IMPARTICION_FECHA_HASTA_NEW2}" />
+			    </div>
+					<div class="col-xs-2 col-sm-3">
+							
+							<input type="radio" name="opcional" value="" {CHECKED_OBLIGATORIA}> <div style='     color: #666;   font-size: 13px;pading-top: 13px;display: inline;margin-top: 5px;'>Obligatoria</div>
+							<input type="radio" name="opcional" {CHECKED_OPCIONAL}> <div style='     color: #666;   font-size: 13px;padding-top: 13px;display: inline;margin-top: 5px;'>Opcional</div>
+			    </div>    
+			    
+			   <!-- <div class="col-xs-2 col-sm-2">
+			      <!--<input type="text" class="form-control" name="observacion" value="{VALUE_COD_IMPARTICION_OBSERVACION_NEW2}" />-->
+			    <!--</div>-->
+			    <div class="col-xs-3 col-sm-3">
+			      <input type="submit" class="btn btn-link" name="guardar" value="Guardar" />
+			      <input type="hidden" class="" name="id_curso_enc" value="{ID_CURSO_ENC}" />
+						<input type="hidden" class="" name="sesion_NEW2" 		value="1" />
+						<input type="hidden" class="" name="imparticion_elearning" 		value="1" />
+			      <input type="hidden" class="" name="id_imparticion_enc" 	value="{ID_IMPARTICION_ENC}" />
+
+			    </div>
+			</div>
+</div>

@@ -1,0 +1,36 @@
+<script>
+    function generaPlantilla2() {
+        $("#FormPlantilla2").submit();
+    }
+</script>
+<script>
+    function generaPlantilla() {
+        $("#FormPlantilla").submit();
+    }
+</script>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">SUBIR NUEVA BASE DE CARRERA INTERNA
+        </h3>
+    </div>
+    <div class="panel-body">
+    	<div class="col-lg-12">
+    		<a href="?sw=actualizacion_carrera_interna&descargar_xls=1" class="btn btn-primary  pull-right">Descargar Base Actual</a>
+    	</div>
+    		<br><br>
+        {ACTUALIZACION_REALIZADA}
+        <br><br>
+        <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+        <form name="importa" method="post" action="?sw=usuarios_insert_tbl_mc_carrera_interna" id="importa" enctype="multipart/form-data" style="display:{DISPLAYFORM2}">
+            <div class="panel-body">
+                <br>Sube el archivo aqu&iacute;
+                <p> <input type="file" name="file" /> <br> <button type="submit" class='btn btn-info '>
+                <i class="fas fa-upload"></i> Actualizar Base de Carrera Interna          </button> 
+                	<input type="hidden" value="upload" name="action" /> </p>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+
+

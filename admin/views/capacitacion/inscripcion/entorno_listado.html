@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{TITTLE}</title>
+
+
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+{HEAD}
+
+      <script>
+                                	
+          function RegInscripcion(){
+   		var Registros=document.getElementById("RegP").value;
+         location.href='?sw=listaInscripciones&r='+Registros;
+          }
+       </script>
+                                
+    </head>
+    <body class="skin-blue">
+        <!-- header logo: style can be found in header.less -->
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="left-side sidebar-offcanvas">                
+                <!-- sidebar: style can be found in sidebar.less -->
+                {MENU_IZQUIERDO}
+                <!-- /.sidebar -->
+            </aside>
+<script language="Javascript">
+
+	function generaExcel() {
+						$( "#FormExcelInscripciones" ).submit();
+					
+					}
+					
+					
+function abrirReporte(pagina) {
+	window.open(pagina,'window','scrollbars=1,width=700,height=800');
+}
+</script>
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">                
+                <!-- Content Header (Page header) -->
+                {NAVEGACION}
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">Lista de Inscripciones</h3>
+							       
+								   <div class="pull-right">									
+                                    <a href="?sw=accioninsc" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Nueva Inscripción Curso Presencial</a> 
+									<a href="javascript:generaExcel()" class='btn btn-sm btn2'><i class="fa fa-gear"></i> Exportar Inscripciones a Excel</a>									
+									</div>   
+
+            
+   
+      
+        			
+            </div> 
+								
+			<script language="Javascript">
+function abrir(pagina) {
+	window.open(pagina,'window','scrollbars=1,width=700,height=800');
+}
+</script>
+
+
+
+                 				<div class="small-box bg-blue">
+                                <div class="Txtinner">
+                                    <p>
+                                        LISTA DE INSCRIPCIONES
+                                    </p>
+                                </div>
+                                </div>
+  						
+										   
+								<script type='text/javascript' src='js/table_sorting/common.js'></script>
+								<script type='text/javascript' src='js/table_sorting/css.js'></script>
+								<script type='text/javascript' src='js/table_sorting/standardista-table-sorting.js'></script>
+								
+                                <div class="box-body table-responsive">
+									
+								<div class="col-md-12" >
+									  <p>
+                                        Registros: <select name="RegP" id="RegP" onchange="RegInscripcion();">
+                                        	<option {REGISTROS10} value="10">10</option>
+											<option {REGISTROS20} value="20">20</option>
+											<option {REGISTROS50} value="50">50</option>
+                                        	<option {REGISTROS100} value="100">100</option>
+                                        </select>
+                                        
+                                         &nbsp;&nbsp; Buscar por codigo: <input type="text" value="" id="codigo_" name="codigo_" value="{BCODIGO}">
+										 <button class="btn btn-default flat" style="margin-top:-2px;width:30px;height;30px;font-size: 10px;padding: 2px 1px;" onclick="buscar_codigo()"><i class="fa fa-search"></i></button>
+										 &nbsp;&nbsp;&nbsp;&nbsp;
+                                         &nbsp;&nbsp; Filtrar por Fecha: 
+										 <input type="text" class="date-input-css" value="{BFECHA1}" id="fecha1" name="fecha1"> -
+										  <input type="text" class="date-input-css" value="{BFECHA2}" id="fecha2" name="fecha2">
+										  <button class="btn btn-default flat" style="margin-top:-2px;width:30px;height;30px;font-size: 10px;padding: 2px 1px;" onclick="buscar_fecha()"><i class="fa fa-search"></i></button>
+                                     
+                                     
+                                     
+                                     
+                                     
+                                     <p align="right">
+                                     	Presupuesto Anual: <b>5.000.000</b><br>
+                                     	Total costo empresa: <b>{TOTAL_COSTO_EMPRESA}</b><br>
+                                     	Presupuesto Restante: <b>{PRESUPUESO_RESTANTE}</b>	
+                                     </p>
+                                     
+                                     
+                                     
+                                    </p>
+								</div>
+                    	
+                                
+								
+							
+                                    <table id="tabla1" class="table table-bordered table-hover" style="background-color: #ffffff;">
+                                        
+                                        <thead style="background:#F9F9F9;">
+                                            <tr>
+                                                <th class="width40 bg_gray"><br>Inscripción
+												
+												</th>
+                                                <th class="width200 bg_gray"><br>Curso</th>
+                                              
+                                                <th class="width140 bg_gray">Fecha</th>
+												
+												<th class="width140 bg_gray"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {ROW_LISTADO}
+                                        </tbody>
+                                        <tfoot>
+                                         
+                                        </tfoot>
+                                    </table>
+									
+                                </div><!-- /.box-body -->
+									<div class="col-sm-12 col-xs-12">
+									{RESUMEN}
+										<nav class="pull-right">
+											<ul class="pagination" style="margin: 0px 0px;">
+												{PAGINACION}
+											</ul>
+										</nav>
+									</div>
+                            </div><!-- /.box -->
+                            
+                           
+						   	<div class="box-body">
+										<!-- text input -->
+
+										<script>
+											$(function() {
+												$(".date-input-css").datepicker();
+											})
+										</script>
+
+									</div><!-- /.box -->
+						   
+						   
+						   
+						   <!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->
+
+         {FOOTER_ADMIN}
+		 <form action="GeneraExcelInscripciones.php" method="post"id="FormExcelInscripciones" name="FormExcelInscripciones">
+								<input type="hidden" id="id_empresa" name="id_empresa" value="{ID_EMPRESA}">
+								</form>
+		 
+		 <input type="hidden" value="" name="totalP" id="totalP">
+		 <input type="hidden" value="" name="actualP" id="actualP">
+
+        <!-- page script
+      <script src="./js/plugins/datatables/jquery.dataTables.js"></script>
+
+    <script src="./js/plugins/datatables/dataTables.bootstrap.js"></script>
+	<script type="text/javascript">
+		
+			
+				   $('#tabla1').dataTable({
+					"bPaginate" : false,
+					"bLengthChange" : false,
+					"bFilter" : false,
+					"bSort" : true,
+					"bInfo" : false,
+					"bAutoWidth" : false
+				});
+
+		</script> -->
+ 		<style>
+
+.btn2{
+background-color: #00a65a;
+    border-color: #00a65a;
+    color: #fff;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto', sans-serif;
+}
+
+		</style>
+		
+		
+		
+		<script type="text/javascript">
+		
+		
+			$("#FormExcelInscripciones").submit(function() {
+				
+			
+				  id_empresa=$('#id_empresa').val();
+
+			      var campos = {
+							"id_empresa" : id_empresa
+						};
+					$.ajax({			
+							data:  campos,
+							url:   'GeneraExcelInscripciones.php',
+							type:  'post',
+							beforeSend: function () {
+							//$("#back").show();
+							//$("#loader").show();	
+							},
+							success:  function () {
+							//$("#back").hide();
+							//$("#loader").hide();
+						
+						  }
+						  
+				   });
+			
+			
+			
+				});
+				
+				
+		function buscar_codigo(){
+
+		var codigo=document.getElementById("codigo_").value;
+         location.href='?sw=listaInscripciones&codigo='+codigo;
+         
+		 }
+		 
+		 function buscar_fecha(){
+
+		var fecha1=document.getElementById("fecha1").value;
+		var fecha2=document.getElementById("fecha2").value;
+		
+         location.href='?sw=listaInscripciones&fecha1='+fecha1+"&fecha2="+fecha2;
+         
+		 }
+		 
+
+		</script>
+		<div id="back" class="modal-backdrop fade in" style="display:none;"></div>
+<div id="loader" style="display:none;z-index:99999;color:#fff;position:fixed;width:200px;top: 50%; left: 47%;"><img src="img/ajax-loader.gif">
+</div>
+    </body>
+</html>

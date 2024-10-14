@@ -1,0 +1,41 @@
+<STYLE>
+	   .alert {
+    padding-left: 0PX;
+    margin-left: 15px;
+    position: relative;
+}
+</STYLE>
+<br>
+<div class="col-md-12">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title"> Gesti&oacute;n de Amonestaciones, Agradecimientos, Reconocimientos</h3>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+        
+    <div class="panel-body">
+				
+			<form name="rut_amonestacion" id="rut_amonestacion" action="?sw=reco_amonestar_gestion" method="post">
+					<input type="text" class="form form-control" name="rut_col" placeholder="Ingresa RUT" id="rut_col" style="width:200px">
+					<br>
+					<input type="submit" class="btn btn-info" value="Ver Registros">
+					<br>
+    	</form>           
+    	
+    </div>
+        
+    </div>
+</div>
+<section class="content">
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+    	{LISTA_AMONESTACIONES_RUT_DADO}
+    </div>	
+</div>
+</section>
+

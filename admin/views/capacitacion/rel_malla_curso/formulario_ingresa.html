@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{TITTLE}</title>
+		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+		<!-- bootstrap 3.0.2 -->
+		{HEAD}
+
+		<body class="skin-blue">
+			<!-- header logo: style can be found in header.less -->
+			{HEADER}
+			<div class="wrapper row-offcanvas row-offcanvas-left">
+				<!-- Left side column. contains the logo and sidebar -->
+				<aside class="left-side sidebar-offcanvas">
+					<!-- sidebar: style can be found in sidebar.less -->
+					{MENU_IZQUIERDO}
+					<!-- /.sidebar -->
+				</aside>
+
+				<!-- Right side column. Contains the navbar and content of the page -->
+				<aside class="right-side">
+					<!-- Content Header (Page header) -->
+					{NAVEGACION}
+					<!-- Main content -->
+					<script src="script/ajax.googleapis.com_ajax_libs_jquery_3.6.0_jquery.min.js"></script>
+					<script src="script/global.js"></script>
+					<script>
+						function CodCurFun(sel) {
+							if (sel.value == "si") {
+								divC = document.getElementById("nTExtoS");
+								divC.style.display = "";
+
+								divT = document.getElementById("nTExtoI");
+								divT.style.display = "none";
+
+							} else {
+
+								divC = document.getElementById("nTExtoS");
+								divC.style.display = "none";
+
+								divT = document.getElementById("nTExtoI");
+								divT.style.display = "";
+							}
+
+						}
+
+						function BuscaBloqueListadoCursos(valor) {
+
+							var campos = {
+								"id_curso" : valor,
+								"id_empresa" : "{ID_EMPRESA}"
+
+							};
+
+							$.ajax({
+								data : campos,
+								url : '?sw=MuestraBloqueDetalleCurso',
+								type : 'post',
+								beforeSend : function() {
+
+								},
+								success : function(response) {
+									let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+									$("#BloqueDetalleCurso").html(cleanResponse);
+								}
+							});
+						}
+
+						function BloqueCursoSeleccionado(valor) {
+
+							var campos = {
+								"id_curso" : valor,
+								"id_empresa" : "{ID_EMPRESA}"
+
+							};
+
+							$.ajax({
+								data : campos,
+								url : '?sw=MuestraBloqueCursoSeleccionado',
+								type : 'post',
+								beforeSend : function() {
+
+								},
+								success : function(response) {
+									$('#myModal').modal('toggle');
+									let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+									$("#BloqueCursoSeleccionado").html(cleanResponse);
+								}
+							});
+						}
+
+						function BloqueMallaSeleccionada(valor) {
+
+							var campos = {
+								"id_malla" : valor,
+								"id_empresa" : "{ID_EMPRESA}"
+
+							};
+
+							$.ajax({
+								data : campos,
+								url : '?sw=MuestraBloqueMallaSeleccionado',
+								type : 'post',
+								beforeSend : function() {
+
+								},
+								success : function(response) {
+									let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+									$('#myModalMallas').modal('toggle');
+									$("#BloqueCursoSeleccionado").html(cleanResponse);
+								}
+							});
+						}
+
+						function BloqueMallaProgramaSeleccionada() {
+							var programa = document.getElementById("programabbdd").value;
+							var malla = document.getElementById("malla").value;
+
+							var campos = {
+								"id_malla" : malla,
+								"id_programa_bbdd" : programa,
+								"id_empresa" : "{ID_EMPRESA}"
+
+							};
+
+							$.ajax({
+								data : campos,
+								url : '?sw=MuestraBloqueProgramaMallaSeleccionado',
+								type : 'post',
+								beforeSend : function() {
+
+								},
+								success : function(response) {
+									let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+									$('#myModalMallasV2').modal('toggle');
+									$("#BloqueCursoSeleccionado").html(cleanResponse);
+								}
+							});
+						}
+
+					</script>
+					<section class="content">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="box box-warning">
+
+									<div class="box-header box boxheader">
+										<div class="box-header">
+											<h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Relación Curso Malla</h3>
+
+										</div>
+
+									</div>
+
+									<!-- text input -->
+
+									<div class="col-md-12">
+										<br>
+										<div class="panel panel-info">
+											<div class="panel-heading">
+												<h3 class="panel-title">Campos Obligatorios</h3>
+											</div>
+
+											<br>
+
+											<div class="panel-body">
+
+												<br>
+												<span class="input-group-btn"> <a href="#myModalCurso" data-toggle="modal" class="btn btn-primary">Seleccione Curso Elearning</a> </span>
+
+												<!--<span class="input-group-btn"> <a href="#myModalMallas" data-toggle="modal" class="btn btn-primary">Seleccione Malla 1</a> </span>-->
+												<span class="input-group-btn"> <a href="#myModalMallasClasificacion" data-toggle="modal" class="btn btn-primary">Seleccione Clasificacion</a> </span>
+												
+												<span class="input-group-btn"> <a href="#myModalMallas" data-toggle="modal" class="btn btn-primary">Seleccione Malla</a> </span>
+												<span class="input-group-btn"> <a href="#myModalMallasPrograma" data-toggle="modal" class="btn btn-primary">Seleccione Programa</a> </span>
+
+												<!--<select name="curso" required="required" id="curso" class="form-control" onchange="BuscaBloqueListadoCursos(this.value);">
+												{OPCIONES_CURSOS}
+												</select>-->
+												<br>
+												<span id="BloqueDetalleCurso"> </span>
+
+												<span id="BloqueCursoSeleccionado"> </span>
+
+												<span id="BloqueCursoSeleccionado"> </span>
+
+											</div>
+										</div>
+
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</section>
+
+				</aside><!-- /.right-side -->
+			</div><!-- ./wrapper -->
+
+			<div id="myModalMallasClasificacion" style="z-index:999999;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+				<div class="modal-dialog" style="width:900px;">
+					<div class="modal-content" >
+
+						<div class="modal-body">
+							<table  id="tabla_selecciona_cursos" class="table table-bordered table-hover">
+								<thead>
+									<tr style="font-weight:bold";>
+
+										<th>IMAGEN</th>
+										<th class="select-filter">CODIGO_CLASIFICACION</th>
+										<th >NOMBRE_CLASIFICACION</th>
+										
+										<th></th>
+									</tr>
+
+								</thead>
+								<tfoot style="display: table-header-group;">
+									<tr>
+										<th></th>
+										
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+
+								<tbody>
+									{ROW_LISTADO_CLASIFICACIONES}
+								</tbody>
+
+							</table>
+						</div>
+
+					</div><!-- /.modal-content -->
+				</div>
+			</div>
+			
+			
+			
+			<div id="myModalCurso" style="z-index:999999;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+				<div class="modal-dialog" style="width:900px;">
+					<div class="modal-content" >
+
+						<div class="modal-body">
+							<table  id="tabla_selecciona_cursos" class="table table-bordered table-hover">
+								<thead>
+									<tr style="font-weight:bold";>
+
+										<th>IMAGEN</th>
+										<th class="select-filter">CODIGO_CURSO</th>
+										<th >NOMBRE_CURSO</th>
+										<th >MODALIDAD</th>
+										<th style="width:120px;">SENCE</th>
+										<th></th>
+									</tr>
+
+								</thead>
+								<tfoot style="display: table-header-group;">
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+
+								<tbody>
+									{ROW_LISTADO}
+								</tbody>
+
+							</table>
+						</div>
+
+					</div><!-- /.modal-content -->
+				</div>
+			</div>
+			
+			
+			
+			<div id="myModalMallas" style="z-index:999999;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+				<div class="modal-dialog" style="width:900px;">
+					<div class="modal-content" >
+
+						<div class="modal-body">
+							<table  id="tabla_selecciona_cursos" class="table table-bordered table-hover">
+								<thead>
+									<tr style="font-weight:bold";>
+
+										<th>CODIGO_MALLA</th>
+										<th class="select-filter">NOMBRE_MALLA</th>
+										<th >DESCRIPCION_MALLA</th>
+										
+										<th></th>
+									</tr>
+
+								</thead>
+								<tfoot style="display: table-header-group;">
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										
+									</tr>
+								</tfoot>
+
+								<tbody>
+									{ROW_LISTADO_MALLAS}
+								</tbody>
+
+							</table>
+						</div>
+
+					</div><!-- /.modal-content -->
+				</div>
+			</div>
+			
+			
+			
+			
+			<div id="myModalMallasPrograma" style="z-index:999999;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+				<div class="modal-dialog" style="width:900px;">
+					<div class="modal-content" >
+
+						<div class="modal-body">
+							<table  id="tabla_selecciona_cursos" class="table table-bordered table-hover">
+								<thead>
+									<tr style="font-weight:bold";>
+
+										<th>IMAGEN_PROGRAMA</th>
+										<th>CODIGO_PROGRAMA</th>
+										<th class="select-filter">NOMBRE_PROGRAMA</th>
+										<th >DESCRIPCION_PROGRAMA</th>
+										
+										<th></th>
+									</tr>
+
+								</thead>
+								<tfoot style="display: table-header-group;">
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										
+									</tr>
+								</tfoot>
+
+								<tbody>
+									{ROW_LISTADO_MALLAS}
+								</tbody>
+
+							</table>
+						</div>
+
+					</div><!-- /.modal-content -->
+				</div>
+			</div>
+			
+			
+
+			<div id="myModalMallasV2" style="z-index:999999;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+				<div class="modal-dialog" style="width:900px;">
+					<div class="modal-content" >
+
+						<div class="modal-body">
+							<div class="panel-heading">
+								<h3 class="panel-title">Selección de Programa - Malla</h3>
+							</div>
+							<input class="form-control" id="id_empresa" name="id_empresa"type="hidden" value="{ID_EMPRSA}">
+
+							<script type="text/javascript" >
+								$(document).ready(function() {
+									// Parametros para el combo
+									$("#programabbdd").change(function() {
+										$("#programabbdd option:selected").each(function() {
+											elegido = $(this).val();
+											$.post("index.php?sw=muestraMallasPorPrograma", {
+												elegido : elegido
+											}, function(data) {
+												let cleanResponse = convertHtmlToJQueryObject(data, true, false);
+												$("#malla").html(cleanResponse);
+											});
+										});
+									});
+								});
+
+							</script>
+
+							<label>Seleccione Programa</label>
+							<select name="programabbdd" id="programabbdd" onchange="MuestraCombo();">
+								<option>-</option>
+								{LISTADO_PROGRAMAS_BBDD}
+							</select>
+							<br>
+							<br>
+
+							<label>Seleccione Malla</label>
+							<select name="malla" id="malla">
+								<option>-</option>
+								{LISTADO_MALLAS}
+							</select>
+							<br>
+							<br>
+							<br>
+							<input type="button" class="btn btn-info"  value="Seleccionar" onclick="BloqueMallaProgramaSeleccionada('valor');" />
+
+						</div>
+
+					</div><!-- /.modal-content -->
+				</div>
+			</div>
+
+			<div id="myModalMallas" style="z-index:999999;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+				<div class="modal-dialog" style="width:900px;">
+					<div class="modal-content" >
+
+						<div class="modal-body">
+							<table  id="tabla_selecciona_mallas" class="table table-bordered table-hover">
+								<thead>
+									<tr style="font-weight:bold";>
+
+										<th></th>
+										<th >CODIGO_MALLA</th>
+										<th >NOMBRE_MALLA</th>
+										<th >TIPO_MALLA</th>
+										<th >TOTAL_CURSOS</th>
+
+										<th></th>
+									</tr>
+
+								</thead>
+								<tfoot style="display: table-header-group;">
+									<tr>
+
+										<th></th>
+										<th></th>
+										<th></th>
+
+									</tr>
+								</tfoot>
+
+								<tbody>
+									{ROW_LISTADO_MALLAS}
+								</tbody>
+
+							</table>
+						</div>
+
+					</div><!-- /.modal-content -->
+				</div>
+			</div>
+
+			{FOOTER_ADMIN}
+
+			<script>
+				function requiere() {
+
+					if ($('#modalidad').val() == "2") {
+						$(".requiere").attr("required", true);
+
+					} else {
+
+						$(".requiere").attr("required", false);
+					}
+
+					//$("#codigo").attr("required", true);
+				}
+
+			</script>
+
+			<script type="text/javascript">
+				$('#tabla_selecciona_mallas').DataTable({
+
+					"oLanguage" : {
+						"sProcessing" : "Procesando...",
+						"sLengthMenu" : "Mostrar _MENU_ registros",
+						"sZeroRecords" : "No se encontraron resultados",
+						"sEmptyTable" : "Ningún dato disponible en esta tabla",
+						"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+						"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+						"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+						"sInfoPostFix" : "",
+						"sSearch" : "Buscar: ",
+						"sUrl" : "",
+						"sInfoThousands" : ",",
+						"sLoadingRecords" : "Cargando...",
+						"oPaginate" : {
+							"sFirst" : "Primero",
+							"sLast" : "Último",
+							"sNext" : "Siguiente",
+							"sPrevious" : "Anterior"
+						},
+						"oAria" : {
+							"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+							"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+						}
+					},
+
+					"bAutoWidth" : false,
+					"pageLength" : 50,
+					"order" : [0, 'desc'],
+					"columnDefs" : [{
+						"targets" : [0],
+						"searchable" : false
+					}],
+
+					initComplete : function() {
+						this.api().columns('.select-filter').every(function() {
+							var column = this;
+							var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+								var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+								column.search( val ? '^' + val + '$' : '', true, false).draw();
+							});
+
+							column.data().unique().sort().each(function(d, j) {
+								select.append('<option value="' + d + '">' + d + '</option>')
+							});
+						});
+					}
+				});
+
+				$('#tabla_selecciona_cursos').DataTable({
+
+					"oLanguage" : {
+						"sProcessing" : "Procesando...",
+						"sLengthMenu" : "Mostrar _MENU_ registros",
+						"sZeroRecords" : "No se encontraron resultados",
+						"sEmptyTable" : "Ningún dato disponible en esta tabla",
+						"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+						"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+						"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+						"sInfoPostFix" : "",
+						"sSearch" : "Buscar: ",
+						"sUrl" : "",
+						"sInfoThousands" : ",",
+						"sLoadingRecords" : "Cargando...",
+						"oPaginate" : {
+							"sFirst" : "Primero",
+							"sLast" : "Último",
+							"sNext" : "Siguiente",
+							"sPrevious" : "Anterior"
+						},
+						"oAria" : {
+							"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+							"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+						}
+					},
+
+					"bAutoWidth" : false,
+					"pageLength" : 50,
+					"order" : [0, 'desc'],
+					"columnDefs" : [{
+						"targets" : [0],
+						"searchable" : false
+					}],
+
+					initComplete : function() {
+						this.api().columns('.select-filter').every(function() {
+							var column = this;
+							var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+								var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+								column.search( val ? '^' + val + '$' : '', true, false).draw();
+							});
+
+							column.data().unique().sort().each(function(d, j) {
+								select.append('<option value="' + d + '">' + d + '</option>')
+							});
+						});
+					}
+				});
+
+			</script>
+
+		</body>
+</html>
+

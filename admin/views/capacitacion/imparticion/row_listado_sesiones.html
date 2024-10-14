@@ -1,0 +1,30 @@
+<tr>
+	
+	<td class="miniSt">{CODIGOINCRIPCION}</td>
+	<td class="miniSt">{ID_CURSO}</td>
+    <td class="miniSt"><strong>{CURSO}</strong></td>
+    <td class="miniSt">{FECHA}</td>
+	<td class="miniSt">{HORA_AM}</td>
+	<td class="miniSt">{HORA_PM}</td>
+	<td class="miniSt">{RELATOR}</td>
+	
+	<td class="miniSt">{CANTIDAD_INSCRITOS}</td>
+
+	
+
+	<td class="miniSt" colspan="3">
+	<a href="?sw=descargarInscritosPorSesion&i={ID_SESION_ENCODEADO}&ci={CODIGO_INSCRIPCION_ENCODEADO}">Descargar Inscritos</a>
+	<form name="{ID_SESION}" method="POST" action="?sw=subeUsuariosPorSesionCheckin" enctype="multipart/form-data" >
+		<input type="file" value="Subir Excel" name="excel">
+		
+		<input type="hidden" name="i" value="{ID_SESION_ENCODEADO}">
+		<input type="hidden" name="ci" value="{CODIGO_INSCRIPCION_ENCODEADO}">
+		<br>
+		<input type="submit" class="btn btn-info" value="Subir">
+	</form>
+	</td>
+	
+	
+	   
+</tr>
+                                           

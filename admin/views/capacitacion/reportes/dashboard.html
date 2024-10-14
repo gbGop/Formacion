@@ -1,0 +1,130 @@
+		<style>
+			.progress-bar {
+    float: left;
+    width: 0px;
+    height: 100%;
+    font-size: 12px;
+    line-height: 20px;
+    color: #FFF;
+    text-align: center;
+    background-color: #2269f5;
+    box-shadow: 0px -1px 0px rgb(0 0 0 / 15%) inset;
+    transition: width 0.6s ease 0s;
+			}
+		</style>								  
+					<div class="row">
+									<div class="col-lg-12">
+									  <div style="text-align:right;">
+									  	<a href="?sw=descargarReportesPorImpart_2023&ci={ID_IMPARTICION_ENC}&excel=1" class="btn btn-link">Descargar Resultados</a>
+									  </div>
+									</div>						
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-primary  text-dark mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">Inscritos</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_INSCRITOS_TXT}</div></h5>
+											  </div>
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-success mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">Aprobados</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_APROBADOS_TXT}</div></h5>
+											  </div>
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-danger mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">Reprobados</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_REPROBADOS_TXT}</div></h5>
+											  </div>
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-primary mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">Finalizados</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_FINALIZADOS_TXT}</div></h5>
+											  </div>
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-warning mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">En proceso</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_EN_PROCESO_TXT}</div></h5>
+											  </div>
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-info mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">No comenzado</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_NO_INICIADOS_TXT}</div></h5>
+											  </div>
+										</div>
+									</div>
+				</div>
+		</div>
+	</div>
+			<BR>
+		<div class="card" style="width: 100%">
+				<script src="https://www.gstatic.com/charts/loader.js"></script>
+							<div id="chart_div"></div>
+												<script>
+													google.charts.load('current', {
+												  callback: function () {
+												    var data = google.visualization.arrayToDataTable([
+												      ['', ''],
+												      ['Aprobados',      		{NUM_APROBADOS}],
+												      ['Reprobados',      	{NUM_REPROBADOS}],
+												      ['En proceso',     		{NUM_EN_PROCESO}],
+												      ['No comenzado',     	{NUM_NO_INICIADOS}]
+												    ]);
+
+												    var chart = new google.visualization.ChartWrapper({
+												      chartType: 'PieChart',
+												      containerId: 'chart_div',
+												      dataTable: data,
+												      options: {
+												        theme: 'material',
+												        is3D: false,
+												        pieSliceText: 'none',
+												        colors: ['#5cb85c', '#f0ad4e','#00b2e3','#d9534f' ],
+												        pieHole: 0.6,
+												        pieStartAngle: 180,
+												        height: 450,
+												        chartArea: { width: '100%', height: '100%', left: 0, bottom: 50, top:20 },
+												        legend: { position: 'bottom', alignment:'center', maxLines: 4, textStyle: { fontSize: 12, bold: true, italic: false, fontName: 'Nunito Sans'  } }
+												      }
+												    });
+												    // sort data - first column
+												    data.sort([{column: 0}]);
+												    chart.draw();
+												  },
+												  packages:['corechart']
+												});
+												</script>
+		</div>
+					<br>
+					<br>
+			<div class="card" style="width: 100%">					
+				  <div class="card-header txt_align_center">
+				   Encuesta de Satisfacci&oacute;n
+				  </div>	
+				  <div style="text-align:right;">
+				  	<a href="?sw=VeReportesXImp2021&i={ID_IMPARTICION_ENC}&excel=2" class="btn btn-link">Descargar Datos Encuestas Satisfaccion</a>
+				  </div>
+				  <div class="card-body    mg_20topbottom" style="padding-left: 20px;">Encuestas Respondidas: {NUM_ENCUESTAS_RESPONDIDAS}</div>
+						{LISTA_PREGUNTAS_ENC_SATISFACCION}
+<br><br><br><br>
+<br><br><br><br><br>
+<br><br><br><br><br>

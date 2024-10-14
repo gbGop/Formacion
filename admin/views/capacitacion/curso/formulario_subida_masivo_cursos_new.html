@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{TITTLE}</title>
+		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+		{HEAD}
+		
+	</head>
+	<body class="skin-blue">
+	
+		<!-- header logo: style can be found in header.less -->
+		{HEADER}
+		<div class="wrapper row-offcanvas row-offcanvas-left">
+
+			<!-- Left side column. contains the logo and sidebar -->
+			<aside class="left-side sidebar-offcanvas">
+				<!-- sidebar: style can be found in sidebar.less -->
+				{MENU_IZQUIERDO}
+				<!-- /.sidebar -->
+			</aside>
+
+			<!-- Right side column. Contains the navbar and content of the page -->
+			<aside class="right-side">
+				<!-- Content Header (Page header) -->
+				{NAVEGACION}
+				<!-- Main content -->
+				
+				<script language="Javascript">
+					function abrirPagina(pagina) {
+						window.open(pagina,'window','width=650, height=600');
+					}
+				
+					function generaPlantilla() {
+						$( "#FormPlantilla" ).submit();
+						<!-- $("#prueba").append('<iframe src="http://www.scorm.gopartners.cl/mod/scorm/player.php" width="100%" height="100%" frameborder="0" scrolling="yes" id="iframe"></iframe>'); -->
+					}
+					
+					function validarConfirmacion(){						
+						if($("#numErrores").text() > 0){
+							alert("Debe solucionar todos los errores de su excel para subirlo !");
+						}else{
+							window.location.href = "?sw=acepproCursos";
+						}
+					}
+					
+				</script>
+
+				<section class="content">
+				
+					<div class="row">
+					
+						<div class="col-xs-12">
+						<div class="box boxheader">
+									<div class="box-header">
+										<a href="?sw=listusu&ex=1" class="btn btn-success btn-sm pull-right flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;"><i class="fa fa-plus"></i> Exportar usuarios a Excel</a>&nbsp; <a href="?sw=procesa_excel_a"  class="btn btn-default btn-sm pull-right flat"><i class="fa fa-cloud-upload"></i> Subir Usuarios Masivos</a>
+										<a href="?sw=accionbasepersonas" class="btn btn-success btn-sm pull-right flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;"><i class="fa fa-plus"></i> Crear Nuevo Usuario</a>&nbsp; <a href="?sw=listusu&exe=1" class="btn btn-success btn-sm pull-right flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;"><i class="fa fa-plus"></i> Listar Usuarios</a>&nbsp;
+									</div>
+									<br>
+									<div class="row">
+									</div>
+									<div class="box">
+										<div class="boxsubtitle" style="border-bottom: 1px solid #F4F4F4;">
+											<h6 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Subir cursos de forma Masiva</h6>
+										</div>
+										<br>
+							<div class="box ">
+							
+								
+								
+								<div class="row">
+		
+									<div class="col-md-12">
+										<!-- Custom Tabs -->
+										<div class="nav-tabs-custom">
+										
+											<ul class="nav nav-tabs">
+											  <li class="{TAB1}"><a aria-expanded="false" href="#tab_1" data-toggle="tab">Configuración</a></li>
+											  <li class="{TAB2}"><a aria-expanded="false" href="#tab_2" data-toggle="tab">Subir Cursos</a></li>
+											</ul>
+											
+											<div class="tab-content">
+				
+												<div class="{CLASTAB1}" id="tab_1">
+				  
+													<div class="row">
+													
+														<form action="?sw=GeneraPlantillaCursos" method="post"id="FormPlantilla" name="FormPlantilla">
+															<input type="hidden" value="{ID_EMPRESA}" name="id_empresa" id="id_empresa">
+												
+															<div class="box-body col-md-12 col-md-offset-1">
+																<div class="alert alert-warning col-md-10">
+																	<div class="col-md-9" align="left">
+																		<strong>Importante:</strong> A continuaci&oacuten se muestran los campos que pueden ser llenados opcionalmente y los que deben ser llenados obligatoriamente en el archivo a descargar.
+																		<br>																	
+																	</div>
+																	<div class="col-md-2" align="right">
+																		<a onclick="generaPlantilla()" class='btn btn-success btn-sm'><i class="fa fa-gear"></i> Generar Plantilla Excel</a>									  
+																	</div>
+																</div>																
+															</div>
+												
+															<div class="box-body col-md-12" align="center">
+															
+																<div class="col-md-3 col-md-offset-3">
+																	<div class="panel panel-danger">
+																		<div class="panel-heading">
+																			<h3 class="panel-title">Campos Obligatorios</h3>
+																		</div>
+																		<div class="panel-body">
+																			<table class="table">
+																				<tbody>																					
+																					{CAMPOS_OBLI}																				
+																				</tbody>
+																			</table>																			
+																		</div>
+																	</div>
+																</div>
+																
+																<div class="col-md-3">
+																	<div class="panel panel-info">
+																		<div class="panel-heading">
+																			<h3 class="panel-title">Campos Opcionales</h3>
+																		</div>
+																		<div class="panel-body">
+																			<table class="table">
+																				<tbody>
+																					{CAMPOS_OPCI}																					
+																				</tbody>
+																			</table>																			
+																		</div>
+																	</div>
+																</div>
+																
+															</div>						
+																				
+														</form>
+													</div>				 
+												</div><!-- /.tab-pane -->
+			
+												<div class="{CLASTAB2}"  id="tab_2">
+          
+													<div class="row">
+							
+														<div class="col-md-3">
+			
+															<div class="box boxheader" style="{DISPLAYFORM1}">
+	
+																<div class="box-body">
+																	<strong><i class="fa fa-refresh fa-spin" style="font-size:18px;"></i> Esperando Confirmación</strong><br/><br/>
+																	<p>
+																		<a onclick="validarConfirmacion()" class="btn btn-success btn-sm cargando" ><i class="fa fa-plus"></i> Confirmar</a> 
+																		<a href="?sw=canceprousu" class="btn btn-danger btn-sm cargando" ><i class="fa fa-plus"></i> Cancelar</a>
+																	</p>				
+																</div><!-- /.box-body -->
+				
+															</div><!-- /.box -->			
+			
+															<div class="box boxheader">
+              			  																	  
+																<div class="box-head">
+																	<strong><i class="fa fa-file-text-o margin-r-5"></i> Notas</strong><br/>  
+																	<p>Recuerde que debe subir la plantilla generada con todos los datos solicitados.</p>
+																	<p>Presione el boton <b>[Subir Excel]</b></p>
+																</div><!-- /.box-body -->
+																  
+																<div class="box-body box-profile">
+																	<!-- small box -->
+																	<div class="small-box bg-gray">
+																	
+																		<div class="inner">
+																			<h3>{TOTALU}</h3>
+																			<p>Cursos Existentes</p>
+																		</div>                           
+																	</div>
+          
+																	<ul class="list-group list-group-unbordered">
+																		<li class="list-group-item">
+																			<i class="fa fa-plus"></i>  <b> Nuevos</b> <a class="pull-right">{TOT_INSERTAR}</a>
+																		</li>
+																		<li class="list-group-item">
+																			<i class="fa fa-refresh"></i>  <b> Actualizar</b> <a class="pull-right">{TOT_ACTUALIZAR}</a>
+																		</li>
+																		<li class="list-group-item">
+																			<i class="fa fa-ban"></i>  <b> Desvincular</b> <a class="pull-right">{TOT_DESVINCULAR}</a>
+																		</li>
+																		<li class="list-group-item">
+																			<i class="fa fa-warning"></i> <b> Errores</b> <a class="pull-right" id="numErrores">{TOT_ERRORES}</a><br><br>
+																			<p> 
+																				{ERRORES} 
+																			</p>
+																		</li>
+																	</ul>
+																</div><!-- /.box-body -->
+															</div><!-- /.box -->
+															<!-- About Me Box -->
+														</div><!-- /.col -->
+														
+														<div class="col-md-9">
+               
+															<div class="box boxheader">
+								
+																<div class="box-header with-border" style="border-bottom: 0px solid #F4F4F4;">
+																	<h3 class="" style="margin-left:10px;"> <i class="fa fa-fw fa-th-list"></i> {TITULO2}</h3>                                                           
+																</div>
+																
+																<div class="box-body">
+																
+																	<div class="small-box bg-red" style="padding:10px;{DISPLAYERROR}">
+																	
+																		<div class="inner">
+																			<h3> <i class="fa fa-unlink"></i> Error grave</h3>
+																			<p><strong>{ERROR_GRAVE}</strong></p>
+																			<p>Revise el archivo, corriga los errores e intente nuevamente!</p>
+																		</div>
+																	</div>
+						
+																	{ENTORNO_PREVIA}
+																
+																	<form name="importa" method="post" action="?sw=procesa_subida_masiva_cursos" id="importa" enctype="multipart/form-data" style="display:{DISPLAYFORM2}" >																	
+																		<div class="panel-body">
+																			<p><input type="file" name="excel" /><br>
+																			<button type="submit" class='btn btn-default btn-sm' >
+																				<i class="fa fa-cloud-upload"></i> Subir Excel con Cursos
+																			</button>
+																			<input type="hidden" value="upload" name="action" /></p>
+																		</div>
+																	</form>
+																</div>						
+															</div><!-- ./col -->
+														</div>		  		 
+													</div><!-- /.tab-pane -->					
+												</div><!-- /.tab-content -->
+											</div><!-- nav-tabs-custom -->
+										</div>	
+									</div><!-- /.box-body -->
+								</div><!-- /.box -->
+							</div><!-- /.box -->
+						<!-- /.box -->
+						</div>
+					</div>
+				</section><!-- /.content -->
+			</aside><!-- /.right-side -->
+		</div><!-- ./wrapper -->
+
+		{FOOTER_ADMIN}
+
+		<!-- page script -->
+		<script>
+			$("#importa").submit(function() {
+				
+				$("#back").show();
+				$("#loader").show();
+			});
+				
+			$(".cargando").click(function() {
+			
+				$("#back").show();
+				$("#loader").show();		
+			});
+
+		</script>
+		
+		<div id="back" class="modal-backdrop fade in" style="display:none;"></div>
+		<div id="loader" style="display:none;z-index:99999;color:#fff;position:fixed;width:200px;top: 50%; left: 47%;"><img src="img/ajax-loader.gif">
+		</div>
+	</body>
+</html>

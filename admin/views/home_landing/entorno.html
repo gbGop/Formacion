@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{TITTLE}</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        {HEAD}
+						<style>
+							
+							.card {
+						    position: relative;
+						    display: -webkit-box;
+						    display: -ms-flexbox;
+						    display: flex;
+						    -webkit-box-orient: vertical;
+						    -webkit-box-direction: normal;
+						    -ms-flex-direction: column;
+						    flex-direction: column;
+						    min-width: 0;
+						    word-wrap: break-word;
+						    background-color: #fff;
+						    background-clip: border-box;
+						    border: 1px solid rgba(0,0,0,.125);
+						    border-radius: .25rem;
+						}
+							
+						.card-body {
+						    -webkit-box-flex: 1;
+						    -ms-flex: 1 1 auto;
+						    flex: 1 1 auto;
+						    padding: 1.25rem;
+						}	
+
+						.card-title {
+						    margin-bottom: .75rem;
+						}
+						.h5, h5 {
+						    font-size: 1.25rem;
+						}
+						.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+						    margin-bottom: .5rem;
+						    font-family: inherit;
+						    font-weight: 500;
+						    line-height: 1.2;
+						    color: inherit;
+						}
+						.text-muted {
+						    color: #6c757d!important;
+						}
+						.mb-2, .my-2 {
+						    margin-bottom: .5rem!important;
+						}
+						.card-subtitle {
+						    margin-top: -.375rem;
+						    margin-bottom: 0;
+						}
+							
+						</style>
+    </head>
+    
+    <body class="skin-blue">
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <aside class="left-side sidebar-offcanvas">                {MENU_IZQUIERDO}            </aside>
+            <aside class="right-side">                {NAVEGACION}                
+            	<section class="content">                    <div class="row">                        
+            		<div class="col-xs-12">                          
+
+															<div>
+																<center>
+																	<div class="card text-white">
+																		<div class="card-body">
+																			<br><br>
+																			<div class="card" style="width:     width: 365px;">
+																			  <div class="card-body">
+																			    <h5 class="card-title">Bienvenido(a) a Formacion Bch: {NOMBRE_ADMIN}</h5>
+																			    <br><br>
+																			    <h6 class="card-subtitle mb-2 text-muted">Perfil:	{PERFIL_ADMINISTRADOR}</h6>
+																			    <br><br>
+																			    <p class="card-text">Para comenzar por favor, utiliza el men&uacute; de la izquierda.</p>
+																			<br><br>
+																			  </div>
+																			</div>
+																			<br><br>
+																			</div>
+																	</div>
+																</center>
+															</div>
+            			
+            			
+            			                  </div>                    </div>                </section>            </aside>        </div>
+        {FOOTER_ADMIN}
+        <!-- page script -->
+        <script type="text/javascript">
+            $(function() {
+                $("#example1").dataTable();
+                $('#example2').dataTable({
+                    "bPaginate" : true,
+                    "bLengthChange" : false,
+                    "bFilter" : false,
+                    "bSort" : true,
+                    "bInfo" : true,
+                    "bAutoWidth" : false
+                });
+            });
+        </script>
+
+    </body>
+</html>
+

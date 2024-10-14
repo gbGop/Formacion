@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{TITTLE}</title>
+		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+		<!-- bootstrap 3.0.2 -->
+		{HEAD}
+
+		<body class="skin-blue">
+			<!-- header logo: style can be found in header.less -->
+			{HEADER}
+			<div class="wrapper row-offcanvas row-offcanvas-left">
+				<!-- Left side column. contains the logo and sidebar -->
+				<aside class="left-side sidebar-offcanvas">
+					<!-- sidebar: style can be found in sidebar.less -->
+					{MENU_IZQUIERDO}
+					<!-- /.sidebar -->
+				</aside>
+
+				<!-- Right side column. Contains the navbar and content of the page -->
+				<aside class="right-side">
+					<!-- Content Header (Page header) -->
+					{NAVEGACION}
+					<!-- Main content -->
+					<section class="content">
+						<div class="row">
+							<!-- left column -->
+							<!--/.col (left) -->
+							<!-- right column -->
+							<div class="col-md-12">
+								<!-- general form elements disabled -->
+								<div class="box box-warning">
+									<div class="box-header">
+										<h3 class="box-title">{TITULO}</h3>
+									</div><!-- /.box-header -->
+									<div class="box-body">
+										<form action="{ACTION}" method="POST" name="{NOMBRE_FORMULARIO}" enctype="multipart/form-data" >
+											<!-- text input -->
+
+											<div class="col-md-4">
+												<label>Nombre del Curso</label>
+												<br>
+												<input type="text" class="form_control_admin" name="nombre_curso" value="{NOM_CURSO}" />
+											</div>
+
+											<script>
+												function CodCurFun(sel) {
+													if (sel.value == "si") {
+														divC = document.getElementById("nTExtoS");
+														divC.style.display = "";
+
+														divT = document.getElementById("nTExtoI");
+														divT.style.display = "none";
+
+													} else {
+
+														divC = document.getElementById("nTExtoS");
+														divC.style.display = "none";
+
+														divT = document.getElementById("nTExtoI");
+														divT.style.display = "";
+													}
+
+												}
+
+											</script>
+
+											<div class="col-md-4" style="{Desaparece_Descripcion_CreacionEdicionCursos}">
+												<label>Descripci&oacute;n</label>
+												<br>
+												<textarea rows="5" class="form_control_admin" name="descripcion_curso" >{DES_CURSO}</textarea>
+											</div>
+
+											<div class="col-md-4">
+												<label>Objetivo del Curso</label>
+												<br>
+												<textarea rows="5" class="form_control_admin" name="objetivo_curso" >{OBJETIVO_CURSO}</textarea>
+											</div>
+
+											<div class="col-md-2">
+												<label>Clasificación del Curso</label>
+												<select class="form_control_admin" name="clasificacion_curso">
+													<option value="-">Seleccione</option>
+													{OPTIONS_CLASIFICACION}
+												</select>
+											</div>
+
+											<div class="col-md-2">
+												<label>Modalidad de Curso</label>
+												<select class="form_control_admin" name="modalidad">
+													<option value="-">Seleccione</option>
+													{OPTIONS_MODALIDAD}
+												</select>
+											</div>
+
+											<div class="col-md-2">
+												<label>Tipo del Curso</label>
+												<select class="form_control_admin" name="tipo_curso">
+													<option value="-">Seleccione</option>
+													{OPTIONS_TIPO_CURSO}
+												</select>
+											</div>
+
+											<div class="col-md-2">
+												<label>CBC</label>
+												<select onchange="CodCurFun(this)" class="form_control_admin" name="cbc">
+													<option value="-">Seleccione</option>
+													<option {SELCBCsi} value="si">SI</option>
+													<option {SELCBCno} value="no">NO</option>
+												</select>
+											</div>
+
+											<div class="col-md-2">
+												<label>Sence</label>
+												<select onchange="CodCurFun(this)" class="form_control_admin" name="sence">
+													<option value="-">Seleccione</option>
+													<option {SELSENCEsi} value="si">SI</option>
+													<option {SELSENCEno} value="no">NO</option>
+												</select>
+											</div>
+
+											<div class="col-md-2">
+												<label>Valor Hora - </label>
+												<input type="text" class="form-control" name="valor_hora" value="{VALOR_HORA}" />
+											</div>
+
+											<div id="nTExtoS" {STYLE_DISPLAY_COD_SENCE}  class="col-md-2">
+												<label>Codigo SENCE</label>
+												<br>
+												<input type="text" class="form_control_admin" name="cod_sence" value="{NUMERO_IDENTIFICADOR}" />
+											</div>
+
+											<input type="hidden" class="form_control_admin" name="id" value="{ID_CURSO_ENCODEADO}" />
+
+											<div  id="nTExtoI" {STYLE_DISPLAY_NUM_IDEN}  class="col-md-2">
+												<label>Numero Identificador</label>
+												<br>
+												<input type="text" class="form_control_admin" name="cod_identificador" value="{COD_IDENTIFICADOR}" />
+											</div>
+
+											<div class="col-md-2">
+												<label>Valor Hora Sence</label>
+												<input type="text" class="form-control" name="valor_hora_sence" value="{VALOR_HORA_SENCE}" />
+											</div>
+
+											<div class="col-md-2">
+												<label>Número de horas</label>
+												<input type="text" class="form-control" name="numero_horas" value="{NUMERO_HORAS}" />
+
+											</div>
+											<div class="col-md-2">
+												<label>Num Part Máximo</label>
+												<input type="text" class="form-control" name="cantidad_maxima_participantes" value="{CANTIDAD_MAXIMA_PARTICIPANTES}" />
+											</div>
+
+											<div class="col-md-2">
+												<label>Nombre OTEC</label>
+												<select class="form-control" name="rut_otec">
+													<option value="-">Seleccione</option>
+													{OPTIONS_RUT_OTEC}
+												</select>
+											</div>
+											<br>
+											<br>
+
+
+									</div><!-- /.box-body -->
+									<div class="col-md-12 centro">
+										<a href="?sw=listcursos">
+										<button type="button" class="btn btn-primary">
+											Volver
+										</button></a>&nbsp;
+										<button type="submit" class="btn btn-primary">
+											{VALOR_BOTON}
+										</button>
+									</div>
+
+									</form>
+
+								</div><!-- /.box -->
+							</div><!--/.col (right) -->
+						</div>
+						<!-- /.row -->
+					</section><!-- /.content -->
+				</aside><!-- /.right-side -->
+			</div><!-- ./wrapper -->
+
+		</body>
+</html>
+
+{FOOTER_ADMIN}

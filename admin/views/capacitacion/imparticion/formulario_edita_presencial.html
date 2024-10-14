@@ -1,0 +1,245 @@
+<script src="script/ajax.googleapis.com_ajax_libs_jquery_3.6.0_jquery.min.js"></script>
+<script src="script/global.js"></script>
+<script>
+	$(function() {
+
+		$(".date-input-css").datepicker();
+
+		//Timepicker
+		$(".timepicker").timepicker({
+			showInputs : false,
+		});
+	})
+	function BuscaBloqueListadoCursos(valor) {
+
+		var campos = {
+			"id_curso" : valor,
+			"id_empresa" : "{ID_EMPRESA}"
+
+		};
+
+		$.ajax({
+			data : campos,
+			url : '?sw=MuestraBloqueDetalleCurso',
+			type : 'post',
+			beforeSend : function() {
+
+			},
+			success : function(response) {
+				let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+				$("#BloqueDetalleCurso").html(cleanResponse);
+			}
+		});
+	}
+
+</script>
+<script type="text/javascript">
+	$('#tabla_cursos').DataTable({
+
+		"oLanguage" : {
+			"sProcessing" : "Procesando...",
+			"sLengthMenu" : "Mostrar _MENU_ registros",
+			"sZeroRecords" : "No se encontraron resultados",
+			"sEmptyTable" : "Ningún dato disponible en esta tabla",
+			"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+			"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+			"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+			"sInfoPostFix" : "",
+			"sSearch" : "Buscar: ",
+			"sUrl" : "",
+			"sInfoThousands" : ",",
+			"sLoadingRecords" : "Cargando...",
+			"oPaginate" : {
+				"sFirst" : "Primero",
+				"sLast" : "Último",
+				"sNext" : "Siguiente",
+				"sPrevious" : "Anterior"
+			},
+			"oAria" : {
+				"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+				"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+			}
+		},
+
+		"bAutoWidth" : false,
+		"pageLength" : 50,
+		"order" : [0, 'desc'],
+		"columnDefs" : [{
+			"targets" : [0],
+			"searchable" : false
+		}],
+
+		initComplete : function() {
+			this.api().columns('.select-filter').every(function() {
+				var column = this;
+				var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+					var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+					column.search( val ? '^' + val + '$' : '', true, false).draw();
+				});
+
+				column.data().unique().sort().each(function(d, j) {
+					select.append('<option value="' + d + '">' + d + '</option>')
+				});
+			});
+		}
+	});
+
+</script>
+
+
+
+<form action="?sw=edimparti" method="POST" name="FormCurso" enctype="multipart/form-data"  >
+
+	<span class="label label-sm label-info"> Curso </span><br>
+	<input required="required"  type="text" class="form-control" name="curso" readonly value="{VALUE_COD_CURSO}" 
+			style="    width: 95px;display: inline;margin-right: 15px;" required/>
+			<strong>{NOMBRE_CURSO_imparticion}</strong>
+	<br>
+	<br>
+	<span class="label label-sm label-danger"> Codigo Impartición</strong></span>
+			<input required="required"  type="number" class="form-control" name="cod_imparticion" 
+			value="{VALUE_COD_IMPARTICION}"/>
+	<br>
+
+	<div class="panel-heading" style="    color: #31708f;background-color: #d9edf7;border-color: #bce8f1;">
+		<h3 class="panel-title">Campos Obligatorios</h3>
+	</div>
+	<br>
+											
+	<span class="label label-sm label-info"> Horario</span>
+	<div class="panel panel-gray">
+		<div class="panel-heading">
+			<div class="row">
+				
+				<div class="col-xs-3 col-sm-3 ">
+					Fecha
+				</div>
+				<div class="col-xs-3 col-sm-3">
+					Hora Desde
+				</div>
+				<div class="col-xs-3 col-sm-3">
+					Hora Hasta
+				</div>
+				<div class="col-xs-3 col-sm-3">
+					Observaciones
+				</div>
+				
+				<div class="col-xs-12 col-sm-12" style="height: 15px;">	 </div>
+				
+				<div class="col-xs-3 col-sm-3 ">
+						<input required="required"  type="date" class="form-control" name="fecha" value="{VALUE_COD_IMPARTICION_FECHA}"/>
+				</div>
+				<div class="col-xs-3 col-sm-3">
+						<input required="required"  type="time" class="form-control" name="hora_desde" value="{VALUE_COD_IMPARTICION_HORA_DESDE}"/>
+				</div>
+				<div class="col-xs-3 col-sm-3">
+						<input required="required"  type="time" class="form-control" name="hora_hasta" value="{VALUE_COD_IMPARTICION_HORA_HASTA}"/>
+				</div>
+				<div class="col-xs-3 col-sm-3">
+						<input  type="text" class="form-control" name="observacion" value="{VALUE_COD_IMPARTICION_OBSERVACION}" />
+				</div>	
+							
+			</div>
+		</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-12" style="height: 15px;">	
+					<center><br>
+								<button type="submit" class="btn btn-primary">
+									Crear Imparticion
+								</button>
+					</center> 
+				</div>
+			</div>
+			
+<BR><BR><BR>
+<div class="panel-heading" style="    color: #31708f;background-color: #d9edf7;border-color: #bce8f1;">
+		<h3 class="panel-title">Participantes</h3>
+	</div>
+	<br>
+
+	<span class="label label-sm label-info"> Inscribir Participantes</span>
+	<div class="row">
+				<div class="col-xs-12 col-sm-12">
+					<a href="?sw=DescargaPresencialImparticion&ci={COD_IMPARTICION_ENCODEADO}" >Descargar Plantilla para Subida de Excel</a>
+					<br><BR>
+					Subir Excel con Participantes
+					<br>
+					<input type="file"  style="width: 101%;" name="excel" id="excel">
+				</div>
+				<div class="col-xs-12 col-sm-12" style="height: 15px;">	
+					<center><br>
+								<button type="submit" class="btn btn-primary">
+									Actualizar Participantes
+								</button>
+					</center> 
+				</div>		
+	</div>
+	<br>
+
+<BR><BR><BR>
+	<div class="panel-heading" style="    color: #31708f;background-color: #d9edf7;border-color: #bce8f1;">
+		<h3 class="panel-title">Campos Opcionales</h3>
+	</div>
+	<br>
+
+	<span class="label label-sm label-info"> Ejecutivo</span>
+	<br>
+	<select class="form-control" name="ejecutivo">
+		<option value=""></option>
+		{OPTIONS_EJECUTIVOS}
+	</select>
+	</br>
+
+
+
+
+	<!--<span class="label label-sm label-default"> Inscribir Postulantes (Oferta Abierta)</span>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-6">
+			Subir Excel con Postulantes
+			<br>
+			<input type="file"  style="width: 101%;" name="excel_postulantes" id="excel_postulantes">
+		</div>
+		<div class="col-xs-12 col-sm-6">
+			<br>
+			<a href="rut_audiencias_postulantes.xlsx" > <i class="fa fa-cloud-download"></i> Descargar Plantilla para Subida de Excel</a>
+		</div>
+	</div>
+
+	<input type="radio" name="validacionjefe" value="CONVALIDACIONJEFE">
+	Con validacion de Jefe
+	<br>
+	<input type="radio" name="validacionjefe" value="SINVALIDACIONJEFE"> 
+	Sin validacion de Jefe
+	<br>
+	<br>
+	<hr>-->
+	<span class="label label-sm label-info"> Dirección</span>
+	&nbsp;
+	<input  type="text" class="form-control" name="direccion"  value="{VALUE_DIRECCION}" />
+	<br>
+	<span class="label label-sm label-info"> Ciudad</span>
+	&nbsp;
+	<input  type="text" class="form-control" name="ciudad" value="{VALUE_CIUDAD}"  />
+
+	<!--<br>
+	<span class="label label-sm label-info"> Cupos <em>(Opcional)</em></span>
+	&nbsp;
+	<input   type="text" class="form-control" name="cupos" value="{VALUE_CUPOS}" size="5" maxlength="5" />
+
+	<br>
+	<hr>-->
+	<br>
+	<span class="label label-sm label-info"> Comentarios </span>
+	<br>
+	<textarea class="form-control" name="comentarios">{COMENTARIOS}</textarea>
+	<br>
+	<br>
+	<center>	
+		<button type="submit" class="btn btn-primary">
+			Agregar Datos a Imparticion
+		</button>
+	</center>
+</form>

@@ -1,0 +1,9 @@
+<?php
+require_once("./funciones/funciones.php");
+require_once("./data/data.php");
+require_once("./configuracion.php");
+    //require_once("../../../front/funciones/funciones.php");
+    //require_once("../../../front/funciones/funciones_home.php");
+    //require_once("../../../front/data/data.php");
+    require_once("clases/conexion/class.connect.php");
+?>

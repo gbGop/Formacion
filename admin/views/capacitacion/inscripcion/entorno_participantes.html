@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{TITTLE}</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+{HEAD}
+    </head>
+    <body class="skin-blue">
+        <!-- header logo: style can be found in header.less -->
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="left-side sidebar-offcanvas">                
+                <!-- sidebar: style can be found in sidebar.less -->
+                {MENU_IZQUIERDO}
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">                
+                <!-- Content Header (Page header) -->
+                {NAVEGACION}
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+   
+   							<div class="small-box bg-blue">
+                                <div class="Txtinner">
+                                    <p>
+                                        DETALLE DE PARTICIPANTES FINALIZADOS
+                                    </p>
+                                </div>
+                                </div>                              
+                              
+   <div class="box-body table-responsive">
+                                    <table id="example2" class="table table-bordered table-hover sortable">
+                                        <thead>
+                                            <tr>
+                                                <th class="width40 bg_gray">RUT</th>
+                                                <th class="width140 bg_gray">NOMBRE COMPLETO</th>
+                                 
+
+												
+												<th class="width80 bg_gray">PORCENTAJE ASISTENCIA</th> 
+												<th class="width80 bg_gray">CASO ESPECIAL</th> 
+												<th class="width80 bg_gray">NOTA</th> 
+												<th class="width80 bg_gray">ESTADO</th> 
+												<th class="width80 bg_gray">ESTADO EVALUACIÓN</th> 
+												<th class="width80 bg_gray">ACCESO EVALUACIÓN</th> 
+                                                
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+{LISTADO_CIERRE_INSCRITOS_POR_CAPACITACION}
+
+
+											
+		                           									
+											
+                                        </tbody>
+                                        <tfoot>
+
+
+
+                                          
+                                        </tfoot>
+                                    </table>
+                                </div>                           
+                              
+          
+          <!--
+          <div class="small-box bg-blue">
+                                <div class="Txtinner">
+                                    <p>
+                                        DATOS REALES INSCRIPCION
+                                    </p>
+                                </div>
+                                </div>
+                                
+                                -->                              
+  <!--                            
+   <div class="box-body table-responsive">
+                                    <table id="example2" class="table table-bordered table-hover sortable">
+                                        <thead>
+										
+										
+										
+                                            <tr>
+                                                <th class="width40 bg_gray">ID inscripción</th>
+                                                <th class="width140 bg_gray">NUM PARTICIPANTES</th>
+
+                                                <th class="width80 bg_gray">MONTO VIATICO</th>
+                                                <th class="width60 bg_gray">MONTO MOVILIZACION</th>
+
+                                                <th class="width80 bg_gray">MONTO FRANQUICIA</th>
+                                                <th class="width60 bg_gray">MONTO EMPRESA</th>
+                                                <th class="width140 bg_gray">MONTO TOTAL</th>
+                                            </tr>
+                                        </thead>
+										
+
+
+  											<tr>
+                                                <td class="miniSt">{ID_INSCRIPCION}</td>
+                                                <td class="miniSt">{NUM_PARTICIPANTES}</td>
+                                                <td class="miniSt">{MONTO_VIATICO}</td>
+                                                <td class="miniSt">{MONTO_MOVILIZACION}</td>
+                                                <td class="miniSt">{MONTO_SENCE}</td>
+                                                <td class="miniSt">{MONOT_EMPRESA}</td>
+                                                <td class="miniSt">{MONTO_TOTAL}</td>
+												
+                                            </tr>
+	
+
+											
+                                        </tbody>
+                                        <tfoot>
+
+
+
+                                          
+                                        </tfoot>
+                                    </table>
+                                </div> 
+                               -->
+
+<!--
+<a name="FormDatosRelevantes"></a>
+  
+  
+  <div class="small-box bg-blue">
+                                <div class="Txtinner">
+                                    <p>
+                                        DATOS RELEVANTES DE INSCRIPCION FINALIZADA
+                                    </p>
+                                </div>
+                                </div>
+                                
+                                -->  
+<!--
+<div class="box-body table-responsive">
+                                    <table id="example2" class="table table-bordered table-hover sortable">
+                         <form name="ForFinal" method="POST" action="?sw=gdatfin">
+										
+
+<input type="hidden" name="ii" value="{ID_INSCRIPCION_ENCODEADO}">
+  											<tr>
+                                                <td class="width40 bg_gray" width="33%">ALUMNO DESTACADO</td>
+                                                <td class="miniSt" width="33%">{NOMBRE_MEJOR_ALUMNO}</td>
+                                                <td class="miniSt" width="33%">{COENTARIO_MEJOR_ALUMNO}</td>
+												
+                                            </tr>
+											
+											
+														<tr>
+                                                <td class="width40 bg_gray">ALUMNO DESTACADO</td>
+                                                <td class="miniSt">{NOMBRE_ALUMNO_DESTACADO}</option></td>
+                                                <td class="miniSt">{COMENTARIO_ALUMNO_DESTACADO}</td>
+												
+                                            </tr>
+											
+											
+											
+														<tr>
+                                                <td class="width40 bg_gray">MEJORA CONTINUA</td>
+                                                <td class="miniSt">{NOMBRE_MEJORA_CONTINUA}</td>
+                                                <td class="miniSt">{COMENTARIO_MEJORA_CONTINUA}</td>
+												
+                                            </tr>
+											
+											
+								
+											
+														<tr>
+                                                <td class="width40 bg_gray">PORCENTAJE DE SATISFACCION </td>
+                                                <td class="miniSt">{PORCENTAJE}%
+												
+												</td>
+												<td class="miniSt">
+                                                {COMENTARIO_PORCENTAJE}</td>
+												
+                                            </tr>
+										
+										<tr><td colspan="3" align="center"><a href="?sw=eddatre&ii={ID_INSCRIPCION_ENCODEADO}"><button type="button" class="btn btn-success">GUARDAR CAMBIOS DE CIERRE DE INSCRIPCION</button></a></td></tr>
+
+                                    </form>
+                                    </table>
+                                </div> -->
+
+
+
+
+
+
+								
+                              
+
+</div>
+
+                            
+                           
+						   
+                        </div>
+                    </div>
+					
+                                
+					
+ 
+ 
+ 
+ 
+
+
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+
+
+         {FOOTER_ADMIN}
+
+        <!-- page script -->
+        <script type="text/javascript">
+            $(function() {
+                $("#example1").dataTable();
+                $('#example2').dataTable({
+                    "bPaginate": true,
+                    "bLengthChange": false,
+                    "bFilter": false,
+                    "bSort": true,
+                    "bInfo": true,
+                    "bAutoWidth": false
+                });
+            });
+        </script>
+
+    </body>
+</html>

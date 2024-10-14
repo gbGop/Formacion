@@ -1,0 +1,27 @@
+<tr>
+	<td class="miniSt"><strong>{CURSO}</strong></td>
+	<td class="miniSt">{CODIGOINCRIPCION}</td>
+	<td class="miniSt">{NOMBRE_INSCRIPCION}</td>
+	<td class="miniSt">{ESTADO_EJECUCION}</td>
+	<td class="miniSt">{FECHAS_SESIONES}</td>
+	<td class="miniSt">{EJECUTIVO}</td>
+		<!--	</td>--><!--<td class="miniSt">{CIUDAD}</td><td class="miniSt">{DIRECCION}</td>-->
+	<td class="miniSt">
+		{ASISTENTES} 	{DESCARGA_PARTICIPANTES}
+		{INSCRITOS} 	{DESCARGA_PARTICIPANTES}
+			<!--{PREINSCRITOS} <a href="?sw=descargaPreInscritos&ci={ID_INSCRIPCION_ENCODEADO}" title="Descargar PreInscritos"><i class="fa fa-cloud-download"></i></a>{POSTULANTES}{CUPOS}-->
+	</td>
+	<td class="miniSt"> 
+		{ALERTA_MAL_CONFIGURADO}
+		<a href="?sw=VeColaboradoresXImp2021&i={ID_INSCRIPCION_ENCODEADO}" style="{DISPLAY_NONE_PARTICIPANTES}"  >Participantes_Asistencia</a><br>
+		<a href="?sw=VeReportesXImp2021&i={ID_INSCRIPCION_ENCODEADO}"  >Reportes</a><br>
+		<a href="?sw=VeDocsXImp2021&i={ID_INSCRIPCION_ENCODEADO}"  >Documentos</a><br>
+		<a href="?sw=QR_2023&i={ID_INSCRIPCION_ENCODEADO}" style="">Encuestas Satisfacci&oacute;n</a><br>
+		<a href="?sw=VeProveedoresXImp2021&i={ID_INSCRIPCION_ENCODEADO}" style="">Proveedores</a><br>
+		<a href="?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i={i}&id_imparticion={ID_INSCRIPCION_ENCODEADO}" title="Editar Imparticion">Editar</a><br>
+		<a href="?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i={i}&id_imparticion={ID_INSCRIPCION_ENCODEADO}&dup=1" title="Editar Imparticion">Duplicar</a><br>
+		<a href="?sw=VeNotificarCuadroContable&i={ID_INSCRIPCION_ENCODEADO}" title="Editar Imparticion">Notificar</a><br>
+		<a href="?sw=dltImpart&i={ID_INSCRIPCION_ENCODEADO}"  onclick = "if (! confirm('Seguro que deseas eliminar esta Imparticion?')) return false;">Eliminar</a>
+		{CERRAR_IMPARTICION}
+	</td>
+</tr>

@@ -1,0 +1,30 @@
+{TEXTO}
+<br>
+<form name="form_{ID_PROGRAMA}_{ID_MALLA}_{RUT}" method="POST" action="?sw=asignaUsuarioAMallaPrograma">
+    <strong>Desea Actualizar la Malla para este participante?</strong>
+    <select id="malla_seleccionada" name="malla_seleccionada">
+        <option value="">-Seleccione-</option>
+        {SELECCION_MALLA}
+    </select>
+    <strong>Opcional</strong>
+    <select name="opcional">
+        <option value="No">No</option>
+        <option value="Si">Si</option>
+    </select>
+    <br>
+    <br>
+    <input type="hidden" name="rut" value="{RUT}">
+    <input type="hidden" name="id_programa" value="{ID_PROGRAMA}">
+    <input type="hidden" name="ID_MALLA" value="{ID_MALLA}">
+    <center>
+        <input type="submit" value="Cambiar de Malla" class="btn btn-success" onclick="AgregaUsuarioRelMallaPersona_{ID_PROGRAMA}_{ID_MALLA}_{RUT}();">
+        <a href="?sw=eliminaRelacionMallaUsuario&r={RUT_ENCODEADO}&iemp={ID_EMPRESA_ENCODEADA}&imall={ID_MALLA_ENCODEADA}">
+        <input type="button" class="btn btn-danger" value="Desinscribir a este Usuario">
+        </a>
+        <br>
+    </center>
+</form>
+<br>
+<hr>
+
+

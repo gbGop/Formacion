@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{TITTLE}</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+{HEAD}
+    </head>
+    <body class="skin-blue">
+        <!-- header logo: style can be found in header.less -->
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="left-side sidebar-offcanvas">                
+                <!-- sidebar: style can be found in sidebar.less -->
+                {MENU_IZQUIERDO}
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">                
+                <!-- Content Header (Page header) -->
+                {NAVEGACION}
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header col-xs-12">									
+									<h3 class="box-title col-xs-10">Listado de Evaluaciones</h3>    							
+									<div class="col-xs-2">									
+										<a href="#" class="btn btn-default btn-sm">Agregar Nueva Evaluaci&oacuten </a>
+									</div>									
+                                </div>
+								<!-- /.box-header -->															
+                                <div class="box-body table-responsive">									
+                                    <table id="listEval" name="listEval" class="table table-bordered table-hover">
+										<thead>
+                                            <tr>                                                
+                                                <th>Id</th>
+												<th>Nombre Evaluaci&oacuten </th> 
+                                                <th>Descripci&oacuten </th>    
+												<th>Num Preguntas</th>
+												<th></th>												
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {LISTADO_EVALUACIONES}
+                                        </tbody>
+									</table>									
+                                </div>
+								<!-- /.box-body -->
+                            </div>
+							<!-- /.box -->
+                            
+                           
+						   <!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->
+
+		{FOOTER_ADMIN}
+		
+		{LIST_EVAL_JS}
+		
+		<script type="text/javascript">
+		
+			$('#listEval').DataTable({					
+			
+				"oLanguage": {
+								"sProcessing":     "Procesando...",
+								"sLengthMenu":     "Mostrar _MENU_ registros",
+								"sZeroRecords":    "No se encontraron resultados",
+								"sEmptyTable":     "Ningún dato disponible en esta tabla",
+								"sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+								"sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+								"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+								"sInfoPostFix":    "",
+								"sSearch":         "Buscar: ",
+								"sUrl":            "",
+								"sInfoThousands":  ",",
+								"sLoadingRecords": "Cargando...",
+								"oPaginate": {
+									"sFirst":    "Primero",
+									"sLast":     "Último",
+									"sNext":     "Siguiente",
+									"sPrevious": "Anterior"
+								},
+								"oAria": {
+									"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+									"sSortDescending": ": Activar para ordenar la columna de manera descendente"
+								}
+				},
+				
+				"order" : [0, 'desc'],				
+				"columnDefs": [{"targets": [ 0 ],"visible": false}],
+				"bAutoWidth" : true,
+				"bFilter" : true,
+				"bPaginate" : true,
+				"bLengthChange" : true,	
+				"aLengthMenu" : [5,10,20,30,60,100],
+				"bProcessing": true,
+				"bSort" : true,
+				"bInfo" : true
+				
+			});
+			
+		</script>
+				
+    </body>	
+	
+</html>

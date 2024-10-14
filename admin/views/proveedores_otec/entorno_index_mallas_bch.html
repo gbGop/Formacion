@@ -1,0 +1,116 @@
+<div class="col-md-12">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Malla Bch</h3>
+        </div>
+    </div>
+</div>
+<div class="">
+    <div class="col-lg-12 col-md-12">
+        <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+        <br>
+        <br>
+        <table class="table table-bordered" id="" style="background-color: #fff;">
+            <input name="id_emp" type="hidden" value="{ID_EMPRESA_ENCODEADO}"/>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th style="width: 50%;">Nombre</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="even" role="row" {bgcolor}="">
+                <form action="?sw=proveedores_ejecutivos_save" method="post" name="">
+                    <td class="mp_txt_small">
+                        <input aria-describedby="" class="form-control" id="direccion" name="direccion" required
+                               type="text" readonly value="{ID_PROGRAMA_NEXT}">
+                    </td>
+                    <td class="mp_txt_small" >
+                        <input aria-describedby="" class="form-control" id="nombre" name="nombre" type="text"   REQUIRED>
+                    </td>
+                    <td class="mp_txt_small">
+                        <input class="btn btn-success" type="submit" value="Guardar">
+                        <input id="id" name="id" type="hidden" value="">
+                        <input id="tipo" name="tipo" type="hidden" value="{ID_TIPO}">
+                    </td>
+                </form>
+            </tr>
+            </tbody>
+        </table>
+        <br><br>
+        <style>
+            table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting, table.dataTable thead > tr > td.sorting_asc, table.dataTable thead > tr > td.sorting_desc, table.dataTable thead > tr > td.sorting {
+                padding-right: 20px !important;
+                BACKGROUND-COLOR: none;
+                color: none;
+                background-color: #ffffff !important;
+                font-weight: 600;
+                color: #283252 !important;
+                margin-bottom: 12px;
+                font-size: 15px;
+            }
+        </style>
+        <table class="table table-bordered" id="example2">
+            <input name="id_emp" type="hidden" value="{ID_EMPRESA_ENCODEADO}"/>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th  style="width: 50%;">Nombre</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {LISTA}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#example2').DataTable({
+        "oLanguage": {
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "No hay dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar: ",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Ultimo",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+        "bAutoWidth": false,
+        "pageLength": 50,
+        "order": [[1, "asc"]],
+        "columnDefs": [{
+            "targets": [0],
+            "searchable": true
+        }],
+        initComplete: function () {
+            this.api().columns('.select-filter').every(function () {
+                var column = this;
+                var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function () {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                    column.search(val ? '^' + val + '$' : '', true, false).draw();
+                });
+                column.data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
+        }
+    });
+</script>

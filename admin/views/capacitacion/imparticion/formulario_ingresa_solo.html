@@ -1,0 +1,130 @@
+
+<script>
+				$(function() {
+
+					$(".date-input-css").datepicker();
+
+					//Timepicker
+					$(".timepicker").timepicker({
+						showInputs : false,
+					});
+				})
+			</script>
+			
+			
+			
+<table id="tabla_cursos" class="table table-bordered table-hover sortable">
+	<thead>
+		<tr>
+			<th class="width140 bg_gray">IMAGEN</th>
+			<th class="width140 bg_gray">CODIGO_CURSO</th>
+			<th class="width140 bg_gray" >NOMBRE_CURSO</th>
+			<th class="width140 bg_gray">MODALIDAD</th>
+			<th class="width140 bg_gray">SENCE</th>
+			<th class="width140 bg_gray">Opciones</th>
+		</tr>
+	</thead>
+	<tfoot style="display: table-header-group;">
+
+	</tfoot>
+	<tbody>
+		{ROW_LISTADO}
+	</tbody>
+	<tfoot>
+
+	</tfoot>
+</table>
+
+<script type="text/javascript">
+	$('#tabla_cursos').DataTable({
+
+		"oLanguage" : {
+			"sProcessing" : "Procesando...",
+			"sLengthMenu" : "Mostrar _MENU_ registros",
+			"sZeroRecords" : "No se encontraron resultados",
+			"sEmptyTable" : "Ningún dato disponible en esta tabla",
+			"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+			"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+			"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+			"sInfoPostFix" : "",
+			"sSearch" : "Buscar: ",
+			"sUrl" : "",
+			"sInfoThousands" : ",",
+			"sLoadingRecords" : "Cargando...",
+			"oPaginate" : {
+				"sFirst" : "Primero",
+				"sLast" : "Último",
+				"sNext" : "Siguiente",
+				"sPrevious" : "Anterior"
+			},
+			"oAria" : {
+				"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+				"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+			}
+		},
+
+		"bAutoWidth" : false,
+		"pageLength" : 50,
+		"order" : [0, 'desc'],
+		"columnDefs" : [{
+			"targets" : [0],
+			"searchable" : false
+		}],
+
+		initComplete : function() {
+			this.api().columns('.select-filter').every(function() {
+				var column = this;
+				var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+					var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+					column.search( val ? '^' + val + '$' : '', true, false).draw();
+				});
+
+				column.data().unique().sort().each(function(d, j) {
+					select.append('<option value="' + d + '">' + d + '</option>')
+				});
+			});
+		}
+	});
+
+</script>
+
+<form action="?sw=adimparti" method="POST" name="FormCurso" enctype="multipart/form-data"  >
+	<br>
+	Codigo Impartición
+	&nbsp;
+	<input required="required"  type="text" class="form-control" name="cod_imparticion" value="{VALUE_COD_IMPARTICION}" />
+	<br>
+	Fecha Inicio
+	&nbsp;
+	<input class="form-control date-input-css" value="{FECHAINICIO}" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha de Inicio" type="text" required>
+
+	<br>
+	Fecha Término
+	&nbsp;
+	<input type="text" class="form-control date-input-css" name="fecha_termino" id="fecha_termino" required="required" value="{VALUE_FECHA_TERMINO}"  >
+	<br>
+	Dirección
+	&nbsp;
+	<input required="required"  type="text" class="form-control" name="direccion" value="{VALUE_DIRECCION}" />
+	<br>
+	Ciudad
+	&nbsp;
+	<input required="required"  type="text" class="form-control" name="ciudad" value="{VALUE_CIUDAD}" />
+
+	<br>
+	Cupos
+	&nbsp;
+	<input required="required"  type="text" class="form-control" name="cupos" value="{VALUE_CUPOS}" size="5" />
+
+	<br>
+
+	<a href="?sw=listaInscripciones2">
+	<button id="send" type="button" class="btn btn-primary">
+		Volver
+	</button> </a>&nbsp;
+	<button type="submit" class="btn btn-primary">
+		Ingresar Imparticion
+	</button>
+
+</form>

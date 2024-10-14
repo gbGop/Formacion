@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>AdminLTE | Dashboard</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        {HEAD}
+    
+    <body class="skin-blue">
+        <!-- header logo: style can be found in header.less -->
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="left-side sidebar-offcanvas">
+                <!-- sidebar: style can be found in sidebar.less -->
+                {MENU_IZQUIERDO}
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                {NAVEGACION}
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <!-- left column -->
+                       <!--/.col (left) -->
+                        <!-- right column -->
+                         <div class="col-xs-12">
+                            <!-- general form elements disabled -->
+                           <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">{TITULO}</h3>
+									
+							   </div><!-- /.box-header -->
+								<hr>
+									
+                                </div><!-- /.box-header -->
+								
+								
+                                <div class="box-body col-md-8">
+                                    <form action="{ACTION}" method="POST" name="FormMalla">
+                                        <!-- text input -->
+										
+										 <div class="form-group">
+                                            <label>Codigo Malla</label>
+                                            <input type="text" class="form-control" name="codigo_malla" value="" />
+                                        </div>
+																				
+										
+                                        <div class="form-group">
+                                            <label>Nombre Malla</label>
+                                            <input type="text" class="form-control" name="nombre_malla" value="" />
+                                        </div>
+										
+										
+										 <div class="form-group">
+                                            <label>Descripci&oacute;n de Malla</label>
+                                            <input type="text" class="form-control" name="descripcion_malla" value="" />
+                                        </div>
+										
+										<div class="form-group">
+                                            <label>Tipo de Malla</label>
+                                            <select class="form-control" name="tipo_malla">
+                                                <option value="obligatorio">Obligatorio</option>
+                                                <option value="opcional">Opcional</option>
+                                            </select>
+                                        </div>
+										
+										<div class="form-group">
+                                            <label>Certificable</label>
+                                            <select class="form-control"  name="certificable">
+                                                <option value="si">Si</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </div>
+										
+										<div class="form-group">
+                                            <label>Ponderacion</label>
+                                            <select class="form-control"  name="ponderacion">
+                                                <option value="si">Si</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </div>
+										
+										<div class="form-group">
+                                            <label>Tipo de Fecha</label>
+                                            <select class="form-control"  name="tipo_fecha">
+                                                <option value="absoluta">Absoluta</option>
+                                                <option value="relativa">Relativa</option>
+                                            </select>
+                                        </div>
+										
+										
+                                        <div class="box-footer">
+										
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> {VALOR_BOTON}</button>
+										<a href="?sw=listcmallas" class="btn btn-danger"><i class="fa fa-reply"></i> Volver</a>
+                                    </div>
+
+                                    </form>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div><!--/.col (right) -->
+                    </div>   <!-- /.row -->
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->
+     {FOOTER_ADMIN}
+    </body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <meta charset="UTF-8">
+                <title>Admin</title>
+                <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+                <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+                {HEAD}
+        </head>
+        <body class="skin-blue">
+                <!-- header logo: style can be found in header.less -->
+                {HEADER}
+                <div class="wrapper row-offcanvas row-offcanvas-left">
+                        <!-- Left side column. contains the logo and sidebar -->
+                        <aside class="left-side sidebar-offcanvas">
+                                <!-- sidebar: style can be found in sidebar.less -->
+                                {MENU_IZQUIERDO} <!-- /.sidebar -->
+                        </aside>
+                        <!-- Right side column. Contains the navbar and content of the page -->
+                        <aside class="right-side">
+                                <!-- Content Header (Page header) -->
+                                {NAVEGACION} <!-- Main content -->
+                                <section class="content">
+                                        <div class="row">
+                                                <div class="col-xs-12">
+                                                        <div class="box boxheader">
+                                                                <div class="box-header with-border" style="border-bottom: 1px solid #F4F4F4;">
+                                                                        <h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Módulos y Evaluaciones | Cursos Elearning</h3>
+                                                                </div>
+                                                                <div class="box-body table-responsive">
+                                                                        <div class="boxsubtitle" style="border-bottom: 1px solid #F4F4F4;">
+                                                                                <h6 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Selecciona Programa</h6>
+                                                                        </div>
+                                                                        <form class="form-horizontal" method="POST" name="ReporteCapacitacion" id="ReporteCapacitacion" action="?sw=vista_mallas_clasificaciones_cursos_objetos" >
+                                                                                <input class="form-control" id="id_empresa" name="id_empresa"type="hidden" value="{ID_EMPRSA}">
+                                                                                <div class="">
+                                                                                        <div class="col-md-3">
+                                                                                                <div class="form-group">
+                                                                                                        <label for="programa">Programa Elearning</label>
+                                                                                                        <select name="programa"  id="programa" class="form-control" >
+                                                                                                                <option value="0">Todas</option>
+                                                                                                                {PROGRAMAS_ELEARNING}
+                                                                                                        </select>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-3">
+                                                                                                <div class="form-group">
+                                                                                                        <label for="rut">RUT Colaborador</label>
+                                                                                                        <input type="text" class="form-control" name="rut" id="rut" value="{RUT_COLABORADOR}">
+                                                                                                </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-3">
+                                                                                                <div class="form-group">
+                                                                                                        <label for="codigo_escolaridad"></label>
+                                                                                                        <br>
+                                                                                                        <button type="submit" class="btn btn-primary">
+                                                                                                                Filtrar
+                                                                                                        </button>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-3"></div>
+                                                                                </div>
+                                                                                <br>
+                                                                                <br>
+                                                                        </form>
+                                                                </div>
+                                                                <br>
+                                                                <br>
+                                                        <!--
+                                                            <div class="">
+                                                                        <div class="box-body table-responsive">
+                                                                                <div class="boxsubtitle" style="border-bottom: 1px solid #F4F4F4;">
+                                                                                        <h6 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Asignación de Curso a Clasificación y Mallas</h6>
+                                                                                </div>
+                                                                        </div>
+                                                                        <table class="table">
+                                                                                <form class='form-horizontal' method='POST' name='InsertaNuevaRelación' id='InsertaNuevaRelación' action='?sw=vista_mallas_clasificaciones_cursos_objetosInsertaRel'>
+                                                                                        <tr>
+                                                                                                <td width="30%"><small>CURSOS</small>
+                                                                                                <br>
+                                                                                                {SELECT_CURSOS}</td>
+                                                                                                <td width="30%"><small>CLASIFICACION</small>
+                                                                                                <br>
+                                                                                                {SELECT_CLASIFICACION}</td>
+                                                                                                <td width="30%"><small>MALLAS</small>
+                                                                                                <br>
+                                                                                                {SELECT_MALLAS}</td>
+                                                                                                <input type="hidden" id="id_programa" name="id_programa" value="{CODIGO_PROGRAMA}" />
+                                                                                                <td width="8%">
+                                                                                                <br>
+                                                                                                <br>
+                                                                                                <input type='submit' class='btn btn-info btn-xs' value="Asignación de Curso a Malla">
+                                                                                                </td>
+                                                                                        </tr>
+                                                                                </form>
+
+                                                                        </table>
+                                                                </div>
+                                                                <div class="">
+                                                                        <!--<div class="box-body table-responsive">
+                                                                                <div class="boxsubtitle" style="border-bottom: 1px solid #F4F4F4;">
+                                                                                        <h6 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Crear Mallas y Clasificaciones</h6>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="pull-right">
+                                                                                <button type="button" class="btn btn-success btn-xs"
+                                                                                data-toggle="modal"
+                                                                                data-id_malla="{ID_PROGRAMA}"
+                                                                                data-target="#NuevaMalla">
+                                                                                        Crear nueva Malla
+                                                                                </button>
+                                                                                &nbsp; <a href="?sw=accioncurso2Elearning">
+                                                                                <button type="button" class="btn btn-success btn-xs">
+                                                                                        Crear nuevo Curso
+                                                                                </button></a>
+                                                                        </div>
+                                                                </div>
+                                                                <br><br> -->
+                                                                <div class="box-body table-responsive">
+                                                                        <div class="boxsubtitle" style="border-bottom: 1px solid #F4F4F4;">
+                                                                                <h6 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Lista de Mallas, Clasificaciones, Cursos y Módulos</h6>
+                                                                        </div>
+                                                                </div>
+                                                                <table class="table table-bordered table-">
+                                                                        <thead>
+                                                                                <tr>
+                                                                                        <th class="bg_gray sorting_asc" width="30%">Estructura</th>
+                                                                                        <th class="bg_gray sorting_asc" width="40%">Datos_Parametros</th>
+                                                                                        <th class="bg_gray sorting_asc" width="8%">Codigo</th>
+                                                                                        <th class="bg_gray sorting_asc" width="8%">Opciones</th>
+                                                                                </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                                {ROW_LISTADO_MALLAS}
+                                                                        </tbody>
+                                                                        <tfoot></tfoot>
+                                                                </table>
+                                                                <!--<HR>
+                                                                {ROW_LISTADO_CLASIFICACION}
+                                                                <HR>
+                                                                {ROW_LISTADO_CURSO}
+                                                                <HR>
+                                                                {ROW_LISTADO_OBJETO}
+                                                                <HR>
+                                                                -->
+                                                                </HR>
+                                                        </div>
+                                                </div>
+                                        </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                </section>
+                <div class="modal fade" id="NuevaMalla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                        <div class="modal-body">
+                                                <STRONG>Nueva Malla para Programa {CODIGO_PROGRAMA}</STRONG>
+                                                <br>
+                                                ID Sugerido: {ID_MALLA_SUGERIDO}
+                                                <hr>
+                                                <form  action="?sw=vista_mallas_clasificaciones_cursos_objetos_saveMalla" method="post" name="formObjeto_{ID_MALLA_SUGERIDO}" enctype="multipart/form-data">
+                                                        <div class="form-group row">
+                                                                <label for="example-text-input" class="col-xs-3 col-form-label"> <small>Nombre Malla</small></label>
+                                                                <div class="col-xs-9">
+                                                                        <small>
+                                                                                <input class="form-control" type="text" value=""
+                                                                                id="malla_nombre" name="malla_nombre" required>
+                                                                        </small>
+                                                                </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                                <label for="example-text-input" class="col-xs-3 col-form-label"> <small>Descripci&oacute;n</small></label>
+                                                                <div class="col-xs-9">
+                                                                        <small>
+                                                                                <input class="form-control" type="text" value=""
+                                                                                id="malla_descripcion" name="malla_descripcion" >
+                                                                        </small>
+                                                                </div>
+                                                        </div>
+                                        </div>
+                                        <input type="hidden" id="id_malla_sugerido" name="id_malla_sugerido" value="{ID_MALLA_SUGERIDO}">
+                                        <input type="hidden" id="id_malla" name="id_malla" value="{ID_MALLA}">
+                                        <input type="hidden" id="id_programa" name="id_programa" value="{CODIGO_PROGRAMA}">
+                                        <CENTER>
+                                                <script>
+function GuardaMalla() {
+if(document.formObjeto_{ID_MALLA_SUGERIDO}.malla_nombre.value==""){
+alert("Ingresa Nombre");
+}else if(document.formObjeto_{ID_MALLA_SUGERIDO}.malla_descripcion.value==""){
+alert("Ingresa Descripcion");
+}else{
+document.formObjeto_{ID_MALLA_SUGERIDO}.submit();
+}
+}
+                                                </script>
+                                                <button type="button" onclick="GuardaMalla();" class="btn btn-info">
+                                                        Guardar Malla
+                                                </button>
+                                        </CENTER>
+                                        </form>
+                                </div>
+                                <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                Cerrar Ventana
+                                        </button>
+                                </div>
+                        </div>
+                </div>
+                </div> <!-- /.content -->
+                </aside><!-- /.right-side -->
+                </div><!-- ./wrapper -->
+                {FOOTER_ADMIN} <!-- DataTables JavaScript -->
+                <script src="./js/plugins/datatables/jquery.dataTables.js"></script>
+                <script src="./js/plugins/datatables/dataTables.bootstrap.js"></script>
+                <script type="text/javascript">
+            $('#tabla1').dataTable({
+                "oLanguage" : {
+                    "sProcessing" : "Procesando...",
+                    "sLengthMenu" : "Mostrar _MENU_ registros",
+                    "sZeroRecords" : "No se encontraron resultados",
+                    "sEmptyTable" : "Ningún dato disponible en esta tabla",
+                    "sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix" : "",
+                    "sSearch" : "Buscar: ",
+                    "sUrl" : "",
+                    "sInfoThousands" : ",",
+                    "sLoadingRecords" : "Cargando...",
+                    "oPaginate" : {
+                        "sFirst" : "Primero",
+                        "sLast" : "Último",
+                        "sNext" : "Siguiente",
+                        "sPrevious" : "Anterior"
+                    },
+                    "oAria" : {
+                        "sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+                    }
+                },
+                "bPaginate" : true,
+                "bLengthChange" : true,
+                "bFilter" : true,
+                "bSort" : true,
+                "bInfo" : true,
+                "bAutoWidth" : true
+            });
+                </script>
+        </body>
+</html>

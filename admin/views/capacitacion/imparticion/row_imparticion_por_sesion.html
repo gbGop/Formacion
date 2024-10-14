@@ -1,0 +1,59 @@
+	<div class="panel-heading">			
+			<div class="row">
+			  <div class="col-xs-3 col-sm-3"> Fecha </div>
+			  <div class="col-xs-2 col-sm-2"> Hora Desde </div>
+			  <div class="col-xs-2 col-sm-2"> Hora Hasta </div>
+			  <div class="col-xs-2 col-sm-2"> Relator </div>
+			  <div class="col-xs-1 col-sm-1"> </div>
+			  <div class="col-xs-2 col-sm-2"> </div>
+			  
+			  
+			    <div class="col-xs-3 col-sm-3 ">
+			      <input required="required" data-requerido="requerido" type="date" class="form-control" name="fecha{ID_SESION}" id="fecha{ID_SESION}" value="{VALUE_COD_IMPARTICION_FECHA}" />
+			    </div>
+			    <div class="col-xs-2 col-sm-2">
+			      <input required="required" data-requerido="requerido" type="time" class="form-control" name="hora_desde{ID_SESION}" value="{VALUE_COD_IMPARTICION_HORA_DESDE}" />
+			    </div>
+			    <div class="col-xs-2 col-sm-2">
+			      <input required="required" data-requerido="requerido" type="time" class="form-control" name="hora_hasta{ID_SESION}" value="{VALUE_COD_IMPARTICION_HORA_HASTA}" />
+			    </div>
+			    <div class="col-xs-2 col-sm-2">
+
+
+
+			      <select name="relator_SES{ID_SESION}" id="relator_SES{ID_SESION}" class="form form-control">
+			      	<option value="{RELATOR_SES}">{RELATOR_nombre_SES}</option>
+			      	<option disable>--------------</option>
+			      	{OPTION_RELATOR_NOMBRE_TIPO}
+			      </select>
+			    </div>
+			    <div class="col-xs-1 col-sm-1 alert">
+			    	{NUMERO_HORAS_SESION}
+			    </div>			    
+			    <div class="col-xs-2 col-sm-2">
+			      <input type="submit" class="btn btn-link" name="guardar" value="Guardar" />
+			      <input type="hidden" class="" name="id_linea{ID_SESION}" 		value="{ID_LINEA_ENC}" />
+			      <input type="hidden" class="" name="sesion" 			value="{ID_SESION}" />
+			      <input type="hidden" class="" name="id_curso_enc" value="{ID_CURSO_ENC}" />
+			      <input type="hidden" class="" name="id_imparticion_enc" 	value="{ID_IMPARTICION_ENC}" />
+			     <a href="?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i={ID_CURSO_ENC}&id_imparticion={ID_IMPARTICION_ENC}&del={ID_LINEA_ENC}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+						  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+						  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+						</svg>
+					 </a>
+			    </div>
+			</div>
+</div>
+
+	<script>
+		document.getElementById("fecha{ID_SESION}").addEventListener("input", function() {
+			var inputDate = new Date(this.value);
+			var day = inputDate.getDay();
+
+			/*if (day === 5 || day === 6) {
+				alert("Recuerda que debes seleccionar solo fechas de Lunes a Viernes");
+				this.value = "";
+			}*/
+		});
+
+	</script>

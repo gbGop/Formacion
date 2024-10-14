@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>AdminLTE | Dashboard</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        {HEAD}
+    
+    <body class="skin-blue">
+        <!-- header logo: style can be found in header.less -->
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="left-side sidebar-offcanvas">
+                <!-- sidebar: style can be found in sidebar.less -->
+                {MENU_IZQUIERDO}
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                {NAVEGACION}
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <!-- left column -->
+                       <!--/.col (left) -->
+                        <!-- right column -->
+                        <div class="col-md-12">
+                            <!-- general form elements disabled -->
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">{TITULO}</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <form action="{ACTION}" method="POST" name="{NOMBRE_FORMULARIO}">
+                                        <!-- text input -->
+										
+										
+																				
+										<input type="hidden" name="id" value="{ID_CURSO_ENCODEADO}"> 
+                                          <div class="form-group">
+                                            <label>Nombre del Curso</label>
+                                            <input type="text" class="form-control" name="nombre_curso" value="{NOM_CURSO}" />
+                                        </div>
+										
+										
+										 <div class="form-group">
+                                            <label>Descripci&oacute;n</label>
+                                            <textarea rows="5" class="form-control" name="descripcion_curso" >{DES_CURSO}</textarea>
+                                        </div>
+										
+										 <div class="form-group">
+                                            <label>Objetivo del Curso</label>
+                                            <textarea rows="5" class="form-control" name="objetivo_curso" >{OBJETIVO_CURSO}</textarea>
+                                        </div>
+										
+										<div class="form-group">
+                                            <label>Clasificación del Curso</label>
+                                            <select class="form-control" name="clasificacion_curso">
+                                                <option value="-">Seleccione</option>
+                                                {OPTIONS_CLASIFICACION}
+                                            </select>
+                                        </div>
+										
+										
+										<div class="form-group">
+                                            <label>Modalidad de Curso</label>
+                                            <select class="form-control" name="modalidad">
+                                                <option value="-">Seleccione</option>
+                                                {OPTIONS_MODALIDAD}
+                                            </select>
+                                        </div>
+										
+										
+										 <div class="form-group">
+                                            <label>Tipo del Curso</label>
+											<select class="form-control" name="tipo_curso">
+                                                <option value="-">Seleccione</option>
+                                                {OPTIONS_TIPO_CURSO}	
+                                            </select>
+											
+                                        </div>
+										
+										 <div class="form-group">
+                                            <label>SENCE</label><br>
+                                            <input type="radio" {CHECKEDsi} class="form-control" name="sence" value="si" />SI&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" {CHECKEDno} class="form-control" name="sence" value="no" />NO
+                                        </div>
+										
+										 <div class="form-group">
+                                            <label>CBC</label><br>
+                                            <input type="radio" {CHECKEDsiCBC} class="form-control" name="cbc" value="si" />SI&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" {CHECKEDnoCBC} class="form-control" name="cbc" value="no" />NO
+                                        </div>
+										
+										
+										
+
+										 <div class="form-group">
+                                            <label>Número de horas</label>
+                                            <input type="text" class="form-control" name="numero_horas" value="{NUMERO_HORAS}" />
+                                        </div>
+										
+										 <div class="form-group">
+                                            <label>Cantidad máxima de participantes</label>
+                                            <input type="text" class="form-control" name="cantidad_maxima_participantes" value="{CANTIDAD_MAXIMA_PARTICIPANTES}" />
+                                        </div>
+										
+										<div class="form-group">
+                                            <label>RUT OTEC</label>
+                                            <select class="form-control" name="rut_otec">
+                                                <option value="-">Seleccione</option>
+                                                {OPTIONS_RUT_OTEC}	
+                                            </select>
+                                        </div>
+										
+										
+
+										
+										
+										
+										
+                                        <div class="box-footer">
+                                        <button type="submit" class="btn btn-primary">{VALOR_BOTON}</button>
+                                    </div>
+
+                                    </form>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div><!--/.col (right) -->
+                    </div>   <!-- /.row -->
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->
+     
+    </body>
+</html>

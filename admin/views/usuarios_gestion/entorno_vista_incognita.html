@@ -1,0 +1,37 @@
+<script>
+    function generaPlantilla2() {
+        $("#FormPlantilla2").submit();
+    }
+</script>
+<form action="?sw=gestion_usuario_clave" method="post" id="FormPlantilla2" name="FormPlantilla2"></form>
+<script>
+    function generaPlantilla() {
+        $("#FormPlantilla").submit();
+    }
+</script>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Vista Inc&oacute;gnita de Usuarios</h3>
+    </div>
+    <div class="panel-body">
+    	<div class="col-lg-12">
+        <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+            <div class="panel-body">
+								<form action="?sw=vista_incognita" name="VCl" method="post">
+									Rut
+										<br>
+											<input type="text" class="form form-control" name="bc" placeholder="" id="bc" style="width:200px">
+											<input  type="submit" class="btn btn-info" value="Buscar">
+										<br>
+								</form>   
+								{BLOQUEO}             
+            </div>    		
+    	</div>
+
+    </div>
+</div>
+
+
+
+

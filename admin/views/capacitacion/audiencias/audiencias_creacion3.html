@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Administrador</title>
+		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+		<!-- bootstrap 3.0.2 -->
+		{HEAD}
+
+		<body class="skin-blue">
+			<!-- header logo: style can be found in header.less -->
+			{HEADER}
+			<div class="wrapper row-offcanvas row-offcanvas-left">
+				<!-- Left side column. contains the logo and sidebar -->
+				<aside class="left-side sidebar-offcanvas">
+					<!-- sidebar: style can be found in sidebar.less -->
+					{MENU_IZQUIERDO}
+					<!-- /.sidebar -->
+				</aside>
+
+				<!-- Right side column. Contains the navbar and content of the page -->
+				<aside class="right-side">
+					<!-- Content Header (Page header) -->
+					{NAVEGACION}
+					<!-- Main content -->
+					<section class="content">
+						<div class="row">
+							<!-- left column -->
+							<!--/.col (left) -->
+							<div class="col-md-12">
+
+								<div class="box boxheader">
+									<div class="box-header">
+										<a href="?sw=audiencias_creacion" class="btn btn-success btn-sm pull-right flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;"> <i class="fa fa-plus"></i> Crear Audiencias</a>&nbsp; 
+									</div>
+									<br>
+									<div class="row"></div>
+									<div class="box">
+										<div class="boxsubtitle" style="border-bottom: 1px solid #F4F4F4;">
+											<h6 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Creación de Audiencias</h6>
+										</div>
+
+										<div class="row">
+											<form class="form-horizontal" style="margin-top:30px;padding-bottom:30px" name="FormPersonas" id="FormPersonas" action="?sw=finAudiencia&ia={ID_AUDIENCIA_ENCODEADA}" method="POST" enctype="multipart/form-data">
+												<div class="col-md-12">
+													<div class="panel panel-info">
+														<div class="panel-body">
+															<span class="lms_vista_malla"><span class="label label-sm label-info lms_text_white_sm1">Paso 1. Seleccionar Campos</span> </span>
+															<span class="lms_vista_malla"><span class="label label-sm label-info lms_text_white_sm1">Paso 2. Definir Datos </span> </span>
+															<span class="lms_vista_malla"><span class="label label-sm label-success lms_text_white_sm1">Paso 3. Nombrar Audiencia</span> </span>
+														</div>
+													</div>
+
+													<div class="box">
+														<div class="boxsubtitle" style="border-bottom: 1px solid #F4F4F4;">
+															<h6 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Nueva Audiencia</h6>
+														</div>
+														<br>
+														Nombre Audiencia
+														<br>
+														<input class="form-control" style="width: 50%;" name="nombre" id="rut" placeholder="Ingrese los datos" type="text" required="">
+														<br>
+														Descripción Audiencia
+														<br>
+														<input class="form-control" style="width: 50%;" name="descripcion" id="rut" placeholder="Ingrese los datos" type="text" required="">
+														<br>
+														<br>
+														<a href="?sw=excAudie&ia={ID_AUDIENCIA_ENCODEADA}" class="btn btn-info">Descargar Excel</a>
+														<br>
+														<br>
+														</br>
+														<div class="row">
+
+															<input name="id_empresa" id="id_empresa"  type="hidden" value="{ID_EMPRESA}">
+
+															<div class="col-md-12">
+																<div class="panel panel-info">
+																	<div class="panel-heading">
+																		<h3 class="panel-title">Resumen de Audiencia</h3>
+																	</div>
+																	<div class="panel-body">
+																		<div class="row">
+
+																			<div class="panel panel-info">
+																				<div class="panel-heading">
+																					<h3 class="panel-title">Participantes</h3>
+																				</div>
+																				<div class="panel-body">
+																					<div class="row">
+																						<label>&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-user"></i> <strong>{TOTAL_USUARIOS_AUDIENCIA}</strong> Participantes <a href="?sw=excAudie&ia={ID_AUDIENCIA_ENCODEADA}" class="btn btn-info"> <i class="fa fa-cloud-download"></i> Descargar Excel</a> </label>
+
+																					</div>
+																					<div class="progress-info">
+																						<br>
+																						<div class="progress">
+																							<span style="width: {PORCENTAJE_AUDIENCIA}%;" class="progress-bar progress-bar-success purple-soft">{PORCENTAJE_AUDIENCIA}% <span class="sr-only">{PORCENTAJE_AUDIENCIA}% de {TOTAL_USUARIOS} dotación</span> </span>
+																						</div>
+
+																					</div>
+																				</div>
+																			</div>
+
+																			{CAMPOS_SELECCIONADOS}
+																			
+																			<!--&nbsp;RUT seleccionados: <b>{TOTAL_RUT_POR_EXCEL}</b>
+																			<br>
+																			<br>
+--></br>
+																		</div>
+
+																	</div>
+
+																</div>
+															</div>
+
+														</div>
+
+													</div>
+												</div>
+
+												<div class="col-md-4 "></div>
+												<div class="col-md-4 ">
+													<button type="submit" class="btn btn-primary">
+														Guardar
+													</button>
+
+													<a href="?sw=listusu">
+													<button type="button" class="btn btn-gray">
+														Volver
+													</button></a>
+
+												</div>
+												<div class="col-md-4 "></div>
+
+											</form>
+
+										</div><!--/.col (right) -->
+									</div>
+									<!-- /.row -->
+					</section><!-- /.content -->
+				</aside><!-- /.right-side -->
+			</div><!-- ./wrapper -->
+
+			{FOOTER_ADMIN}
+
+			<script>
+				$('#foto1').change(function(e) {
+					//alert(e);
+					addImageP(e);
+
+				});
+
+				function addImageP(e) {
+					var file = e.target.files[0],
+					    imageType = /image.*/;
+
+					if (!file.type.match(imageType))
+						return;
+
+					var reader = new FileReader();
+					reader.onload = fileOnloadP;
+					reader.readAsDataURL(file);
+
+				}
+
+				function fileOnloadP(e) {
+					var result = e.target.result;
+					$('#imagenPerfil').attr("src", result);
+
+				}
+
+
+				$("#FormPersonas").submit(function() {
+
+					$("#back").show();
+					$("#loader").show();
+
+				});
+
+			</script>
+
+			<div id="back" class="modal-backdrop fade in" style="display:none;"></div>
+			<div id="loader" style="display:none;z-index:99999;color:#fff;position:fixed;width:200px;top: 50%; left: 47%;"><img src="img/ajax-loader.gif">
+			</div>
+
+		</body>
+</html>

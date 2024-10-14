@@ -1,0 +1,387 @@
+<script>
+	$(function() {
+
+		$(".date-input-css").datepicker();
+
+		//Timepicker
+		$(".timepicker").timepicker({
+			showInputs : false,
+		});
+	})
+</script>
+
+<table id="tabla_cursos" class="table table-bordered table-hover sortable">
+	<thead>
+		<tr>
+			<th class="width140 bg_gray">IMAGEN</th>
+			<th class="width140 bg_gray">CODIGO_CURSO</th>
+			<th class="width140 bg_gray" >NOMBRE_CURSO</th>
+			<th class="width140 bg_gray">MODALIDAD</th>
+			<th class="width140 bg_gray">SENCE</th>
+			<th class="width140 bg_gray">Opciones</th>
+		</tr>
+	</thead>
+	<tfoot style="display: table-header-group;">
+
+	</tfoot>
+	<tbody>
+		{ROW_LISTADO}
+	</tbody>
+	<tfoot>
+
+	</tfoot>
+</table>
+
+<script type="text/javascript">
+	$('#tabla_cursos').DataTable({
+
+		"oLanguage" : {
+			"sProcessing" : "Procesando...",
+			"sLengthMenu" : "Mostrar _MENU_ registros",
+			"sZeroRecords" : "No se encontraron resultados",
+			"sEmptyTable" : "Ningún dato disponible en esta tabla",
+			"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+			"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+			"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+			"sInfoPostFix" : "",
+			"sSearch" : "Buscar: ",
+			"sUrl" : "",
+			"sInfoThousands" : ",",
+			"sLoadingRecords" : "Cargando...",
+			"oPaginate" : {
+				"sFirst" : "Primero",
+				"sLast" : "Último",
+				"sNext" : "Siguiente",
+				"sPrevious" : "Anterior"
+			},
+			"oAria" : {
+				"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+				"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+			}
+		},
+
+		"bAutoWidth" : false,
+		"pageLength" : 50,
+		"order" : [0, 'desc'],
+		"columnDefs" : [{
+			"targets" : [0],
+			"searchable" : false
+		}],
+
+		initComplete : function() {
+			this.api().columns('.select-filter').every(function() {
+				var column = this;
+				var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+					var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+					column.search( val ? '^' + val + '$' : '', true, false).draw();
+				});
+
+				column.data().unique().sort().each(function(d, j) {
+					select.append('<option value="' + d + '">' + d + '</option>')
+				});
+			});
+		}
+	});
+
+</script>
+
+<form action="?sw=adimparti" method="POST" name="FormCurso" enctype="multipart/form-data"  >
+	<br>
+	Codigo Impartición
+	&nbsp;
+	<input required="required"  type="text" class="form-control" name="cod_imparticion" value="{VALUE_COD_IMPARTICION}" />
+	<br>
+	Fecha Inicio
+	&nbsp;
+	<input class="form-control date-input-css" value="{FECHAINICIO}" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha de Inicio" type="text" required>
+
+	<br>
+	Fecha Término
+	&nbsp;
+	<input type="text" class="form-control date-input-css" name="fecha_termino" id="fecha_termino" required="required" value="{VALUE_FECHA_TERMINO}"  >
+	<br>
+	Dirección
+	&nbsp;
+	<input required="required"  type="text" class="form-control" name="direccion" value="{VALUE_DIRECCION}" />
+	<br>
+	Ciudad
+	&nbsp;
+	<input required="required"  type="text" class="form-control" name="ciudad" value="{VALUE_CIUDAD}" />
+
+	<br>
+	Cupos
+	&nbsp;
+	<input required="required"  type="text" class="form-control" name="cupos" value="{VALUE_CUPOS}" size="5" />
+
+	<br>
+
+	<div class="col-lg-12">
+		<div class="col-md-2" style="width:150px;padding-left:0px;">
+			<div class="box boxheader">
+				<div class="box-header with-border" style="border-bottom: 1px solid #F4F4F4;">
+					<h3 class="" style="margin-left:10px;font-size:16px;"><i class="fa fa-clock-o"></i> Lunes</h3>
+				</div>
+
+				<div class="box-body">
+
+					<div class="row">
+
+						<div class="col-xs-5">
+							<input type="time" class="lunes_d_am"  id="lunes_d_am" value="{L1H}">
+							<!--<select class="form-control_horario "  id="lunes_d_am">
+							<option></option> {L1}
+							</select>
+							-->
+						</div>
+
+						<div class="col-xs-6">
+							<input type="time" class="lunes_h_am"  id="lunes_h_am" value="{L2H}">
+							<!--<select class="form-control_horario "  id="lunes_h_am">
+							<option></option>{L2}
+							</select>-->
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<input type="time" class="lunes_d_pm"  id="lunes_d_pm" value="{L3H}">
+							<!--<select class="form-control_horario" id="lunes_h_pm">
+							<option></option>{L3}
+							</select>
+							-->
+						</div>
+						<div class="col-xs-6">
+							<input type="time" class="lunes_h_pm"  id="lunes_h_pm" value="{L4H}">
+							<!--<select class="form-control_horario" id="lunes_h_pm">
+							<option></option>{L4}
+							</select>-->
+
+						</div>
+
+					</div>
+				</div><!-- /.box-body -->
+			</div>
+		</div>
+
+		<div class="col-md-2" style="width:150px;">
+			<div class="box boxheader">
+				<div class="box-header with-border" style="border-bottom: 1px solid #F4F4F4;">
+					<h3 class="" style="margin-left:10px;font-size:16px;"><i class="fa fa-clock-o"></i> Martes</h3>
+				</div>
+
+				<div class="box-body">
+					<div class="row">
+						<div class="col-xs-5">
+							<input type="time" class="martes_d_am"  id="martes_d_am" value="{L5H}">
+							<!--<select class="form-control_horario "  id="martes_d_am">
+							<option></option>{L5}
+							</select>-->
+
+						</div>
+						<div class="col-xs-6">
+							<input type="time" class="martes_h_am"  id="martes_h_am"  value="{L6H}">
+
+							<!--<select class="form-control_horario" id="martes_h_am" >
+							<option></option>{L6}
+							</select>-->
+
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<input type="time" class="martes_d_pm"  id="martes_d_pm"  value="{L7H}">
+							<!--<select class="form-control_horario" id="martes_d_pm" >
+							<option></option>{L7}
+							</select>-->
+
+						</div>
+						<div class="col-xs-6">
+							<input type="time" class="martes_h_pm"  id="martes_h_pm"  value="{L8H}">
+							<!--<select class="form-control_horario" id="martes_h_pm">
+							<option></option>{L8}
+							</select>-->
+
+						</div>
+
+					</div>
+				</div><!-- /.box-body -->
+			</div>
+		</div>
+
+		<div class="col-md-2" style="width:150px;">
+			<div class="box boxheader">
+				<div class="box-header with-border" style="border-bottom: 1px solid #F4F4F4;">
+					<h3 class="" style="margin-left:10px;font-size:16px;"><i class="fa fa-clock-o"></i> Miercoles</h3>
+				</div>
+
+				<div class="box-body">
+					<div class="row">
+						<div class="col-xs-5">
+							<input type="time" class="miercoles_d_am"  id="miercoles_d_am"  value="{L9H}">
+							<!--<select class="form-control_horario" id="miercoles_d_am" style="margin-left:-10px;">
+							<option></option>{L9}
+							</select>
+							-->
+						</div>
+
+						<div class="col-xs-6">
+							<input type="time" class="miercoles_h_am"  id="miercoles_h_am"  value="{L10H}">
+							<!--<select class="form-control_horario" id="miercoles_h_am">
+							<option></option>{L10}
+							</select>-->
+
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<input type="time" class="miercoles_d_pm"  id="miercoles_d_pm"  value="{L11H}">
+							<!--
+							<select class="form-control_horario" id="miercoles_d_pm">
+							<option></option>{L11}
+							</select>-->
+
+						</div>
+						<div class="col-xs-6">
+							<input type="time" class="miercoles_h_pm"  id="miercoles_h_pm"  value="{L12H}">
+							<!--
+							<select class="form-control_horario" id="miercoles_h_pm">
+							<option></option>{L12}
+							</select>
+							-->
+
+						</div>
+
+					</div>
+				</div><!-- /.box-body -->
+			</div>
+		</div>
+
+		<div class="col-md-2" style="width:150px;">
+			<div class="box boxheader">
+				<div class="box-header with-border" style="border-bottom: 1px solid #F4F4F4;">
+					<h3 class="" style="margin-left:10px;font-size:16px;"><i class="fa fa-clock-o"></i> Jueves</h3>
+				</div>
+
+				<div class="box-body">
+					<div class="row">
+						<div class="col-xs-5">
+							<input type="time" class="jueves_d_am"  id="jueves_d_am"  value="{L13H}">
+							<!--
+							<select class="form-control_horario" id="jueves_d_am">
+							<option></option>{L13}
+							</select>
+							-->
+
+						</div>
+						<div class="col-xs-6">
+							<input type="time" class="jueves_h_am"  id="jueves_h_am"  value="{L14H}">
+							<!--
+							<select class="form-control_horario" id="jueves_h_am">
+							<option></option>{L14}
+							</select>
+							-->
+
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<input type="time" class="jueves_d_pm"  id="jueves_d_pm" value="{L15H}">
+							<!--
+							<select class="form-control_horario" id="jueves_d_pm" >
+							<option></option>{L15}
+							</select>
+							-->
+
+						</div>
+						<div class="col-xs-6">
+							<input type="time" class="jueves_h_pm"  id="jueves_h_pm" value="{L16H}">
+
+							<!--<select class="form-control_horario" id="jueves_h_pm">
+							<option></option>{L16}
+							</select>
+							-->
+
+						</div>
+
+					</div>
+				</div><!-- /.box-body -->
+			</div>
+		</div>
+
+		<div class="col-md-2" style="width:150px;">
+			<div class="box boxheader">
+				<div class="box-header with-border" style="border-bottom: 1px solid #F4F4F4;">
+					<h3 class="" style="margin-left:10px;font-size:16px;"><i class="fa fa-clock-o"></i> Viernes</h3>
+				</div>
+
+				<div class="box-body">
+					<div class="row">
+						<div class="col-xs-5">
+							<input type="time" class="viernes_d_am"  id="viernes_d_am"  value="{L17H}">
+							<!--
+							<select class="form-control_horario" id="viernes_d_am" >
+							<option></option>{L17}
+							</select>
+							-->
+
+						</div>
+						<div class="col-xs-6">
+							<input type="time" class="viernes_h_am"  id="viernes_h_am" value="{L18H}">
+							<!--
+							<select class="form-control_horario" id="viernes_h_am">
+							<option></option>{L18}
+							</select>
+							-->
+
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<input type="time" class="viernes_d_pm"  id="viernes_d_pm" value="{L19H}">
+							<!--
+							<select class="form-control_horario" id="viernes_d_pm" style="margin-left:-10px;">
+							<option></option>{L19}
+							</select>-->
+
+						</div>
+						<div class="col-xs-6">
+							<input type="time" class="viernes_h_pm"  id="viernes_h_pm" value="{L20H}">
+							<!--
+							<select class="form-control_horario" id="viernes_h_pm" >
+							<option></option>{L20}
+							</select>
+							-->
+
+						</div>
+
+					</div>
+				</div><!-- /.box-body -->
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="form-group">
+															<label class="col-lg-2 control-label" for="region" >Comentarios:</label>
+															<div class="col-lg-10">
+																<textarea class="form-control"  name="comentarios" id="comentarios">{COMENTARIO}</textarea>
+															</div>
+		</div>
+														
+														
+														
+
+	<a href="?sw=listaInscripciones2">
+	<button id="send" type="button" class="btn btn-primary">
+		Volver
+	</button> </a>&nbsp;
+	<button type="submit" class="btn btn-primary">
+		Ingresar Imparticion
+	</button>
+
+</form>

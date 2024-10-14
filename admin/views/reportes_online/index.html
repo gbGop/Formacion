@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{TITTLE}</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>{HEAD}</head>
+        
+    <body class="skin-blue">
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <aside class="left-side sidebar-offcanvas">                
+                {MENU_IZQUIERDO}
+            </aside>
+
+            <aside class="right-side">                
+                {NAVEGACION}
+								<link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+
+              
+              
+     <section class="content">
+         <div class="row">
+           <div class="col-xs-12">
+				      <div class="box">
+				          <div class="box-header">
+				              <h3 class="box-title">Reportes Online</h3>
+			            </div> 
+							</div> 			
+			
+							<div class="row">
+								<div class="col-lg-12">
+									<div class="card">
+									  <div class="card-header">
+									    Filtros Organizacionales
+									  </div>
+									  <div class="card-body">
+									    <!--<h5 class="card-title"></h5>-->
+									    <p class="card-text">Realiza Filtros Globales para los Reportes de Cursos.</p>
+											<form name="filtros" id="filtros" action="?sw=reportes_online_updated" method="post">
+												<div class="col-lg-8"><strong>{C1}</strong><br>
+														{OPTIONS_C1_CHECKBOXS}
+													<!--<select name="c1" id="c1" class="form form-control">
+														{OPTIONS_C1}
+													</select>-->
+												</div>
+												<!--<div class="col-lg-2">{C2}
+													<select name="c2" id="c2" class="form form-control">
+														{OPTIONS_C2}
+													</select>
+												</div>
+												<div class="col-lg-2">{C3}
+													<select name="c3" id="c3" class="form form-control">
+														{OPTIONS_C3}
+													</select>
+												</div>
+												<div class="col-lg-2">{C4}
+													<select name="c4" id="c4" class="form form-control">
+														{OPTIONS_C4}
+													</select>
+												</div>-->
+												<div class="col-lg-2"><strong>Rut Colaborador</strong><br>
+													<input type="number" name="rut_colaborador" id="rut_colaborador" class="form form-control" value="{rut_colaborador}">
+												</div>				
+												<div class="col-lg-2">
+														<br>
+														<input type="submit" value="Filtrar" name="filtro" id="filtro" class="btn btn-primary">
+														<input type="hidden" value="1" name="create_filter" id="create_filter" class="btn btn-info">
+									  		</div>
+									  		<div class="col-lg-6"><br>{FILTROS_REALIZADOS_FILTRO_SUPERIOR}</div>
+									  		<div class="col-lg-6"><br><a href="?sw=reportes_online_updated&clean=1" class="btn btn-link pull-right">Resetear Filtros</a></div>
+									  	</form>	   
+										</div>
+									</div>
+								</div>				
+
+								<div class="col-lg-12"><br></div>
+								<div class="col-lg-12">
+									<div class="card">
+									  <div class="card-header">
+									    Reporte Cursos
+									  </div>
+									  <div class="card-body">
+											<p class="card-text">Reportes por cada cursos virtual.<em> (Recuerda que los filtros afectarán resultados)</em>.</p>
+						          <table id="example2" class="table table-bordered table-hover sortable">
+						              <thead>
+						                  <tr>
+						                      <th class="width40">IdCurso</th>
+						                      <th class="width140">Curso</th>
+						                      <th class="width140 ">Categor&iacute;a</th>                      
+																	<th class="width60">Descargar</th> 
+																	<th class="width60">Ver</th> 
+						                  </tr>
+						              </thead>
+						              <tbody>
+						                  {ROW_LISTADO_CURSOS}
+						              </tbody>
+						          </table>					   
+										</div>
+									</div>
+								</div>
+
+								<div class="col-lg-12"><br></div>
+								<div class="col-lg-12">
+									<div class="card">
+									  <div class="card-header">
+									    Reporte por Categor&iacute;as
+									  </div>
+									  <div class="card-body">
+											<p class="card-text">Reportes consolidado de todos los cursos de una categor&oacute;a en una línea por Colaborador.</p>
+								        <table id="example3" class="table table-bordered table-hover sortable">
+						              <thead>
+						                  <tr>
+						                      <th class="width40 ">IdCategor&iacute;a</th>
+						                      <th class="width140 ">Categor&iacute;a</th>
+																	<th class="width60 ">Descargar</th> 
+																	<th class="width60 ">Ver</th> 
+						                  </tr>
+						              </thead>
+						              <tbody>
+						                  {ROW_LISTADO_PROGRAMAS}
+						              </tbody>
+						          </table>					   
+										</div>
+									</div>
+								</div>
+
+								<div class="col-lg-12"><br></div>
+								<div class="col-lg-12">
+									<div class="card">
+									  <div class="card-header">
+									    Reporte por cada Cursos / Categor&iacute;as
+									  </div>
+									  <div class="card-body">
+											<p class="card-text">Reportes detalle de todos los cursos de una categor&oacute;a en una línea por cursos / colaborador.</p>
+
+						          <table id="example4" class="table table-bordered table-hover sortable">
+				              <thead>
+				                  <tr>
+				                      <th class="width40 ">IdCategor&iacute;a</th>
+				                      <th class="width140 ">Categor&iacute;a</th>
+															<th class="width60 ">Descargar</th> 
+				                  </tr>
+				              </thead>
+				              <tbody>
+				                  {ROW_LISTADO_PROGRAMAS_DETALLE}
+				              </tbody>
+				          </table>
+						              </tbody>
+						          </table>					   
+										</div>
+									</div>
+								</div>
+
+								<div class="col-lg-12"><br></div>
+								<div class="col-lg-12">
+									<div class="card">
+									  <div class="card-header">
+									    Reporte por Agrupaciones
+									  </div>
+									  <div class="card-body">
+											<p class="card-text">Se pueden crear Agrupaciones de Cursos, y luego obtener reportes por cada Agrupación por Curso / Colaborador.</p>
+
+											<p>
+											  <a class="btn btn-link pull-right" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+											    Crear Nueva Agrupaci&oacute;n
+											  </a>
+											</p>
+												<div class="collapse" id="collapseExample">
+												  <div class="card card-body">
+												    <form name="agrupacion" id="agrupacion" method="post" action="?sw=reportes_online_updated">
+												    	Nombre Agrupaci&oacute;n<br>
+												    	<input type="text" name="nombre_agrupacion" id="nombre_agrupacion" class="form form-control" required>
+												    	<br>
+												    	Selecci&oacute;n de Cursos <br>
+												    		{cursos_agrupacion_checkbox}
+												    	</select>
+												    	<input type="hidden" name="agrupacion_nueva" value="1">
+												    	<br>
+												    	<input type="submit" class="btn btn-info" value="Guardar Agrupaci&oacute;n">
+												    </form>
+												  </div>
+												</div>
+				      	
+				          <table id="example5" class="table table-bordered table-hover sortable">
+				              <thead>
+				                  <tr>
+				                      <th class="width40">IdAgrupaci&oacute;n</th>
+				                      <th class="width140">Agrupaci&oacute;n</th>
+				                      <th class="width140">Cursos</th>                      
+															<th class="width60">Descargar</th> 
+				                  </tr>
+				              </thead>
+				              <tbody>
+				                  {ROW_LISTADO_AGRUPACION}
+				              </tbody>
+				          </table>
+						              </tbody>
+						          </table>					   
+										</div>
+									</div>
+								</div>
+
+								<div class="col-lg-12"><br></div>
+								<div class="col-lg-12">
+									<div class="card">
+									  <div class="card-header">
+									    Reporte Completo
+									  </div>
+									  <div class="card-body">
+											<form name="reportes_completos" id="reportes_completos" action="?sw=reportes_online_descarga" method="post">
+												<div class="col-lg-3">
+													Seleccione Tipo de Reporte:<br>
+														<select id="rc_tipo" name="rc_tipo" class="form form-control" required>
+															{OPTIONS_RC_TIPOS_REPORTES}
+														</select>
+												</div>
+												<div class="col-lg-3">
+													Seleccione A&ntilde;o:<br>
+													<select id="rc_anos" name="rc_anos" class="form form-control">
+														{OPTIONS_RC_ANOS}
+													</select>
+												</div>
+												<div class="col-lg-3">
+													Seleccione Gerencia:<br>
+														<select id="rc_gerencia" name="rc_gerencia" class="form form-control">
+															{OPTIONS_RC_GERENCIA}
+														</select>
+												</div>
+												<div class="col-lg-3">
+													Seleccione Programa:<br>
+														<select id="rc_programa" name="rc_programa" class="form form-control">
+															{OPTIONS_RC_PROGRAMA}
+														</select>
+														<input type="submit" value="Descargar" name="filtro" id="filtro" class="btn btn-primary" style="float: right;">
+														<input type="hidden" value="1" name="download_reportes_completos" id="download_reportes_completos" class="btn btn-info">														
+													</form>		
+												</div>		
+											</div>					
+										</div>
+									</div>
+							
+								<div class="col-lg-12"><br></div>
+								<div class="col-lg-12">
+									<div class="card">
+									  <div class="card-header">
+									    Reporte Colaborador
+									  </div>
+									  <div class="card-body">								  	
+										<form name="reportes_completos_col" id="reportes_completos_col" action="?sw=reportes_online_descarga" method="post">										
+												Seleccione Colaborador:<br>
+														<select id="rc_colaboradores" name="rc_colaboradores" class="form form-control" required>
+															{OPTIONS_RC_COLABORADORES}
+														</select>
+												<input type="submit" value="Descargar" name="filtro" id="filtro" class="btn btn-primary" style="float: right;">
+												<input type="hidden" value="1" name="download_reportes_completos" id="download_reportes_completos" class="btn btn-info">		
+												<input type="hidden" value="Colaborador" id="rc_tipo" name="rc_tipo" class="btn btn-info">													
+										</form>								  											
+								</div>
+									</div>
+								</div>
+								<br>
+							
+               <div class="col-lg-12"><br><br><br></div>             
+                           
+
+           </div>
+      		</div>
+
+     </section>
+	</aside>
+</div>
+
+
+     {FOOTER_ADMIN}
+
+       	<script type="text/javascript">
+		$('#example2').DataTable({
+			"oLanguage" : {
+				"sProcessing" : "Procesando...",
+				"sLengthMenu" : "Mostrar _MENU_ registros",
+				"sZeroRecords" : "No se encontraron resultados",
+				"sEmptyTable" : "Ning?n dato disponible en esta tabla",
+				"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+				"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+				"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+				"sInfoPostFix" : "",
+				"sSearch" : "Buscar: ",
+				"sUrl" : "",
+				"sInfoThousands" : ",",
+				"sLoadingRecords" : "Cargando...",
+				"oPaginate" : {
+					"sFirst" : "Primero",
+					"sLast" : "?ltimo",
+					"sNext" : "Siguiente",
+					"sPrevious" : "Anterior"
+				},
+				"oAria" : {
+					"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+					"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+				}
+			},
+			"bAutoWidth" : false,
+			"pageLength" : 5,
+			"order" : [],
+			"columnDefs" : [{
+				"targets" : [0],
+				"searchable" : true
+			}],
+			initComplete : function() {
+				this.api().columns('.select-filter').every(function() {
+					var column = this;
+					var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+						var val = $.fn.dataTable.util.escapeRegex($(this).val());
+						column.search( val ? '^' + val + '$' : '', true, false).draw();
+					});
+					column.data().unique().sort().each(function(d, j) {
+						select.append('<option value="' + d + '">' + d + '</option>')
+					});
+				});
+			}
+		});
+	</script>
+<script type="text/javascript">
+		$('#example3').DataTable({
+			"oLanguage" : {
+				"sProcessing" : "Procesando...",
+				"sLengthMenu" : "Mostrar _MENU_ registros",
+				"sZeroRecords" : "No se encontraron resultados",
+				"sEmptyTable" : "Ning?n dato disponible en esta tabla",
+				"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+				"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+				"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+				"sInfoPostFix" : "",
+				"sSearch" : "Buscar: ",
+				"sUrl" : "",
+				"sInfoThousands" : ",",
+				"sLoadingRecords" : "Cargando...",
+				"oPaginate" : {
+					"sFirst" : "Primero",
+					"sLast" : "?ltimo",
+					"sNext" : "Siguiente",
+					"sPrevious" : "Anterior"
+				},
+				"oAria" : {
+					"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+					"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+				}
+			},
+			"bAutoWidth" : false,
+			"pageLength" : 5,
+			"order" : [],
+			"columnDefs" : [{
+				"targets" : [0],
+				"searchable" : true
+			}],
+			initComplete : function() {
+				this.api().columns('.select-filter').every(function() {
+					var column = this;
+					var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+						var val = $.fn.dataTable.util.escapeRegex($(this).val());
+						column.search( val ? '^' + val + '$' : '', true, false).draw();
+					});
+					column.data().unique().sort().each(function(d, j) {
+						select.append('<option value="' + d + '">' + d + '</option>')
+					});
+				});
+			}
+		});
+	</script>
+
+<script type="text/javascript">
+		$('#example4').DataTable({
+			"oLanguage" : {
+				"sProcessing" : "Procesando...",
+				"sLengthMenu" : "Mostrar _MENU_ registros",
+				"sZeroRecords" : "No se encontraron resultados",
+				"sEmptyTable" : "Ning?n dato disponible en esta tabla",
+				"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+				"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+				"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+				"sInfoPostFix" : "",
+				"sSearch" : "Buscar: ",
+				"sUrl" : "",
+				"sInfoThousands" : ",",
+				"sLoadingRecords" : "Cargando...",
+				"oPaginate" : {
+					"sFirst" : "Primero",
+					"sLast" : "?ltimo",
+					"sNext" : "Siguiente",
+					"sPrevious" : "Anterior"
+				},
+				"oAria" : {
+					"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+					"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+				}
+			},
+			"bAutoWidth" : false,
+			"pageLength" : 5,
+			"order" : [],
+			"columnDefs" : [{
+				"targets" : [0],
+				"searchable" : true
+			}],
+			initComplete : function() {
+				this.api().columns('.select-filter').every(function() {
+					var column = this;
+					var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+						var val = $.fn.dataTable.util.escapeRegex($(this).val());
+						column.search( val ? '^' + val + '$' : '', true, false).draw();
+					});
+					column.data().unique().sort().each(function(d, j) {
+						select.append('<option value="' + d + '">' + d + '</option>')
+					});
+				});
+			}
+		});
+	</script>
+	
+	<script type="text/javascript">
+		$('#example5').DataTable({
+			"oLanguage" : {
+				"sProcessing" : "Procesando...",
+				"sLengthMenu" : "Mostrar _MENU_ registros",
+				"sZeroRecords" : "No se encontraron resultados",
+				"sEmptyTable" : "Ning?n dato disponible en esta tabla",
+				"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+				"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+				"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+				"sInfoPostFix" : "",
+				"sSearch" : "Buscar: ",
+				"sUrl" : "",
+				"sInfoThousands" : ",",
+				"sLoadingRecords" : "Cargando...",
+				"oPaginate" : {
+					"sFirst" : "Primero",
+					"sLast" : "?ltimo",
+					"sNext" : "Siguiente",
+					"sPrevious" : "Anterior"
+				},
+				"oAria" : {
+					"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+					"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+				}
+			},
+			"bAutoWidth" : false,
+			"pageLength" : 5,
+			"order" : [],
+			"columnDefs" : [{
+				"targets" : [0],
+				"searchable" : true
+			}],
+			initComplete : function() {
+				this.api().columns('.select-filter').every(function() {
+					var column = this;
+					var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+						var val = $.fn.dataTable.util.escapeRegex($(this).val());
+						column.search( val ? '^' + val + '$' : '', true, false).draw();
+					});
+					column.data().unique().sort().each(function(d, j) {
+						select.append('<option value="' + d + '">' + d + '</option>')
+					});
+				});
+			}
+		});
+	</script>
+    </body>
+</html>

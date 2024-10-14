@@ -1,0 +1,20 @@
+<tr>
+	<td class="miniSt"><strong>{CURSO}</strong></td>
+	<td class="miniSt">{CODIGOINCRIPCION}</td>
+	<td class="miniSt">{ESTADO_EJECUCION}</td>
+	<td class="miniSt">{FECHAS_SESIONES}
+	</td><td class="miniSt">{EJECUTIVO}</td>
+	</td>
+	<td class="miniSt">
+		{INSCRITOS} 	{DESCARGA_PARTICIPANTES}
+	</td>
+	<td class="miniSt"> 
+		<a href="?sw=VeColaboradoresXImp2021&i={ID_INSCRIPCION_ENCODEADO}"  >Participantes</a><br>
+
+		<a href="?sw=reportes_online_descarga&id={ID_CURSO}&tipo=Curso&vista=graph&id_inscripcion={CODIGOINCRIPCION}&enc_sat=1">Reportes</a>
+		<br>
+		<a href="?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i={i}&id_imparticion={ID_INSCRIPCION_ENCODEADO}" title="Editar Imparticion">Editar</a>
+		<br>
+		<a href="?sw=dltImpart&i={ID_INSCRIPCION_ENCODEADO}"  onclick = "if (! confirm('Seguro que deseas eliminar esta Imparticion?')) return false;">Eliminar</a>
+	</td>
+</tr>

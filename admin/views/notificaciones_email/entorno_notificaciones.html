@@ -1,0 +1,152 @@
+<div class="col-md-12">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">{TITULO}</h3>
+        </div>
+    </div>
+</div>
+<div class="">
+<div class="col-lg-12 col-md-12">
+	
+<link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+<table id="" class="table table-bordered">
+    <input type="hidden" name="id_emp" value="{ID_EMPRESA_ENCODEADO}" />
+    <thead style='background-color: #36C6D3;color: #fff;padding-left: 20px;margin-left: 20px;'>
+        <tr>
+            <th width='20%'>Crear Notificación</th>
+            <th width='60%'></th>
+            <th width='20%'></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr {bgcolor}="" role="row" class="even">
+            <form name="" action="?sw=notificaciones_email_notificaciones_Save" method="post">
+                <td class="sorting_1">
+                    <span class="label label-sm label-info"> Nombre</span><input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="" placeholder="" required>
+                </td>
+                <td class="sorting_1">
+                    <span class="label label-sm label-info"> Asunto</span>
+                    <input type="text" class="form-control" id="subject" name="subject" aria-describedby="" style='width: 70%;display: inline;'  placeholder="" required>
+                   <br>
+                    <span class="label label-sm label-info"> Titulo</span>
+                    <input type="text" class="form-control" id="titulo" name="titulo" aria-describedby="" style='width: 70%;display: inline;'  placeholder="" required>
+                   <br> 
+                    <span class="label label-sm label-info"> Texto</span>
+                    <textarea id="texto" name="texto" class="form form-control" style='width: 70%;display: inline;' ></textarea>
+                </td>
+                <td class="mp_txt_small">
+                    <input type="submit" class="btn btn-success" value="Guardar">
+                </td>
+            </form>
+        </tr>
+    </tbody>
+</table>
+
+<table id="example2" class="table table-bordered">
+    <input type="hidden" name="id_emp" value="{ID_EMPRESA_ENCODEADO}" />
+    <thead>
+        <tr>
+            <th width='20%'>Notificaciones</th>
+            <th width='60%'>Contenido</th>
+            <th width='20%'>Acci&oacute;n</th>
+        </tr>
+    </thead>
+    <tbody>
+        {LISTA_NOTIFICACIONES}
+    </tbody>
+</table>
+    </div>
+</div>
+<!-- row end -->
+<script type="text/javascript">
+    $('#example2').DataTable({
+        "oLanguage": {
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar: ",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+        "bAutoWidth": false,
+        "pageLength": 50,
+        "order": [],
+        "columnDefs": [{
+            "targets": [0],
+            "searchable": true
+        }],
+        initComplete: function() {
+            this.api().columns('.select-filter').every(function() {
+                var column = this;
+                var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                    column.search(val ? '^' + val + '$' : '', true, false).draw();
+                });
+                column.data().unique().sort().each(function(d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
+        }
+    });
+        $('#example1').DataTable({
+        "oLanguage": {
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar: ",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+        "bAutoWidth": false,
+        "pageLength": 50,
+        "order": [],
+        "columnDefs": [{
+            "targets": [0],
+            "searchable": true
+        }],
+        initComplete: function() {
+            this.api().columns('.select-filter').every(function() {
+                var column = this;
+                var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                    column.search(val ? '^' + val + '$' : '', true, false).draw();
+                });
+                column.data().unique().sort().each(function(d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
+        }
+    });
+</script>

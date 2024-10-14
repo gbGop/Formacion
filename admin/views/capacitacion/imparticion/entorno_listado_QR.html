@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{TITTLE}</title>
+    <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+    <style>
+        .dataTables_filter input {
+            line-height: 20px;
+        }
+        .selecfiltro {
+            width: 100%;
+            line-height: 15px;
+            font-size: 12px;
+        }
+        .label {
+            min-width: 115px;
+        }
+
+        .modal-backdrop fade in {
+            z-index: 0 !important;
+            opacity: 0.7;
+        }
+
+        .bg-gray {
+            padding:15px;
+            font-weight:bold;
+        }
+
+        .bg-white {
+            padding:15px;
+            border-bottom: 1px solid #ccc;
+        }
+
+    </style>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    {HEAD}
+</head>
+<body class="skin-blue">
+{HEADER}
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <aside class="left-side sidebar-offcanvas">
+        {MENU_IZQUIERDO}
+    </aside>
+    <aside class="right-side">
+        {NAVEGACION}
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header box boxheader">
+                            <div class="box-header">
+                                <h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Tipo de Encuesta de Satisfacci&oacute;n</h3>
+                                <span class="pull-left btn btn-link">
+                                            <a href="?sw=listaInscripciones2&i={ID_CURSO_ENCODEADO}" class="btn btn-link pull-left"><span class="negro">Volver</span></a>
+                                    </span>
+                                <span class="pull-right">
+										<a href="?sw=VeColaboradoresXImp2021&i={ID_INSCRIPCION_ENCODEADO}" class="btn btn-link btn-link-2"  >Participantes</a>
+                                    <a class="btn btn-link btn-link-2"
+                                       href="?sw=VeProveedoresXImp2021&i={ID_INSCRIPCION_ENCODEADO}">Proveedores</a>
+										<a href="?sw=VeReportesXImp2021&i={ID_INSCRIPCION_ENCODEADO}" class="btn btn-link btn-link-2"  style="{DISPLAY_MODALIDAD2}">Reportes</a>
+										<a href="?sw=VeDocsXImp2021&i={ID_INSCRIPCION_ENCODEADO}" class="btn btn-link btn-link-2"  style="{DISPLAY_MODALIDAD2}">Documentos</a>
+										<a href="?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i={ID_CURSO_ENCODEADO}&id_imparticion={ID_INSCRIPCION_ENCODEADO}" class="btn btn-link btn-link-2" title="Editar Imparticion">Editar Imparticion</a>
+									 </span>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="col-md-12">
+                        <br>
+
+
+                        <div class="panel panel-info" style="{display_none_qr_form}">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Crear Encuesta de Satisfacci&oacute;n</h3>
+                            </div>
+                            <div class="panel-body">
+                                <form id="tipo_enc" name="tipo_enc" action="?sw=QR_2023&i={ID_IMPARTICION_ENCODEADO}" method="post">
+                                    <br>
+
+                                    <label>Sesiones</label>
+                                    <br><br>
+                                    <div class="row">
+                                        <div class="col-lg-2 bg-gray">Fecha</div>
+                                        <div class="col-lg-2 bg-gray">Hora desde</div>
+                                        <div class="col-lg-2 bg-gray">Hora hasta</div>
+                                        <div class="col-lg-2 bg-gray">Relator</div>
+                                        <div class="col-lg-2 bg-gray">Duraci&oacute;n Relatoria (min)</div>
+                                        <div class="col-lg-2 bg-gray">Agregar a Encuesta</div>
+                                    </div>
+                                    <div class="row">
+                                        {CHECKBOX_SES_RELATORES}
+                                    </div>
+                                    <br>
+                                    <div class="text-center" style="{DISPLAY_OTA_ABIERTA}">
+                                        <input type="hidden" name="crear_enc_satisf" value="1">
+                                        <input type="submit" class="btn btn-info" value="Crear Encuesta de Satisfaccion">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
+                        <div class="panel panel-info"  style="{display_none_qr}">
+
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Encuesta</h3>
+                            </div>
+                            <div class="panel-body">
+                                <label>Relatores Seleccionados</label>
+                                <br><br>
+                                <div class="row">
+                                    <div class="col-lg-2 bg-gray">Fecha</div>
+                                    <div class="col-lg-2 bg-gray">Hora desde</div>
+                                    <div class="col-lg-2 bg-gray">Hora hasta</div>
+                                    <div class="col-lg-2 bg-gray">Relator</div>
+                                    <div class="col-lg-2 bg-gray">Duraci&oacute;n Relatoria (min)</div>
+                                    <div class="col-lg-2 bg-gray">Relatores Seleccionados</div>
+                                </div>
+                                <div class="row">
+                                    {CHECKBOX_SES_RELATORES_SELECCIONADOS}
+                                </div>
+                                <div class="text-right">{ELIMINAR_ENCUESTA}</div>
+                            </div>
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Link</h3>
+                            </div>
+                            <div class="panel-body">
+                                {LINK}
+                            </div>
+                        </div>
+                        <div class="panel panel-info"  style="{display_none_qr}">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">QR</h3>
+                            </div>
+                            <div class="panel-body">
+                                {IMAGEN_QR}
+                                <br>
+                            </div>
+                        </div>
+                        <div class="panel panel-info"  style="{display_none_qr}">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Informe de Resultados de Encuesta</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class='col-lg-12'>
+                                        <span class="pull-right">
+                                            <a href="?sw=QR_2023&i={ID_INSCRIPCION_ENCODEADO}&download=1" class="btn btn-link btn-link-2" >Reporte Detalle</a>
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class='col-lg-6 bg-gray'><strong>Pregunta</strong></div>
+                                    <div class='col-lg-3 bg-gray' ><strong>Número de respuestas</strong></div>
+                                    <div class='col-lg-3 bg-gray' ><strong>Promedio</strong></div>
+                                    {TABLE_PREGUNTAS_CATEGORIA_CANTIDAD_NOTA_PROMEDIO_2023}
+                                    {TABLE_TOTALES_CANTIDAD_NOTA_PROMEDIO_2023}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </aside>
+</div>
+{FOOTER_ADMIN}
+
+<script type="text/javascript">
+    $('#example2').DataTable({
+        "oLanguage" : {
+            "sProcessing" : "Procesando...",
+            "sLengthMenu" : "Mostrar _MENU_ registros",
+            "sZeroRecords" : "No se encontraron resultados",
+            "sEmptyTable" : "Ningún dato disponible en esta tabla",
+            "sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix" : "",
+            "sSearch" : "Buscar: ",
+            "sUrl" : "",
+            "sInfoThousands" : ",",
+            "sLoadingRecords" : "Cargando...",
+            "oPaginate" : {
+                "sFirst" : "Primero",
+                "sLast" : "Último",
+                "sNext" : "Siguiente",
+                "sPrevious" : "Anterior"
+            },
+            "oAria" : {
+                "sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+        "bAutoWidth" : false,
+        "pageLength" : 50,
+        "order" : [],
+        "columnDefs" : [{
+            "targets" : [0],
+            "searchable" : true
+        }],
+        initComplete : function() {
+            this.api().columns('.select-filter').every(function() {
+                var column = this;
+                var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                    column.search( val ? '^' + val + '$' : '', true, false).draw();
+                });
+                column.data().unique().sort().each(function(d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
+        }
+    });
+</script>
+</body>
+</html>

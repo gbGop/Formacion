@@ -1,0 +1,74 @@
+
+<form action="?sw=adimparti" method="POST" name="FormCurso" enctype="multipart/form-data"  >
+
+	<span class="label label-sm label-info"> Curso Virtual</span><br>
+	<input required="required"  type="text" class="form-control" name="curso" readonly value="{VALUE_COD_CURSO}" 
+			style="    width: 95px;display: inline;margin-right: 15px;" required/>
+			<strong>{NOMBRE_CURSO_imparticion}</strong>
+	<br>
+	<br>
+	<span class="label label-sm label-danger"> Codigo Impartici&oacute;n</strong></span>
+			<input required="required"  type="number" class="form-control" name="cod_imparticion"  readonly
+			value="{VALUE_COD_IMPARTICION}"/>
+	<br>
+
+	<div class="panel-heading" style="    color: #31708f;background-color: #d9edf7;border-color: #bce8f1;">
+		<h3 class="panel-title">Campos Obligatorios</h3>
+	</div>
+	<br>
+
+<!--
+<span class="label label-sm label-info"> Malla</span>
+
+	<select name="id_malla" id="id_malla" class="form-control" required>
+		<option value="">-Seleccione-</option>
+		{OPTIONS_MALLAS}
+	</select>
+<br>	-->										
+
+
+	
+	<div id="content_fecha_inicio_termino" class="">
+	<span class="label label-sm label-info"> Fecha Inicio y T&eacute;rmino</span>
+		<div class="panel-heading">
+					<div>
+							{FORMULARIO_HORARIOS_LINEA_FECHA_INICIO_TERMINO_ELEARNING}
+					</div>
+		</div>			
+		<BR>
+	</div>
+	<BR>
+
+
+
+	<span class="label label-sm label-info"> Nombre Impartici&oacute;n</span>
+	&nbsp;
+	<input  type="text" class="form-control" name="nombre"  value="{VALUE_NOMBRE}" required/>
+	<br>
+	<span class="label label-sm label-info"> Consultor Capacitaci&oacute;n</span>
+	<br>
+	<select class="form-control" name="ejecutivo" required>
+		<option value=""></option>
+		{OPTIONS_EJECUTIVOS}
+	</select>
+	</br>
+<!--
+	<span class="label label-sm label-info"> Proveedor</span>
+	&nbsp;
+	<select class="form-control" name="ciudad">
+		<option value=""></option>
+		{OPTIONS_OTEC}
+	</select>
+	<br>
+	<span class="label label-sm label-info"> Observaciones </span>
+	<br>
+	<textarea class="form-control" name="comentarios">{COMENTARIOS}</textarea>
+	<br>-->
+
+					<center><br>
+								<button type="submit" class="btn btn-primary">
+									Crear Impartici&oacute;n
+								</button>
+					</center> 
+</form>
+

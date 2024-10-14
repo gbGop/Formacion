@@ -1,0 +1,71 @@
+<br>
+<br>
+
+                              	<a name="seccionInscripcionParticipantes"></a><div class="small-box bg-blue ">
+                                <div class="Txtinner">
+                                    <p>
+                                        INSCRIPCION DE PARTICIPANTES 
+                                    </p>  
+								</div>
+                              	</div>
+                              
+                              
+                              
+                             									Nueva Base Personas por Subida Masiva 
+                                  &nbsp; &nbsp; &nbsp; &nbsp;
+<a href="formato/basepersonas_inscripcion_masivo.xlsx" class='btn btn-default btn-sm'>Descargar Plantilla </a>
+<form name="importa" method="post" action="?sw=procesa_excel_inscripciones" enctype="multipart/form-data" style="display:inline" >
+<input type="file" name="excel" />
+<input type="hidden" name="idi" value="{ID_INSCRIPCION_ENCODEADO}">
+<button type="submit" class='btn btn-default btn-sm' >Subir Masivamente</button> 
+<input type="hidden" value="upload" name="action" />
+</form>
+
+
+
+
+
+
+
+	 
+<br>
+<br>                            
+	<div class="small-box bg-blue">
+                                <div class="Txtinner">
+                                    <p>
+                                        INSCRIPCION INDIVIDUAL DE PARTICIPANTES 
+                                    </p>
+                                </div>
+                                </div>
+                                
+                                <table  class="table table-bordered table-hover">
+                                        <thead>
+                                        
+                                        <tr>
+                                                <th class="width350 bg_gray">NOMBRE</th>
+                                                <th class="width80 bg_gray">VIATICO<br><button type="button" class="botonAdmin" data-toggle="tooltip" data-placement="right" title="Viatico: Corresponde a la suma de dinero razonable que se paga por concepto de alojamiento y alimentación motivo de la asistencia de capacitación (siempre que deban ausentarse de su lugar de trabajo)
+
+No se considera viatico: Coffe Break, llamadas telefónicas, bebidas alcohólicas, regalos, medicamentos o lavandería."><i class="fa fa-question-circle"></i>
+</button></th>
+                                                <th class="width80 bg_gray">MOVILIZACION<br><button type="button" class="botonAdmin" data-toggle="tooltip" data-placement="right" title="Movilidad:  Corresponde a tipo de movilidad pública,  que el trabajador deba acceder a la actividad de capacitación. (no se consideran gastos de compra de combustible, peaje, mantención y/o lavado de vehículo y compra de tarjeta bip.)
+"><i class="fa fa-question-circle"></i>
+</button></th>
+                                                <th class="width140 bg_gray"></th>
+                                            </tr>
+                                            
+                                            
+                                            <form name="FormIndInsc" method="post" action="?sw=inscalum">
+                                            <input type="hidden" name="ii" value="{ID_INSCRIPCION_ENCODEADO}" />
+                                            <tr>
+                                                <td class="miniSt">
+                                                	<select name="alumnos" class="form_control_admin">
+                                                    	{OPTIONS_ALUMNOS}
+                                                     </select>
+                                                    </td>
+                                                <td class="miniSt"><input class="form_control_admin" type="text" name="viatico"></td>
+                                                <td class="miniSt"><input class="form_control_admin" type="text" name="movilizacion"></td>
+                                                <td class="miniSt"><button type="submit" class="btn btn-primary">Ingresar Usuario</button></td>
+                                            </tr>
+                                            </form>
+                                         </thead>
+                                         </table>

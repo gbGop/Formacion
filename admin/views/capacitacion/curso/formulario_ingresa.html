@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{TITTLE}</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <!-- bootstrap 3.0.2 -->
+    {HEAD}
+<body class="skin-blue">
+<!-- header logo: style can be found in header.less -->
+{HEADER}
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="left-side sidebar-offcanvas">
+        <!-- sidebar: style can be found in sidebar.less -->
+        {MENU_IZQUIERDO}
+        <!-- /.sidebar -->
+    </aside>
+    <aside class="right-side">
+        {NAVEGACION}
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-warning">
+                        <div class="box-header box boxheader">
+                            <div class="box-header">
+                                <h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Cursos Sincrónicos</h3>
+                                <a class="btn btn-link" href="?sw=listcursos2">Volver</a>
+                            </div>
+                        </div>
+                        <script src="script/ajax.googleapis.com_ajax_libs_jquery_3.6.0_jquery.min.js"></script>
+                        <script src="script/global.js"></script>
+                        <script>
+                            function CodCurFun(sel) {
+                                if (sel.value == "si") {
+                                    divC = document.getElementById("nTExtoS");
+                                    divC.style.display = "";
+
+                                    divT = document.getElementById("nTExtoI");
+                                    divT.style.display = "none";
+
+                                } else {
+                                    divC = document.getElementById("nTExtoS");
+                                    divC.style.display = "none";
+
+                                    divT = document.getElementById("nTExtoI");
+                                    divT.style.display = "";
+                                }
+
+                            }
+                        </script>
+                        <form action="{ACTION}" enctype="multipart/form-data" method="POST" name="{NOMBRE_FORMULARIO}">
+                            <div class="col-md-12">
+                                <br>
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Campos Obligatorios</h3>
+                                    </div>
+                                    <script>
+                                        function ColocaProgramasPorFoco() {
+                                            foco = $("#foco").val();
+                                            //alert(foco);
+                                            var campos = {
+                                                "foco": foco
+                                            };
+                                            $.ajax({
+                                                data: campos,
+                                                url: '?sw=filtro_programabbdd_por_foco_creacion_cursos',
+                                                type: 'post',
+                                                success: function (response) {
+                                                    let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+                                                    $("#programa_bbdd_bloque").html(cleanResponse);
+                                                }
+                                            });
+
+                                        }
+                                    </script>
+                                    <div class="panel-body">
+                                        <span class="label label-sm label-danger"> Codigo Interno</span>
+                                        &nbsp;
+                                        <input class="form-control" name="codigo_curso" required="required" type="text"
+                                               value="{COD_CURSO}" readonly/>
+                                        <br>
+                                        <span class="label label-sm label-info"> Nombre de Curso</span>
+                                        <br>
+                                        <input class="form-control" name="nombre_curso" required="required" type="text"
+                                               value="{NOM_CURSO}"/>
+                                        <br>
+                                        <span class="label label-sm label-info"> Modalidad</span>
+                                        &nbsp;
+                                        <br>
+                                        <select class="form-control" id="modalidad" name="modalidad"
+                                                required="required">
+
+                                            <option value="2">SINCR&Oacute;NICO</option>
+
+                                        </select>
+                                        <br>
+                                        <span class="label label-sm label-info"> Eje</span>
+                                        <br>
+                                        <!-- onchange="ColocaProgramasPorFoco();"-->
+                                        <select class="form-control" id="foco" name="foco" required="required">
+                                            <option value="">Seleccione</option>
+                                            {OPTIONS_FOCOS}
+                                        </select>
+                                        <br>
+                                        <span class="label label-sm label-info"> Proyecto</span>
+                                        <br>
+                                        <span id="programa_bbdd_bloque">
+														<select class="form-control" id="programa_bbdd"
+                                                                name="programa_bbdd" required="required">
+															<option value="">Seleccione</option>
+															{OPTIONS_PROGRAMAS_BBDD_2022_sinanidacion}
+														</select> </span>
+                                        <br>
+                                        <span class="label label-sm label-info"> Cuenta Contable</span>
+                                        <br>
+
+                                        <span id="programa_bbdd_bloque">
+                                            <input type="text"  class="form form-control" name="cuenta" readonly id="cuenta" value="">
+                                            <input type="text"  class="form form-control" name="cuenta_glosa" readonly id="cuenta_glosa" value="">
+                                        </span>
+                                                                                <br>
+
+                                                                                <span class="label label-sm label-info">CUI</span>
+                                                                                <br>
+                                                                                <span id="cui_bloque">
+                                            <div>
+                                                <input type="text" class="form form-control" name="cui" readonly id="cui" value="">
+                                            </div>
+                                                                                    <!--<select class="form-control" id="cui_select" name="cui">
+                                                                                        <option value="">Seleccione</option>
+                                                                                        {OPTIONS_CUI_2024_anidada}
+                                                                                    </select>-->
+                                        </span>
+                                       <br>
+                                        <span class="label label-sm label-info"> Divisi&oacute;n Mandante</span>
+                                        <br>
+                                        <span id="division_mandante">
+														<select class="form-control" id="division_mandante" name="division_mandante" required="required">
+															<option value="">Seleccione</option>
+															{OPTIONS_DIVISION_MANDANTE}
+														</select> </span>
+                                        <br>
+                                        <script>
+                                            function handleProgramaBbddChange() {
+                                                var selectedValue = document.getElementById("programa_bbdd").value;
+                                                if (selectedValue !== "") {
+                                                    var url = "?sw=FB_2024_ajax_cuenta_contable_cui&selected_value=" + selectedValue;
+                                                    fetch(url)
+                                                        .then(response => response.json())
+                                                        .then(data => {
+
+                                                            // Handle the response data
+                                                            document.getElementById("cuenta").value = data.cuenta;
+                                                            document.getElementById("cuenta_glosa").value = data.cuenta_glosa;
+                                                            document.getElementById("cui").value = data.cui;
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('Error:', error);
+                                                        });
+                                                }
+                                            }
+                                            document.getElementById("programa_bbdd").addEventListener("change", handleProgramaBbddChange);
+                                        </script>
+
+                                       <span class="label label-sm label-info"> N&uacute;mero de Horas</span>
+                                       <input class="form-control" id="numero_horas" name="numero_horas" placeholder="Ejemplo: 2  horas"
+                                              required step="1" type="number"
+                                              value="{NUMERO_HORAS}">
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="col-md-12">
+                               <br>
+                               <div class="panel panel-info">
+                                   <div class="panel-heading">
+                                       <h3 class="panel-title">Campos Opcionales</h3>
+                                   </div>
+                                   <div class="panel-body">
+                                       <script>
+                                           function MuestraImagenSeleccionada(seleccionado) {
+                                               if (seleccionado == 0) {
+
+                                                   document.getElementById("adjuntarImagen").style.display = "block";
+                                                   for (i = 1; i <= 10; i++) {
+
+                                                       if (seleccionado == i) {
+                                                           //alert("a");
+                                                           document.getElementById("imagen" + i).style.display = "block";
+                                                       } else {
+                                                           //alert("b");
+                                                           document.getElementById("imagen" + i).style.display = "none";
+                                                       }
+                                                   }
+
+                                               } else {
+                                                   for (i = 1; i <= 10; i++) {
+
+                                                       if (seleccionado == i) {
+                                                           //alert("a");
+                                                           document.getElementById("imagen" + i).style.display = "block";
+                                                       } else {
+                                                           //alert("b");
+                                                           document.getElementById("imagen" + i).style.display = "none";
+                                                       }
+                                                   }
+                                                   document.getElementById("adjuntarImagen").style.display = "none";
+                                               }
+                                           }
+                                       </script>
+                                       <!--<select name="tipo_imagen" onchange="MuestraImagenSeleccionada(this.value);" id="tipo_imagen" class="selectpicker">-->
+                                        <span class="label label-sm label-info"> Imagen de Curso</span>
+                                        <select class="selectpicker" id="tipo_imagen"
+                                                name="tipo_imagen" onchange="MuestraImagenSeleccionada(this.value);">
+                                            <option value="0">Adjuntar Imagen</option>
+                                            <option data-thumbnail="../front/img/Img_cursos_default_1.jpg">1</option>
+                                            <option data-thumbnail="../front/img/Img_cursos_default_2.jpg">2</option>
+                                            <option data-thumbnail="../front/img/Img_cursos_default_3.jpg">3</option>
+                                            <option data-thumbnail="../front/img/Img_cursos_default_4.jpg">4</option>
+                                            <option data-thumbnail="../front/img/Img_cursos_default_5.jpg">5</option>
+                                            <option data-thumbnail="../front/img/Img_cursos_default_6.jpg">6</option>
+                                            <option data-thumbnail="../front/img/Img_cursos_default_7.jpg">7</option>
+                                            <option data-thumbnail="../front/img/Img_cursos_default_8.jpg">8</option>
+                                            <option data-thumbnail="../front/img/Img_cursos_default_9.jpg">9</option>
+                                            <option data-thumbnail="../front/img/Img_cursos_default_10.jpg">10</option>
+                                        </select>
+                                        <span id="adjuntarImagen">
+														<br>
+														Subir Imagen | <small>Tama&ntilde;o 400x300, Formato JPG o PNG</small>
+														<input class="form-control" id="archivo" name="archivo"
+                                                               onchange="ValidarImagen(this);" type="file">
+													</span>
+                                        <!--<span style="display: none" id="imagen1"><img src="../front/img/logos_cursos/Img_cursos_default_1.jpg" ></span>
+                                        <span style="display: none"  id="imagen2"><img src="../front/img/logos_cursos/Img_cursos_default_2.jpg"></span>
+                                        <span style="display: none"  id="imagen3"><img src="../front/img/logos_cursos/Img_cursos_default_3.jpg"></span>
+                                        <span style="display: none"  id="imagen4"><img src="../front/img/logos_cursos/Img_cursos_default_4.jpg"></span>
+                                        <span style="display: none"  id="imagen5"><img src="../front/img/logos_cursos/Img_cursos_default_5.jpg"></span>
+                                        <span style="display: none"  id="imagen6"><img src="../front/img/logos_cursos/Img_cursos_default_6.jpg"></span>
+                                        <span style="display: none"  id="imagen7"><img src="../front/img/logos_cursos/Img_cursos_default_7.jpg"></span>
+                                        <span style="display: none"  id="imagen8"><img src="../front/img/logos_cursos/Img_cursos_default_8.jpg"></span>
+                                        <span style="display: none"  id="imagen9"><img src="../front/img/logos_cursos/Img_cursos_default_9.jpg"></span>
+                                        <span style="display: none"  id="imagen10"><img src="../front/img/logos_cursos/Img_cursos_default_10.jpg"></span>
+
+                                        -->
+                                        <div style="{Desaparece_Descripcion_CreacionEdicionCursos}">
+                                            <br><span class="label label-sm label-info"> Descripci&oacute;n</span>
+                                            &nbsp;
+                                            <textarea class="form-control" name="descripcion_curso"
+                                                      rows="2">{DES_CURSO}</textarea>
+                                        </div>
+                                        <br>
+                                        <span class="label label-sm label-info"> Objetivo</span>
+                                        &nbsp;
+                                        <textarea class="form-control" data-validate-words="1" name="objetivo_curso"
+                                                  rows="2">{OBJETIVO_CURSO}</textarea>
+                                        <br>
+                                        <span class="label label-sm label-info"> Contenidos</span> &nbsp;
+                                        <textarea class="form-control" data-validate-words="1" name="contenidos_cursos"
+                                                  rows="2">{CONTENIDOS_CURSO}</textarea>
+                                        <!--<br>
+                                        <span class="label label-sm label-info"> Sence</span>
+                                        &nbsp;
+                                        <select class="form-control" name="sence" onChange="CodCurFun(this)">
+                                            <option value="no">NO</option>
+                                            <option value="si">SI</option>
+                                        </select>-->
+                                        <div id="nTExtoS" style="display: none">
+                                            <br>
+                                            <span class="label label-sm label-info"> Código Sence</span>
+                                            &nbsp;
+                                            <input class="form-control" name="cod_sence" type="text"
+                                                   value="{COD_SENCE}"/>
+                                            <br>
+                                            <span class="label label-sm label-info"> Nombre Curso Sence</span>
+                                            &nbsp;
+                                            <input class="form-control" id="nombre_curso_sence" name="nombre_curso_sence"
+                                                   type="text" value="{NOMBRE_CURSO_SENCE}"/>
+                                            <br>
+                                            <span class="label label-sm label-info"> Nombre OTIC</span>
+                                            <select class="form form-control" id="nombre_otic" name="nombre_otic">
+                                                <option value=""></option>
+                                                <option value="SOFOFA">SOFOFA</option>
+                                                <option value="BANOTIC">BANOTIC</option>
+                                            </select>
+
+                                        </div>
+                                        <div id="bloqueMaximoParticipantes" style="display: none">
+                                            <br>
+                                            <span class="label label-sm label-info"> Máximo de Participantes</span>
+                                            &nbsp;
+                                            <input class="form-control" name="cantidad_maxima_participantes" type="text"
+                                                   value="{CANTIDAD_MAXIMA_PARTICIPANTES}"/>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 centro">
+                                <br>
+                                <center>
+                                    <button class="btn btn-success " type="submit">
+                                        {VALOR_BOTON}
+                                    </button>
+                                </center>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </aside><!-- /.right-side -->
+</div><!-- ./wrapper -->
+{FOOTER_ADMIN}
+<script>
+    function ValidarImagen(obj) {
+        var uploadFile = obj.files[0];
+
+        if (!window.FileReader) {
+            alert('El navegador no soporta la lectura de archivos');
+            return;
+        }
+
+        if (!(/\.(jpg|png|gif)$/i).test(uploadFile.name)) {
+            alert('El archivo a adjuntar no es una imagen');
+        } else {
+            var img = new Image();
+            img.onload = function () {
+                if (this.width.toFixed(0) != 400 && this.height.toFixed(0) != 300) {
+                    alert('Las medidas deben ser: 400 * 300');
+                } else if (uploadFile.size > 200000) {
+                    alert('El peso de la imagen no puede exceder los 2000kb')
+                } else {
+                    //alert('Imagen correcta :)')
+                }
+            };
+            img.src = URL.createObjectURL(uploadFile);
+        }
+    }
+
+    function requiereClasificacion(valor) {
+
+        if (valor.value == "2") {
+            divT = document.getElementById("bloqueMaximoParticipantes");
+            divT.style.display = "";
+        } else {
+            divT = document.getElementById("bloqueMaximoParticipantes");
+            divT.style.display = "none";
+
+        }
+
+    }
+</script>
+</body>
+</html>

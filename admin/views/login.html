@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Administrador</title>
+{HEAD}
+
+<head>
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="496817439519-k6vplghsjo0c2787it819felj794tfaa.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+<script language="Javascript">
+    function abrirPagina(pagina) {
+        window.open(pagina, 'window', 'params');
+    }
+</script>
+
+<body role="document" onLoad="document.formlogin.user.focus();">
+    <div class="section nopadding nomargin" style="width: 100%; height: 100%; position: absolute; left: 0; top: 0;  background-size: cover;"></div>
+    <span class="visible-xs"></span><span class="visible-sm"></span><span class="visible-md"></span><span class="visible-lg"></span>
+    <div id="k-head" class="container">
+        <div class="row">
+            <nav class="k-functional-navig">
+                <ul class="list-inline pull-right">
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="content-section-a" id="contact">
+        <div class="container">
+            <!-- container -->
+            <div class="row">
+                <!-- row -->
+                <div id="k-top-search" class="col-lg-12 clearfix">
+                    <!-- top search -->
+                    <!-- toggle search button -->
+                </div>
+                <!-- top search end -->
+                <div class="k-breadcrumbs col-lg-12 clearfix">
+                    <br>
+                    <br>
+                </div>
+                <!-- breadcrumbs end -->
+            </div>
+            <!-- row end -->
+            <div class="row no-gutter fullwidth">
+                <!-- row -->
+                <div class="col-sm-2 col-md-2"></div>
+                <script type="text/javascript">
+                    $(document).ready(function() {
+
+                        $.validator.addMethod("rut", function(value, element) {
+                            return this.optional(element) || $.Rut.validar(value);
+                        }, "Este campo debe ser un rut valido.");
+
+                        $("#formlogin").validate();
+
+                        $('#user').Rut({
+                            validation: false
+                        });
+                    });
+                </script>
+                <div class="col-sm-8 col-md-8">
+                    <div class="panel panel-default divcenter noradius noborder" style="
+                        background-color: rgba(255,255,255,0.4);">
+                        <div class="panel-body" style="padding: 40px;">
+                            <!-- <h1 class="text-center login-title">Sign in to continue to Bootsnipp</h1>-->
+                            <div class="account-wall colorblue">
+                                <center>
+                                    <h2>Administrador</h2>
+                                </center>
+                                <br>
+                                <form action="?sw=entrada" method="post">
+                                    <div class="form-group">
+                                        Usuario
+                                        <input type="text" name="userid" class="form-control" placeholder="User ID" />
+                                    </div>
+                                    <div class="form-group">
+                                        Clave
+                                        <input type="password" name="password" class="form-control" placeholder="Password" />
+                                    </div>
+                                    <div class="footer">
+                                        <center>
+                                            <button type="submit" class="btn bg-blue">
+                                                    Ingresar
+                                                </button>
+                                        </center>
+                                    </div>
+                                </form>
+
+                              
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <!--<a href="#" class="text-center new-account">Create an account </a>-->
+                </div>
+                <div class="col-sm-2 col-md-2"></div>
+            </div>
+            <!-- row end -->
+            <div class="row no-gutter fullwidth">
+                <!-- row -->
+                <div class="col-lg-12" style="height:20px"></div>
+            </div>
+            <div class="row no-gutter fullwidth">
+                <!-- row -->
+                <div class="col-lg-12" style="height:20px"></div>
+            </div>
+        </div>
+        <!-- container end -->
+    </div>
+    <!-- content wrapper end -->
+    
+</body>
+
+</html>

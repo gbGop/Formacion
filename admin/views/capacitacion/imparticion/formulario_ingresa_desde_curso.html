@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{TITTLE}</title>
+    <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+    <style>
+        .dataTables_filter input {
+            line-height: 20px;
+        }
+
+        .selecfiltro {
+            width: 100%;
+            line-height: 15px;
+            font-size: 12px;
+        }
+    </style>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    {HEAD}
+</head>
+<body class="skin-blue">
+{HEADER}
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <aside class="left-side sidebar-offcanvas">
+        {MENU_IZQUIERDO}
+    </aside>
+    <aside class="right-side">
+        {NAVEGACION}
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-warning">
+                        <div class="box-header box boxheader">
+                            <div class="box-header">
+                                <h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Creaci&oacute;n
+                                    de Impartici&oacute;n</h3>
+                                <br>
+                                <span class="pull-left btn btn-link">
+                                        <a class="btn btn-link" href="?sw={BACK_TO_LIST_CURSOS}#">Volver</a>
+                                    </span>
+                                <span class="pull-right">
+                                    	
+										<a class="btn btn-link btn-link-2"
+                                           href="?sw=VeColaboradoresXImp2021&i={ID_INSCRIPCION_ENCODEADO}">Participantes</a>
+                                    <a class="btn btn-link btn-link-2"
+                                       href="?sw=VeProveedoresXImp2021&i={ID_INSCRIPCION_ENCODEADO}">Proveedores</a>
+										<a class="btn btn-link btn-link-2"
+                                           href="?sw=reportes_online_descarga&id={ID_CURSO}&tipo=Curso&vista=graph&id_inscripcion={CODIGOINCRIPCION}&enc_sat=1" style="{DISPLAY_MODALIDAD1}">Reportes</a>
+										<a class="btn btn-link btn-link-2"
+                                           href="?sw=VeReportesXImp2021&i={ID_INSCRIPCION_ENCODEADO}" style="{DISPLAY_MODALIDAD2}">Reportes</a>
+										<a class="btn btn-link btn-link-2"
+                                           href="?sw=VeDocsXImp2021&i={ID_INSCRIPCION_ENCODEADO}" style="{DISPLAY_MODALIDAD2}">Documentos</a>
+										<a class="btn btn-link btn-link-2"
+                                           href="?sw=QR_2023&i={ID_INSCRIPCION_ENCODEADO}" style="{DISPLAY_MODALIDAD2}">Encuestas Satisfacci&oacute;n</a><br>
+		 </span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <br>
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"> {NOMBRE_CURSO_imparticion} - Creaci&oacute;n de Impartici&oacute;n</h3>
+                                </div>
+                                <br>
+                                <div class="panel-body">
+                                    {alert_de_imparticion_sin_asistencia_nota_aprobacion}
+                                    <span id="BloqueCursoSeleccionado">
+													{BLOQUE_CURSO_SELECCIONADO}
+												</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </aside><!-- /.right-side -->
+</div><!-- ./wrapper -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="myModalMallasV2" role="dialog"
+     style="z-index:999999;" tabindex="-1">
+    <div class="modal-dialog" style="width:900px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Selección de Programa - Malla</h3>
+                </div>
+                <input class="form-control" id="id_empresa" name="id_empresa" type="hidden" value="{ID_EMPRSA}">
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+{FOOTER_ADMIN}
+</body>
+</html>
+

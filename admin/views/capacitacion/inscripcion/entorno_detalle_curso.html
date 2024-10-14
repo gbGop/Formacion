@@ -1,0 +1,441 @@
+
+ 
+ <br>
+
+                 				<div class="small-box bg-blue">
+                                <div class="Txtinner">
+                                    <p>
+                                        CURSO SELECCIONADO
+                                    </p>
+                                </div>
+                                </div>
+                       
+                                           
+										   
+							<script>
+
+								function FormExcel(){
+									document.FormReprotes.ex.value="1";
+									document.FormReprotes.submit();
+								}
+							
+							</script>							
+										   
+								<script type='text/javascript' src='js/table_sorting/common.js'></script>
+								<script type='text/javascript' src='js/table_sorting/css.js'></script>
+								<script type='text/javascript' src='js/table_sorting/standardista-table-sorting.js'></script>
+								
+                                <div class="box-body table-responsive">
+                                    <table id="example2" class="table table-bordered table-hover sortable">
+                                        <thead>
+                                            <tr>
+
+
+												<th class="width40 bg_gray">COD</th>
+                                                <th class="width140 bg_gray">NOMBRE_CURSO</th>
+                                                <th class="width100 bg_gray">CLASIFICACION</th>
+                                                <th class="width80 bg_gray">OTEC</th>
+                                                <th class="width80 bg_gray">MODALIDAD</th>
+                                                <th class="width60 bg_gray">TIPO</th>
+                                                <th class="width60 bg_gray">CBC <button type="button" class="botonAdmin" data-toggle="tooltip" data-placement="right" title="CBC: Comité Bipartito de Capacitación"><i class="fa fa-question-circle"></i>
+</button></th>
+                                                <th class="width60 bg_gray">SENCE</th>
+                                                <th class="width60 bg_gray">HORAS</th>
+                                                <th class="width60 bg_gray">$_HH<button type="button" class="botonAdmin" data-toggle="tooltip" data-placement="right" title="Valor hora del curso dado por el proveedor"><i class="fa fa-question-circle"></i>
+</button></th>
+<th class="width60 bg_gray">$_SENCE<button type="button" class="botonAdmin" data-toggle="tooltip" data-placement="right" title="Valor hora oficial SENCE"><i class="fa fa-question-circle"></i>
+</button></th>
+												<th class="width80 bg_gray">$_PART<button type="button" class="botonAdmin" data-toggle="tooltip" data-placement="right" title="Valor del Curso por Participante: Multiplicación del Número de Horas por Valor Hora"><i class="fa fa-question-circle"></i>
+</button></th>											
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+
+<tr>
+
+	<td class="miniSt">{CODIGO_SENCE}</td>
+    
+    <td class="miniSt"><strong>{NOMBRE}</strong></td>
+	<td class="miniSt">{CLASIFICACION}</td>
+	<td class="miniSt">{OTEC}</td>
+
+	<td class="miniSt">{MODALIDAD}</td>
+	<td class="miniSt">{TIPO}</td>
+	<td class="miniSt">{CBC}</td>
+
+	<td class="miniSt">{SENCE}</td>
+	<td class="miniSt">{NUM_HORAS}</td>
+	<td class="miniSt">{VALOR_HORA}</td>
+	<td class="miniSt">{VALOR_HORA_SENCE}</td>
+	<td class="miniSt">{VALOR_CURSO_ENCABEZADO}</td>
+
+	<!--<td><a href="?sw=accioncurso&i={CODIGO_ENCODEADO}"><i class="fa fa-pencil"></i></a>&nbsp;<a href="?sw=dltc&i={CODIGO_ENCODEADO}"><i class="fa fa-trash-o"></i></a></td>-->
+</tr>
+
+                                        </tbody>
+                                        <tfoot>
+                                          
+                                        </tfoot>
+                                    </table>
+                                </div><!-- /.box-body -->
+								                       
+
+                            </div><!-- /.box -->
+    
+    
+                              <a name="seccionDetalleInscripcion"></a><div class="small-box bg-blue ">
+                                <div class="Txtinner">
+                                    <p>
+                                        DETALLE DE INSCRIPCION 
+                                    </p>  
+								</div>
+                              </div>
+                              
+<script>
+	
+		function CodCurFun(sel) {
+      if (sel.value=="si"){
+           divC = document.getElementById("nTExtoS");
+           divC.style.display = "";
+
+           divT = document.getElementById("nTExtoI");
+           divT.style.display = "none";
+		   
+
+      }else{
+
+           divC = document.getElementById("nTExtoS");
+           divC.style.display="none";
+
+           divT = document.getElementById("nTExtoI");
+           divT.style.display = "";
+      }
+	  
+}
+	
+	</script>
+	                              
+                              
+<form name="FormInscripcion" action="{ACTION_INSC}" method="POST" >
+
+
+<input type="hidden" class="form_control_admin" name="ide" value="{ID_INSCRIPCION_ENCODEADA}" />
+<input type="hidden" class="form_control_admin" name="idc" value="{ID_CURSO_ENCODEADA}" />
+
+<div class="row">
+<div class="col-md-4">
+<label>Fecha Inicio - Término</label><br>
+<input class="form-control" id="reservation" name="reservation" type="text" size="22" value="{FECHA_COMPLETA}">
+</div>
+
+	<div class="col-md-2"> <label>Número de Días</label><br>
+	<input type="text" class="form_control_admin" value="{NUMERO_DIAS}" name="numero_dias" size='3' />	
+    </div>	
+
+	<div class="col-md-2"> <label>Modalidad</label><br>
+                            <select onChange="CodCurFun(this)" class="form_control_admin" name="abiertocerrado">
+                            <option value="-">Seleccione</option>
+                            <option value="si">Abierto</option>
+                            <option value="no">Cerrado</option>
+                            </select>
+    </div>	  
+    
+	<div class="col-md-2"> <label>Valor Total Curso</label><br>
+	<input type="text" class="form_control_admin" name="valor_curso" value="{VALOR_CURSO}" />	
+    </div>	   
+    
+	<div class="col-md-2"> <label>Valor Hora Curso</label><br>
+	<input type="text" class="form_control_admin" name="valor_hora_curso" value="{VALOR_HORA_CURSO}"  />	
+    </div>	        
+ </div>   
+    
+            																		
+ <div class="row">   
+	<div class="col-md-6"> <label>Dirección</label><br>
+	<input type="text" class="form_control_admin" value="{DIRECCION}" name="direccion"  />	
+    </div>	 
+    
+	<div class="col-md-3"> <label>Comuna</label><br>
+	<input type="text" class="form_control_admin" value="{COMUNA}" name="comuna"  />	
+    </div>	 
+    
+	<div class="col-md-3"> <label>Región</label><br>
+	<input type="text" class="form_control_admin" value="{CIUDAD}" name="ciudad" />	
+    </div>	                																		
+  </div>   
+ <div class="row">   
+
+<div class="col-md-12"><br />
+<br />
+
+<table width="740px">
+<tr>
+	<td width="100px"><label>Horario</label></td>
+    <td colspan="2" class="thTEXT1">Lunes</td>
+    <td colspan="2" class="thTEXT2">Martes</td>
+    <td colspan="2" class="thTEXT1">Miércoles</td>
+    <td colspan="2" class="thTEXT2">Jueves</td>
+    <td colspan="2" class="thTEXT1">Viernes</td>
+</tr>
+<tr>
+    <td valign="top" class="derecha">AM</td>
+    <td class="thTEXT1"><!--<input type="time" class="form_control_admin_hora" name="HOR_LUNES_D_AM" value="{VALUE_HOR_LUNES_D_AM}" size="8" placeholder="HH:MM" />-->
+    <div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH timepicker" name="HOR_LUNES_D_AM" value="{VALUE_HOR_LUNES_D_AM}"/>
+     </div>
+                                            
+                                            <br>
+                                            <!--<select name="HOR_LUNES_D_AM">{SELECT_HOR_LUNES_D_AM}</select>--></td>
+	<td class="thTEXT1" style="width:50px;">
+    <!--<input type="time" class="form_control_admin_hora" name="HOR_LUNES_H_AM" value="{VALUE_HOR_LUNES_H_AM}"size="8"  placeholder="HH:MM"/>-->
+<!--    <select name="HOR_LUNES_H_AM">{SELECT_HOR_LUNES_H_AM}</select>
+-->     <div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH timepicker" name="HOR_LUNES_H_AM" value="{VALUE_HOR_LUNES_H_AM}"/>
+     </div>
+     </td>	
+    <td class="thTEXT2"  style="width:50px;">
+<!--    <input type="time" class="form_control_admin_hora" name="HOR_MARTES_D_AM" value="{VALUE_HOR_MARTES_D_AM}" size="8" placeholder="HH:MM"/>
+-->    
+<!--<select name="HOR_MARTES_D_AM">{SELECT_HOR_MARTES_D_AM}</select>
+--><div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH timepicker" name="HOR_MARTES_D_AM" value="{VALUE_HOR_MARTES_D_AM}"/>
+     </div>
+     	</td>
+<td class="thTEXT2">	
+<!--<input type="time" class="form_control_admin_hora" name="HOR_MARTES_H_AM" value="{VALUE_HOR_MARTES_H_AM}" size="8" placeholder="HH:MM"/>-->
+
+<!--<select name="HOR_MARTES_H_AM">{SELECT_HOR_MARTES_H_AM}</select>
+--><div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH timepicker" name="HOR_MARTES_H_AM" value="{VALUE_HOR_MARTES_H_AM}"/>
+     </div>
+     
+	</td>
+
+
+    <td class="thTEXT1">	
+<!--    <input type="time" class="form_control_admin_hora" name="HOR_MIERCOLES_D_AM" value="{VALUE_HOR_MIERCOLES_D_AM}"size="8" placeholder="HH:MM" />
+-->    
+<!--<select name="HOR_MIERCOLES_D_AM">{SELECT_HOR_MIERCOLES_D_AM}</select>
+--><div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH timepicker" name="HOR_MIERCOLES_D_AM" value="{VALUE_HOR_MIERCOLES_D_AM}"/>
+     </div>
+     
+    </td>
+    
+
+
+
+	<td class="thTEXT1">
+<!--    <input type="time" class="form_control_admin_hora" name="HOR_MIERCOLES_H_AM" value="{VALUE_HOR_MIERCOLES_H_AM}" size="8" placeholder="HH:MM"/>
+-->
+<div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_MIERCOLES_H_AM" value="{VALUE_HOR_MIERCOLES_H_AM}"/>
+     </div>
+<!--     <select name="HOR_MIERCOLES_H_AM">{SELECT_HOR_MIERCOLES_H_AM}</select>
+-->    
+    	</td>
+
+
+    <td class="thTEXT2">	
+<!--    <input type="time" class="form_control_admin_hora" name="HOR_JUEVES_D_AM" value="{VALUE_HOR_JUEVES_D_AM}" size="8" placeholder="HH:MM"/>
+-->
+<!--<select name="HOR_JUEVES_D_AM">{SELECT_HOR_JUEVES_D_AM}</select>
+--><div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_JUEVES_D_AM" value="{VALUE_HOR_JUEVES_D_AM}"/>
+     </div>
+     
+    
+    	</td>
+<td class="thTEXT2">	
+<!--<input type="time" class="form_control_admin_hora" name="HOR_JUEVES_H_AM" value="{VALUE_HOR_JUEVES_H_AM}"size="8"  placeholder="HH:MM"/>
+-->
+<!--<select name="HOR_JUEVES_H_AM">{SELECT_HOR_JUEVES_H_AM}</select>
+--><div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_JUEVES_H_AM" value="{VALUE_HOR_JUEVES_H_AM}"/>
+     </div>
+	</td>
+
+
+    
+    <td class="thTEXT1">	
+<!--    <input type="time" class="form_control_admin_hora" name="HOR_VIERNES_D_AM" value="{VALUE_HOR_VIERNES_D_AM}"size="8"  placeholder="HH:MM"/>
+-->
+<!--<select name="HOR_VIERNES_D_AM">{SELECT_HOR_VIERNES_D_AM}</select>
+-->
+<div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_VIERNES_D_AM" value="{VALUE_HOR_VIERNES_D_AM}"/>
+     </div>
+    	</td>
+
+
+<td class="thTEXT1">	
+<!--<input type="time" class="form_control_admin_hora" name="HOR_VIERNES_H_AM" value="{VALUE_HOR_VIERNES_H_AM}"size="8"  placeholder="HH:MM"/>
+-->
+<div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_VIERNES_H_AM" value="{VALUE_HOR_VIERNES_H_AM}"/>
+     </div>
+<!--<select name="HOR_VIERNES_H_AM">{SELECT_HOR_VIERNES_H_AM}</select>
+-->	 
+
+</td>
+</tr>
+
+ 
+
+<tr>
+    <td valign="top" class="derecha">PM</td>
+	<td  class="thTEXT1">
+   <!-- <input type="time" class="form_control_admin_hora" name="HOR_LUNES_D_PM" value="{VALUE_HOR_LUNES_D_PM}"size="8"  placeholder="HH:MM"/>-->
+    
+<!--    <select name="HOR_LUNES_D_PM">{SELECT_HOR_LUNES_D_PM}</select>
+-->    <div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_LUNES_D_PM" value="{VALUE_HOR_LUNES_D_PM}"/>
+     </div>
+     
+    </td>
+	<td class="thTEXT1">
+<!--	<input type="time" class="form_control_admin_hora" name="HOR_LUNES_H_PM" value="{VALUE_HOR_LUNES_H_PM}"size="8"  placeholder="HH:MM"/>
+-->       
+<!-- <select name="HOR_LUNES_H_PM">{SELECT_HOR_LUNES_H_PM}</select>
+--> <div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_LUNES_H_PM" value="{VALUE_HOR_LUNES_H_PM}"/>
+     </div>
+
+</td>
+	<td class="thTEXT2">
+<!--    <input type="time" class="form_control_admin_hora" name="HOR_MARTES_D_PM" value="{VALUE_HOR_MARTES_D_PM}"size="8"  placeholder="HH:MM"/>
+-->    
+<!--<select name="HOR_MARTES_D_PM">{SELECT_HOR_MARTES_D_PM}</select>
+-->    <div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_MARTES_D_PM" value="{VALUE_HOR_MARTES_D_PM}"/>
+     </div>
+    	</td>
+
+<td class="thTEXT2">	
+<!--<input type="time" class="form_control_admin_hora" name="HOR_MARTES_H_PM" value="{VALUE_HOR_MARTES_H_PM}" size="8" placeholder="HH:MM"/>
+-->
+<!--<select name="HOR_MARTES_H_PM">{SELECT_HOR_MARTES_H_PM}</select>
+--><div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_MARTES_H_PM" value="{VALUE_HOR_MARTES_H_PM}"/>
+     </div>
+     
+</td>
+	<td class="thTEXT1">
+<!--    <input type="time" class="form_control_admin_hora" name="HOR_MIERCOLES_D_PM" value="{VALUE_HOR_MIERCOLES_D_PM}"size="8" placeholder="HH:MM" />
+-->    
+
+<!--    <select name="HOR_MIERCOLES_D_PM">{SELECT_HOR_MIERCOLES_D_PM}</select>
+-->    <div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_MIERCOLES_D_PM" value="{VALUE_HOR_MIERCOLES_D_PM}"/>
+     </div>
+
+    
+	</td>
+<td class="thTEXT1">	
+<!--<input type="time" class="form_control_admin_hora" name="HOR_MIERCOLES_H_PM" value="{VALUE_HOR_MIERCOLES_H_PM}"size="8"  placeholder="HH:MM"/>
+-->    
+<div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_MIERCOLES_H_PM" value="{VALUE_HOR_MIERCOLES_H_PM}"/>
+     </div>
+<!--     <select name="HOR_MIERCOLES_H_PM">{SELECT_HOR_MIERCOLES_H_PM}</select>
+-->    
+    </td>   
+	<td class="thTEXT2">
+<!--    <input type="time" class="form_control_admin_hora" name="HOR_JUEVES_D_PM" value="{VALUE_HOR_JUEVES_D_PM}"size="8"  placeholder="HH:MM"/>
+-->    	
+
+<!--<select name="HOR_JUEVES_D_PM">{SELECT_HOR_JUEVES_D_PM}</select>
+--><div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_JUEVES_D_PM" value="{VALUE_HOR_JUEVES_D_PM}"/>
+     </div>
+
+</td>
+	<td class="thTEXT2">
+<!--    <input type="time" class="form_control_admin_hora" name="HOR_JUEVES_H_PM" value="{VALUE_HOR_JUEVES_H_PM}" size="8" placeholder="HH:MM"/>
+-->    	
+<!--<select name="HOR_JUEVES_H_PM">{SELECT_HOR_JUEVES_H_PM}</select>
+--><div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_JUEVES_H_PM" value="{VALUE_HOR_JUEVES_H_PM}"/>
+     </div>
+        
+    </td>
+	<td class="thTEXT1">
+<!--    <input type="time" class="form_control_admin_hora" name="HOR_VIERNES_D_PM" value="{VALUE_HOR_VIERNES_D_PM}" size="8" placeholder="HH:MM"/>
+-->    	
+<!--<select name="HOR_VIERNES_D_PM">{SELECT_HOR_VIERNES_D_PM}</select>
+--><div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH  timepicker" name="HOR_VIERNES_D_PM" value="{VALUE_HOR_VIERNES_D_PM}"/>
+     </div>
+     
+     
+    	</td>
+<td class="thTEXT1">
+	 <div class="bootstrap-timepicker">
+            	<input type="text" class="form_control_admin_HH timepicker" name="HOR_VIERNES_H_PM" value="{VALUE_HOR_VIERNES_H_PM}"/>
+     </div>
+</td>
+</tr>
+</table>
+
+
+</div>
+  </div>   
+ 
+
+
+
+
+		
+	
+		  
+	   
+	
+    
+		
+		  
+		   
+		         
+  </div>
+  
+  
+	<div class="col-md-12"> <label>Comentarios</label><br>
+	<input type="text" class="form_control_admin" value="{COMENTARIOS}" name="comentario"/>	
+    </div>	  
+  
+  
+  	<div class="col-md-12">
+	
+	<br>
+	
+	
+<table width="100%">
+	<tr>	
+	<td colspan="12" class="miniSt" align="center">
+		<button type="submit" class="btn btn-success">ACTUALIZAR INSCRIPCION</button>
+	</td>
+	</tr>
+</table>
+	</form>
+	</div>	 
+  	     
+<br>
+<br>  
+<br>  
+<br>
+		
+
+
+{SECCION_INSCRIPCION_USUARIOS}	
+
+
+
+ 
+	   <!-- small box -->
+              	
+												
+	                        					
+						
+
+
+                

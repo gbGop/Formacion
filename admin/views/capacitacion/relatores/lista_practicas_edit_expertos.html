@@ -1,0 +1,39 @@
+<tr {BGCOLOR} >
+<form name="" action="?sw=MP_save_edit_expertos_grupos" method="post">
+	<td class="mp_txt_small">
+			<input type="text" class="form-control" id="grupo_interes" value="{RUT_EXPERTO}" name="grupo_interes" aria-describedby="" placeholder="Ingresa RUT de experto" required>
+	</td>
+			<input type="hidden" name="id_experto" value="{ID_EXPERTO}">
+	<td class="mp_txt_small"><strong>{EXPERTO}</strong></td>
+	<td class="mp_txt_small">{CARGO}</td>
+	<td class="mp_txt_small">{GERENCIA}</td>
+	<td class="mp_txt_small">
+			<select  name="grupo_interes_mp" style="min-width: 100%" class="form-control">
+				<option value="{IDGRUPO}">{GRUPO}</option>
+				{OPTIONS_CATEGORIAS_MEJORES_PRACTICAS}
+			</select>
+	</td>
+	<td class="mp_txt_small">  <input type="submit" class="btn btn-info" value="Editar Experto">	</td>
+</tr>
+</form>
+<script type="text/javascript">
+	//<![CDATA[
+	CKEDITOR.replace('editor{ID_MP}', {
+		filebrowserBrowseUrl : 'js/ckeditor/filemanager/index.php',
+
+		toolbarGroups : [{
+			"name" : "basicstyles",
+			"groups" : ["basicstyles"]
+		}, {
+			"name" : "links",
+			"groups" : ["links"]
+		}, {
+			//"name" : "paragraph",
+			//"groups" : ["list", "blocks"]
+		}],
+		// Remove the redundant buttons from toolbar groups defined above.
+		removeButtons : 'Underline,Strike,Subscript,Superscript,Anchor,Styles,Specialchar'
+
+	});
+	//]]>
+</script>

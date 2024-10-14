@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>AdminLTE | Data Tables</title>
+		<link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+		{HEAD}
+	</head>
+	<body class="skin-blue">
+		<!-- header logo: style can be found in header.less -->
+		{HEADER}
+		<div class="wrapper row-offcanvas row-offcanvas-left">
+			<!-- Left side column. contains the logo and sidebar -->
+			<aside class="left-side sidebar-offcanvas">
+				<!-- sidebar: style can be found in sidebar.less -->
+				{MENU_IZQUIERDO}
+				<!-- /.sidebar -->
+			</aside>
+
+			<!-- Right side column. Contains the navbar and content of the page -->
+			<aside class="right-side">
+				<!-- Content Header (Page header) -->
+				{NAVEGACION}
+				<!-- Main content -->
+
+				<section class="content">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="box boxheader">
+								<div class="box-header with-border" style="border-bottom: 1px solid #F4F4F4;">
+									<h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Reporte Capacitaci&oacuten&nbsp; Consolidado</h3>
+								</div>
+								<div class="box-body table-responsive">
+									<br>
+									<div class="boxsubtitle" style="border-bottom: 1px solid #F4F4F4;">
+										<h6 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Mulfiltro </h6>
+									</div>
+									<form class="form-horizontal" method="POST" name="ReporteCapacitacion" id="ReporteCapacitacion" action="?sw=vista_mallas_clasificaciones_cursos_objetos" >
+										<input class="form-control" id="id_empresa" name="id_empresa"type="hidden" value="{ID_EMPRSA}">
+										<div class="">
+											<div class="col-md-3">
+												<div class="form-group">
+													<label for="malla">Malla</label>
+													<select name="malla"  id="malla" class="form-control" >
+														<option value="0">Todas</option>
+														{MALLAS}
+													</select>
+												</div>
+											</div>
+											<div class="col-md-3">
+
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label for="codigo_escolaridad"></label>
+													<br>
+													<button type="submit" class="btn btn-primary">
+														Filtrar
+													</button>
+													<script>
+														function GeneraExcelDatos() {
+															document.getElementById("excel").value = "1";
+															document.getElementById("ReporteCapacitacion").submit();
+															document.getElementById("excel").value = "0";
+
+														}
+													</script>
+													<button type="button" class="btn btn-primary" onclick="#">
+														Exportar a Excel
+													</button>
+													<input type="hidden" name="excel" id="excel" />
+												</div>
+											</div>
+										</div>
+										<br>
+										<br>
+										{FILTROS_SELECCIONADOS}
+										<br>
+										<br>
+
+										<div class="boxsubtitle" style="border-bottom: 1px solid #F4F4F4;">
+											<h6 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Vista Integrada </h6>
+										</div>
+										<br>
+										<div class="row">
+
+											<div class="box-body table-responsive">
+												<table id="tabla1" class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>Clasificación</th>
+															<th>Código</th>
+															<th>Datos</th>
+															<th style="width:150px;">Opciones</th>
+														</tr>
+													</thead>
+													<tbody>
+														{ROW_LISTADO_CLASIFICACION}
+													</tbody>
+													<tfoot>
+
+													</tfoot>
+												</table>
+											</div>
+
+										</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+		</div>
+		</section>
+
+		<!-- /.content -->
+		</aside><!-- /.right-side -->
+		</div><!-- ./wrapper -->
+
+		{FOOTER_ADMIN}
+
+		<!-- DataTables JavaScript -->
+
+		<script src="./js/plugins/datatables/jquery.dataTables.js"></script>
+
+		<script src="./js/plugins/datatables/dataTables.bootstrap.js"></script>
+
+		<script type="text/javascript">
+			$('#tabla1').dataTable({
+
+				"oLanguage" : {
+					"sProcessing" : "Procesando...",
+					"sLengthMenu" : "Mostrar _MENU_ registros",
+					"sZeroRecords" : "No se encontraron resultados",
+					"sEmptyTable" : "Ningún dato disponible en esta tabla",
+					"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+					"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+					"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+					"sInfoPostFix" : "",
+					"sSearch" : "Buscar: ",
+					"sUrl" : "",
+					"sInfoThousands" : ",",
+					"sLoadingRecords" : "Cargando...",
+					"oPaginate" : {
+						"sFirst" : "Primero",
+						"sLast" : "Último",
+						"sNext" : "Siguiente",
+						"sPrevious" : "Anterior"
+					},
+					"oAria" : {
+						"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+						"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+					}
+				},
+
+				"bPaginate" : true,
+				"bLengthChange" : true,
+				"bFilter" : true,
+				"bSort" : true,
+				"bInfo" : true,
+				"bAutoWidth" : true
+			});
+
+		</script>
+
+	</body>
+</html>

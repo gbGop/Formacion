@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{TITTLE}</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        {HEAD}
+        <style>
+          .boxheader {
+            position: relative;
+            border-radius: 3px;
+            background: #FFF none repeat scroll 0% 0%;
+            border-top: 0px solid #3C8DBC;
+            margin-bottom: 20px;
+            width: 100%;
+            box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+          }
+          .form-control {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            height: 34px;
+          }
+        </style>
+    </head>
+    <body class="skin-blue">
+        <!-- header logo: style can be found in header.less -->
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="left-side sidebar-offcanvas">
+                <!-- sidebar: style can be found in sidebar.less -->
+                {MENU_IZQUIERDO} <!-- /.sidebar -->
+            </aside>
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                {NAVEGACION} <!-- Main content -->
+                <script language="Javascript">
+					function abrirPagina(pagina) {
+						window.open(pagina, 'window', 'width=650, height=600');
+					}
+					function generaPlantilla() {
+						$("#FormPlantilla").submit();
+					}
+					function validarSubirExcel($idEval, $programa) {
+						if ($("#numErrores").text() > 0) {
+							alert("Debe solucionar todos los errores de su excel para subirlo !");
+						} else {
+							$("#back").show();
+							$("#loader").show();
+							window.location.href = "?sw=acepPreviewExcelPreg&idEval=" + $idEval;
+						}
+					}
+					function cancelarSubirExcel($idEval) {
+						$("#back").show();
+						$("#loader").show();
+						window.location.href = "?sw=cancelSubirPreg&idEval=" + $idEval;
+					}
+                </script>
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box boxheader">
+                                <div class="box-header with-border" style="border-bottom: 1px solid #F4F4F4;">
+                                    <h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Banco de Preguntas</h3>
+                                    <a href="?sw=viewEval&&idEval={ID_EVAL}&programa={PROGRAMA}" class="btn btn-link pull-left"><span class="negro"><i class="fa fa-reply"></i> Volver</span></a>
+                                </div>
+                            </div>
+                            <div class="box boxheader">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!-- Custom Tabs -->
+                                        <div class="nav-tabs-custom">
+                                            <ul class="nav nav-tabs">
+                                                <li class="active">
+                                                    <a aria-expanded="false" href="#tab_1" data-toggle="tab">Subir Preguntas</a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content">
+                                                <div class="tab-pane active"  id="tab_1">
+                                                    <div class="row">
+                                                        <form action="jhonatan_funciones_post.php" method="post" id="FormPlantilla" name="FormPlantilla">
+                                                            <input type="hidden" value="5" name="accion" id="accion">
+                                                            <input type="hidden" value="{ID_EMPRESA}" name="id_empresa" id="id_empresa">
+                                                            <input type="hidden" value="{ID_EVAL}" name="id_eval" id="id_eval">
+                                                            <input type="hidden" value="{PROGRAMA}" name="programa" id="programa">
+                                                        </form>
+                                                        <div class="col-md-3">
+                                                            <div class="box boxheader" style="{DISPLAYFORM1}">
+                                                                <div class="box-body">
+                                                                    <p>
+                                                                        <br>
+                                                                        <a href="?sw=acepPreviewExcelPreg&idEval={ID_EVAL}&programa={PROGRAMA}" class="btn btn-success"><span class="blanco">Guardar Preguntas</span></a>
+                                                                        <br>
+                                                                    </p>
+                                                                    <br>
+                                                                    <br>
+                                                                    <strong><i class="fa fa-refresh fa-spin" style="font-size:18px;"></i> Esperando Confirmaci&oacuten</strong>
+                                                                    <br>
+                                                                </div><!-- /.box-body -->
+                                                            </div><!-- /.box -->
+                                                            <div class="box boxheader">
+                                                                <div class="box-head"></div><!-- /.box-body -->
+                                                                <div class="box-body box-profile">
+                                                                    <!-- small box -->
+                                                                    <div class="small-box bg-gray">
+                                                                        <div class="box-header with-border" style="border-bottom: 0px solid #F4F4F4;">
+                                                                            <br>
+                                                                            <h6 class="" style="margin-left:10px;"><i class="fa  fa-usert"></i>{TOTAL_PREG} Preguntas</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                    <ul class="list-group list-group-unbordered">
+                                                                        <li class="list-group-item">
+                                                                            <i class="fa fa-plus"></i><b> Nuevas</b><a class="pull-right">{TOT_INSERTAR}</a>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <i class="fa fa-refresh"></i><b> Actualizar</b><a class="pull-right">{TOT_ACTUALIZAR}</a>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <i class="fa fa-warning"></i><b> Errores</b><a class="pull-right" id="numErrores">{TOT_ERRORES}</a>
+                                                                            <br>
+                                                                            <br>
+                                                                            <p>
+                                                                                {ERRORES}
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div><!-- /.box-body -->
+                                                            </div><!-- /.box -->
+                                                            <!-- About Me Box -->
+                                                        </div><!-- /.col -->
+                                                        <div class="col-md-9">
+                                                            <div class="box boxheader">
+                                                                <div class="box-header with-border" style="border-bottom: 0px solid #F4F4F4;">
+                                                                    <h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> {TITULO2}</h3>
+                                                                </div>
+                                                                <div class="box-body">
+                                                                    <div class="small-box bg-red" style="padding:10px;{DISPLAYERROR}">
+                                                                        <div class="inner">
+                                                                            <h3><i class="fa fa-unlink"></i> Error grave</h3>
+                                                                            <p>
+                                                                                <strong>{ERROR_GRAVE}</strong>
+                                                                            </p>
+                                                                            <p>
+                                                                                Revise el archivo, corriga los errores e intente nuevamente
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    {ENTORNO_PREVIA}
+                                                                    <form name="importa" method="post" action="?sw=subirExcelPreg&idEval={ID_EVAL}&programa={PROGRAMA}" id="importa" enctype="multipart/form-data" style="display:{DISPLAYFORM2}" >
+                                                                        <div class="panel-body">
+                                                                            <br>
+                                                                            <a onclick="generaPlantilla()"  class="btn btn-primary btn-sm pull-left flat" style="margin-top: 10px;margin-right: 10px;font-size: 14px;"><i class="fa fa-download"></i> Descargar Plantilla Preguntas en Excel</a>
+                                                                        
+                                                                            <br>
+                                                                            <br>
+                                                                            <br>
+                                                                            Una vez que has llenado la Plantilla con Preguntas, súbela aquí
+                                                                            <br>
+                                                                            <p>
+                                                                                <input type="file" name="excel" />
+                                                                                <br>
+                                                                                <button type="submit" class='btn btn-success btn-sm' >
+                                                                                    <i class="fas fa-upload"></i> Subir Excel con Preguntas
+                                                                                </button>
+                                                                                <input type="hidden" value="upload" name="action" />
+                                                                            </p>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div><!-- ./col -->
+                                                        </div>
+                                                    </div><!-- /.tab-pane -->
+                                                </div><!-- /.tab-content -->
+                                            </div><!-- nav-tabs-custom -->
+                                        </div>
+                                    </div><!-- /.box-body -->
+                                </div><!-- /.box -->
+                            </div><!-- /.box -->
+                            <!-- /.box -->
+                        </div>
+                    </div>
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->
+        {FOOTER_ADMIN} <!-- page script -->
+        <script>
+			$("#importa").submit(function() {
+				$("#back").show();
+				$("#loader").show();
+			});
+        </script>
+        <div id="back" class="modal-backdrop fade in" style="display:none;"></div>
+        <div id="loader" style="display:none;z-index:99999;color:#fff;position:fixed;width:200px;top: 50%; left: 47%;"><img src="img/ajax-loader.gif">
+        </div>
+    </body>
+</html>

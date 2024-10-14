@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>AdminLTE | Dashboard</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        {HEAD}
+    
+	
+	<script>
+	
+		function pagoOnChange(sel) {
+      if (sel.value=="3"){
+           divC = document.getElementById("nArchivo");
+           divC.style.display = "";
+
+           divT = document.getElementById("nEvaluacion");
+           divT.style.display = "none";
+
+      }else{
+
+           divC = document.getElementById("nArchivo");
+           divC.style.display="none";
+
+           divT = document.getElementById("nEvaluacion");
+           divT.style.display = "";
+      }
+}
+	
+	</script>
+    <body class="skin-blue">
+        <!-- header logo: style can be found in header.less -->
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+              <aside class="left-side sidebar-offcanvas">
+                <!-- sidebar: style can be found in sidebar.less -->
+                {MENU_IZQUIERDO}
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                {NAVEGACION}
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <!-- left column -->
+                       <!--/.col (left) -->
+                        <!-- right column -->
+                        <div class="col-md-6">
+                            <!-- general form elements disabled -->
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">{TITULO}</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <form action="{ACTION}" method="POST" enctype="multipart/form-data" name="{NOMBRE_FORMULARIO}"  >
+                                        <!-- text input -->
+										
+										
+																				
+										
+                                        <div class="form-group">
+                                            <label>Nombre Evaluaci&oacute;n</label>
+                                            <input type="text" class="form-control" name="nombre_evaluacion" value="{NOM_EVALUACION}" />
+                                        </div>
+										
+										
+									
+										
+										 <div class="form-group">
+                                            <label>Descripci&oacute;n</label>
+                                            <textarea rows="5" class="form-control" name="descripcion_evaluacion" >{DES_EVALUACION}</textarea>
+                                        </div>
+										
+										
+										
+
+										
+										
+										
+										 
+										
+										
+										
+										
+										<div class="box-footer">
+                                        <button type="submit" class="btn btn-primary">{VALOR_BOTON}</button>
+                                    </div>
+
+                                    </form>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div><!--/.col (right) -->
+                    </div>   <!-- /.row -->
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->
+     
+    </body>
+</html>

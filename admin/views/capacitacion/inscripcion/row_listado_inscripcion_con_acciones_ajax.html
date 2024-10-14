@@ -1,0 +1,66 @@
+<script>
+function EstadoPagado_{CODIGOINCRIPCION}(){
+
+var campos = {
+
+"tipo" : "asignaPagadoAInsc",
+"codigo_inscripcion" : "{CODIGOINCRIPCION}"
+};
+alert("Pagado a la OC Correspondiente");
+$.ajax({
+data : campos,
+url : 'funciones/ajax.php',
+type : 'post',
+beforeSend : function() {
+$("#back").show();
+$("#loader").show();
+},
+success : function(response) {
+$("#back").hide();
+$("#loader").hide();
+$("#{CODIGOINCRIPCION}_pendiente").html(response);
+}
+});
+}
+
+</script>
+
+
+
+<tr>
+
+	<td class="miniSt" ><strong>Cod: {CODIGOINCRIPCION}</strong>
+	<br>
+	{ESTADO} ({ESTADONOMBRE})
+	<br>
+	<a class="btn btn-default flat" style="width:75px;height;30px;font-size: 10px;padding: 2px 1px;" href="?sw=accioninsc&id={CODIGOINCRIPCION}&idc={ID_CURSO}" classtitle="Ver Inscripcion"><i class="fa fa-pencil"></i> Ver Datos</a>
+	<br>
+	<br>
+	{REAL} 
+	
+	<br>
+	
+		<input type="checkbox" {CHECKED_PAGO}   onclick="EstadoPagado_{CODIGOINCRIPCION}();" /> PAGO
+	
+	
+	</td>
+
+	<td class="miniSt" >{CLASIFICACION}
+	<br>
+	<strong>{CURSO}</strong></td>
+	<td class="miniSt" ><strong>Inicio: </strong>{FECHA_INICIO}
+	<br />
+	<strong>Termino: </strong>{FECHA_TERMINO}
+	<br />
+	<strong>Participantes: </strong>{PARTICIPANTES}
+	<br />
+	
+	<a href="?sw=detinexc&ii={CODIGOINCRIPCION}&reh=19" data-toggle="tooltip" data-placement="left" title="Descargar XLS para OTIC"><i class="fa fa-download"></i></a>&nbsp;
+	<!--<a href="?sw=uploadarchii&ii={ID_INSCRIPCION_ENCODEADO}" data-toggle="tooltip" data-placement="left" title="Subir Documento" onclick="abrir(this.href);return false"><i class="fa fa-cloud-upload"></i></a>&nbsp;-->
+    {ICONO_EXPORTAR_REPORTE}
+        
+	</td>
+	<td class="miniSt">{TABLA}</td>
+
+</tr>
+

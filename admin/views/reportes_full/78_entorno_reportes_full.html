@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{TITTLE}</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'> {HEAD}
+</head>
+<body class="skin-blue">
+    {HEADER}
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+        <aside class="left-side sidebar-offcanvas"> {MENU_IZQUIERDO} </aside>
+        <aside class="right-side"> {NAVEGACION}
+            <section class="content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <section class="content">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="box">
+                                        <div class="box-header with-border" style="border-bottom: 1px solid #F4F4F4;">
+                                            <h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Reportes Full </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <center>
+                                        <div class="panel panel-info">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">Reportes Full</h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                <form id='reporte_express' name='reporte_express' action='?sw=lms_reportes_full' method='post'>
+                                                    <div class="col-xs-4">
+                                                        Programa<br>
+                                                        <select name='id_programa_express' id='id_programa_express' class='form form-control' required>
+                                                            <option value=''></option>
+                                                                {ROW_PROGRAMAS_ARRAY}
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-xs-4">
+                                                        Fecha Inicio<br>
+                                                        <input type="date" name="fecha_inicio_exp" class="form form-control">
+                                                    </div>
+
+                                                    <div class="col-xs-4">
+                                                        Fecha Término<br>
+                                                        <input type="date" name="fecha_termino_exp" class="form form-control">
+                                                    </div>
+
+                                                    <div class="col-xs-12">
+                                                        <br><input type='submit' class='btn btn-info' value='Exportar Reporte Online'>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </center>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Reportes Full</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <form class="form-horizontal" method="POST" action="?sw=lms_reportes_full" id="ReporteCapacitacion" name="ReporteCapacitacion">
+                                                <input class="form-control" id="id_empresa" name="id_empresa" type="hidden" value="{ID_EMPRESA}">
+                                                <input type="hidden" name="tipo_filtro">
+                                                <div class="">
+                                                    <div class="col-md-3">
+                                                        <script src="script/ajax.googleapis.com_ajax_libs_jquery_3.6.0_jquery.min.js"></script>
+                                                        <script src="script/global.js"></script>
+
+                                                        <script>
+                                                            function ProgramaGlobalPorFoco() {
+
+                                                                foco = $("#foco").val();
+                                                                ejecutivo = $("#ejecutivo").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "ejecutivo": ejecutivo
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_programaGlobal_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+                                                                        $("#programaglobal").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+
+                                                            function ProgrammaBBDDPorFoco() {
+
+                                                                foco = $("#foco").val();
+                                                                ejecutivo = $("#ejecutivo").val();
+                                                                programaglobal = $("#programaglobal").val();
+
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "ejecutivo": ejecutivo,
+                                                                    "programaglobal": programaglobal
+
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_programabbdd_elearning_por_foco_programa',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+                                                                        $("#programabbdd").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function MallaPorFoco() {
+                                                                foco = $("#foco").val();
+                                                                ejecutivo = $("#ejecutivo").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "ejecutivo": ejecutivo
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_malla_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+                                                                        $("#malla").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ClasificacionPorFoco() {
+                                                                foco = $("#foco").val();
+                                                                ejecutivo = $("#ejecutivo").val();
+
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "ejecutivo": ejecutivo
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_clasificacion_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#clasificacion").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function CursoPorFoco() {
+                                                                foco = $("#foco").val();
+                                                                ejecutivo = $("#ejecutivo").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "ejecutivo": ejecutivo
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_curso_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#cursos2").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ImparticionesPorFoco() {
+                                                                foco = $("#foco").val();
+                                                                ejecutivo = $("#ejecutivo").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "ejecutivo": ejecutivo
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_imparticiones_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#imparticion").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ObjetosPorFoco() {
+                                                                foco = $("#foco").val();
+                                                                var campos = {
+                                                                    "foco": foco
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_objetos_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#objetos").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+                                                        </script>
+                                                        <div class="form-group">
+                                                            <label for="foco">EJE</label>
+                                                            <select name="foco" onchange="ProgramaGlobalPorFoco();ProgrammaBBDDPorFoco();MallaPorFoco();ClasificacionPorFoco();CursoPorFoco();ObjetosPorFoco();" id="foco" class="form-control">
+                                                        <option value="0">Todos</option>
+                                                        {OPTIONS_FOCOS}
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <script>
+                                                            function ProgrammaBBDDPorFoco() {
+
+                                                                foco = $("#foco").val();
+                                                                ejecutivo = $("#ejecutivo").val();
+                                                                programaglobal = $("#programaglobal").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "ejecutivo": ejecutivo,
+                                                                    "programaglobal": programaglobal
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_programabbdd_elearning_por_foco_programa',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+                                                                        $("#programabbdd").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function MallaPorProgramaBBDD() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_malla_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#malla").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ClasificacionPorProgramaBBDD() {
+                                                                foco = $("#foco").val();
+
+                                                                programabbdd = $("#programabbdd").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_clasificacion_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#clasificacion").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function CursoPorProgramaBBDD() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_curso_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#cursos2").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ImparticionesPorProgramaBBDD() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_imparticiones_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#imparticion").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ObjetosPorProgramaBBDD() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_objetos_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#objetos").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+                                                        </script>
+                                                        <div class="form-group">
+                                                            <label for="programaglobal">PROYECTO</label>
+                                                            <select name="programaglobal" id="programaglobal" class="form-control" onchange="ProgrammaBBDDPorFoco();MallaPorProgramaBBDD();ClasificacionPorProgramaBBDD();CursoPorProgramaBBDD();ObjetosPorProgramaBBDD();">
+                                                        <option value="0">Todos</option>
+                                                        {OPTIONS_PROGRAMAS_GLOBAL}
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <script>
+                                                            function MallaPorProgramaBBDD() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_malla_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#malla").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ClasificacionPorProgramaBBDD() {
+                                                                foco = $("#foco").val();
+
+                                                                programabbdd = $("#programabbdd").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_clasificacion_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#clasificacion").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function CursoPorProgramaBBDD() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_curso_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#cursos2").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ImparticionesPorProgramaBBDD() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_imparticiones_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#imparticion").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ObjetosPorProgramaBBDD() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_objetos_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#objetos").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+                                                        </script>
+                                                        <div class="form-group">
+                                                            <label for="programabbdd">PROGRAMA ELEARNING</label>
+                                                            <select name="programabbdd" id="programabbdd" class="form-control" onchange="MallaPorProgramaBBDD();ClasificacionPorProgramaBBDD();CursoPorProgramaBBDD();ObjetosPorProgramaBBDD();">
+                                                        <option value="0">Todos</option>
+                                                        {OPTIONS_PROGRAMAS_BBDD}
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <script>
+                                                            function ClasificacionPorMalla() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                malla = $("#malla").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd,
+                                                                    "malla": malla
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_clasificacion_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#clasificacion").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function CursoPorMalla() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                malla = $("#malla").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd,
+                                                                    "malla": malla
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_curso_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+                                                                        $("#cursos2").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                                 function CursoPorMalla3() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                malla = $("#malla").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd,
+                                                                    "malla": malla
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_curso_por_foco_id',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#cursos3").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+
+                                                            function ImparticionesPorMalla() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                malla = $("#malla").val();
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd,
+                                                                    "malla": malla
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_imparticiones_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#imparticion").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ObjetosPorMalla() {
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                malla = $("#malla").val();
+
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd,
+                                                                    "malla": malla
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_objetos_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+                                                                        $("#objetos").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+                                                        </script>
+                                                        <div class="form-group">
+                                                            <label for="malla">MALLA</label>
+                                                            <select name="malla" id="malla" class="form-control" onchange="ClasificacionPorMalla();CursoPorMalla();CursoPorMalla3();ObjetosPorMalla();">
+                                                        <option value="0">Todas</option>
+                                                        {MALLAS}
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <script>
+                                                            function ObjetosPorCursofiltro2() {
+
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                malla = $("#malla").val();
+                                                                clasificacion = $("#clasificacion").val();
+                                                                cursos = $("#cursos3").val();
+
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd,
+                                                                    "malla": malla,
+                                                                    "clasificacion": clasificacion,
+                                                                    "cursos": cursos
+                                                                };
+
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_objetos_por_curso',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+                                                                        $("#objetos").html(cleanResponse);
+                                                                    }
+                                                                });
+
+                                                            }
+
+                                                            function ImparticionesPorCurso2() {
+                                                                //foco = $("#foco").val();
+                                                                //programabbdd = $("#programabbdd").val();
+                                                                //malla = $("#malla").val();
+                                                                //clasificacion = $("#clasificacion").val();
+                                                                curso = $("#cursos3").val();
+                                                                var campos = {
+
+                                                                    "curso": curso
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_imparticion_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+
+                                                                        $("#imparticion").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ejecutaSubmitCursos() {
+                                                                document.ReporteCapacitacion.tipo_filtro.value = '1';
+                                                                document.ReporteCapacitacion.submit();
+                                                            }
+                                                        </script>
+                                                        <div class="form-group">
+                                                            <label for="cursos">ID CURSOS</label>
+                                                            <select name="cursos3" id="cursos3" class="form-control" onchange="ObjetosPorCursofiltro2();ImparticionesPorCurso2();">
+                                                        <option value="0">Todas</option>
+                                                        {ID_CURSOS}
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <script>
+                                                            function ObjetosPorCursofiltro() {
+
+                                                                foco = $("#foco").val();
+                                                                programabbdd = $("#programabbdd").val();
+                                                                malla = $("#malla").val();
+                                                                clasificacion = $("#clasificacion").val();
+                                                                cursos = $("#cursos").val();
+
+                                                                var campos = {
+                                                                    "foco": foco,
+                                                                    "programabbdd": programabbdd,
+                                                                    "malla": malla,
+                                                                    "clasificacion": clasificacion,
+                                                                    "cursos": cursos
+                                                                };
+
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_objetos_por_curso',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+                                                                        $("#objetos").html(cleanResponse);
+                                                                    }
+                                                                });
+
+                                                            }
+
+                                                            function ImparticionesPorCurso() {
+                                                                //foco = $("#foco").val();
+                                                                //programabbdd = $("#programabbdd").val();
+                                                                //malla = $("#malla").val();
+                                                                //clasificacion = $("#clasificacion").val();
+                                                                curso = $("#cursos2").val();
+                                                                var campos = {
+
+                                                                    "curso": curso
+                                                                };
+                                                                $.ajax({
+                                                                    data: campos,
+                                                                    url: '?sw=filtro_imparticion_por_foco',
+                                                                    type: 'post',
+                                                                    success: function(response) {
+                                                                        let cleanResponse = convertHtmlToJQueryObject(response, true, false);
+                                                                        $("#imparticion").html(cleanResponse);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            function ejecutaSubmitCursos() {
+                                                                document.ReporteCapacitacion.tipo_filtro.value = '1';
+                                                                document.ReporteCapacitacion.submit();
+                                                            }
+                                                        </script>
+                                                        <div class="form-group">
+                                                            <label for="cursos">CURSOS</label>
+                                                            <select name="cursos" id="cursos2" class="form-control" onchange="ObjetosPorCursofiltro();ImparticionesPorCurso();">
+                                                        <option value="0">Todas</option>
+                                                        {CURSOS}
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="imparticion">IMPARTICIONES</label>
+                                                            <select name="imparticion" id="imparticion" class="form-control">
+                                                        <option value="0">Todas</option>
+                                                        {IMPARTICIONES}
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="ejecutivo">EJECUTIVO</label>
+                                                            <select name="ejecutivo" id="ejecutivo" class="form-control" onchange="ImparticionesPorEjecutivo(this.value);CursosPorEjecutivo(this.value);FocoPorEjecutivo(this.value);ProgramasPorEjecutivo(this.value);MallasPorEjecutivo(this.value);ClasificacionPorEjecutivo(this.value);">
+                                                    <option value="0">Todas</option>
+                                                    {OPTIONS_EJECUTIVOS}
+                                                </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="modalidad">MODALIDAD</label>
+                                                            <select name="modalidad" id="modalidad" class="form-control" onchange="ImparticionesPorEjecutivo(this.value);CursosPorEjecutivo(this.value);FocoPorEjecutivo(this.value);ProgramasPorEjecutivo(this.value);MallasPorEjecutivo(this.value);ClasificacionPorEjecutivo(this.value);">
+                                                    <option value="0">Todas</option>
+                                                    <option value="Presencial">Presencial</option>
+                                                    <option value="Elearning">Elearning</option>
+
+
+                                                </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="fecha_inicio">FECHA_INICIO</label>
+                                                            <input type="month" id="fecha_inicio" name="fecha_inicio" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="fecha_termino">FECHA_TERMINO</label>
+                                                            <input type="month" id="fecha_termino" name="fecha_termino" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="estado">ESTADO AVANCE</label>
+                                                            <select name="estado" id="ejecutivo" class="form-control" onchange="ImparticionesPorEjecutivo(this.value);CursosPorEjecutivo(this.value);FocoPorEjecutivo(this.value);ProgramasPorEjecutivo(this.value);MallasPorEjecutivo(this.value);ClasificacionPorEjecutivo(this.value);">
+                                                    <option value="0">Todos</option>
+                                                    <option value="FINALIZADO">Finalizado</option>
+                                                    <option value="EN_PROCESO">En_Proceso</option>
+                                                    <option value="NO_INICIADO">No_Iniciado</option>
+                                                </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <center>
+                                        <div class="col-xs-12">
+                                        <input type="radio" id="vigente" name="vigente" value="" checked /> Detalle Todos
+                                        <input type="radio" id="vigente" name="vigente" value="vigente" /> Detalle Solo Personal Vigente
+                                        <input type="radio" id="vigente" name="vigente" value="cursoscol" /> Cursos en Columnas
+
+                                           <br>   <br>
+                                            <button type="submit" class="btn btn-info">
+                                    Procesar Reporte
+                                </button>
+                                        </div>
+                                    </center>
+                                </div>
+                                <br>
+					<div class="row">
+						<div class="col-xs-12">
+							<center>
+								<div class="panel panel-info">
+									<div class="panel-heading">
+										<h3 class="panel-title">Reportes Automáticos</h3>
+									</div>
+									<div class="panel-body">
+										{ROW_REPORTES_AUTOMATICOS_ULTIMOS_8}
+									</div>
+								</div>
+							</center>
+						</div>
+					</div>                                
+                                <br>
+                                <center>
+                                    <input type="hidden" name="excel" id="excel" />
+                                    <br>
+                                    <small>Ultima Actualizacion de Base de Reportes: {FECHA_ACTUALIZACION_REPORTE}</small>
+                                </center>
+                                <script>
+                                    function GeneraExcelDatos() {
+                                        document.getElementById("excel").value = "1";
+                                        document.getElementById("ReporteCapacitacion").submit();
+                                        document.getElementById("excel").value = "0";
+                                    }
+
+                                    function GeneraExcelDatos_detalleCurso() {
+                                        document.getElementById("excel").value = "2";
+                                        document.getElementById("ReporteCapacitacion").submit();
+                                        document.getElementById("excel").value = "0";
+                                    }
+
+                                    function GuardaEnBase() {
+                                        document.getElementById("excel").value = "2";
+                                        document.getElementById("ReporteCapacitacion").action = "?sw=lms_reportes_capacitacion_detalleV2";
+                                        document.getElementById("ReporteCapacitacion").target = "_blank";
+                                        document.getElementById("ReporteCapacitacion").submit();
+                                        document.getElementById("ReporteCapacitacion").action = "?sw=lms_reportes_capacitacion";
+                                        document.getElementById("ReporteCapacitacion").target = "";
+                                        document.getElementById("excel").value = "";
+                                    }
+                                </script>
+                                <input type="hidden" id="GeneraExcel" name="GeneraExcel" value="GeneraExcel" />
+                                </form>
+                                <script src="js/plugins/daterangepicker/daterangepicker.js" type="text/javascript"></script>

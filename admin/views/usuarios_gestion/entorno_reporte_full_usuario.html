@@ -1,0 +1,26 @@
+<script>
+    function generaPlantilla2() {
+        $("#FormPlantilla2").submit();
+    }
+</script>
+<form action="?sw=gestion_usuario_clave" method="post" id="FormPlantilla2" name="FormPlantilla2"></form>
+<script>
+    function generaPlantilla() {
+        $("#FormPlantilla").submit();
+    }
+</script>
+<br><br><br>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Descargar Reporte Full por Usuario</h3>
+    </div>
+    <div class="panel-body">
+        <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+        <form name="importa" method="post" action="?sw=ReporteFullUsuario" id="importa" enctype="multipart/form-data" style="display:{DISPLAYFORM2}">
+            <div class="panel-body">
+                RUT: <input type="text" name="rut" class="form form-control" style="width: 200px !important;" /> <br>
+                <input type="submit" class='btn btn-success' value="Descargar Reporte"></input>
+            </div>
+        </form>
+    </div>
+</div>

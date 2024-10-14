@@ -1,0 +1,380 @@
+<form action="?sw=adimparti" id="formPresencial" method="POST" name="formPresencial">
+    <div class="row">
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Curso Sincr&oacute;nico</span><br>
+            <input class="form-control" name="curso" readonly required="required" required
+                   style="    width: 120px;display: inline;margin-right: 15px;"
+                   type="text" value="{VALUE_COD_CURSO}"/>
+            <strong>{NOMBRE_CURSO_imparticion}</strong>
+            <br><br>
+            <span class="label label-sm label-info"> Cuenta Contable</span><br>
+            <strong>{CUENTA_CONTABLE}</strong>
+            <strong>{NOMBRE_CUENTA_CONTABLE}</strong>
+            <br><br>
+            <span class="label label-sm label-info"> Proyecto</span><br>
+            <strong>{PROYECTO}</strong>
+            <br><br>
+            <span class="label label-sm label-info"> Eje</span><br>
+            <strong>{EJE}</strong>
+        </div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-danger"> Codigo Impartici&oacute;n</strong></span>
+            <input class="form-control" name="cod_imparticion" readonly required="required" type="number"
+                   value="{VALUE_COD_IMPARTICION}"/>
+        </div>
+        <div class="col-lg-12 col-xs-12"><br>
+            {ALERTA_HORAS_SESIONES_FECHA_INICIO_TERMINO_CURSO_ID_IMPARTICION}
+        </div>
+        <div class="col-lg-12 col-xs-12">
+            <span class="label label-sm label-info"> Tipo de Horario</span>
+            <br>
+            <input id="radio_fecha_sesiones" name="tipo_horario" required type="radio" value="fecha_sesiones"> Fechas por Sesiones
+            <br>
+            <input id="radio_fecha_inicio_termino" name="tipo_horario" required type="radio"
+                   value="fecha_inicio_termino"> Fecha Inicio y T&eacute;rmino
+            <br>
+            <br>
+            <script>
+                $('#radio_fecha_sesiones').on('click', function () {
+                    $("#content_fecha_inicio_termino input").prop('required', false);
+                    $("#content_fecha_sesiones input[data-requerido='requerido']").prop('required', true);
+
+                    $("#content_fecha_inicio_termino").addClass("d-none");
+                    $("#content_fecha_sesiones").removeClass("d-none");
+                });
+                $('#radio_fecha_inicio_termino').on('click', function () {
+                    $("#content_fecha_sesiones input").prop('required', false);
+                    $("#content_fecha_inicio_termino input").prop('required', true);
+
+                    $("#content_fecha_inicio_termino").removeClass("d-none");
+                    $("#content_fecha_sesiones").addClass("d-none");
+                });
+                {SCRIPT_ACTIVA_TIPO_HORARIO_BOTONES}
+            </script>
+
+            <!-- Include Select2 CSS and JS -->
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+            <script>
+                $(document).ready(function() {
+                    $('#relator').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_NEW').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES1').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES2').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES3').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES4').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES5').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES6').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES7').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES8').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES9').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES10').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES11').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#relator_SES12').select2({
+                        placeholder: 'Busca relator',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#direccion').select2({
+                        placeholder: 'Busca lugar de ejecuci&oacute;n',
+                        allowClear: true,
+                        width: '100%'
+                    });
+
+
+                });
+
+            </script>
+
+
+            <div class="d-none" id="content_fecha_sesiones">
+                <span class="label label-sm label-info"> Fechas Por Sesiones</span>
+                <div class="panel-heading">
+                    <div style="    color: #777;font-size: 14px;padding-left: 0px;margin-left: -10px;font-weight: 400;">
+                        Recuerda crear sesiones sin considerar tiempos libres (por ejemplo: Hora de almuerzo)
+                    </div>
+                    <div>
+                        {FORMULARIO_HORARIOS_LINEA_1}
+                        {FORMULARIO_HORARIOS_LINEA_2}
+                        {FORMULARIO_HORARIOS_LINEA_3}
+                        {FORMULARIO_HORARIOS_LINEA_4}
+                        {FORMULARIO_HORARIOS_LINEA_5}
+                        {FORMULARIO_HORARIOS_LINEA_6}
+                        {FORMULARIO_HORARIOS_LINEA_7}
+                        {FORMULARIO_HORARIOS_LINEA_8}
+                        {FORMULARIO_HORARIOS_LINEA_9}
+                        {FORMULARIO_HORARIOS_LINEA_10}
+                        {FORMULARIO_HORARIOS_LINEA_11}
+                        {FORMULARIO_HORARIOS_LINEA_12}
+                        {FORMULARIO_HORARIOS_LINEA_AGREGAR_MAS}
+                    </div>
+                </div>
+                <BR>
+            </div>
+            <div class="d-none" id="content_fecha_inicio_termino">
+                <span class="label label-sm label-info"> Fecha Inicio y T&eacute;rmino</span>
+                <div class="panel-heading">
+                    <div style="    color: #777;font-size: 14px;padding-left: 0px;margin-left: -10px;font-weight: 400;">
+                        Utilizar s&oacute;lo para cursos con jornadas continuas
+                    </div>
+                    <div>
+                        {FORMULARIO_HORARIOS_LINEA_FECHA_INICIO_TERMINO}
+                    </div>
+                </div>
+                <BR>
+            </div>
+        </div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Nombre Impartici&oacute;n</span>
+            &nbsp;
+            <input class="form-control" name="nombre" required type="text" value="{VALUE_NOMBRE}"/>
+        </div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Tipo Imparticion</span>
+            <br>
+            <select class="form-control" name="opcional" required>
+                <option value="0" {SELECT_OBLIGATORIA}>Obligatoria</option>
+                <option value="1" {SELECT_OPCIONAL}>Opcional</option>
+            </select>
+        </div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Tipo Modalidad</span>
+            <br>
+            <select class="form-control" name="tipo_modalidad" required>
+                <option value=""></option>
+                <option value="5" {SELECT_MODALIDAD_05}>Evaluaci&oacute;n</option>
+                <option value="4" {SELECT_MODALIDAD_04}>Seminario</option>
+                <option value="3" {SELECT_MODALIDAD_03}>Streaming</option>
+                <option value="1" {SELECT_MODALIDAD_01}>Taller Presencial</option>
+                <option value="2" {SELECT_MODALIDAD_02}>Webinar</option>
+                <option value="6" {SELECT_MODALIDAD_06}>Coaching/Acompa&ntilde;amiento</option>
+                <!--<option value="7" {SELECT_MODALIDAD_07}>Navegaci&oacute;n plataforma online</option>-->
+            </select>
+        </div>
+        <div class="col-lg-6 col-xs-12">
+        </div>
+        <div class="col-lg-12 col-xs-12"><br></div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Consultor Capacitaci&oacute;n</span>
+            <br>
+            <select class="form-control" name="ejecutivo" required>
+                <option value=""></option>
+                {OPTIONS_EJECUTIVOS_INTERNO}
+            </select>
+        </div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Ejecutivo Externo</span>
+            <br>
+            <select class="form-control" name="ejecutivo_externo" required>
+                <option value=""></option>
+                {OPTIONS_EJECUTIVOS_EXTERNO}
+            </select>
+        </div>
+        <div class="col-lg-12 col-xs-12"><br></div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Lugar Ejecuci&oacute;n</span>
+            &nbsp;
+            <select class="form-control" id="direccion" name="direccion" required>
+                <!--<option value="No Aplica">No Aplica</option>-->
+                {VALUE_DIRECCION}
+            </select>
+        </div>
+        <!--<span class="label label-sm label-info"> URL Streaming <small>(Opcional)</small></span>
+        &nbsp;
+        <input  type="text" class="form-control" name="streaming"  value="{VALUE_STREAMING}" />
+        <br>-->
+
+        <!--<div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Proveedor</span>
+            &nbsp;
+            <select class="form-control" name="ciudad" required>
+                <option value="NO APLICA">NO APLICA</option>
+                {OPTIONS_OTEC}
+            </select>
+        </div>-->
+
+        <div class="col-lg-12 col-xs-12"><br></div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Porcentaje M&iacute;nimo de asistencia para aprobaci&oacute;n </span>
+            <br>
+            <input class="form-control" max="100" min="50" name="minimo_asistencia" required
+                   type="number" value="{MINIMO_ASISTENCIA}"/>
+        </div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Nota m&iacute;nima para Aprobaci&oacute;n </span>
+            <br>
+            <input class="form-control" id="minimo_nota_aprobacion" max="100" min="0" name="minimo_nota_aprobacion"
+                   required type="number" value="{MINIMO_NOTA_APROBACION}"/>
+            <div style="text-align: right;">
+                <a aria-controls="collapseExample1" aria-expanded="false" class="btn link" data-bs-toggle="collapse"
+                   href="#collapseExample1"
+                   role="button">
+                    Conversi&oacute;n Nota a Porcentaje
+                </a>
+            </div>
+            <div class="collapse" id="collapseExample1">
+                <div class="card card-body">
+                    <div>
+                        <!-- Defines a field for entering a number-->
+                        <p>Ingrese Nota</p>
+                        <input class="form form-control" id="num" type="number" min="1" max="7" step="0.1"/>
+                        <button class="btn btn-link" onclick="percentage_1()" type="button">Calcular Porcentaje</button>
+                        <br>
+                        <input class="form form-control" id="value1" readonly type="text"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Malla </span>
+            <br>
+            <select class="form-control" name="malla_bch" required>
+                <option value="{OPTIONS_MALLA_BCH_SAVED}">{OPTIONS_MALLA_BCH_SAVED}</option>
+                {OPTIONS_MALLA_BCH}
+            </select>
+        </div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Categor&iacute;a </span>
+            <br>
+            <select class="form-control" name="categoria_bch" required>
+                <option value="{OPTIONS_CATEGORIA_BCH_SAVED}">{OPTIONS_CATEGORIA_BCH_SAVED}</option>
+                {OPTIONS_CATEGORIA_BCH}
+            </select>
+        </div>
+        <div class="col-lg-12 col-xs-12"><br></div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Costos Asociados</span>
+            <select class="form-control" name="costos_asociados">
+                <option value=""></option>
+                <option value="SI" {COSTOS_ASOCIADOS_SI}>SI</option>
+                <option value="NO" {COSTOS_ASOCIADOS_NO}>NO</option>
+            </select>
+        </div>
+        <div class="col-lg-6 col-xs-12">
+        </div>
+        <div class="col-lg-12 col-xs-12"><br></div>
+        <div class="col-lg-6 col-xs-12">
+            <span class="label label-sm label-info"> Sence</span>
+            &nbsp;
+            <select class="form-control" id="sence" name="sence" onChange="CodCurFun(this)">
+                <option value="SI" {SENCE_SI}>SI</option>
+                <option value="NO" {SENCE_NO}>NO</option>
+            </select>
+        </div>
+        <div class="col-lg-6 col-xs-12">
+            <div id="nTExtoS" style="display: none">
+                <br>
+                <span class="label label-sm label-info"> C&oacute;digo Sence</span>
+                &nbsp;
+                <input class="form-control" name="cod_sence" type="text"
+                       value="{COD_SENCE}"/>
+                <br>
+                <span class="label label-sm label-info"> Nombre Curso Sence</span>
+                &nbsp;
+                <input class="form-control" id="nombre_curso_sence" name="nombre_curso_sence"
+                       type="text" value="{NOMBRE_CURSO_SENCE}"/>
+                <br>
+                <span class="label label-sm label-info"> Nombre OTIC</span>
+                <select class="form form-control" id="nombre_otic" name="nombre_otic">
+                    <option value=""></option>
+                    <option value="SOFOFA" {SELECT_SOFOFA}>SOFOFA</option>
+                    <option value="BANOTIC" {SELECT_BANOTIC}>BANOTIC</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-12 col-xs-12"><br></div>
+        <div class="col-lg-12 col-xs-12">
+            <span class="label label-sm label-info"> Observaciones <em>opcional</em></span>
+            <br>
+            <textarea class="form-control" name="comentarios">{COMENTARIOS}</textarea>
+        </div>
+        <div class="col-lg-12 col-xs-12" style="{DISPLAY_OTA_ABIERTA}">
+            <center><br>
+                <input type="hidden" value="{EDITAR}" name="ed">
+                <input class="btn btn-primary" type="submit" value="Guardar Datos">
+            </center>
+</form>
+</div>
+</div>
+<script>
+    function CodCurFun(sel) {
+        if (sel.value == "SI") {
+            divC = document.getElementById("nTExtoS");
+            divC.style.display = "";
+
+            divT = document.getElementById("nTExtoI");
+            divT.style.display = "none";
+
+        } else {
+            divC = document.getElementById("nTExtoS");
+            divC.style.display = "none";
+
+            divT = document.getElementById("nTExtoI");
+            divT.style.display = "";
+        }
+
+    }
+
+    $("#sence").trigger("change");
+
+    function percentage_1() {
+
+        // Method returns the element of percent id
+        // Method returns the element of num id
+        var num = document.getElementById("num").value;
+        document.getElementById("value1").value =((num * 100) / 7).toFixed(1);
+    }
+</script>

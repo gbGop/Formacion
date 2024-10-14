@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>AdminLTE | Dashboard</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        {HEAD}
+		
+		<!--<link rel="stylesheet" href="././../css/froalaEditor/froala_editor.css">-->
+<!-- 		<script type="text/javascript" src="./././js/ckeditor/adapters/jquery.js"></script>
+		<script type="text/javascript" src="./././js/ckeditor/build-config.js"></script>
+		<script type="text/javascript" src="./././js/ckeditor/styles.js"></script> -->
+    
+    <body class="skin-blue">
+        <!-- header logo: style can be found in header.less -->
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="left-side sidebar-offcanvas">
+                <!-- sidebar: style can be found in sidebar.less -->
+                {MENU_IZQUIERDO}
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                {NAVEGACION}
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <!-- left column -->
+                       <!--/.col (left) -->
+                        <!-- right column -->
+                        <div class="col-md-12">
+                            <!-- general form elements disabled -->
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">Agregar nueva pregunta</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <form action="?sw=addPReguPorEval" method="POST" name="FormAddPreg" enctype="multipart/form-data">                                        
+										<input type="hidden"  value="6"  name="accion"/>
+                                        <input type="hidden"  value="{ID_EVAL}"  name="idEval" id="idEval"/>
+										<input type="hidden"  value="{ID_GRUPO}"  name="idGrupo" id="idGrupo"/>
+										<input type="hidden"  value="{TOT_ALTER}"  name="totalAlter" id="totalAlter"/>																											
+										
+										<script>
+											function TipoDePregunta(valor_seleccionado){
+												
+												      if (valor_seleccionado=="1" || valor_seleccionado=="2"){
+														   divC = document.getElementById("bloqueAlternativas");
+														   divC.style.display = "";
+														   
+														   divC = document.getElementById("bloqueAlternativasLikert");
+														   divC.style.display="none";
+														   
+														   divC = document.getElementById("bloqueSubeImagenContenido");
+														   divC.style.display="none";
+														   
+														   
+														   
+														   }else{
+														   divC = document.getElementById("bloqueAlternativas");
+														   divC.style.display="none";
+														   }
+													
+													  if (valor_seleccionado=="2"){
+														   divC = document.getElementById("bloqueSubeImagenContenido");
+														   divC.style.display = "";
+														   divC = document.getElementById("bloqueAlternativasLikert");
+														   divC.style.display="none";
+														
+														   
+														
+														   
+														   
+														   
+													   }else{
+														   divC = document.getElementById("bloqueSubeImagenContenido");
+														   divC.style.display="none";
+													   }
+													   
+													   
+													     if (valor_seleccionado=="3" ){
+														   divC = document.getElementById("bloqueAlternativasLikert");
+														   divC.style.display = "";
+														   
+														   divC = document.getElementById("bloqueSubeImagenContenido");
+														   divC.style.display="none";
+														   
+														   divC = document.getElementById("bloqueAlternativas");
+														   divC.style.display="none";
+														   
+														   
+														   }else{
+														   divC = document.getElementById("bloqueAlternativasLikert");
+														   divC.style.display="none";
+														   }
+													   
+													   
+													   
+													   
+													
+														   
+														   
+											}
+										</script>
+                                        <div class="form-group col-md-6 ">
+                                            <label>Tipo de Pregunta</label>
+											<select onchange="TipoDePregunta(this.value);" name="tipo_pregunta" class="form-control" required>
+												<option value="">-Seleccione Opción-</option>
+												<option value="1">Pregunta + Opciones</option>
+												<option value="7">Pregunta Abierta</option>
+												<option value="2">Pregunta con imagen + Opciones</option>
+												<option value="3">Pregunta con escala likert (10 opciones)</option>
+											</select>
+											
+										</div>
+										<div class="form-group col-md-6 ">
+										</div>
+										<div class="form-group col-md-12 ">
+											</select>
+											
+											 <label>Pregunta</label>
+											<textarea name="pregunta" id="pregunta" class="form-control" rows="5"></textarea>
+                                            
+                                        </div>
+										
+											<div id="bloqueSubeImagenContenido" class="panel panel-default col-md-12" style="display:none;">
+											<div class="panel-heading" >
+												<p class="">Seleccione imagen para contenido de la pregunta</p>
+											</div>
+											<br>
+											<div class="">												
+												<input type="file" name="imagen_contenido" id="imagen_contenido">
+											</div>
+										</div>																																														
+										
+										
+										
+										<div id="bloqueAlternativas" class="panel panel-default col-md-12" style="display:none;">
+											<div class="panel-heading" >
+												<p class="">A continuaci&oacuten seleccione la alternativa correcta:</p>
+											</div>
+											<div class="panel-body" id="alterBody">
+										  
+
+											</div>
+											<div class="panel-footer">												
+												<a title='Agregar Alternativa' class='btn btn-success btn-sm' onclick="agregarAlternativa()" > 
+													<i class='glyphicon glyphicon-plus'></i>
+													Agregar Alternativa
+												</a>
+											</div>
+										</div>	
+
+
+										<div id="bloqueAlternativasLikert" class="panel panel-default col-md-12" style="display:none;">
+											<div class="panel-heading" >
+												<p class="">A continuaci&oacuten seleccione la alternativa correcta:</p>
+											</div>
+											<div class="panel-body" id="alterBody">
+										  
+
+											</div>
+											<div class="panel-footer">												
+													<div class="panel-body" id="alterBody">
+										  
+
+											<div class="form-group col-md-6"><label style="font-weight:bold">Alternativa 1 </label><div class="input-group"><span class="input-group-addon"><input onchange="cambiarCorrecta(this)" type="radio" name="correcta[]" value="1"></span><input type="text" class="form-control" name="alternativa__1" value=""></div><input type="hidden" value="0" name="idAlter_1"></div>
+											<div class="form-group col-md-6"><label style="font-weight:bold">Alternativa 2 </label><div class="input-group"><span class="input-group-addon"><input onchange="cambiarCorrecta(this)" type="radio" name="correcta[]" value="2"></span><input type="text" class="form-control" name="alternativa__2" value=""></div><input type="hidden" value="0" name="idAlter_2"></div>
+											<div class="form-group col-md-6"><label style="font-weight:bold">Alternativa 3 </label><div class="input-group"><span class="input-group-addon"><input onchange="cambiarCorrecta(this)" type="radio" name="correcta[]" value="3"></span><input type="text" class="form-control" name="alternativa__3" value=""></div><input type="hidden" value="0" name="idAlter_3"></div>
+											<div class="form-group col-md-6"><label style="font-weight:bold">Alternativa 4 </label><div class="input-group"><span class="input-group-addon"><input onchange="cambiarCorrecta(this)" type="radio" name="correcta[]" value="4"></span><input type="text" class="form-control" name="alternativa__4" value=""></div><input type="hidden" value="0" name="idAlter_4"></div>
+											<div class="form-group col-md-6"><label style="font-weight:bold">Alternativa 5 </label><div class="input-group"><span class="input-group-addon"><input onchange="cambiarCorrecta(this)" type="radio" name="correcta[]" value="5"></span><input type="text" class="form-control" name="alternativa__5" value=""></div><input type="hidden" value="0" name="idAlter_5"></div>
+											<div class="form-group col-md-6"><label style="font-weight:bold">Alternativa 6 </label><div class="input-group"><span class="input-group-addon"><input onchange="cambiarCorrecta(this)" type="radio" name="correcta[]" value="6"></span><input type="text" class="form-control" name="alternativa__6" value=""></div><input type="hidden" value="0" name="idAlter_6"></div>
+											<div class="form-group col-md-6"><label style="font-weight:bold">Alternativa 7 </label><div class="input-group"><span class="input-group-addon"><input onchange="cambiarCorrecta(this)" type="radio" name="correcta[]" value="7"></span><input type="text" class="form-control" name="alternativa__7" value=""></div><input type="hidden" value="0" name="idAlter_7"></div>
+											<div class="form-group col-md-6"><label style="font-weight:bold">Alternativa 8 </label><div class="input-group"><span class="input-group-addon"><input onchange="cambiarCorrecta(this)" type="radio" name="correcta[]" value="8"></span><input type="text" class="form-control" name="alternativa__8" value=""></div><input type="hidden" value="0" name="idAlter_8"></div>
+											<div class="form-group col-md-6"><label style="font-weight:bold">Alternativa 9 </label><div class="input-group"><span class="input-group-addon"><input onchange="cambiarCorrecta(this)" type="radio" name="correcta[]" value="9"></span><input type="text" class="form-control" name="alternativa__9" value=""></div><input type="hidden" value="0" name="idAlter_9"></div>
+											<div class="form-group col-md-6"><label style="font-weight:bold">Alternativa 10 </label><div class="input-group"><span class="input-group-addon"><input onchange="cambiarCorrecta(this)" type="radio" name="correcta[]" value="10"></span><input type="text" class="form-control" name="alternativa__10" value=""></div><input type="hidden" value="0" name="idAlter_10"></div></div>
+											
+													
+											</div>
+										</div>											
+										
+										
+										
+                                        <div class="box-footer" align="right">
+                                        <a href="?sw=viewEval&idEval={ID_EVAL}"><button type="button" class="btn btn-primary">Volver</button></a>
+                                    </div>
+
+                                    </form>
+                                </div><!-- /.box-body -->
+							<center><input type="button" onclick="EjecutaForm();" value="Crear Pregunta" class="btn btn-success">
+</center>
+							<script>
+								function EjecutaForm(){
+
+										document.FormAddPreg.submit();
+								
+								}
+							</script>
+                            </div><!-- /.box -->
+                        </div><!--/.col (right) -->
+                    </div>   <!-- /.row -->
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->  
+
+		<script type="text/javascript">
+					
+			window.onload = function() {
+				CKEDITOR.replace( 'pregunta' );				
+				CKEDITOR.instances.pregunta.setData(buscarValor());
+			};
+			
+			function buscarValor(){
+				
+				return document.getElementById("pregunta").value;
+			}
+			
+			function enviarFormulario(){				
+						
+				document.getElementById("pregunta").value = CKEDITOR.instances.pregunta.getData();				
+				EditPregunta.submit();
+			}
+			
+			function agregarAlternativa(){
+				
+				var totAlter = parseInt($("#totalAlter").val());				
+				
+				var newAlter  = "<div class='form-group col-md-6'>";
+					newAlter +=	"<label style='font-weight:bold'>Alternativa " +(totAlter+1)+" </label>";
+					newAlter += "<div class='input-group'>";		
+					newAlter += "<span class='input-group-addon'><input onchange='cambiarCorrecta(this)' type='radio' name=correcta[] value='"+(totAlter+1)+"'></span>";
+					newAlter +=	"<input type='text' class='form-control' name='alternativa_"+(totAlter+1)+"' value='' />";
+					newAlter +=	"</div>";
+					newAlter +=	"<input type='hidden' value='0' name='idAlter_"+(totAlter+1)+"'/>";
+					newAlter +=	"</div>";
+				
+				$("#totalAlter").val(totAlter+1);
+				$("#alterBody").append(newAlter);				
+			}
+			
+			function cambiarCorrecta(obj){
+				$("#alternativaCorrecta").val(obj.value);
+			}
+			
+		</script>		
+	 
+    </body>
+</html>

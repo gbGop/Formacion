@@ -1,0 +1,57 @@
+	<div class="panel-heading">			
+			<div style="text-align:right;{DISPLAY_AGREGAR_MAS}">
+		  	<a class="btn btn-link" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+			    (+) Agregar
+			  </a>
+			</div>
+				<div class="collapse" id="collapseExample">
+			<div class="row">
+			  <div class="col-xs-3 col-sm-3"> Fecha </div>
+			  <div class="col-xs-2 col-sm-2"> Hora Desde </div>
+			  <div class="col-xs-2 col-sm-2"> Hora Hasta </div>
+			  <div class="col-xs-2 col-sm-2"> Relator 	</div>
+			  <div class="col-xs-1 col-sm-1">		</div>
+			  <div class="col-xs-2 col-sm-2">		</div>
+			  
+			    <div class="col-xs-3 col-sm-3 ">
+			      <input  type="date" class="form-control" name="fecha_NEW" id="fecha_NEW" value="" />
+			    </div>
+			    <div class="col-xs-2 col-sm-2">
+			      <input  type="time" class="form-control" name="hora_desde_NEW" value=""  />
+			    </div>
+			    <div class="col-xs-2 col-sm-2">
+			      <input  type="time" class="form-control" name="hora_hasta_NEW" value=""  />
+			    </div>
+			    <div class="col-xs-2 col-sm-2">
+			      <select name="relator_NEW" id="relator_NEW" class="form form-control">
+			      	<option value="{RELATOR}">{RELATOR_nombre}</option>
+			      	<option disable>--------------</option>
+			      	{OPTION_RELATOR_NOMBRE_TIPO}
+			      </select>
+			    </div>
+			    <div class="col-xs-1 col-sm-1 alert">  	
+			    	{NUMERO_HORAS_SESION}
+			    </div>
+			    <div class="col-xs-2 col-sm-2">
+			      <input type="submit" class="btn btn-link" name="guardar" value="Guardar" />
+			      <input type="hidden" class="" name="id_linea" 			value="{ID_LINEA_ENC}" />
+			      <input type="hidden" class="" name="sesion_NEW" 		value="{ID_SESION_NEW}" />
+			      <input type="hidden" class="" name="id_curso_enc" 	value="{ID_CURSO_ENC}" />
+			      <input type="hidden" class="" name="id_imparticion_enc" 	value="{ID_IMPARTICION_ENC}" />
+			    </div>
+			</div>				
+			</div>			
+</div>
+
+	<script>
+		document.getElementById("fecha_NEW").addEventListener("input", function() {
+			var inputDate = new Date(this.value);
+			var day = inputDate.getDay();
+
+			/*if (day === 5 || day === 6) {
+				alert("Recuerda que debes seleccionar solo fechas de Lunes a Viernes");
+				this.value = "";
+			}*/
+		});
+
+	</script>

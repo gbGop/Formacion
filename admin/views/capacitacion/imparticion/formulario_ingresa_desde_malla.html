@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{TITTLE}</title>
+    <link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+    <style>
+        .dataTables_filter input {
+            line-height: 20px;
+        }
+
+        .selecfiltro {
+            width: 100%;
+            line-height: 15px;
+            font-size: 12px;
+        }
+    </style>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    {HEAD}
+</head>
+<body class="skin-blue">
+{HEADER}
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <aside class="left-side sidebar-offcanvas">
+        {MENU_IZQUIERDO}
+    </aside>
+    <aside class="right-side">
+        {NAVEGACION}
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-warning">
+                        <div class="box-header box boxheader">
+                            <div class="box-header">
+                                <h3 class="" style="margin-left:10px;"><i class="fa fa-fw fa-th-list"></i> Creaci&oacute;n
+                                    de
+                                    Impartici&oacute;n desde Malla</h3>
+                                <br>
+                                <span class="pull-left btn btn-link">
+                                        <a class="btn btn-link" href="?sw={BACK_TO_LIST_CURSOS}#">Volver</a>
+                                    </span>
+                                <span class="pull-right">
+	            <!--	<a href="?sw=VeColaboradoresXImp2021&i={ID_INSCRIPCION_ENCODEADO}"  >Participantes</a>
+		        <a href="?sw=reportes_online_descarga&id={ID_CURSO}&tipo=Curso&vista=graph&id_inscripcion={CODIGOINCRIPCION}&enc_sat=1" style="{DISPLAY_MODALIDAD1}">Reportes</a>
+		        <a href="?sw=VeReportesXImp2021&i={ID_INSCRIPCION_ENCODEADO}"  style="{DISPLAY_MODALIDAD2}">Reportes</a><br>-->
+		 </span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <br>
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"> {NOMBRE_PROGRAMA} - {NOMBRE_MALLA}</h3>
+                                </div>
+                                <br>
+                                <div class="panel-body">
+                                    <div id="content_fecha_inicio_termino">
+                                        <div class="panel-heading">
+                                            <form action="?sw=adimparti_malla" enctype="multipart/form-data"
+                                                  id="FormCurso" method="POST" name="FormCurso">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        {ALERTA_DELETE_2022}
+                                                        <span class="label label-sm label-info">Fecha Inicio y T&eacute;rmino General de los Cursos</span>
+                                                    </div>
+                                                    <div class="col-xs-2 col-sm-3">Fecha Inicio</div>
+                                                    <div class="col-xs-2 col-sm-3">Fecha T&eacute;rmino</div>
+                                                    <div class="col-xs-2 col-sm-3">Modalidad</div>
+                                                    <div class="col-xs-2 col-sm-3"></div>
+                                                    <div class="col-xs-2 col-sm-3">
+                                                        <input class="form-control" name="fecha_desde"
+                                                               required="required" type="date"
+                                                               value="{VALOR_FECHA_DESDE}">
+                                                    </div>
+                                                    <div class="col-xs-2 col-sm-3">
+                                                        <input class="form-control" name="fecha_hasta"
+                                                               required="required" type="date"
+                                                               value="{VALOR_FECHA_HASTA}">
+                                                    </div>
+                                                    <div class="col-xs-2 col-sm-3">
+                                                        <input name="opcional" type="radio" value="0"
+                                                               {CHECKED_OBLIGATORIO}>
+                                                        <div style="color: #666; font-size: 13px; padding-top: 13px; display: inline; margin-top: 5px;">
+                                                            Obligatoria
+                                                        </div>
+                                                        <input name="opcional" type="radio" value="1"
+                                                               {CHECKED_OPCIONAL}>
+                                                        <div style="color: #666; font-size: 13px; padding-top: 13px; display: inline; margin-top: 5px;">
+                                                            Opcional
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <br>
+                                                        <span class="label label-sm label-info">Nombre Impartici&oacute;n</span>
+                                                        <input class="form-control" name="nombre_imparticion"
+                                                               required="" type="text"
+                                                               value="{VALOR_NOMBRE_IMPARTICION}">
+                                                        <br>
+                                                        <span class="label label-sm label-info">{Texto_Pilar}</span>
+                                                        <br>
+                                                        <!-- onchange="ColocaProgramasPorFoco();"-->
+                                                        <select class="form-control" id="foco" name="foco"
+                                                                required="required">
+                                                            <option value="{OPTIONS_FOCO_ID_SAVED}">{OPTIONS_FOCO_SAVED}</option>
+                                                            {OPTIONS_FOCOS}
+                                                        </select>
+                                                        <br>
+                                                        <span class="label label-sm label-info">{Texto_Programa}</span>
+                                                        <br>
+                                                        <span id="programa_bbdd_bloque">
+                                                            <select class="form-control" id="programa_bbdd"
+                                                                    name="programa_bbdd" required="required">
+                                                                <option value="{OPTIONS_PROGRAMA_ID_SAVED}">{OPTIONS_PROGRAMA_SAVED}</option>
+                                                                {OPTIONS_PROGRAMAS_BBDD_2022_sinanidacion}
+                                                            </select>
+                                                        </span>
+                                                        <br>
+                                                        <span class="label label-sm label-info">Consultor Capacitaci&oacute;n</span>
+                                                        <select class="form-control" name="ejecutivo" required="">
+                                                            <option value="{VALOR_EJECUTIVO}">{VALOR_EJECUTIVO_NOMBRE}
+                                                            </option>
+                                                            {OPTIONS_EJECUTIVOS_NEW}
+                                                        </select>
+                                                        <br>
+                                                    </div>
+                                                    <div class="col-lg-6 col-xs-12">
+                                                        <span class="label label-sm label-info">Malla</span>
+                                                        <br>
+                                                        <select class="form-control" name="malla_bch" required>
+                                                            <option value="{OPTIONS_MALLA_BCH_SAVED}">
+                                                                {OPTIONS_MALLA_BCH_SAVED}
+                                                            </option>
+                                                            {OPTIONS_MALLA_BCH}
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-lg-6 col-xs-12">
+                                                        <span class="label label-sm label-info">Categor&iacute;a</span>
+                                                        <br>
+                                                        <select class="form-control" name="categoria_bch" required>
+                                                            <option value="{OPTIONS_CATEGORIA_BCH_SAVED}">
+                                                                {OPTIONS_CATEGORIA_BCH_SAVED}
+                                                            </option>
+                                                            {OPTIONS_CATEGORIA_BCH}
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <br><br>
+                                                        <span class="label label-sm label-info">Lista de Cursos</span>
+                                                        <br><br>
+                                                        <div class="row">
+                                                            <div class="col-xs-2 col-sm-2">Id_Curso</div>
+                                                            <div class="col-xs-6 col-sm-6">Nombre Curso</div>
+                                                            <div class="col-xs-2 col-sm-2">Id_Inscripcion</div>
+                                                            <div class="col-xs-2 col-sm-2"></div>
+                                                        </div>
+                                                        <div class="row">
+                                                            {LISTA_DE_CURSOS_DE_MALLA_DESDE_INSCRIPCION}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <center>
+                                                            <input name="idpbbdd" type="hidden"
+                                                                   value="{ID_PROGRAMA_ENC}">
+                                                            <input name="i" type="hidden" value="{ID_MALLA_ENCODEADO}">
+                                                            <input name="id_malla_enc" type="hidden"
+                                                                   value="{ID_MALLA_ENCODEADO}">
+                                                            <input name="id_programa_enc" type="hidden"
+                                                                   value="{ID_PROGRAMA_ENC}">
+                                                            <input name="id_foco_enc" type="hidden"
+                                                                   value="{ID_FOCO_ENCODEADO}">
+                                                            <br>
+                                                            {BOTON_GUARDAR_O_NO_SE_PUEDE_EDITAR}
+                                                        </center>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-12"
+                                                     style="{DESPLIEGA_BLOQUE_PARTICIPANTES}">
+                                                    <br>
+                                                    Participantes
+                                                    <br>
+                                                    <div class="panel panel-info">
+                                                        <div class="panel-body">
+                                                            <span class="label label-sm label-info"
+                                                                  style="margin-bottom: 1px;">Preinscritos</span>
+                                                            {CUENTA_PREINSCRITOS}
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel panel-info">
+                                                        <div class="panel-heading">
+                                                            <h3 class="panel-title">Participantes</h3>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <span class="label label-sm label-info">1. Descargar Participantes</span>
+                                                                    <br><a class="btn btn-link"
+                                                                           href="?sw=descargarInscritosPorImpart_Elearning_2022_por_malla">
+                                                                    <span class="negro">Descargar Participantes</span>
+                                                                </a><br>
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <span class="label label-sm label-info">2. Actualiza los datos y súbelo aquí</span>
+                                                                    <form action="?sw=accionParticipantesImparticion_2022_porMalla"
+                                                                          enctype="multipart/form-data" id="part"
+                                                                          method="POST" name="Part"
+                                                                          style="display: inline;">
+                                                                        <br>
+                                                                        <input name="file" style="display: inline;"
+                                                                               type="file" value="Subir Excel">
+                                                                        <input name="idpbbdd" type="hidden"
+                                                                               value="{ID_PROGRAMA_ENC}">
+                                                                        <input name="i" type="hidden"
+                                                                               value="{ID_MALLA_ENCODEADO}">
+                                                                        <input class="btn btn-success"
+                                                                               style="display: inline;" type="submit"
+                                                                               value="Actualizar Participantes">
+                                                                    </form>
+                                                                </div>
+                                                                <div class="col-lg-4"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </aside><!-- /.right-side -->
+</div><!-- ./wrapper -->
+{FOOTER_ADMIN}
+</body>
+</html>
+

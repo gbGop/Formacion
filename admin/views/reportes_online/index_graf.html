@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{TITTLE}</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>{HEAD}</head>
+    <body class="skin-blue">
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <aside class="left-side sidebar-offcanvas">                
+                {MENU_IZQUIERDO}
+            </aside>
+            <aside class="right-side">                
+                {NAVEGACION}
+		<link href="css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+			<br>
+     <div class="col-lg-12">	<a href="?sw=reportes_online_updated" class="btn btn-link">Volver</a></div>         
+      <br>        
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+	      <div class="box">
+	          <div class="box-header">
+	              <h3 class="box-title">Reportes Online {TIPO} {NOMBRE-CURSO}</h3>
+            </div> 
+				</div> 			
+
+				<br>
+				  <div class="card-header txt_align_center">
+				    Detalle de Resultados
+				  </div>
+										  
+					<div class="row">
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-primary  text-dark mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">Inscritos</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_INSCRITOS}</div></h5>
+											  </div>
+										</div>
+									</div>
+
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-success mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">Aprobados</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_APROBADOS}</div></h5>
+											  </div>
+										</div>
+									</div>
+
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-danger mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">Reprobados</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_REPROBADOS}</div></h5>
+											  </div>
+										</div>
+									</div>
+
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-primary mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">Finalizados</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_FINALIZADOS}</div></h5>
+											  </div>
+										</div>
+									</div>
+
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-warning mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">En proceso</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_EN_PROCESO}</div></h5>
+											  </div>
+										</div>
+									</div>
+
+									<div class="col-lg-2">
+										<br>
+										<div class="card text-white bg-info mb-3" style="max-width: 100%">
+										  <div class="card-header  text-center font_18px mg_20topbottom">No comenzado</div>
+											  <div class="card-body">
+											    <h5 class="card-title"><div class="bigNumber text-light text-center mg_20topbottom">{NUM_NO_INICIADOS}</div></h5>
+											  </div>
+										</div>
+									</div>
+
+
+									
+				</div>
+
+		<div class="card" style="width: 100%">
+					<br>	<br>
+					<style>
+					.highcharts-data-table table {
+					    min-width: 100%;
+					    max-width: 100%;
+					    margin: 1em auto;
+					}	
+					.highcharts-data-labels,.highcharts-xaxis-labels text {
+							font-size: 130% !important;
+					}
+					</style>
+
+					<figure class="highcharts-figure">
+					    <div id="container"></div>
+					</figure>
+					<script>
+									Highcharts.chart('container', {
+									colors: ['#5cb85c', '#d9534f', '#f0ad4e', '#00B2E3'],
+									    chart: {
+									        plotBackgroundColor: null,
+									        plotBorderWidth: null,
+									        plotShadow: false,
+									        type: 'pie',
+									          style: {
+									            fontFamily: 'Nunito Sans'
+									        }
+									    },
+									    title: {
+									        text: 'Reportes Curso {NOMBRE-CURSO}'
+									    },
+									    tooltip: {
+									        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+									    },
+									    accessibility: {
+									        point: {
+									            valueSuffix: '%'
+									        }
+									    },
+									    plotOptions: {
+									        pie: {
+									            allowPointSelect: true,
+									            cursor: 'pointer',
+									            dataLabels: {
+									                enabled: true,
+									                format: '{point.name}:<b> {point.percentage:.1f} %</b>',
+									                 style: {
+									        					fontWeight:400,
+									        					fontSize:'16px',
+									        					fontFamily: 'Nunito Sans'
+									      						}
+									            }
+									        }
+									    },
+									    
+									    series: [{
+									        name: 'Reportes',
+									        colorByPoint: true,
+									         innerSize: '50%',
+									        data: [{
+									            name: 'Aprobados',
+									            y: {NUM_APROBADOS}
+									           
+									        }, {
+									            name: 'Reprobados',
+									            y: {NUM_REPROBADOS}
+									        }, {
+									            name: 'En proceso',
+									            y: {NUM_EN_PROCESO}
+									        }, {
+									            name: 'No comenzado',
+									            y: {NUM_NO_INICIADOS}
+									        }]
+									    }]
+									});
+					</script>
+
+		</div>
+		
+		<br>
+		<div class="card" style="width: 100%">
+					<div class="card-header txt_align_center">
+				   Lista de Participantes
+				   <br>
+
+							<div style="text-align:right;">
+						  	<a href="?sw=reportes_online_descarga&id={ID_CURSO_ENV}&tipo=Curso" class="btn btn-link">Descargar Reporte</a>
+						  </div>
+				   
+				  </div>
+      <div class="box-body table-responsive">
+          <table id="example2" class="table table-bordered table-hover sortable">
+              <thead>
+                  <tr>
+                      <th class="width40">Rut</th>
+                      {TH_ID_SAP}
+                      <th class="width140">Nombre</th>
+											<th class="width60">Avance</th> 
+											<th class="width60">Estado</th> 
+											<th class="width60">Resultado</th> 
+                  </tr>
+              </thead>
+              <tbody>
+                  {ROW_LISTADO_USUARIOS}
+              </tbody>
+          </table>
+      </div>
+		</div>
+		
+		<br>
+		
+		{LISTA_PREGUNTAS_ENC_SATISFACCION}
+<BR>
+
+
+      
+
+                            </div>
+                            
+                           
+
+                        </div>
+                    </div>
+
+                </section>
+            </aside>
+        </div>
+
+
+     {FOOTER_ADMIN}
+
+       	<script type="text/javascript">
+		$('#example2').DataTable({
+			"oLanguage" : {
+				"sProcessing" : "Procesando...",
+				"sLengthMenu" : "Mostrar _MENU_ registros",
+				"sZeroRecords" : "No se encontraron resultados",
+				"sEmptyTable" : "Ning?n dato disponible en esta tabla",
+				"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+				"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+				"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+				"sInfoPostFix" : "",
+				"sSearch" : "Buscar: ",
+				"sUrl" : "",
+				"sInfoThousands" : ",",
+				"sLoadingRecords" : "Cargando...",
+				"oPaginate" : {
+					"sFirst" : "Primero",
+					"sLast" : "?ltimo",
+					"sNext" : "Siguiente",
+					"sPrevious" : "Anterior"
+				},
+				"oAria" : {
+					"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+					"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+				}
+			},
+			"bAutoWidth" : false,
+			"pageLength" : 10,
+			"order" : [],
+			"columnDefs" : [{
+				"targets" : [0],
+				"searchable" : true
+			}],
+			initComplete : function() {
+				this.api().columns('.select-filter').every(function() {
+					var column = this;
+					var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+						var val = $.fn.dataTable.util.escapeRegex($(this).val());
+						column.search( val ? '^' + val + '$' : '', true, false).draw();
+					});
+					column.data().unique().sort().each(function(d, j) {
+						select.append('<option value="' + d + '">' + d + '</option>')
+					});
+				});
+			}
+		});
+	</script>
+       	<script type="text/javascript">
+		$('#example3').DataTable({
+			"oLanguage" : {
+				"sProcessing" : "Procesando...",
+				"sLengthMenu" : "Mostrar _MENU_ registros",
+				"sZeroRecords" : "No se encontraron resultados",
+				"sEmptyTable" : "Ning?n dato disponible en esta tabla",
+				"sInfo" : "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+				"sInfoEmpty" : "Mostrando registros del 0 al 0 de un total de 0 registros",
+				"sInfoFiltered" : "(filtrado de un total de _MAX_ registros)",
+				"sInfoPostFix" : "",
+				"sSearch" : "Buscar: ",
+				"sUrl" : "",
+				"sInfoThousands" : ",",
+				"sLoadingRecords" : "Cargando...",
+				"oPaginate" : {
+					"sFirst" : "Primero",
+					"sLast" : "?ltimo",
+					"sNext" : "Siguiente",
+					"sPrevious" : "Anterior"
+				},
+				"oAria" : {
+					"sSortAscending" : ": Activar para ordenar la columna de manera ascendente",
+					"sSortDescending" : ": Activar para ordenar la columna de manera descendente"
+				}
+			},
+			"bAutoWidth" : false,
+			"pageLength" : 10,
+			"order" : [],
+			"columnDefs" : [{
+				"targets" : [0],
+				"searchable" : true
+			}],
+			initComplete : function() {
+				this.api().columns('.select-filter').every(function() {
+					var column = this;
+					var select = $('<select class="selecfiltro"></select>').appendTo($(column.footer()).empty()).on('change', function() {
+						var val = $.fn.dataTable.util.escapeRegex($(this).val());
+						column.search( val ? '^' + val + '$' : '', true, false).draw();
+					});
+					column.data().unique().sort().each(function(d, j) {
+						select.append('<option value="' + d + '">' + d + '</option>')
+					});
+				});
+			}
+		});
+	</script>
+    </body>
+</html>

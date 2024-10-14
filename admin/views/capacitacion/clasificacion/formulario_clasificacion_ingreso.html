@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>AdminLTE | Dashboard</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        {HEAD}
+    
+    <body class="skin-blue">
+        <!-- header logo: style can be found in header.less -->
+        {HEADER}
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="left-side sidebar-offcanvas">
+                <!-- sidebar: style can be found in sidebar.less -->
+                {MENU_IZQUIERDO}
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                {NAVEGACION}
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <!-- left column -->
+                       <!--/.col (left) -->
+                        <!-- right column -->
+                         <div class="col-xs-12">
+                            <!-- general form elements disabled -->
+                           <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">{TITULO}</h3>
+									
+							   </div><!-- /.box-header -->
+								<hr>
+									
+                                </div><!-- /.box-header -->
+								
+								
+                                <div class="box-body col-md-8">
+                                    <form action="{ACTION}" method="POST" name="FormMalla" enctype="multipart/form-data">
+                                        <!-- text input -->
+                                        <div class="form-group">
+                                            <label>ID Clasificación</label>
+                                            <input type="text" class="form-control" name="id_clasificacion" value="{ID_CLASIFICACION}" />
+                                        </div>
+										
+										
+										 <div class="form-group">
+                                            <label>Clasificación</label>
+                                            <input type="text" class="form-control" name="clasificacion" value="{CLASIFICACION}" />
+                                        </div>
+										
+										<div class="form-group">
+                                            <label>Color</label>
+                                             <input type="text" class="form-control" name="color" value="{COLOR}" />
+                                        </div>
+										
+										<div class="form-group">
+                                            <label>Color2</label>
+                                             <input type="text" class="form-control" name="color2" value="{COLOR2}" />
+                                        </div>
+										
+										<div class="form-group">
+                                            <label>Imagen</label>
+                                            <input type="file" class="form-control" name="imagen" value="{IMAGEN}" />
+                                        </div>
+										<div class="form-group">
+                                            <label>Imagen Back</label>
+                                            <input type="file" class="form-control" name="imagen_back" value="{IMAGEN_BACK}" />
+                                        </div>
+									
+										
+                                        <div class="box-footer">
+										
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> {VALOR_BOTON}</button>
+										<a href="?sw=listclasificacion" class="btn btn-danger"><i class="fa fa-reply"></i></a>
+                                    </div>
+
+                                    </form>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div><!--/.col (right) -->
+                    </div>   <!-- /.row -->
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->
+     {FOOTER_ADMIN}
+    </body>
+</html>

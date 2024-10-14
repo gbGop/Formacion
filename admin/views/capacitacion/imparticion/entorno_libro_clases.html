@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Administracion</title>
+    <style>
+        .label {
+            min-width: 115px;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
+    <link href="css/go_admin.css?v=91631?v3" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="skin-blue">
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <section class="content" id="pdfContent">
+        <div class="row">
+
+            <div class="col-xs-12">
+                <div class="col-md-12">
+                    <div class="panel panel-info" id="panelCabecera">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-6"><img src="img/bch_logo_1.png"></div>
+                                <div class="col-6 text-end"><img src="img/bch_logo_2.png"></div>
+                            </div>
+                            <h3 class="panel-title">Curso</h3>
+                        </div>
+                        <div class="panel-body">
+                            <span class="label label-sm label-info" style="    margin-bottom: 1px;"> Curso </span>
+                            {ID_CURSO} {NOMBRE_CURSO}<br>
+                            <span class="label label-sm label-info" style="    margin-bottom: 1px;"> OTA </span>
+                            {ID_OTA} {NOMBRE_IMPARTICION}
+                            <br>
+                            <span class="label label-sm label-info" style="    margin-bottom: 1px;"> Fechas</span>
+                            {FECHA_INICIO} - {FECHA_TERMINO}
+                            <span class="label label-sm label-info" style="    margin-bottom: 1px;"> Lugar de Ejecuci&oacute;n</span>
+                            {DIRECCION}
+                        </div>
+                    </div>
+                    <div id="panelParticipante" class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Participantes</h3>
+                        </div>
+                    </div>
+                    <div class="panel panel-info" style="{display_asistencia_none}">
+                        <div class="panel-body">
+                            <table id="panelTable" class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="bg_gray" width="5%">N°</th>
+                                    <th class="bg_gray" width="12%"><strong>NOMBRE</strong></th>
+                                    <th class="bg_gray" width="5%">RUT</th>
+                                    <th class="bg_gray" width="1%">DV</th>
+                                    <th class="bg_gray" width="20%">FIRMA</th>
+                                    <th class="bg_gray" width="12%">AUTORIZO AL BANCO A USAR MI IMAGEN EN RRSS</th>
+                                </tr>
+                                </thead>
+                                <tfoot style="display: table-header-group;">
+                                </tfoot>
+                                <tbody id="panelTableBody">
+                                {ROW_LISTADO_COLABORADORES_LIBROCLASES}
+                                </tbody>
+                            </table>
+                            <br><br>
+                            <br><br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="text-center">
+        <br>
+        <button id="downloadPdfBtn" class="btn btn-primary">Descargar PDF</button>
+        <br><br>
+    </div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+			crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Function to export content to PDF
+			function exportToPDF() {
+				const { jsPDF } = window.jspdf;
+				// Crear una nueva instancia de jsPDF
+				let doc = new jsPDF();
+				let marginTop = 20; // Margen superior en mm
+
+				// Obtener el contenido HTML a convertir en PDF
+				let htmlContent = $("#pdfContent")[0];
+
+				// Utilizar html2canvas para renderizar el contenido HTML como un canvas
+				html2canvas(htmlContent).then(function(canvas) {
+					// Convertir canvas a PDF
+					let imgData = canvas.toDataURL('image/png');
+					let imgWidth = 210; // Ancho de la imagen en mm para A4
+					let imgHeight = canvas.height * imgWidth / canvas.width;
+
+					// Añadir la imagen al PDF
+					doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+					// Obtener el contenido del div panelCabecera
+					let panelCabeceraContent = $("#panelCabecera")[0];
+					let panelParticipanteContent = $("#panelParticipante")[0].outerHTML;
+					let panelTableContent = $("#panelTable")[0].outerHTML;
+
+					// Añadir el HTML al panelCabeceraContent
+					panelCabeceraContent.innerHTML += panelParticipanteContent;
+
+					// Crear un contenedor temporal para manipular el contenido HTML
+					let tempDiv = document.createElement('div');
+					tempDiv.innerHTML = panelTableContent;
+
+					// Eliminar el contenido dentro del div con el id panelTableBody
+					let panelTableBody = tempDiv.querySelector('#panelTableBody');
+					if (panelTableBody) {
+						panelTableBody.innerHTML = '';
+					}
+
+					// Añadir el HTML modificado del panelTable al panelCabeceraContent
+					panelCabeceraContent.innerHTML += tempDiv.innerHTML;
+					// Utilizar html2canvas para renderizar el contenido de panelCabecera como un canvas
+					html2canvas(panelCabeceraContent).then(function(canvas) {
+						// Convertir canvas a PDF
+						let imgDataCabecera = canvas.toDataURL('image/png');
+						let imgWidthCabecera = 200; // Ancho de la imagen en mm para A4
+						let imgHeightCabecera = canvas.height * imgWidthCabecera / canvas.width;
+
+						// Añadir una página en blanco
+						doc.addPage();
+
+						// Añadir la imagen del panelCabecera a la nueva página del PDF
+						doc.addImage(imgDataCabecera, 'PNG', 5, 5, imgWidthCabecera, imgHeightCabecera);
+
+						// Guardar el PDF
+						doc.save("documento.pdf");
+					});
+				});
+			}
+
+
+            // Bind click event to export button
+            $("#downloadPdfBtn").click(function () {
+                exportToPDF();
+            });
+        });
+    </script>
+
+</div>
+
+</body>
+</html>
