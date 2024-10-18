@@ -30,7 +30,7 @@
 			setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
 		}
 		unset($_COOKIE[session_name()]);
-		echo "<script>location.href='" . $url_front_admin . "/admin/?sw=login';</script>";
+		echo "<script>location.href='" . getenv("HTTP_URL") . "/admin/?sw=login';</script>";
 		exit();
 	}
 	
@@ -63,7 +63,7 @@
 		}
 		// Finalmente, destruir la sesión.
 		session_destroy();
-		echo "<script>location.href='" . $url_front_admin . "/admin/?sw=login';</script>";
+		echo "<script>location.href='" . getenv("HTTP_URL") . "/admin/?sw=login';</script>";
 		exit();
 	}
 	elseif ($seccion == "login") {
@@ -287,7 +287,7 @@
 						session_start();
 						echo " <script>alert('Ups, las credenciales no son correctas'); location.href='?sw=logout';    </script>";
 						exit;
-						echo "<script>location.href='" . $url_front_admin . "/admin/?sw=login';</script>";
+						echo "<script>location.href='" . getenv("HTTP_URL") . "/admin/?sw=login';</script>";
 						exit;
 					}
 				}
@@ -301,7 +301,7 @@
 			echo " <script>alert('Ups, las credenciales no son correctas'); location.href='?sw=logout';    </script>";
 			exit;
 			
-			echo "<script>location.href='" . $url_front_admin . "/admin/?sw=login';</script>";
+			echo "<script>location.href='" . getenv("HTTP_URL") . "/admin/?sw=login';</script>";
 			exit;
 		}
 	} // CREACION DE CURSOS PRESENCIALES
@@ -2186,8 +2186,8 @@
 		$minimo_nota_aprobacion = ($post["minimo_nota_aprobacion"]);
 		$datos_post = $post;
 		Lista_curso_Crea_IMPARTICION_CreaImparticion($id_empresa, $codigo_imparticion, $datos_curso[0]->id, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_malla, $post["tipo_horario"], $datos_post, $sesiones, $ejecutivo, $comentarios, $observacion, $hora_desde, $hora_hasta, $nombre, $relator, $streaming, $minimo_asistencia, $minimo_nota_aprobacion, $post["ejecutivo_externo"]);
-		
-		echo "<script>location.href='?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i=" . $post["id_curso_enc"] . "&id_imparticion=" . $id_imparticion_encoded . "';</script>";
+		$id_curso_enc = isset($post["id_curso_enc"]) ? htmlspecialchars($post["id_curso_enc"], ENT_QUOTES) : ''; // Sanitizar
+		echo "<script>location.href='?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i=" . $id_curso_enc . "&id_imparticion=" . $id_imparticion_encoded . "';</script>";
 		exit;
 	}
 	elseif ($seccion == "edimparti") {
@@ -3145,9 +3145,6 @@ Cuadro Contable<br>
 		SendGrid_Email($to, $nombreto, $from, $nombrefrom, $tipo, $subject, $titulo, $subtitulo, $texto, $url, $texto_url, $texto2, $texto3, $texto4, $logo, $id_empresa, $url2, "Email_Masivo", $rut, $id_notificacion);
 		SendGrid_Email($to2, $nombreto2, $from, $nombrefrom, $tipo, $subject, $titulo, $subtitulo, $texto, $url, $texto_url, $texto2, $texto3, $texto4, $logo, $id_empresa, $url2, "Email_Masivo", $rut, $id_notificacion);
 		exit();
-		echo "<script>location.href='?sw=VeNotificarCuadroContable&i=" . $get["i"] . "';</script>";
-		exit();
-		exit();
 	}
 	elseif ($seccion == "accionSubeProveedorPorImparticion_2021") {
 		//print_r($post);echo Decodear3($get["i"]);
@@ -3157,8 +3154,8 @@ Cuadro Contable<br>
 			$post["otros_input"] = "";
 		}
 		InsertProveedorImparticion2024(Decodear3($get["i"]), $post["proveedor"], $post["servicio_otorgado"], $post["otros_input"]);
-		echo "<script>location.href='?sw=VeProveedoresXImp2021&i=" . $get["i"] . "';</script>";
-		exit();
+		$i = isset($get["i"]) ? htmlspecialchars($get["i"], ENT_QUOTES) : ''; // Sanitizar
+		echo "<script>location.href='?sw=VeProveedoresXImp2021&i=" . $i . "';</script>";
 		exit();
 	}
 	elseif ($seccion == "VeDocsXImp2021") {
@@ -4817,8 +4814,8 @@ Cuadro Contable<br>
 		elseif ($post["tipo"] == "cuentas") {
 			proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["telefono"], $post["email"], $post["contacto"]);
 		}
-		
-		echo "<script>location.href='?sw=lista_proveedores_otec&tipo=" . $post["tipo"] . "';    </script>";
+		$tipo = isset($post["tipo"]) ? htmlspecialchars($post["tipo"], ENT_QUOTES) : ''; // Sanitizar
+		echo "<script>location.href='?sw=lista_proveedores_otec&tipo=" . $tipo . "';    </script>";
 		exit();
 	} // CREACION DE CURSOS PRESENCIALES
 	elseif ($seccion == "reporteJson_3_Pack_Cash_V6") {
@@ -5133,8 +5130,8 @@ Cuadro Contable<br>
 				// echo "</table>";
 			}
 		}
-		
-		echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_curso=" . $post["id_curso"] . "';</script>";
+		$id_curso = isset($post["id_curso"]) ? htmlspecialchars($post["id_curso"], ENT_QUOTES) : ''; // Sanitizar
+		echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_curso=" . $id_curso . "';</script>";
 		unlink("upload/" . $storagename);
 		exit;
 	}
@@ -5255,7 +5252,8 @@ Cuadro Contable<br>
 		
 		if ($post["accion_editar_fecha"] == "1") {
 			data_rel_id_inscripcion_rut_curso_Update($post["id_inscripcion"], $post["fecha_inicio"], $post["fecha_termino"], $post["rut_ejecutivo"]);
-			echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_inscripcion=" . $post["id_inscripcion"] . "';</script>";
+			$id_inscripcion= isset($post["id_inscripcion"]) ? htmlspecialchars($post["id_inscripcion"], ENT_QUOTES) : ''; // Sanitizar
+			echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_inscripcion=" . $id_inscripcion . "';</script>";
 			exit;
 		}
 		
@@ -8067,7 +8065,7 @@ location.href='?sw=veobj&i=$jefe';
 	elseif ($seccion == "notificaciones_automaticas_envio") {
 		$id_empresa = $_SESSION["id_empresa"];
 		
-		NotificacionesAutomaticas_envio($id_empresa, $url_front, $url_front_admin, $logo, $from, $nombrefrom);
+		NotificacionesAutomaticas_envio($id_empresa, $url_front, getenv("HTTP_URL"), $logo, $from, $nombrefrom);
 		echo "Notificaciones Enviadas";
 		
 		echo "
@@ -9038,9 +9036,6 @@ alert('Submenu Eliminado');
 location.href='?sw=asigsub&i=" . Encodear3($id_menu) . "';
 </script>";
 		exit;
-	}
-	elseif ($seccion == "asigsubmenu") {
-		print_r($get);
 	}
 	elseif ($seccion == "addmenu") {
 		$id_menu = Decodear3($get["i"]);
@@ -15200,7 +15195,8 @@ if(count($array_rut_id_curso_l2)==0){
         	header('Content-Disposition: attachment; filename=Reporte_Online_' . $post["id_programa_express"] . '_' . $hoy . '.csv');
 
 						$Programa=ObtieneDatosProgramasPorEmpresa($post["id_programa_express"], $id_empresa);
-        		echo "IdPrograma;".$post["id_programa_express"]."\r\n";
+						$id_programa_express= isset($post["id_programa_express"]) ? htmlspecialchars($post["id_programa_express"], ENT_QUOTES) : ''; // Sanitizar
+        		echo "IdPrograma;".$id_programa_express."\r\n";
         		echo "Programa;".$Programa[0]->nombre_programa."\r\n";
         		echo "\r\n";
 
@@ -19428,7 +19424,7 @@ location.href='?sw=addeval';
 </script>";
 }
 else if ($seccion == "adtexto") {
-    print_r($post);
+
     $texto_pregunta = (trim($post["descripcion_pregunta"]));
     $id_evaluacion = Decodear3($get["i"]);
     $tipo_pregunta = $post["tippre"];
@@ -19436,13 +19432,6 @@ else if ($seccion == "adtexto") {
 
 //Obtengo la ultmia pregunta con un MAX()
     $ultimo_id = ObtenerUltimaPregunta();
-    print_r($ultimo_id);
-    exit;
-    echo "
-<script>
-alert('Pregunta creada correctamente.');
-location.href='?sw=accionEvaluacion&i=" . Encodear3($id_evaluacion) . "';
-</script>";
 }
 else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos") {
 //print_r($post);print_r($get);
@@ -21395,7 +21384,7 @@ location.href='?sw=listcmallas';
 </script>";
 }
 else if ($seccion == "edcmallla") {
-    print_r($post);
+
     $nombre_malla = ($post["nombre_malla"]);
     $descripcion_malla = ($post["descripcion_malla"]);
     $tipo_malla = ($post["tipo_malla"]);
@@ -22522,9 +22511,6 @@ else if ($seccion == "MuestraBloqueCursoSeleccionado") {
 	header('Content-Type: text/plain');
     echo $formulario;
 }
-else if ($seccion == "demo_post") {
-    print_r($post);
-}
 else if ($seccion == "MuestraBloqueCursoSeleccionadot") {
     $id_curso = $post["id_curso"];
     $id_empresa = $_SESSION["id_empresa"];
@@ -22545,9 +22531,6 @@ else if ($seccion == "MuestraBloqueCursoSeleccionadot") {
     $formulario = ListadoCursosAdmin2(FuncionesTransversalesAdmin($formulario), $id_empresa, "", $id_curso);
     $formulario = str_replace("{VALUE_COD_CURSO}", $id_curso, $formulario);
     echo $formulario;
-}
-else if ($seccion == "demo_post") {
-    print_r($post);
 }
 else if ($seccion == "MuestraBloqueAudienciaSeleccionada") {
     $id_empresa = $_SESSION["id_empresa"];
