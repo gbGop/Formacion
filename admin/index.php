@@ -24066,7 +24066,7 @@ else if($seccion=="getColaborador"){
     $factura_proveenom = $_POST['nombreProvee'];
     $factur_cuenta_nombre = $_POST['cuentanom'];
     if(isset($id) || $id!=""){
-        $update  = updateDatosGeneralesFactura($id,$factur_numdoc, $factur_tipdocid, $factur_proveerut,
+        updateDatosGeneralesFactura($id,$factur_numdoc, $factur_tipdocid, $factur_proveerut,
                                       $factur_servid, ($factur_servotro), $factur_montoto, $factur_montonet, $factur_impuest,
                                       $factur_fecemision, $factur_ota, $factur_numota, $factur_cuenta,
                                       ($factur_proyecto), ($factur_curso), ($factur_otanombre), $factur_cui,
@@ -24126,7 +24126,7 @@ else if($seccion=="getColaborador"){
     $reemboa_proveenom = ($_POST['nombreColabora']);
     $reembo_cuenta_nombre = $_POST['cuentanom'];
     if(isset($id) || $id!=""){
-        $update  = updateDatosGeneralesReembolso($id,$reembo_numdoc, $reembo_tipdocid,$reembo_tipdocOtro, $reembo_proveerut,
+        updateDatosGeneralesReembolso($id,$reembo_numdoc, $reembo_tipdocid,$reembo_tipdocOtro, $reembo_proveerut,
                                       $reembo_servid, ($reembo_servotro), $reembo_montoto, $reembo_montonet, $reembo_impuest,
                                       $reembo_fecemision, $reembo_ota, $reembo_numota, $reembo_cuenta,
                                       ($reembo_proyecto), ($reembo_curso), ($reembo_otanombre), $reembo_cui,
