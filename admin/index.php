@@ -24068,12 +24068,55 @@ else if($seccion=="getColaborador"){
             $code = 200;
             $message ="Factura guardada exitosamente";
             //Se guardan los responsables de la factura
-            $_POST['aplicaSup']=="on"?$responsables['sup']=array("tipo"=>"1","resprut"=>Decodear3($_POST['selrespsup']), "recep"=>$_POST['dateRecepsup'], "envio"=>$_POST['dateEnviosup']):"";
-            $_POST['aplicaEje']=="on"?$responsables['eje']=array("tipo"=>"2","resprut"=>Decodear3($_POST['selrespejec']), "recep"=>$_POST['dateRecepeje'], "envio"=>$_POST['dateEnvioEje']):"";
-            $_POST['aplicaCon']=="on"?$responsables['con']=array("tipo"=>"3","resprut"=>Decodear3($_POST['selrespcon']), "recep"=>$_POST['dateRecepcon'], "envio"=>$_POST['dateEnviocon']):"";
-            $_POST['aplicaJef']=="on"?$responsables['jef']=array("tipo"=>"4","resprut"=>Decodear3($_POST['selrespjef']), "recep"=>$_POST['dateRecepjef'], "envio"=>$_POST['dateEnviojef']):"";
-            $_POST['aplicaJef1']=="on"?$responsables['jef1']=array("tipo"=>"5","resprut"=>Decodear3($_POST['selrespjef1']), "recep"=>$_POST['dateRecepjef1'], "envio"=>$_POST['dateEnviojef1']):"";
-            $_POST['aplicaJef2']=="on"?$responsables['jef2']=array("tipo"=>"6","resprut"=>Decodear3($_POST['selrespjef2']), "recep"=>$_POST['dateRecepjef2'], "envio"=>$_POST['dateEnviojef2']):"";
+$selrespsup = VerificaSQLInjectionLight($_POST['selrespsup']);
+$selrespejec = VerificaSQLInjectionLight($_POST['selrespejec']);
+$selrespcon = VerificaSQLInjectionLight($_POST['selrespcon']);
+$selrespjef = VerificaSQLInjectionLight($_POST['selrespjef']);
+$selrespjef1 = VerificaSQLInjectionLight($_POST['selrespjef1']);
+$selrespjef2 = VerificaSQLInjectionLight($_POST['selrespjef2']);
+
+// Validar cada entrada y construir el array de responsables
+$_POST['aplicaSup'] == "on" ? $responsables['sup'] = array(
+    "tipo" => "1",
+    "resprut" => Decodear3($selrespsup),
+    "recep" => $_POST['dateRecepsup'],
+    "envio" => $_POST['dateEnviosup']
+) : "";
+
+$_POST['aplicaEje'] == "on" ? $responsables['eje'] = array(
+    "tipo" => "2",
+    "resprut" => Decodear3($selrespejec),
+    "recep" => $_POST['dateRecepeje'],
+    "envio" => $_POST['dateEnvioEje']
+) : "";
+
+$_POST['aplicaCon'] == "on" ? $responsables['con'] = array(
+    "tipo" => "3",
+    "resprut" => Decodear3($selrespcon),
+    "recep" => $_POST['dateRecepcon'],
+    "envio" => $_POST['dateEnviocon']
+) : "";
+
+$_POST['aplicaJef'] == "on" ? $responsables['jef'] = array(
+    "tipo" => "4",
+    "resprut" => Decodear3($selrespjef),
+    "recep" => $_POST['dateRecepjef'],
+    "envio" => $_POST['dateEnviojef']
+) : "";
+
+$_POST['aplicaJef1'] == "on" ? $responsables['jef1'] = array(
+    "tipo" => "5",
+    "resprut" => Decodear3($selrespjef1),
+    "recep" => $_POST['dateRecepjef1'],
+    "envio" => $_POST['dateEnviojef1']
+) : "";
+
+$_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
+    "tipo" => "6",
+    "resprut" => Decodear3($selrespjef2),
+    "recep" => $_POST['dateRecepjef2'],
+    "envio" => $_POST['dateEnviojef2']
+) : "";
             saveResponsablesFacturaData($responsables, $idInsert);
 
             $countfiles = count($_FILES['multimediaFiles']['name']);
@@ -24134,12 +24177,55 @@ else if($seccion=="getColaborador"){
             $code = 200;
             $message ="Reembolso guardado exitosamente";
             //Se guardan los responsables de la factura
-            $_POST['aplicaSup']=="on"?$responsables['sup']=array("tipo"=>"1","resprut"=>Decodear3($_POST['selrespsup']), "recep"=>$_POST['dateRecepsup'], "envio"=>$_POST['dateEnviosup']):"";
-            $_POST['aplicaEje']=="on"?$responsables['eje']=array("tipo"=>"2","resprut"=>Decodear3($_POST['selrespejec']), "recep"=>$_POST['dateRecepeje'], "envio"=>$_POST['dateEnvioEje']):"";
-            $_POST['aplicaCon']=="on"?$responsables['con']=array("tipo"=>"3","resprut"=>Decodear3($_POST['selrespcon']), "recep"=>$_POST['dateRecepcon'], "envio"=>$_POST['dateEnviocon']):"";
-            $_POST['aplicaJef']=="on"?$responsables['jef']=array("tipo"=>"4","resprut"=>Decodear3($_POST['selrespjef']), "recep"=>$_POST['dateRecepjef'], "envio"=>$_POST['dateEnviojef']):"";
-            $_POST['aplicaJef1']=="on"?$responsables['jef1']=array("tipo"=>"5","resprut"=>Decodear3($_POST['selrespjef1']), "recep"=>$_POST['dateRecepjef1'], "envio"=>$_POST['dateEnviojef1']):"";
-            $_POST['aplicaJef2']=="on"?$responsables['jef2']=array("tipo"=>"6","resprut"=>Decodear3($_POST['selrespjef2']), "recep"=>$_POST['dateRecepjef2'], "envio"=>$_POST['dateEnviojef2']):"";
+$selrespsup = VerificaSQLInjectionLight($_POST['selrespsup']);
+$selrespejec = VerificaSQLInjectionLight($_POST['selrespejec']);
+$selrespcon = VerificaSQLInjectionLight($_POST['selrespcon']);
+$selrespjef = VerificaSQLInjectionLight($_POST['selrespjef']);
+$selrespjef1 = VerificaSQLInjectionLight($_POST['selrespjef1']);
+$selrespjef2 = VerificaSQLInjectionLight($_POST['selrespjef2']);
+
+// Validar cada entrada y construir el array de responsables
+$_POST['aplicaSup'] == "on" ? $responsables['sup'] = array(
+    "tipo" => "1",
+    "resprut" => Decodear3($selrespsup),
+    "recep" => $_POST['dateRecepsup'],
+    "envio" => $_POST['dateEnviosup']
+) : "";
+
+$_POST['aplicaEje'] == "on" ? $responsables['eje'] = array(
+    "tipo" => "2",
+    "resprut" => Decodear3($selrespejec),
+    "recep" => $_POST['dateRecepeje'],
+    "envio" => $_POST['dateEnvioEje']
+) : "";
+
+$_POST['aplicaCon'] == "on" ? $responsables['con'] = array(
+    "tipo" => "3",
+    "resprut" => Decodear3($selrespcon),
+    "recep" => $_POST['dateRecepcon'],
+    "envio" => $_POST['dateEnviocon']
+) : "";
+
+$_POST['aplicaJef'] == "on" ? $responsables['jef'] = array(
+    "tipo" => "4",
+    "resprut" => Decodear3($selrespjef),
+    "recep" => $_POST['dateRecepjef'],
+    "envio" => $_POST['dateEnviojef']
+) : "";
+
+$_POST['aplicaJef1'] == "on" ? $responsables['jef1'] = array(
+    "tipo" => "5",
+    "resprut" => Decodear3($selrespjef1),
+    "recep" => $_POST['dateRecepjef1'],
+    "envio" => $_POST['dateEnviojef1']
+) : "";
+
+$_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
+    "tipo" => "6",
+    "resprut" => Decodear3($selrespjef2),
+    "recep" => $_POST['dateRecepjef2'],
+    "envio" => $_POST['dateEnviojef2']
+) : "";
             saveResponsablesReembolsoData($responsables, $idInsert);
 
             $countfiles = count($_FILES['multimediaFiles']['name']);
@@ -24195,12 +24281,55 @@ else if($seccion=="getColaborador"){
                                       ($factur_proyecto), ($factur_curso), ($factur_otanombre), $factur_cui,
                                       $factur_respgast, ($factur_observacion), $factur_mes, $factur_anual,$factura_status,$factura_proveenom,($factur_cuenta_nombre));
         //Se guardan los responsables de la factura
-            $_POST['aplicaSup']=="on"?$responsables['sup']=array("tipo"=>"1","resprut"=>Decodear3($_POST['selrespsup']), "recep"=>$_POST['dateRecepsup'], "envio"=>$_POST['dateEnviosup']):"";
-            $_POST['aplicaEje']=="on"?$responsables['eje']=array("tipo"=>"2","resprut"=>Decodear3($_POST['selrespejec']), "recep"=>$_POST['dateRecepeje'], "envio"=>$_POST['dateEnvioEje']):"";
-            $_POST['aplicaCon']=="on"?$responsables['con']=array("tipo"=>"3","resprut"=>Decodear3($_POST['selrespcon']), "recep"=>$_POST['dateRecepcon'], "envio"=>$_POST['dateEnviocon']):"";
-            $_POST['aplicaJef']=="on"?$responsables['jef']=array("tipo"=>"4","resprut"=>Decodear3($_POST['selrespjef']), "recep"=>$_POST['dateRecepjef'], "envio"=>$_POST['dateEnviojef']):"";
-            $_POST['aplicaJef1']=="on"?$responsables['jef1']=array("tipo"=>"5","resprut"=>Decodear3($_POST['selrespjef1']), "recep"=>$_POST['dateRecepjef1'], "envio"=>$_POST['dateEnviojef1']):"";
-            $_POST['aplicaJef2']=="on"?$responsables['jef2']=array("tipo"=>"6","resprut"=>Decodear3($_POST['selrespjef2']), "recep"=>$_POST['dateRecepjef2'], "envio"=>$_POST['dateEnviojef2']):"";
+            $selrespsup = VerificaSQLInjectionLight($_POST['selrespsup']);
+$selrespejec = VerificaSQLInjectionLight($_POST['selrespejec']);
+$selrespcon = VerificaSQLInjectionLight($_POST['selrespcon']);
+$selrespjef = VerificaSQLInjectionLight($_POST['selrespjef']);
+$selrespjef1 = VerificaSQLInjectionLight($_POST['selrespjef1']);
+$selrespjef2 = VerificaSQLInjectionLight($_POST['selrespjef2']);
+
+// Validar cada entrada y construir el array de responsables
+$_POST['aplicaSup'] == "on" ? $responsables['sup'] = array(
+    "tipo" => "1",
+    "resprut" => Decodear3($selrespsup),
+    "recep" => $_POST['dateRecepsup'],
+    "envio" => $_POST['dateEnviosup']
+) : "";
+
+$_POST['aplicaEje'] == "on" ? $responsables['eje'] = array(
+    "tipo" => "2",
+    "resprut" => Decodear3($selrespejec),
+    "recep" => $_POST['dateRecepeje'],
+    "envio" => $_POST['dateEnvioEje']
+) : "";
+
+$_POST['aplicaCon'] == "on" ? $responsables['con'] = array(
+    "tipo" => "3",
+    "resprut" => Decodear3($selrespcon),
+    "recep" => $_POST['dateRecepcon'],
+    "envio" => $_POST['dateEnviocon']
+) : "";
+
+$_POST['aplicaJef'] == "on" ? $responsables['jef'] = array(
+    "tipo" => "4",
+    "resprut" => Decodear3($selrespjef),
+    "recep" => $_POST['dateRecepjef'],
+    "envio" => $_POST['dateEnviojef']
+) : "";
+
+$_POST['aplicaJef1'] == "on" ? $responsables['jef1'] = array(
+    "tipo" => "5",
+    "resprut" => Decodear3($selrespjef1),
+    "recep" => $_POST['dateRecepjef1'],
+    "envio" => $_POST['dateEnviojef1']
+) : "";
+
+$_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
+    "tipo" => "6",
+    "resprut" => Decodear3($selrespjef2),
+    "recep" => $_POST['dateRecepjef2'],
+    "envio" => $_POST['dateEnviojef2']
+) : "";
             saveResponsablesFacturaData($responsables, $id);
 
             $countfiles = count($_FILES['multimediaFiles']['name']);
@@ -24256,7 +24385,7 @@ else if($seccion=="getColaborador"){
                                       ($reembo_proyecto), ($reembo_curso), ($reembo_otanombre), $reembo_cui,
                                       $reembo_respgast, ($reembo_observacion), $reembo_mes, $reembo_anual,$reemboa_status,$reemboa_proveenom,($reembo_cuenta_nombre));
         //Se guardan los responsables de la factura
-// Validar y proteger todas las entradas de POST contra inyecciones SQL
+
 $selrespsup = VerificaSQLInjectionLight($_POST['selrespsup']);
 $selrespejec = VerificaSQLInjectionLight($_POST['selrespejec']);
 $selrespcon = VerificaSQLInjectionLight($_POST['selrespcon']);
