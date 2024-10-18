@@ -572,6 +572,7 @@ function Fecha2021_fecha_sesion($id_imparticion, $sesion)
 
 function ImparticionSesionesAsistenciaPorSesion_2021($id_imparticion, $rut, $ses_1, $ses_2, $ses_3, $ses_4, $ses_5, $ses_6, $ses_7, $ses_8, $ses_9, $ses_10, $ses_11, $ses_12)
 {
+	$suma_sesiones=0;
     $connexion = new DatabasePDO();
     $num_sesiones_total = NumSesionesDadaImparticion2021($id_imparticion);
     $hoy = date("Y-m-d");
@@ -935,8 +936,6 @@ function Update_lms_Malla_2023_full($rut, $id_malla, $id_malla_antigua, $id_curs
 {
     $connexion = new DatabasePDO();
     
-    $observaciones = ($observaciones);
-
     $sql = "UPDATE rel_lms_malla_persona SET id_malla = :id_malla WHERE rut = :rut AND id_malla = :id_malla_antigua";
     $connexion->query($sql);
     $connexion->bind(':id_malla', $id_malla);
@@ -1733,6 +1732,7 @@ function proveedores_ejecutivos_save_insert_update($id_empresa, $tipo, $id, $rut
 					VALUES ('$rut','$email', '$nombre', '$descripcion', '$nombre_completo', '$direccion','$telefono','USUARIO_MANUAL','$id_empresa','USUARIO_MANUAL','$manana');";
 					$connexion->query($sql_insert);
         } elseif ($tipo == "usuarios_externos") {
+	        $extra='';
             $nombre_completo = $nombre . " " . $descripcion . " " . $extra;
             $datetime = new DateTime('tomorrow');
             $manana = $datetime->format('Y-m-d');
@@ -3506,7 +3506,7 @@ function IMPARTICION_CreaImparticion($id_empresa, $codigo_imparticion, $id_curso
         :miercoles_d_am, :miercoles_h_am, :miercoles_d_pm, :miercoles_h_pm,
         :jueves_d_am, :jueves_h_am, :jueves_d_pm, :jueves_h_pm,
         :viernes_d_am, :viernes_h_am, :viernes_d_pm, :viernes_h_pm, :sesiones, :ejecutivo, :comentarios)";
-
+	$ciudadu ="";
     $connexion->query($sql);
     $connexion->bind(':codigo_inscripcion', $codigo_imparticion);
     $connexion->bind(':fecha_inicio', $fecha_inicio);
@@ -3952,7 +3952,8 @@ function Lista_curso_Crea_IMPARTICION_CreaImparticion($id_empresa, $codigo_impar
     $sql = "select id from tbl_inscripcion_curso where codigo_inscripcion='$codigo_imparticion' limit 1";
     $connexion->query($sql);
     $cod = $connexion->resultset();
-
+	$malla_bch=$_POST["malla_bch"];
+	$categoria_bch=$_POST["categoria_bch"];
     if ($streaming <> "") {
         $direccion = $streaming;
         $comuna = "STREAMING";
@@ -3971,10 +3972,6 @@ function Lista_curso_Crea_IMPARTICION_CreaImparticion($id_empresa, $codigo_impar
         } else {
             $qrelator="";
         }
-
-
-        $malla_bch=$_POST["malla_bch"];
-        $categoria_bch=$_POST["categoria_bch"];
 
         $sql = "
 update tbl_inscripcion_curso
@@ -4009,7 +4006,7 @@ where id='" . $id . "'";
         $sql = "
 INSERT INTO tbl_inscripcion_curso
 (codigo_inscripcion, fecha_inicio, fecha_termino, direccion, comuna, ciudad, id_curso, id_empresa, cupos, id_malla, tipo_audiencia, ejecutivo, comentarios,observacion, hora_inicio, hora_termino, nombre,id_audiencia,minimo_asistencia,minimo_nota_aprobacion, abierto_cerrado, pago) " .
-            "VALUES ('$codigo_imparticion', '$fecha_inicio', '$fecha_termino', '$direccion', '$ciudadu', '$ciudad', '$id_curso', '$id_empresa', '$cupos', '$id_malla', '$tipo_audiencia','$ejecutivo','$comentarios','$observacion', '$hora_inicio', '$hora_termino', '$nombre', '$relator', '$minimo_asistencia', '$minimo_nota_aprobacion', '$malla_bch', '$categoria_bch');";
+            "VALUES ('$codigo_imparticion', '$fecha_inicio', '$fecha_termino', '$direccion', '$comuna', '$ciudad', '$id_curso', '$id_empresa', '$cupos', '$id_malla', '$tipo_audiencia','$ejecutivo','$comentarios','$observacion', '$hora_inicio', '$hora_termino', '$nombre', '$relator', '$minimo_asistencia', '$minimo_nota_aprobacion', '$malla_bch', '$categoria_bch');";
     }
 
 
@@ -4376,7 +4373,7 @@ function InsertaRelacionInscripcionUsuarioFull2021($rut, $id_programa, $id_inscr
     } elseif ($Imp[0]->id_modalidad == "2") {
 
         $sql1 = "SELECT id from tbl_inscripcion_usuarios
-								where id_curso='$id_curso' and rut='$rut' and id_malla='$id_malla' and id_empresa='$id_empresa'";
+								where id_curso='$id_curso' and rut='$rut' and id_malla='{$Imp[0]->id_malla}' and id_empresa='$id_empresa'";
 
 		 $connexion->query($sql1);
     	$cod1 = $connexion->resultset();
@@ -4436,7 +4433,7 @@ function InsertaRelacionInscripcionUsuarioFull2021($rut, $id_programa, $id_inscr
             $modalidad_idCurso = ModalidadCurso($id_curso, $id_empresa);
 
             $sqlOp = "SELECT opcional from rel_lms_malla_curso
-						where id_curso='$id_curso' and id_malla='$id_malla' and id_programa='$id_programa' and id_empresa='$id_empresa' limit 1";
+						where id_curso='$id_curso' and id_malla='{$Imp[0]->id_malla}' and id_programa='$id_programa' and id_empresa='$id_empresa' limit 1";
 			
 			$connexion->query($sqlOp);
     		$codOp = $connexion->resultset();

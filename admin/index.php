@@ -246,7 +246,7 @@ if (!$seccion) {
     // Get a key from https://www.google.com/recaptcha/admin/create
     if ($_POST["g-recaptcha-response"]) {
         //ini_set('display_errors', 1);ini_set('display_startup_errors', 1);error_reporting(E_ALL);
-        $secret = "6Lci7oQUAAAAACwn-7uQ67zs_4_HKGDVmXiHRYXw";
+        $secret = getenv('SECRET_CAPTCHA');
         $response = null;
         // comprueba la clave secreta
         $reCaptcha = new ReCaptcha($secret);
@@ -299,7 +299,7 @@ if (!$seccion) {
                     session_start();
                     echo " <script>alert('Ups, las credenciales no son correctas'); location.href='?sw=logout';    </script>";
                     exit;
-                    echo "<script>location.href='https://www.masconectadosbch.cl/admin/?sw=login';</script>";
+                    echo "<script>location.href='".$url_front_admin."/admin/?sw=login';</script>";
                     exit;
 
                 }
@@ -312,83 +312,11 @@ if (!$seccion) {
         echo " <script>alert('Ups, las credenciales no son correctas'); location.href='?sw=logout';    </script>";
         exit;
 
-        echo "<script>location.href='https://www.masconectadosbch.cl/admin/?sw=login';</script>";
+        echo "<script>location.href='".$url_front_admin."/admin/?sw=login';</script>";
         exit;
 
-    }
-} else if ($seccion == "checkUserCopec") {
-
-    //ini_set('display_errors', 1);ini_set('display_startup_errors', 1);error_reporting(E_ALL);
-    //session_start();
-    $id_empresa = "78";
-
-    //echo "<pre>";        print_r($_GET);        echo "</pre>";
-    $_SESSION["id_empresa"] = $id_empresa;
-
-    $response = file_get_contents('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' . $_GET["idt"]);
-    $response = json_decode($response);
-    //print_r($response);
-
-    $nombre_completo = ($response->name);
-    $nombre = ($response->given_name);
-    $apellido = ($response->family_name);
-    $imagenUrl = ($response->picture);
-    $email = ($response->email);
-
-    // echo "<h3><br>".$response->email;
-    $user_content_key = ($response->user_content_key);
-    $arreglo_email = $arreglo_archivo = explode("@", $response->email);
-
-    $var_desde_login = Decodear3(($_GET["var"]));
-    $var_en_sesion = Decodear3($_SESSION["token"]);
-    // $var=Decodear3($_GET["var"]);
-    $ambiente = ($_GET["ambiente"]);
-    $id_mp = ($_GET["id_mp"]);
-    $im = ($_GET["im"]);
-
-    //$arreglo_email[1] = "copec.cl";
-
-    //echo "<br>email ".$email."<br>".$arreglo_email[1];
-    //exit();
-
-    if ($arreglo_email[1] == "copec.cl" or $arreglo_email[1] == "gop.cl") {
-        // actualiza avatar
-        // ActualizaFotoBciUser($email, $id_empresa, $imagenUrl);
-        $key = LMS_ConsultaRutSegunEmail($email, $id_empresa);
-        //echo "key $key";
-        //print_r($_SESSION);
-        if ($key == "") {
-            echo "
-                                <script>
-                                    location.href='?sw=logout';
-                                </script>";
-            exit;
-        }
-        $_SESSION["user_"] = $key;
-        $_SESSION["admin_"] = $key;
-        //SGD_Agile_UpdateAvatar($_SESSION["user_"],$imagenUrl);
-        $datos_empresa = DatosEmpresa($id_empresa);
-        //InsertTblAnalitica($key, $id_empresa, "LOGIN", "LoginGoogleExterno");
-        $arrayEmpresa = BuscaEmpresaUserRut($key);
-        $home_admin = $arrayEmpresa[0]->home_admin;
-
-        //echo "hola 1795";
-        // echo "".$url_front."/front/?sw=".$datos_empresa[0]->case_home."";
-        // sleep(5);
-        echo "
-                                <script>
-                                    location.href='?sw=" . $home_admin . "';
-                                </script>";
-        exit;
-    } else {
-        echo "
-                                <script>
-                                    location.href='?sw=logout';
-                                </script>";
-        exit;
     }
 } // CREACION DE CURSOS PRESENCIALES
-
 
 else if($seccion == "FB_2024_ajax_cuenta_contable_cui"){
 
@@ -7072,8 +7000,8 @@ else if ($seccion == "notificaciones_email") {
     $texto = ($Notificacion[0]->texto);
     $subtitulo1 = "";
     $tipo = "text/html";
-    $from = "notificaciones@masconectadosbch.cl";
-    $nombrefrom = "notificaciones@masconectadosbch.cl";
+    $from = getenv('EMAIL_FROM');
+    $nombrefrom = getenv('EMAIL_FROM_NAME');
     $num_envios = 0;
     foreach ($array_envios as $usuario) {
         $rut = $usuario->rut;
@@ -7728,12 +7656,10 @@ else if ($seccion == "notificaciones_email") {
     $id_empresa = $_SESSION["id_empresa"];
     $Array_Usuario = ListaTodosUsuario($id_empresa);
     foreach ($Array_Usuario as $unico) {
-        $avatar = "";
-
         $avatar = VerificaFotoPersonalAdminV2($unico->rut);
         $avatar = str_replace('../', '', $avatar);
-
-        echo "<br>" . ($unico->rut) . ";" . ($unico->nombre_completo) . ";" . ($unico->cargo) . ";" . ($unico->division) . ";https://masconectadosbch.cl/" . $avatar;
+		$urlAvatar=getenv("AVATAR_URL");
+        echo "<br>" . ($unico->rut) . ";" . ($unico->nombre_completo) . ";" . ($unico->cargo) . ";" . ($unico->division) . ";"."$urlAvatar" . $avatar;
 
     }
 
@@ -8244,8 +8170,8 @@ location.href='?sw=listProcesosCorreos';
                 $nombreto = $arr_usu->nombre_completo;
 
                 if ($id_empresa == "62") {
-                    $from = "notificaciones@capacitacionbci.cl";
-                    $nombrefrom = "Capacitación Bci";
+                    $from = getenv('EMAIL_FROM');
+                    $nombrefrom = getenv('EMAIL_FROM_NAME');
                     $tipo = "text/html";
                     $subject = ("Te invitamos a realizar una Evaluación de Impacto");
                     $titulo1 = ("Te invitamos a realizar Evaluación de Impacto de la Capacitación sobre " . $arr_usu->nombre_completo_col);
@@ -8255,7 +8181,7 @@ location.href='?sw=listProcesosCorreos';
                     //$texto2=($texto2);
                     $texto3 = "";
                     $texto4 = "";
-                    $url = "https://capacitacionbci.cl";
+                    $url = getenv("MC_URL");
                     $texto_url = "Ingresa a Capacitacionbci.cl";
                     $logo = "";
                     $id_empresa = $id_empresa;
@@ -8265,11 +8191,8 @@ location.href='?sw=listProcesosCorreos';
                     //echo "$to, $nombreto, $from, $nombrefrom, $tipo, $subject, $titulo1,$subtitulo1,$texto1,$url,$texto_url, $texto2, $texto3, $texto4, $logo, $id_empresa, $url, 'Email_Masivo_Med', $rut, $id_inscripcion";sleep(3);
                     SendGrid_Email($to, $nombreto, $from, $nombrefrom, $tipo, $subject, $titulo1, $subtitulo1, $texto1, $url, $texto_url, $texto2, $texto3, $texto4, $logo, $id_empresa, $url, "Email_Masivo_Med", $rut, $id_inscripcion, "");
                 }
-
-                //ActualizoEstadoEnvioCorreoPorProceso($rut, $id_proceso);
             }
         }
-        // ActualizoEstadoEnvioCorreoPorProceso($rut, $id_proceso);
     }
 
     echo "
@@ -8309,8 +8232,8 @@ location.href='?sw=lista_Mediciones_med';
                 $nombreto = $arr_usu->nombre_completo;
 
                 if ($id_empresa == "62") {
-                    $from = "notificaciones@capacitacionbci.cl";
-                    $nombrefrom = "Capacitación Bci";
+                    $from = getenv('EMAIL_FROM');
+                    $nombrefrom = getenv('EMAIL_FROM_NAME');
                 }
 
                 $tipo = "text/html";
@@ -15866,8 +15789,6 @@ else if ($seccion == "eventos_gestion_detalle") {
             $texto1 = ($texto1);
             $texto2 = ($texto2);
             $texto3 = $direccion;
-            //$texto3="https://calendar.google.com/event?action=TEMPLATE&tmeid=NGJpNW5mYnBsMDd1NnQ2NW1sdW0xMzVmM2kgcm9kLmFyYW5jaWJpYUBt&tmsrc=rod.arancibia%40gmail.com";
-            //,+link+here:+http://www.example.com&location=".
 
             if ($unico->LinkAcceso != '') {
                 $url = "https://www.google.com/calendar/render?action=TEMPLATE&text=" .
