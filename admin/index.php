@@ -39,21 +39,19 @@
 	$arreglo_post = $_POST;
 	$arreglo_get = $_GET;
 	$arreglo_request = $_REQUEST;
-	$_POST = VerificaArregloSQLInjectionV2($arreglo_post);
-	$_GET = VerificaArregloSQLInjectionV2($arreglo_get);
-	$_REQUEST = VerificaArregloSQLInjectionV2($arreglo_request);
-	
 	
 	if ($seccion <> "lista_audiencias") {
 		//echo "<br>filtro";
-		$_POST = VerificaArregloSQLInjectionV2($arreglo_post);
-		$_GET = VerificaArregloSQLInjectionV2($arreglo_get);
-		$_REQUEST = VerificaArregloSQLInjectionV2($arreglo_request);
+		$post = VerificaArregloSQLInjectionV2($arreglo_post);
+		$get = VerificaArregloSQLInjectionV2($arreglo_get);
+		$request = VerificaArregloSQLInjectionV2($arreglo_request);
 	}
 	else {
-		//	echo "<br>Sin filtro";
+		$post = $arreglo_post;
+		$get = $arreglo_get;
+		$request = $arreglo_request;
 	}
-	insertLogAdmin_2022($_SESSION["admin_"], $_GET["sw"], $_POST, $_GET, $_REQUEST);
+	insertLogAdmin_2022($_SESSION["admin_"], $get["sw"], $post, $get, $request);
 	//print_r($_SESSION);
 	$_SESSION['LAST_ACTIVITY'] = time();
 	if (!$seccion) {
@@ -96,7 +94,7 @@
 		
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/home_landing/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_dimension = $_GET["id_dimension"];
+		$id_dimension = $get["id_dimension"];
 		//print_r($_SESSION);
 		//echo "<br><br>Rut ".$_SESSION["user_"]."<br>";
 		$Adm = DatosUsuarioAdmin($_SESSION["user_"]);
@@ -109,17 +107,17 @@
 		exit;
 	}
 	elseif ($seccion == "entrada") {
-		$id_empresa_desde_login = Decodear3($_POST["iem"]);
-		$rut = ($_POST["userid"]);
-		$rut = $_POST["userid"];
+		$id_empresa_desde_login = Decodear3($post["iem"]);
+		$rut = ($post["userid"]);
+		$rut = $post["userid"];
 		
 		$total_intentos = 1;
 		$rut = htmlentities(trim($rut));
 		
-		$clave = (($_POST["password"]));
+		$clave = (($post["password"]));
 		$clave = htmlentities(trim($clave));
-		$word = trim($_GET["word"]);
-		$tema = Decodear3(trim(($_POST["tema"])));
+		$word = trim($get["word"]);
+		$tema = Decodear3(trim(($post["tema"])));
 		$rutcontodo = str_replace(" ", "", $rut);
 		$rut = str_replace(".", "", $rut);
 		$rut = str_replace(" ", "", $rut);
@@ -141,7 +139,7 @@
 	}
 	elseif ($seccion == "entradaCap") {
 		//exit();
-		$valor = $_POST["captcha"];
+		$valor = $post["captcha"];
 		
 		//GOOGLE CAPTCHA
 		class ReCaptchaResponse
@@ -235,16 +233,16 @@
 			}
 		}
 		
-		//print_r($_POST);
+		//print_r($post);
 		
 		// Get a key from https://www.google.com/recaptcha/admin/create
-		if ($_POST["g-recaptcha-response"]) {
+		if ($post["g-recaptcha-response"]) {
 			//ini_set('display_errors', 1);ini_set('display_startup_errors', 1);error_reporting(E_ALL);
 			$secret = getenv('SECRET_CAPTCHA');
 			$response = null;
 			// comprueba la clave secreta
 			$reCaptcha = new ReCaptcha($secret);
-			$response = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
+			$response = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $post["g-recaptcha-response"]);
 			if ($response != null && $response->success) {
 				// Si el c&oacute;digo es correcto, seguimos procesando el formulario como siempre
 				//exit("si");
@@ -309,7 +307,7 @@
 	} // CREACION DE CURSOS PRESENCIALES
 	
 	elseif ($seccion == "FB_2024_ajax_cuenta_contable_cui") {
-		$id_programa = $_GET["selected_value"];
+		$id_programa = $get["selected_value"];
 		$Prg = TraeProgramasBBDDById($id_programa);
 		$cuenta = $Prg[0]->cuenta;
 		$cuenta_glosa = $Prg[0]->cuenta_glosa;
@@ -329,8 +327,8 @@
 		exit();
 	}
 	elseif ($seccion == "FB_2024_ajax_otec") {
-		//$id_programa = $_GET["selected_value"];
-		$OtecS = Trae_otec_Search_Data($_POST['query']);
+		//$id_programa = $get["selected_value"];
+		$OtecS = Trae_otec_Search_Data($post['query']);
 		//print_r($OtecS);
 		$options_search_otec = "";
 		foreach ($OtecS as $o) {
@@ -342,7 +340,7 @@
 	elseif ($seccion == "accioncurso1") {
 		//print_r($_SESSION);
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_curso = Decodear3($_GET["i"]);
+		$id_curso = Decodear3($get["i"]);
 		//echo "id curso $id_curso";
 		if ($id_curso) {
 			$PRINCIPAL = FormularioCurso1(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/formulario_edita1.html")), $id_curso, $_SESSION["id_empresa"]);
@@ -359,11 +357,11 @@
 	
 	elseif ($seccion == "listmallas1") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$exportar_a_excel = $_POST["ex"];
-		$pagina = $_GET["p"];
-		$excel = $_GET["excel"];
+		$exportar_a_excel = $post["ex"];
+		$pagina = $get["p"];
+		$excel = $get["excel"];
 		if ($exportar_a_excel == "1" or $excel == "1") {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$fechahoy = date("Y-m-d") . " " . date("H:i:s");
 			header("Content-Type: application/vnd.ms-excel");
 			header("Content-Disposition: attachment; filename=Cursos_" . $fechahoy . ".xls");
@@ -378,7 +376,7 @@
 			exit;
 		}
 		else {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			//echo "HOLA";
 			$PRINCIPAL = ListadoMallasAdmin1(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/entorno_listado_cursos1_mallas.html")), $id_empresa, "", "", "");
 			global $Texto_Pilar, $Texto_Programa;
@@ -391,11 +389,11 @@
 	}
 	elseif ($seccion == "listcursos1") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$exportar_a_excel = $_POST["ex"];
-		$pagina = $_GET["p"];
-		$excel = $_GET["excel"];
+		$exportar_a_excel = $post["ex"];
+		$pagina = $get["p"];
+		$excel = $get["excel"];
 		if ($exportar_a_excel == "1" or $excel == "1") {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$fechahoy = date("Y-m-d") . " " . date("H:i:s");
 			// Set the HTTP headers
 			header('Content-Description: File Transfer');
@@ -418,7 +416,7 @@
 			exit;
 		}
 		else {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$PRINCIPAL = ListadoCursosAdmin1(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/entorno_listado_cursos1.html")), $id_empresa, $excel, "", "");
 			global $Texto_Pilar, $Texto_Programa;
 			$PRINCIPAL = str_replace("{Texto_Pilar}", ($Texto_Pilar), $PRINCIPAL);
@@ -429,28 +427,28 @@
 		}
 	}
 	elseif ($seccion == "adcurso1") {
-		//print_r($_POST);
+		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
-		$codigo_curso = (trim($_POST["codigo_curso"]));
-		$nombre_curso = (trim($_POST["nombre_curso"]));
-		$nombre_curso_sence = (trim($_POST["nombre_curso_sence"]));
-		$descripcion_curso = (trim($_POST["descripcion_curso"]));
-		$objetivo_curso = (trim($_POST["objetivo_curso"]));
-		$modalidad = trim($_POST["modalidad"]);
-		$ejecutivo = trim($_POST["ejecutivo"]);
-		$sence = trim($_POST["sence"]);
-		$foco = trim($_POST["foco"]);
-		$foco2 = trim($_POST["foco2"]);
-		$foco3 = trim($_POST["foco3"]);
-		$tipo_actividad = trim($_POST["tipo_actividad"]);
-		$necesidad = trim($_POST["necesidad"]);
-		$proveedor = trim($_POST["proveedor"]);
-		$ejecutivo = trim($_POST["ejecutivo"]);
+		$codigo_curso = (trim($post["codigo_curso"]));
+		$nombre_curso = (trim($post["nombre_curso"]));
+		$nombre_curso_sence = (trim($post["nombre_curso_sence"]));
+		$descripcion_curso = (trim($post["descripcion_curso"]));
+		$objetivo_curso = (trim($post["objetivo_curso"]));
+		$modalidad = trim($post["modalidad"]);
+		$ejecutivo = trim($post["ejecutivo"]);
+		$sence = trim($post["sence"]);
+		$foco = trim($post["foco"]);
+		$foco2 = trim($post["foco2"]);
+		$foco3 = trim($post["foco3"]);
+		$tipo_actividad = trim($post["tipo_actividad"]);
+		$necesidad = trim($post["necesidad"]);
+		$proveedor = trim($post["proveedor"]);
+		$ejecutivo = trim($post["ejecutivo"]);
 		//presencial
-		$programa_bbdd = trim($_POST["programa_bbdd"]);
+		$programa_bbdd = trim($post["programa_bbdd"]);
 		//elearning
-		$programa_bbdd_global = trim($_POST["programa_bbdd_global"]);
-		$programa_bbdd_elearning = trim($_POST["programa_bbdd_elearning"]);
+		$programa_bbdd_global = trim($post["programa_bbdd_global"]);
+		$programa_bbdd_elearning = trim($post["programa_bbdd_elearning"]);
 		
 		if ($modalidad == 1) {
 			//$programa_bbdd_global=$programa_bbdd;
@@ -458,29 +456,29 @@
 			//InsertaRelacionMallaClasificacionCursoAdmin("presencial", $codigo_curso, "presencial", $id_empresa, $foco, $programa_bbdd);
 		}
 		
-		$cbc = trim($_POST["cbc"]);
-		$numero_horas = trim($_POST["numero_horas"]);
+		$cbc = trim($post["cbc"]);
+		$numero_horas = trim($post["numero_horas"]);
 		$numero_horas = str_replace('.', ',', $numero_horas);
 		$numero_horas = str_replace(';', ',', $numero_horas);
-		$cantidad_maxima_participantes = trim($_POST["cantidad_maxima_participantes"]);
-		$rut_otec = trim($_POST["rut_otec"]);
-		$clasificacion_curso = trim($_POST["clasificacion_curso"]);
-		$tipo_curso = (trim($_POST["tipo_curso"]));
-		$prerequisito_curso = (trim($_POST["prerequisito_curso"]));
-		$cod_sence = (trim($_POST["cod_sence"]));
-		$cod_identificador = (trim($_POST["cod_identificador"]));
-		$valor_hora = (trim($_POST["valor_hora"]));
-		$valor_hora_sence = (trim($_POST["valor_hora_sence"]));
-		$contenidos_cursos = (trim($_POST["contenidos_cursos"]));
+		$cantidad_maxima_participantes = trim($post["cantidad_maxima_participantes"]);
+		$rut_otec = trim($post["rut_otec"]);
+		$clasificacion_curso = trim($post["clasificacion_curso"]);
+		$tipo_curso = (trim($post["tipo_curso"]));
+		$prerequisito_curso = (trim($post["prerequisito_curso"]));
+		$cod_sence = (trim($post["cod_sence"]));
+		$cod_identificador = (trim($post["cod_identificador"]));
+		$valor_hora = (trim($post["valor_hora"]));
+		$valor_hora_sence = (trim($post["valor_hora_sence"]));
+		$contenidos_cursos = (trim($post["contenidos_cursos"]));
 		if ($cod_sence) {
 			$numero_identificador = $cod_sence;
 		}
 		elseif ($cod_identificador) {
 			$numero_identificador = $cod_identificador;
 		}
-		$codigo_sence = $_POST["cod_sence"];
+		$codigo_sence = $post["cod_sence"];
 		
-		if ($_POST["tipo_imagen"] == "0") {
+		if ($post["tipo_imagen"] == "0") {
 			$tamano = $_FILES["archivo"]['size'];
 			$tipo = $_FILES["archivo"]['type'];
 			$archivo = $_FILES["archivo"]['name'];
@@ -495,7 +493,7 @@
 			}
 		}
 		else {
-			$datos_subida[1] = "Img_cursos_default_" . $_POST["tipo_imagen"] . ".jpg";
+			$datos_subida[1] = "Img_cursos_default_" . $post["tipo_imagen"] . ".jpg";
 		}
 		
 		InsertaCurso($nombre_curso, $descripcion_curso, $modalidad, $tipo_curso, $prerequisito_curso, $datos_subida[1], $objetivo_curso, $sence, $numero_horas, $cantidad_maxima_participantes, $rut_otec, $clasificacion_curso, $cbc, $numero_identificador, $valor_hora, $valor_hora_sence, $codigo_curso, $id_empresa, $contenidos_cursos, $nombre_curso_sence, $foco, $programa_bbdd, $codigo_sence, $programa_bbdd_global, $programa_bbdd_elearning, $foco2, $foco3, $tipo_actividad, $necesidad, $proveedor, $ejecutivo);
@@ -504,41 +502,41 @@
 		exit;
 	}
 	elseif ($seccion == "edcurso1") {
-		//print_r($_POST);
+		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
 		
-		$id_curso = Decodear(Decodear($_POST["id"]));
-		$nombre_curso = (trim($_POST["nombre_curso"]));
-		$descripcion_curso = ($_POST["descripcion_curso"]);
-		$modalidad = ($_POST["modalidad"]);
-		$tipo_curso = ($_POST["tipo_curso"]);
-		$prerequisito_curso = ($_POST["prerequisito_curso"]);
-		$nombre_curso_sence = (trim($_POST["nombre_curso_sence"]));
-		$foco = trim($_POST["foco"]);
-		$foco2 = trim($_POST["foco2"]);
-		$foco3 = trim($_POST["foco3"]);
-		$tipo_actividad = trim($_POST["tipo_actividad"]);
-		$necesidad = trim($_POST["necesidad"]);
-		$proveedor = trim($_POST["proveedor"]);
-		$programa_bbdd_global = trim($_POST["programa_bbdd_global"]);
-		$programa_bbdd = trim($_POST["programa_bbdd"]);
-		$contenidos_cursos = (trim($_POST["contenidos_cursos"]));
-		$objetivo_curso = (trim($_POST["objetivo_curso"]));
-		$sence = trim($_POST["sence"]);
-		$codigo_sence = (trim($_POST["codigo_sence"]));
-		$ejecutivo = trim($_POST["ejecutivo"]);
-		$sence = trim($_POST["sence"]);
-		$cbc = trim($_POST["cbc"]);
-		$numero_horas = trim($_POST["numero_horas"]);
-		$cantidad_maxima_participantes = trim($_POST["cantidad_maxima_participantes"]);
-		$rut_otec = trim($_POST["rut_otec"]);
-		$clasificacion_curso = trim($_POST["clasificacion_curso"]);
-		$valor_hora = trim($_POST["valor_hora"]);
-		$valor_hora_sence = $_POST["valor_hora_sence"];
-		$nuevo_id_curso = $_POST["codigo_curso"];
-		$prerequisito_curso = ($_POST["prerequisito_curso"]);
+		$id_curso = Decodear(Decodear($post["id"]));
+		$nombre_curso = (trim($post["nombre_curso"]));
+		$descripcion_curso = ($post["descripcion_curso"]);
+		$modalidad = ($post["modalidad"]);
+		$tipo_curso = ($post["tipo_curso"]);
+		$prerequisito_curso = ($post["prerequisito_curso"]);
+		$nombre_curso_sence = (trim($post["nombre_curso_sence"]));
+		$foco = trim($post["foco"]);
+		$foco2 = trim($post["foco2"]);
+		$foco3 = trim($post["foco3"]);
+		$tipo_actividad = trim($post["tipo_actividad"]);
+		$necesidad = trim($post["necesidad"]);
+		$proveedor = trim($post["proveedor"]);
+		$programa_bbdd_global = trim($post["programa_bbdd_global"]);
+		$programa_bbdd = trim($post["programa_bbdd"]);
+		$contenidos_cursos = (trim($post["contenidos_cursos"]));
+		$objetivo_curso = (trim($post["objetivo_curso"]));
+		$sence = trim($post["sence"]);
+		$codigo_sence = (trim($post["codigo_sence"]));
+		$ejecutivo = trim($post["ejecutivo"]);
+		$sence = trim($post["sence"]);
+		$cbc = trim($post["cbc"]);
+		$numero_horas = trim($post["numero_horas"]);
+		$cantidad_maxima_participantes = trim($post["cantidad_maxima_participantes"]);
+		$rut_otec = trim($post["rut_otec"]);
+		$clasificacion_curso = trim($post["clasificacion_curso"]);
+		$valor_hora = trim($post["valor_hora"]);
+		$valor_hora_sence = $post["valor_hora_sence"];
+		$nuevo_id_curso = $post["codigo_curso"];
+		$prerequisito_curso = ($post["prerequisito_curso"]);
 		//Actualizo PRograma
-		if ($_POST["tipo_imagen"] == "0") {
+		if ($post["tipo_imagen"] == "0") {
 			$tamano = $_FILES["archivo"]['size'];
 			$tipo = $_FILES["archivo"]['type'];
 			$archivo = $_FILES["archivo"]['name'];
@@ -558,10 +556,10 @@
 				$nombre_imagen = $datos_subida[1];
 			}
 		}
-		elseif ($_POST["tipo_imagen"] != "imagenoriginal") {
-			$nombre_imagen = "Img_cursos_default_" . $_POST["tipo_imagen"] . ".jpg";
+		elseif ($post["tipo_imagen"] != "imagenoriginal") {
+			$nombre_imagen = "Img_cursos_default_" . $post["tipo_imagen"] . ".jpg";
 		}
-		$bajada = $_POST["division_mandante"];
+		$bajada = $post["division_mandante"];
 		ActualizaCurso($nuevo_id_curso, $nombre_curso, $descripcion_curso, $modalidad, $tipo_curso, $prerequisito_curso, $objetivo_curso, $sence, $numero_horas, $cantidad_maxima_participantes, $rut_otec, $submodalidad, $cbc, $valor_hora, $valor_hora_sence, $contenidos_cursos, $nombre_curso_sence, $foco, $programa_bbdd, $codigo_sence, $nombre_imagen, $nuevo_id_curso, $programa_bbdd_global, $foco2, $foco3, $tipo_actividad, $necesidad, $proveedor, $ejecutivo, $bajada);
 		// UpdateInscripcionCursoElearning($id_curso, $ejecutivo, $id_empresa);
 		// UpdateRelLmsMallaCursoElearning($id_curso, $programa_bbdd, $foco, $id_empresa);
@@ -570,55 +568,55 @@
 		exit;
 	}
 	elseif ($seccion == "edcurso2") {
-		//print_r($_POST);
+		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
 		
-		$id_curso = (Decodear3($_POST["id"]));
-		$nombre_curso = (trim($_POST["nombre_curso"]));
-		$descripcion_curso = ($_POST["descripcion_curso"]);
-		$modalidad_arreglo = ($_POST["modalidad"]);
+		$id_curso = (Decodear3($post["id"]));
+		$nombre_curso = (trim($post["nombre_curso"]));
+		$descripcion_curso = ($post["descripcion_curso"]);
+		$modalidad_arreglo = ($post["modalidad"]);
 		
 		$Mod = explode(";", $modalidad_arreglo);
 		$modalidad = $Mod[0];
 		$submodalidad = $Mod[1];
 		
-		$tipo_curso = ($_POST["tipo_curso"]);
-		$prerequisito_curso = ($_POST["prerequisito_curso"]);
+		$tipo_curso = ($post["tipo_curso"]);
+		$prerequisito_curso = ($post["prerequisito_curso"]);
 		
-		$nombre_curso_sence = (trim($_POST["nombre_curso_sence"]));
+		$nombre_curso_sence = (trim($post["nombre_curso_sence"]));
 		
-		$foco = trim($_POST["foco"]);
-		$foco2 = trim($_POST["foco2"]);
+		$foco = trim($post["foco"]);
+		$foco2 = trim($post["foco2"]);
 		
-		$foco3 = trim($_POST["foco3"]);
-		$tipo_actividad = trim($_POST["tipo_actividad"]);
-		$necesidad = trim($_POST["necesidad"]);
-		$proveedor = trim($_POST["proveedor"]);
+		$foco3 = trim($post["foco3"]);
+		$tipo_actividad = trim($post["tipo_actividad"]);
+		$necesidad = trim($post["necesidad"]);
+		$proveedor = trim($post["proveedor"]);
 		
 		
-		$programa_bbdd_global = trim($_POST["programa_bbdd_global"]);
-		$programa_bbdd = trim($_POST["programa_bbdd"]);
-		$contenidos_cursos = (trim($_POST["contenidos_cursos"]));
+		$programa_bbdd_global = trim($post["programa_bbdd_global"]);
+		$programa_bbdd = trim($post["programa_bbdd"]);
+		$contenidos_cursos = (trim($post["contenidos_cursos"]));
 		
-		$objetivo_curso = (trim($_POST["objetivo_curso"]));
-		$sence = trim($_POST["sence"]);
+		$objetivo_curso = (trim($post["objetivo_curso"]));
+		$sence = trim($post["sence"]);
 		
-		$codigo_sence = (trim($_POST["codigo_sence"]));
-		$ejecutivo = trim($_POST["ejecutivo"]);
-		$sence = trim($_POST["sence"]);
+		$codigo_sence = (trim($post["codigo_sence"]));
+		$ejecutivo = trim($post["ejecutivo"]);
+		$sence = trim($post["sence"]);
 		
-		$cbc = trim($_POST["cbc"]);
-		$numero_horas = trim($_POST["numero_horas"]);
-		$cantidad_maxima_participantes = trim($_POST["cantidad_maxima_participantes"]);
-		$rut_otec = trim($_POST["rut_otec"]);
-		$clasificacion_curso = trim($_POST["clasificacion_curso"]);
-		$valor_hora = trim($_POST["valor_hora"]);
-		$valor_hora_sence = $_POST["valor_hora_sence"];
+		$cbc = trim($post["cbc"]);
+		$numero_horas = trim($post["numero_horas"]);
+		$cantidad_maxima_participantes = trim($post["cantidad_maxima_participantes"]);
+		$rut_otec = trim($post["rut_otec"]);
+		$clasificacion_curso = trim($post["clasificacion_curso"]);
+		$valor_hora = trim($post["valor_hora"]);
+		$valor_hora_sence = $post["valor_hora_sence"];
 		
-		$nuevo_id_curso = $_POST["codigo_curso"];
-		$prerequisito_curso = ($_POST["prerequisito_curso"]);
+		$nuevo_id_curso = $post["codigo_curso"];
+		$prerequisito_curso = ($post["prerequisito_curso"]);
 		//Actualizo PRograma
-		if ($_POST["tipo_imagen"] == "0") {
+		if ($post["tipo_imagen"] == "0") {
 			$tamano = $_FILES["archivo"]['size'];
 			$tipo = $_FILES["archivo"]['type'];
 			$archivo = $_FILES["archivo"]['name'];
@@ -637,10 +635,10 @@
 				$nombre_imagen = $datos_subida[1];
 			}
 		}
-		elseif ($_POST["tipo_imagen"] != "imagenoriginal") {
-			$nombre_imagen = "Img_cursos_default_" . $_POST["tipo_imagen"] . ".jpg";
+		elseif ($post["tipo_imagen"] != "imagenoriginal") {
+			$nombre_imagen = "Img_cursos_default_" . $post["tipo_imagen"] . ".jpg";
 		}
-		$bajada = $_POST["division_mandante"];
+		$bajada = $post["division_mandante"];
 		
 		ActualizaCurso($id_curso, $nombre_curso, $descripcion_curso, $modalidad, $tipo_curso, $prerequisito_curso, $objetivo_curso, $sence, $numero_horas, $cantidad_maxima_participantes, $rut_otec, $submodalidad, $cbc, $valor_hora, $valor_hora_sence, $contenidos_cursos, $nombre_curso_sence, $foco, $programa_bbdd, $codigo_sence, $nombre_imagen, $nuevo_id_curso, $programa_bbdd_global, $foco2, $foco3, $tipo_actividad, $necesidad, $proveedor, $ejecutivo, $bajada);
 		
@@ -657,9 +655,9 @@
 		exit;
 	}
 	elseif ($seccion == "listaInscripciones1") {
-		$i = $_GET["i"];
+		$i = $get["i"];
 		$id_curso = Decodear3($i);
-		$excel = $_GET["excel"];
+		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola i $i ".Decodear3($i);
 		//exit();
@@ -686,9 +684,9 @@
 		exit;
 	}
 	elseif ($seccion == "listaInscripcionesMallas1") {
-		$i = $_GET["i"];
+		$i = $get["i"];
 		$id_malla = Decodear3($i);
-		$excel = $_GET["excel"];
+		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola i $i $id_malla";
 		//exit();
@@ -719,7 +717,7 @@
 	elseif ($seccion == "accioncurso2") {
 		//print_r($_SESSION);
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_curso = Decodear3($_GET["i"]);
+		$id_curso = Decodear3($get["i"]);
 		//echo "id curso $id_curso";
 		if ($id_curso) {
 			$PRINCIPAL = FormularioCurso2(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/formulario_edita.html")), $id_curso, $_SESSION["id_empresa"]);
@@ -763,12 +761,12 @@
 	
 	elseif ($seccion == "reporte_full_sincronico") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$exportar_a_excel = $_POST["ex"];
-		$pagina = $_GET["p"];
-		$excel = $_GET["excel"];
+		$exportar_a_excel = $post["ex"];
+		$pagina = $get["p"];
+		$excel = $get["excel"];
 		if ($exportar_a_excel == "1" or $excel == "1") {
-			$fecha_inicio = $_POST["fecha_inicio"];
-			$fecha_termino = $_POST["fecha_termino"];
+			$fecha_inicio = $post["fecha_inicio"];
+			$fecha_termino = $post["fecha_termino"];
 			$fechahoy = date("Y-m-d");
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/csv');
@@ -786,8 +784,8 @@
 			exit;
 		}
 		elseif ($exportar_a_excel == "2" or $excel == "2") {
-			$fecha_inicio = $_POST["fecha_inicio"];
-			$fecha_termino = $_POST["fecha_termino"];
+			$fecha_inicio = $post["fecha_inicio"];
+			$fecha_termino = $post["fecha_termino"];
 			$fechahoy = date("Y-m-d");
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/csv');
@@ -1048,7 +1046,7 @@
 			exit();
 		}
 		else {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$PRINCIPAL = ReporteFullSincronico_2023(FuncionesTransversalesAdmin(file_get_contents("views/curso/entorno_reportes_full_sincronico.html")), "", $id_empresa);
 			global $Texto_Pilar, $Texto_Programa;
 			$PRINCIPAL = str_replace("{Texto_Pilar}", ($Texto_Pilar), $PRINCIPAL);
@@ -1061,11 +1059,11 @@
 	
 	elseif ($seccion == "listcursos2") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$exportar_a_excel = $_POST["ex"];
-		$pagina = $_GET["p"];
-		$excel = $_GET["excel"];
+		$exportar_a_excel = $post["ex"];
+		$pagina = $get["p"];
+		$excel = $get["excel"];
 		if ($exportar_a_excel == "1" or $excel == "1") {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$fechahoy = date("Y-m-d") . " " . date("H:i:s");
 			header("Content-Type: application/vnd.ms-excel");
 			header("Content-Disposition: attachment; filename=Cursos_" . $fechahoy . ".xls");
@@ -1079,7 +1077,7 @@
 			exit;
 		}
 		else {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$PRINCIPAL = ListadoCursosAdmin2(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/entorno_listado_cursos2.html")), $id_empresa, "", "", "");
 			global $Texto_Pilar, $Texto_Programa;
 			$PRINCIPAL = str_replace("{Texto_Pilar}", ($Texto_Pilar), $PRINCIPAL);
@@ -1089,28 +1087,28 @@
 		}
 	}
 	elseif ($seccion == "adcurso2") {
-		//print_r($_POST);
+		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
-		$codigo_curso = (trim($_POST["codigo_curso"]));
-		$nombre_curso = (trim($_POST["nombre_curso"]));
-		$nombre_curso_sence = (trim($_POST["nombre_curso_sence"]));
-		$descripcion_curso = (trim($_POST["descripcion_curso"]));
-		$objetivo_curso = (trim($_POST["objetivo_curso"]));
-		$modalidad_arreglo = trim($_POST["modalidad"]);
-		$ejecutivo = trim($_POST["ejecutivo"]);
-		$sence = trim($_POST["sence"]);
-		$foco = trim($_POST["foco"]);
-		$foco2 = trim($_POST["foco2"]);
-		$foco3 = trim($_POST["foco3"]);
-		$tipo_actividad = trim($_POST["tipo_actividad"]);
-		$necesidad = trim($_POST["necesidad"]);
-		$proveedor = trim($_POST["proveedor"]);
-		$ejecutivo = trim($_POST["ejecutivo"]);
+		$codigo_curso = (trim($post["codigo_curso"]));
+		$nombre_curso = (trim($post["nombre_curso"]));
+		$nombre_curso_sence = (trim($post["nombre_curso_sence"]));
+		$descripcion_curso = (trim($post["descripcion_curso"]));
+		$objetivo_curso = (trim($post["objetivo_curso"]));
+		$modalidad_arreglo = trim($post["modalidad"]);
+		$ejecutivo = trim($post["ejecutivo"]);
+		$sence = trim($post["sence"]);
+		$foco = trim($post["foco"]);
+		$foco2 = trim($post["foco2"]);
+		$foco3 = trim($post["foco3"]);
+		$tipo_actividad = trim($post["tipo_actividad"]);
+		$necesidad = trim($post["necesidad"]);
+		$proveedor = trim($post["proveedor"]);
+		$ejecutivo = trim($post["ejecutivo"]);
 		//presencial
-		$programa_bbdd = trim($_POST["programa_bbdd"]);
+		$programa_bbdd = trim($post["programa_bbdd"]);
 		//elearning
-		$programa_bbdd_global = trim($_POST["programa_bbdd_global"]);
-		$programa_bbdd_elearning = trim($_POST["programa_bbdd_elearning"]);
+		$programa_bbdd_global = trim($post["programa_bbdd_global"]);
+		$programa_bbdd_elearning = trim($post["programa_bbdd_elearning"]);
 		
 		
 		$Mod = explode(";", $modalidad_arreglo);
@@ -1124,29 +1122,29 @@
 			InsertaRelacionMallaClasificacionCursoAdmin("presencial", $codigo_curso, "presencial", $id_empresa, $foco, $programa_bbdd);
 		}
 		
-		$cbc = trim($_POST["cbc"]);
-		$numero_horas = trim($_POST["numero_horas"]);
+		$cbc = trim($post["cbc"]);
+		$numero_horas = trim($post["numero_horas"]);
 		$numero_horas = str_replace('.', ',', $numero_horas);
 		$numero_horas = str_replace(';', ',', $numero_horas);
-		$cantidad_maxima_participantes = trim($_POST["cantidad_maxima_participantes"]);
-		$rut_otec = trim($_POST["rut_otec"]);
-		$clasificacion_curso = trim($_POST["clasificacion_curso"]);
-		$tipo_curso = (trim($_POST["tipo_curso"]));
-		$prerequisito_curso = (trim($_POST["prerequisito_curso"]));
-		$cod_sence = (trim($_POST["cod_sence"]));
-		$cod_identificador = (trim($_POST["cod_identificador"]));
-		$valor_hora = (trim($_POST["valor_hora"]));
-		$valor_hora_sence = (trim($_POST["valor_hora_sence"]));
-		$contenidos_cursos = (trim($_POST["contenidos_cursos"]));
+		$cantidad_maxima_participantes = trim($post["cantidad_maxima_participantes"]);
+		$rut_otec = trim($post["rut_otec"]);
+		$clasificacion_curso = trim($post["clasificacion_curso"]);
+		$tipo_curso = (trim($post["tipo_curso"]));
+		$prerequisito_curso = (trim($post["prerequisito_curso"]));
+		$cod_sence = (trim($post["cod_sence"]));
+		$cod_identificador = (trim($post["cod_identificador"]));
+		$valor_hora = (trim($post["valor_hora"]));
+		$valor_hora_sence = (trim($post["valor_hora_sence"]));
+		$contenidos_cursos = (trim($post["contenidos_cursos"]));
 		if ($cod_sence) {
 			$numero_identificador = $cod_sence;
 		}
 		elseif ($cod_identificador) {
 			$numero_identificador = $cod_identificador;
 		}
-		$codigo_sence = $_POST["cod_sence"];
+		$codigo_sence = $post["cod_sence"];
 		
-		if ($_POST["tipo_imagen"] == "0") {
+		if ($post["tipo_imagen"] == "0") {
 			$tamano = $_FILES["archivo"]['size'];
 			$tipo = $_FILES["archivo"]['type'];
 			$archivo = $_FILES["archivo"]['name'];
@@ -1161,12 +1159,12 @@
 			}
 		}
 		else {
-			$datos_subida[1] = "Img_cursos_default_" . $_POST["tipo_imagen"] . ".jpg";
+			$datos_subida[1] = "Img_cursos_default_" . $post["tipo_imagen"] . ".jpg";
 		}
 		
 		$clasificacion_curso = $submodalidad;
-		$ejecutivo = trim($_POST["ejecutivo"]);
-		$bajada = $_POST["division_mandante"];
+		$ejecutivo = trim($post["ejecutivo"]);
+		$bajada = $post["division_mandante"];
 		
 		InsertaCurso($nombre_curso, $descripcion_curso, $modalidad, $tipo_curso, $prerequisito_curso, $datos_subida[1], $objetivo_curso, $sence, $numero_horas, $cantidad_maxima_participantes, $rut_otec, $clasificacion_curso, $cbc, $numero_identificador, $valor_hora, $valor_hora_sence, $codigo_curso, $id_empresa, $contenidos_cursos, $nombre_curso_sence, $foco, $programa_bbdd, $codigo_sence, $programa_bbdd_global, $programa_bbdd_elearning, $foco2, $foco3, $tipo_actividad, $necesidad, $proveedor, $ejecutivo, $bajada);
 		
@@ -1174,20 +1172,20 @@
 		exit;
 	}
 	elseif ($seccion == "listaInscripciones2") {
-		$i = $_GET["i"];
+		$i = $get["i"];
 		$id_curso = Decodear3($i);
-		$excel = $_GET["excel"];
+		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola i $i ".Decodear3($i);
 		//exit();
 		
-		if ($_GET["cOTA"] <> "") {
-			$c_ota = Decodear3($_GET["cOTA"]);
+		if ($get["cOTA"] <> "") {
+			$c_ota = Decodear3($get["cOTA"]);
 			UpdateCierreOta_2024($c_ota);
 			echo "<script>alert('OTA cerrada exitosamente')</script>";
 		}
-		if ($_GET["aOTA"] <> "") {
-			$a_ota = Decodear3($_GET["aOTA"]);
+		if ($get["aOTA"] <> "") {
+			$a_ota = Decodear3($get["aOTA"]);
 			UpdateAbreOta_2024($a_ota);
 			echo "<script>alert('OTA abierta exitosamente')</script>";
 		}
@@ -1218,7 +1216,7 @@
 	elseif ($seccion == "accioncurso3") {
 		//print_r($_SESSION);
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_curso = Decodear3($_GET["i"]);
+		$id_curso = Decodear3($get["i"]);
 		//echo "id curso $id_curso";
 		if ($id_curso) {
 			$PRINCIPAL = FormularioCurso3(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/formulario_edita3.html")), $id_curso, $_SESSION["id_empresa"]);
@@ -1234,11 +1232,11 @@
 	}
 	elseif ($seccion == "listcursos3") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$exportar_a_excel = $_POST["ex"];
-		$pagina = $_GET["p"];
-		$excel = $_GET["excel"];
+		$exportar_a_excel = $post["ex"];
+		$pagina = $get["p"];
+		$excel = $get["excel"];
 		if ($exportar_a_excel == "1" or $excel == "1") {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$fechahoy = date("Y-m-d") . " " . date("H:i:s");
 			header("Content-Type: application/vnd.ms-excel");
 			header("Content-Disposition: attachment; filename=Cursos_" . $fechahoy . ".xls");
@@ -1252,7 +1250,7 @@
 			exit;
 		}
 		else {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$PRINCIPAL = ListadoCursosAdmin3(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/entorno_listado_cursos3.html")), $id_empresa);
 			global $Texto_Pilar, $Texto_Programa;
 			$PRINCIPAL = str_replace("{Texto_Pilar}", ($Texto_Pilar), $PRINCIPAL);
@@ -1262,25 +1260,25 @@
 		}
 	}
 	elseif ($seccion == "adcurso3") {
-		//print_r($_POST);
+		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
-		$codigo_curso = (trim($_POST["codigo_curso"]));
-		$nombre_curso = (trim($_POST["nombre_curso"]));
-		$nombre_curso_sence = (trim($_POST["nombre_curso_sence"]));
-		$descripcion_curso = (trim($_POST["descripcion_curso"]));
-		$objetivo_curso = (trim($_POST["objetivo_curso"]));
-		$modalidad = trim($_POST["modalidad"]);
-		$ejecutivo = trim($_POST["ejecutivo"]);
-		$sence = trim($_POST["sence"]);
-		$foco = trim($_POST["foco"]);
-		$foco2 = trim($_POST["foco2"]);
-		$foco3 = trim($_POST["foco3"]);
-		$tipo_actividad = trim($_POST["tipo_actividad"]);
-		$necesidad = trim($_POST["necesidad"]);
-		$proveedor = trim($_POST["proveedor"]);
-		$ejecutivo = trim($_POST["ejecutivo"]);
-		$programa_bbdd = trim($_POST["programa_bbdd"]);
-		$programa_bbdd_global = trim($_POST["programa_bbdd_global"]);
+		$codigo_curso = (trim($post["codigo_curso"]));
+		$nombre_curso = (trim($post["nombre_curso"]));
+		$nombre_curso_sence = (trim($post["nombre_curso_sence"]));
+		$descripcion_curso = (trim($post["descripcion_curso"]));
+		$objetivo_curso = (trim($post["objetivo_curso"]));
+		$modalidad = trim($post["modalidad"]);
+		$ejecutivo = trim($post["ejecutivo"]);
+		$sence = trim($post["sence"]);
+		$foco = trim($post["foco"]);
+		$foco2 = trim($post["foco2"]);
+		$foco3 = trim($post["foco3"]);
+		$tipo_actividad = trim($post["tipo_actividad"]);
+		$necesidad = trim($post["necesidad"]);
+		$proveedor = trim($post["proveedor"]);
+		$ejecutivo = trim($post["ejecutivo"]);
+		$programa_bbdd = trim($post["programa_bbdd"]);
+		$programa_bbdd_global = trim($post["programa_bbdd_global"]);
 		
 		
 		if ($modalidad == 3) {
@@ -1289,30 +1287,30 @@
 			InsertaRelacionMallaClasificacionCursoAdmin("autoinscripcion", $codigo_curso, "autoinscripcion", $id_empresa, $foco, $programa_bbdd);
 		}
 		
-		$cbc = trim($_POST["cbc"]);
-		$numero_horas = trim($_POST["numero_horas"]);
+		$cbc = trim($post["cbc"]);
+		$numero_horas = trim($post["numero_horas"]);
 		$numero_horas = str_replace('.', ',', $numero_horas);
 		$numero_horas = str_replace(';', ',', $numero_horas);
 		
-		$cantidad_maxima_participantes = trim($_POST["cantidad_maxima_participantes"]);
-		$rut_otec = trim($_POST["rut_otec"]);
-		$clasificacion_curso = trim($_POST["clasificacion_curso"]);
-		$tipo_curso = (trim($_POST["tipo_curso"]));
-		$prerequisito_curso = (trim($_POST["prerequisito_curso"]));
-		$cod_sence = (trim($_POST["cod_sence"]));
-		$cod_identificador = (trim($_POST["cod_identificador"]));
-		$valor_hora = (trim($_POST["valor_hora"]));
-		$valor_hora_sence = (trim($_POST["valor_hora_sence"]));
-		$contenidos_cursos = (trim($_POST["contenidos_cursos"]));
+		$cantidad_maxima_participantes = trim($post["cantidad_maxima_participantes"]);
+		$rut_otec = trim($post["rut_otec"]);
+		$clasificacion_curso = trim($post["clasificacion_curso"]);
+		$tipo_curso = (trim($post["tipo_curso"]));
+		$prerequisito_curso = (trim($post["prerequisito_curso"]));
+		$cod_sence = (trim($post["cod_sence"]));
+		$cod_identificador = (trim($post["cod_identificador"]));
+		$valor_hora = (trim($post["valor_hora"]));
+		$valor_hora_sence = (trim($post["valor_hora_sence"]));
+		$contenidos_cursos = (trim($post["contenidos_cursos"]));
 		if ($cod_sence) {
 			$numero_identificador = $cod_sence;
 		}
 		elseif ($cod_identificador) {
 			$numero_identificador = $cod_identificador;
 		}
-		$codigo_sence = $_POST["cod_sence"];
+		$codigo_sence = $post["cod_sence"];
 		
-		if ($_POST["tipo_imagen"] == "0") {
+		if ($post["tipo_imagen"] == "0") {
 			$tamano = $_FILES["archivo"]['size'];
 			$tipo = $_FILES["archivo"]['type'];
 			$archivo = $_FILES["archivo"]['name'];
@@ -1328,7 +1326,7 @@
 			}
 		}
 		else {
-			$datos_subida[1] = "Img_cursos_default_" . $_POST["tipo_imagen"] . ".jpg";
+			$datos_subida[1] = "Img_cursos_default_" . $post["tipo_imagen"] . ".jpg";
 		}
 		
 		InsertaCurso($nombre_curso, $descripcion_curso, $modalidad, $tipo_curso, $prerequisito_curso, $datos_subida[1], $objetivo_curso, $sence, $numero_horas, $cantidad_maxima_participantes, $rut_otec, $clasificacion_curso, $cbc, $numero_identificador, $valor_hora, $valor_hora_sence, $codigo_curso, $id_empresa, $contenidos_cursos, $nombre_curso_sence, $foco, $programa_bbdd, $codigo_sence, $programa_bbdd_global, $programa_bbdd_elearning, $foco2, $foco3, $tipo_actividad, $necesidad, $proveedor, $ejecutivo);
@@ -1337,50 +1335,50 @@
 		exit;
 	}
 	elseif ($seccion == "edcurso3") {
-		//print_r($_POST);
+		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
 		
-		$id_curso = Decodear(Decodear($_POST["id"]));
-		$nombre_curso = (trim($_POST["nombre_curso"]));
-		$descripcion_curso = ($_POST["descripcion_curso"]);
-		$modalidad = ($_POST["modalidad"]);
-		$tipo_curso = ($_POST["tipo_curso"]);
-		$prerequisito_curso = ($_POST["prerequisito_curso"]);
+		$id_curso = Decodear(Decodear($post["id"]));
+		$nombre_curso = (trim($post["nombre_curso"]));
+		$descripcion_curso = ($post["descripcion_curso"]);
+		$modalidad = ($post["modalidad"]);
+		$tipo_curso = ($post["tipo_curso"]);
+		$prerequisito_curso = ($post["prerequisito_curso"]);
 		
-		$nombre_curso_sence = (trim($_POST["nombre_curso_sence"]));
+		$nombre_curso_sence = (trim($post["nombre_curso_sence"]));
 		
-		$foco = trim($_POST["foco"]);
-		$foco2 = trim($_POST["foco2"]);
+		$foco = trim($post["foco"]);
+		$foco2 = trim($post["foco2"]);
 		
-		$foco3 = trim($_POST["foco3"]);
-		$tipo_actividad = trim($_POST["tipo_actividad"]);
-		$necesidad = trim($_POST["necesidad"]);
-		$proveedor = trim($_POST["proveedor"]);
+		$foco3 = trim($post["foco3"]);
+		$tipo_actividad = trim($post["tipo_actividad"]);
+		$necesidad = trim($post["necesidad"]);
+		$proveedor = trim($post["proveedor"]);
 		
 		
-		$programa_bbdd_global = trim($_POST["programa_bbdd_global"]);
-		$programa_bbdd = trim($_POST["programa_bbdd"]);
-		$contenidos_cursos = (trim($_POST["contenidos_cursos"]));
+		$programa_bbdd_global = trim($post["programa_bbdd_global"]);
+		$programa_bbdd = trim($post["programa_bbdd"]);
+		$contenidos_cursos = (trim($post["contenidos_cursos"]));
 		
-		$objetivo_curso = (trim($_POST["objetivo_curso"]));
-		$sence = trim($_POST["sence"]);
+		$objetivo_curso = (trim($post["objetivo_curso"]));
+		$sence = trim($post["sence"]);
 		
-		$codigo_sence = (trim($_POST["codigo_sence"]));
-		$ejecutivo = trim($_POST["ejecutivo"]);
-		$sence = trim($_POST["sence"]);
+		$codigo_sence = (trim($post["codigo_sence"]));
+		$ejecutivo = trim($post["ejecutivo"]);
+		$sence = trim($post["sence"]);
 		
-		$cbc = trim($_POST["cbc"]);
-		$numero_horas = trim($_POST["numero_horas"]);
-		$cantidad_maxima_participantes = trim($_POST["cantidad_maxima_participantes"]);
-		$rut_otec = trim($_POST["rut_otec"]);
-		$clasificacion_curso = trim($_POST["clasificacion_curso"]);
-		$valor_hora = trim($_POST["valor_hora"]);
-		$valor_hora_sence = $_POST["valor_hora_sence"];
+		$cbc = trim($post["cbc"]);
+		$numero_horas = trim($post["numero_horas"]);
+		$cantidad_maxima_participantes = trim($post["cantidad_maxima_participantes"]);
+		$rut_otec = trim($post["rut_otec"]);
+		$clasificacion_curso = trim($post["clasificacion_curso"]);
+		$valor_hora = trim($post["valor_hora"]);
+		$valor_hora_sence = $post["valor_hora_sence"];
 		
-		$nuevo_id_curso = $_POST["codigo_curso"];
-		$prerequisito_curso = ($_POST["prerequisito_curso"]);
+		$nuevo_id_curso = $post["codigo_curso"];
+		$prerequisito_curso = ($post["prerequisito_curso"]);
 		//Actualizo PRograma
-		if ($_POST["tipo_imagen"] == "0") {
+		if ($post["tipo_imagen"] == "0") {
 			$tamano = $_FILES["archivo"]['size'];
 			$tipo = $_FILES["archivo"]['type'];
 			$archivo = $_FILES["archivo"]['name'];
@@ -1400,8 +1398,8 @@
 				$nombre_imagen = $datos_subida[1];
 			}
 		}
-		elseif ($_POST["tipo_imagen"] != "imagenoriginal") {
-			$nombre_imagen = "Img_cursos_default_" . $_POST["tipo_imagen"] . ".jpg";
+		elseif ($post["tipo_imagen"] != "imagenoriginal") {
+			$nombre_imagen = "Img_cursos_default_" . $post["tipo_imagen"] . ".jpg";
 		}
 		
 		ActualizaCurso($id_curso, $nombre_curso, $descripcion_curso, $modalidad, $tipo_curso, $prerequisito_curso, $objetivo_curso, $sence, $numero_horas, $cantidad_maxima_participantes, $rut_otec, $clasificacion_curso, $cbc, $valor_hora, $valor_hora_sence, $contenidos_cursos, $nombre_curso_sence, $foco, $programa_bbdd, $codigo_sence, $nombre_imagen, $nuevo_id_curso, $programa_bbdd_global, $foco2, $foco3, $tipo_actividad, $necesidad, $proveedor, $ejecutivo);
@@ -1417,9 +1415,9 @@
 		exit;
 	}
 	elseif ($seccion == "listaInscripciones3") {
-		$i = $_GET["i"];
+		$i = $get["i"];
 		$id_curso = Decodear3($i);
-		$excel = $_GET["excel"];
+		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola i $i ".Decodear3($i);
 		//exit();
@@ -1444,18 +1442,18 @@
 		exit;
 	}
 	elseif ($seccion == "listAgrupaciones") {
-		//print_r($_POST);//exit();
-		$idAgrup = Decodear3($_GET["idAgrup"]);
+		//print_r($post);//exit();
+		$idAgrup = Decodear3($get["idAgrup"]);
 		//echo "<br>idAgrup $idAgrup<br>";
-		if ($_POST["agrupacion_nueva"] == "1") {
-			//print_r($_POST);
+		if ($post["agrupacion_nueva"] == "1") {
+			//print_r($post);
 			$id_agrupacion = reportes_online_maxAgrupacion();
-			foreach ($_POST as $key => $value) {
+			foreach ($post as $key => $value) {
 				//echo "<br>line<br>";			print_r($value);				echo "<br>key<br>";				print_r($key);
 				if ($key == "nombre_agrupacion" or $key == "agrupacion_nueva") {
 					continue;
 				}
-				$nombre_agrupacion = $_POST["nombre_agrupacion"];
+				$nombre_agrupacion = $post["nombre_agrupacion"];
 				//echo "<br>id_agrupacion $id_agrupacion nombre_agrupacion $nombre_agrupacion, id_curso ".$key;
 				reportes_online_Insert_agrupacion_data($id_agrupacion, $nombre_agrupacion, $key);
 			}
@@ -1468,8 +1466,8 @@
 		exit;
 	}
 	elseif ($seccion == "filtro_programabbdd_por_foco_creacion_cursos") {
-		$foco = $_POST["foco"];
-		$arreglo_post = $_POST;
+		$foco = $post["foco"];
+		$arreglo_post = $post;
 		$id_empresa = $_SESSION["id_empresa"];
 		// echo "<br>foco $foco<br>";
 		// Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
@@ -1492,17 +1490,17 @@
 	
 	elseif ($seccion == "MuestraBloqueCursoSeleccionadoDesdeCurso") {
 		//ini_set('display_errors', 1);ini_set('display_startup_errors', 1);error_reporting(E_ALL);
-		/*echo "<br>";		print_r($_POST);	echo "<br>";print_r($_GET);		echo "<br>";*/
-		$id_curso = Decodear3($_GET["i"]);
+		/*echo "<br>";		print_r($post);	echo "<br>";print_r($get);		echo "<br>";*/
+		$id_curso = Decodear3($get["i"]);
 		//echo "<br>id_curso $id_curso<br>";
-		if ($_GET["del"] <> "") {
-			$id_linea = Decodear3($_GET["del"]);
+		if ($get["del"] <> "") {
+			$id_linea = Decodear3($get["del"]);
 			DeleteSesionImparticion2021($id_linea);
 		}
 		
-		$id_programa = Decodear3($_GET["idpbbdd"]);
-		$id_inscripcion = Decodear3($_GET["i"]);
-		$id_imparticion = Decodear3($_GET["id_imparticion"]);
+		$id_programa = Decodear3($get["idpbbdd"]);
+		$id_inscripcion = Decodear3($get["i"]);
+		$id_imparticion = Decodear3($get["id_imparticion"]);
 		//echo "<br>----------------------------------------->id_curso $id_curso id_programa $id_programa id_inscripcion $id_inscripcion id_imparticion $id_imparticion<br>";
 		
 		if ($id_imparticion <> "") {
@@ -1525,18 +1523,18 @@
 			}
 			$formulario = str_replace("{OPTIONS_MALLAS}", $option_malla, $formulario);
 			$back_to_list_cursos = "listcursos1";
-			$back_to_list_cursos = "listaInscripciones1&i=" . $_GET["i"] . "";
+			$back_to_list_cursos = "listaInscripciones1&i=" . $get["i"] . "";
 		}
 		elseif ($datos_curso[0]->modalidad == 2) {
 			$DISPLAY_MODALIDAD1 = " display:none !important";
 			$formulario = file_get_contents("views/capacitacion/imparticion/formulario_ingresa_presencial2.html");
 			$back_to_list_cursos = "listcursos2";
-			$back_to_list_cursos = "listaInscripciones2&i=" . $_GET["i"] . "";
+			$back_to_list_cursos = "listaInscripciones2&i=" . $get["i"] . "";
 		}
 		elseif ($datos_curso[0]->modalidad == 3) {
 			$formulario = file_get_contents("views/capacitacion/imparticion/formulario_ingresa_presencial3.html");
 			$back_to_list_cursos = "listcursos3";
-			$back_to_list_cursos = "listaInscripciones3&i=" . $_GET["i"] . "";
+			$back_to_list_cursos = "listaInscripciones3&i=" . $get["i"] . "";
 		}
 		else {
 			$formulario = file_get_contents("views/capacitacion/imparticion/formulario_ingresa_presencial.html");
@@ -1578,7 +1576,7 @@
 		
 		//echo "<H1>$id_programa - id curso $id_curso</H1>";
 		//print_r($Imp);
-		if (Decodear3($_GET["id_imparticion"]) <> "") {
+		if (Decodear3($get["id_imparticion"]) <> "") {
 			$PRINCIPAL = str_replace("{EDITAR}", "1", $PRINCIPAL);
 		}
 		else {
@@ -1672,18 +1670,18 @@
 	
 	elseif ($seccion == "MuestraBloqueCursoSeleccionadoDesdeMalla") {
 		//ini_set('display_errors', 1);ini_set('display_startup_errors', 1);error_reporting(E_ALL);
-		//echo "<br>";		print_r($_POST);	echo "<br>";print_r($_GET);		echo "<br>";
-		$id_malla = Decodear3($_GET["i"]);
+		//echo "<br>";		print_r($post);	echo "<br>";print_r($get);		echo "<br>";
+		$id_malla = Decodear3($get["i"]);
 		// echo "<br>id_malla $id_malla<br>";
-		if ($_GET["del"] <> "") {
-			$id_linea = Decodear3($_GET["del"]);
+		if ($get["del"] <> "") {
+			$id_linea = Decodear3($get["del"]);
 			DeleteSesionImparticion2021($id_linea);
 		}
-		$id_programa = Decodear3($_GET["idpbbdd"]);
-		$id_inscripcion = Decodear3($_GET["i"]);
-		$id_imparticion = Decodear3($_GET["id_imparticion"]);
+		$id_programa = Decodear3($get["idpbbdd"]);
+		$id_inscripcion = Decodear3($get["i"]);
+		$id_imparticion = Decodear3($get["id_imparticion"]);
 		$id_foco = BuscaIdFoco_DadoIdMalla_IdPrograma_2022($id_malla, $id_programa);
-		$id_malla_enc = Decodear3($_GET["id_malla_enc"]);
+		$id_malla_enc = Decodear3($get["id_malla_enc"]);
 		//echo $id_foco;
 		if ($id_malla_enc <> "") {
 			$id_malla = $id_malla_enc;
@@ -1699,8 +1697,8 @@
 		$datos_malla = BuscoCursoDadaMallayPrograma_2024($id_malla, $id_programa, $_SESSION["id_inscripcion_id_malla"]);
 		$datos_malla_first = BuscoCursoDadaMallayPrograma_2024_First($id_malla, $id_programa);
 		//print_r($datos_malla);
-		//print_r($_GET);
-		if ($_GET["first"] == "1") {
+		//print_r($get);
+		if ($get["first"] == "1") {
 			$_SESSION["id_inscripcion_id_malla"] = "";
 			$proximo_id_inscripcion = BuscaCorrelativoMalla_IdMalla_IdInscripcion2022();
 			$proximo_id_inscripcion = $proximo_id_inscripcion + 1;
@@ -1712,12 +1710,12 @@
 			//$formulario_mallas = FormularioImparticionMallas(FuncionesTransversalesAdmin($formulario_mallas), $id_empresa, $id_imparticion, $unico->id_curso);
 			//$formulario_mallas = DatosImparticiones_Sesiones_2021($formulario_mallas, $id_imparticion, $unico->id_curso);
 			//$Imp = BuscaIdImparticionFull_2021($id_imparticion);
-			if ($_GET["first"] == "1") {
+			if ($get["first"] == "1") {
 				insert_IdMalla_IdInscripcion2022($id_malla, $unico->id_curso, $proximo_id_inscripcion);
 			}
 		}
 		
-		if ($_GET["first"] == "1") {
+		if ($get["first"] == "1") {
 			$_SESSION["id_inscripcion_id_malla"] = $proximo_id_inscripcion;
 		}
 		
@@ -1756,20 +1754,20 @@
 		
 		$hoy = date("Y-m-d");
 		$alerta_delete = "";
-		if ($_GET["del"] == "1") {
+		if ($get["del"] == "1") {
 			//echo "<br> hoy $hoy, ".$u->fecha_inicio;
 			if ($u->fecha_inicio <= $hoy) {
 				$alerta_delete = "<div class='alert alert-danger'>Las imparticiones ya están en curso. Ya no puedes eliminar estas imparticiones</div>";
 			}
 			else {
 				$alerta_delete = "<div class='alert alert-danger'>
-                                <a href='?sw=dltImpartmalla&i=" . $_GET["i"] . "&id_malla_enc=" . $_GET["id_malla_enc"] . "&idpbbdd=" . $_GET["idpbbdd"] . "'>
+                                <a href='?sw=dltImpartmalla&i=" . $get["i"] . "&id_malla_enc=" . $get["id_malla_enc"] . "&idpbbdd=" . $get["idpbbdd"] . "'>
                                     <span style='color: #01225d;'>Eliminar Imparticiones Definitivamente</span>
                                  </a>
                             </div>";
 			}
 		}
-		if ($_GET["edit"] == "1") {
+		if ($get["edit"] == "1") {
 			//echo "<br> hoy $hoy, ".$u->fecha_inicio;
 			if ($u->fecha_inicio <= $hoy) {
 				$alerta_delete = "<div class='alert alert-info'>Las imparticiones ya están en curso. Ya no las puedes editar</div>";
@@ -1806,8 +1804,8 @@
 		$PRINCIPAL = str_replace("{OPTIONS_PROGRAMA_SAVED}", ($datos_malla[0]->programa), $PRINCIPAL);
 		
 		$PRINCIPAL = str_replace("{BLOQUE_MALLA_SELECCIONADO}", $formulario_mallas, $PRINCIPAL);
-		$PRINCIPAL = str_replace("{ID_PROGRAMA_ENC}", $_GET["idpbbdd"], $PRINCIPAL);
-		$PRINCIPAL = str_replace("{ID_MALLA_ENCODEADO}", $_GET["i"], $PRINCIPAL);
+		$PRINCIPAL = str_replace("{ID_PROGRAMA_ENC}", $get["idpbbdd"], $PRINCIPAL);
+		$PRINCIPAL = str_replace("{ID_MALLA_ENCODEADO}", $get["i"], $PRINCIPAL);
 		
 		$PRINCIPAL = str_replace("{ID_FOCO_ENCODEADO}", Encodear3($id_foco), $PRINCIPAL);
 		$PRINCIPAL = str_replace("{LISTA_DE_CURSOS_DE_MALLA_DESDE_INSCRIPCION}", ($row_id_curso), $PRINCIPAL);
@@ -1822,7 +1820,7 @@
 		$PRINCIPAL = str_replace("{OPTIONS_EJECUTIVOS_NEW}", ($options_ejecutivos_new), $PRINCIPAL);
 		
 		$DISPLAY_MODALIDAD2 = " display:none !important";
-		$back_to_list_cursos = "listaInscripciones1&i=" . $_GET["i"] . "";
+		$back_to_list_cursos = "listaInscripciones1&i=" . $get["i"] . "";
 		$back_to_list_cursos = "listmallas1";
 		
 		
@@ -1963,25 +1961,25 @@
 	
 	
 	elseif ($seccion == "adimparti_malla") {
-		//print_r($_POST);    print_r($_SESSION); exit();
+		//print_r($post);    print_r($_SESSION); exit();
 		$id_inscripcion_id_malla = $_SESSION["id_inscripcion_id_malla"];
 		$id_empresa = $_SESSION["id_empresa"];
-		$fecha_desde = $_POST["fecha_desde"];
-		$fecha_hasta = $_POST["fecha_hasta"];
-		$opcional = $_POST["opcional"];
+		$fecha_desde = $post["fecha_desde"];
+		$fecha_hasta = $post["fecha_hasta"];
+		$opcional = $post["opcional"];
 		
-		$categoria_bch = $_POST["categoria_bch"];
-		$malla_bch = $_POST["malla_bch"];
+		$categoria_bch = $post["categoria_bch"];
+		$malla_bch = $post["malla_bch"];
 		
-		$i = $_POST["i"];
-		$idpbbdd = $_POST["idpbbdd"];
-		$id_malla = Decodear3($_POST["id_malla_enc"]);
-		$id_programa = Decodear3($_POST["id_programa_enc"]);
-		$id_foco = Decodear3($_POST["id_foco_enc"]);
-		$ejeM = ($_POST["foco"]);
-		$proyectoM = ($_POST["programa_bbdd"]);
-		$ejecutivo = $_POST["ejecutivo"];
-		$nombre_inscripcion = $_POST["nombre_imparticion"];
+		$i = $post["i"];
+		$idpbbdd = $post["idpbbdd"];
+		$id_malla = Decodear3($post["id_malla_enc"]);
+		$id_programa = Decodear3($post["id_programa_enc"]);
+		$id_foco = Decodear3($post["id_foco_enc"]);
+		$ejeM = ($post["foco"]);
+		$proyectoM = ($post["programa_bbdd"]);
+		$ejecutivo = $post["ejecutivo"];
+		$nombre_inscripcion = $post["nombre_imparticion"];
 		$activa_cero = 0;
 		$Lista_Cursos_para_CrearInscripcion = Id_cursos_id_Inscripcion_por_id_inscripcion_idMalla_2022($id_inscripcion_id_malla);//print_r($Lista_Cursos_para_CrearInscripcion);exit();
 		foreach ($Lista_Cursos_para_CrearInscripcion as $u) {
@@ -2008,126 +2006,126 @@
 	}
 	
 	elseif ($seccion == "adimparti") {
-		//echo "<br>Post<br>";echo "<pre>";print_r($_POST);echo "</pre>";
-		if ($_POST["ed"] == "1") {
-			$id_imparticion_decod = ($_POST["cod_imparticion"]);
+		//echo "<br>Post<br>";echo "<pre>";print_r($post);echo "</pre>";
+		if ($post["ed"] == "1") {
+			$id_imparticion_decod = ($post["cod_imparticion"]);
 		}
 		else {
-			$id_imparticion_decod = VerificaCodImparticion_2023($_POST["cod_imparticion"]);
-			$_POST["cod_imparticion"] = $id_imparticion_decod;
+			$id_imparticion_decod = VerificaCodImparticion_2023($post["cod_imparticion"]);
+			$post["cod_imparticion"] = $id_imparticion_decod;
 		}
 		
-		if ($_POST["imparticion_elearning"] == "1") {
+		if ($post["imparticion_elearning"] == "1") {
 			//echo "ES ELEARNING";
-			if ($_POST["opcional"] == "on") {
+			if ($post["opcional"] == "on") {
 				$opcional = "1";
 			}
 			else {
 				$opcional = "0";
 			}
 			//echo "creo imparticion tipo elearning id_imparticion_decod $id_imparticion_decod";
-			InsertUpdatetbl_rel_lms_id_curso_id_inscripcion($_POST["curso"], $id_imparticion_decod, $_POST["nombre"], $_POST["fecha_desde_new_2"], $_POST["fecha_hasta_new_2"], $_SESSION["id_empresa"], $opcional, $_POST["ejecutivo"], $_POST["ejecutivo_externo"], $_POST["sence"], $_POST["cod_sence"], $_POST["nombre_curso_sence"], $_POST["nombre_otic"], $_POST["tipo_modalidad"], $_POST["costos_asociados"]);
-			//echo "<script>location.href='?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i=".$_POST["id_curso_enc"]."&id_imparticion=".$id_imparticion_encoded."';</script>";exit;
+			InsertUpdatetbl_rel_lms_id_curso_id_inscripcion($post["curso"], $id_imparticion_decod, $post["nombre"], $post["fecha_desde_new_2"], $post["fecha_hasta_new_2"], $_SESSION["id_empresa"], $opcional, $post["ejecutivo"], $post["ejecutivo_externo"], $post["sence"], $post["cod_sence"], $post["nombre_curso_sence"], $post["nombre_otic"], $post["tipo_modalidad"], $post["costos_asociados"]);
+			//echo "<script>location.href='?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i=".$post["id_curso_enc"]."&id_imparticion=".$id_imparticion_encoded."';</script>";exit;
 		}
 		else {
 			//echo "NO ES ELEARNING";
 			
-			$existe_otra_imparticion_2023 = InscripcionCheckImparticionrepetido_2023($_POST["curso"], $id_imparticion_decod);
+			$existe_otra_imparticion_2023 = InscripcionCheckImparticionrepetido_2023($post["curso"], $id_imparticion_decod);
 			//echo $existe_otra_imparticion_2023;
 			
 			if ($existe_otra_imparticion_2023 > 0) {
 				$nuevo_cod1 = NuevoCodigoImparticion_2021($id_imparticion_decod);
-				$existe_otra_imparticion_2023_1 = InscripcionCheckImparticionrepetido_2023($_POST["curso"], $nuevo_cod1);
+				$existe_otra_imparticion_2023_1 = InscripcionCheckImparticionrepetido_2023($post["curso"], $nuevo_cod1);
 				//echo "<br>existe_otra_imparticion_2023_1 $existe_otra_imparticion_2023_1";
 				if ($existe_otra_imparticion_2023_1 > 0) {
 					$nuevo_cod1 = NuevoCodigoImparticion_2021($nuevo_cod1);
-					$existe_otra_imparticion_2023_1 = InscripcionCheckImparticionrepetido_2023($_POST["curso"], $nuevo_cod1);
+					$existe_otra_imparticion_2023_1 = InscripcionCheckImparticionrepetido_2023($post["curso"], $nuevo_cod1);
 					//echo "<br>existe_otra_imparticion_2023_2 $existe_otra_imparticion_2023_1";
 				}
 				//echo "nuevo post $nuevo_cod1";
-				$_POST["cod_imparticion"] = $nuevo_cod1;
-				$id_imparticion_decod = $_POST["cod_imparticion"];
+				$post["cod_imparticion"] = $nuevo_cod1;
+				$id_imparticion_decod = $post["cod_imparticion"];
 			}
 			//exit();
-			//$_POST["cod_imparticion"]
-			if ($_POST["opcional"] == "1") {
+			//$post["cod_imparticion"]
+			if ($post["opcional"] == "1") {
 				$opcional = "1";
 			}
 			else {
 				$opcional = "0";
 			}
 			
-			InsertUpdatetbl_rel_lms_id_curso_id_inscripcion($_POST["curso"], $id_imparticion_decod, $_POST["nombre"], $_POST["fecha_desde_new_2"], $_POST["fecha_hasta_new_2"], $_SESSION["id_empresa"], $opcional, $_POST["ejecutivo"], $_POST["ejecutivo_externo"], $_POST["sence"], $_POST["cod_sence"], $_POST["nombre_curso_sence"], $_POST["nombre_otic"], $_POST["tipo_modalidad"], $_POST["costos_asociados"]);
+			InsertUpdatetbl_rel_lms_id_curso_id_inscripcion($post["curso"], $id_imparticion_decod, $post["nombre"], $post["fecha_desde_new_2"], $post["fecha_hasta_new_2"], $_SESSION["id_empresa"], $opcional, $post["ejecutivo"], $post["ejecutivo_externo"], $post["sence"], $post["cod_sence"], $post["nombre_curso_sence"], $post["nombre_otic"], $post["tipo_modalidad"], $post["costos_asociados"]);
 			//echo "opcional es $opcional";
 		}
 		//exit();
 		
-		$id_imparticion_decod = Decodear3($_POST["id_imparticion_enc"]);
+		$id_imparticion_decod = Decodear3($post["id_imparticion_enc"]);
 		if ($id_imparticion_decod <> "") {
-			$id_imparticion_encoded = $_POST["id_imparticion_enc"];
+			$id_imparticion_encoded = $post["id_imparticion_enc"];
 		}
 		else {
-			$id_imparticion_decod = $_POST["cod_imparticion"];
+			$id_imparticion_decod = $post["cod_imparticion"];
 			$id_imparticion_encoded = Encodear3($id_imparticion_decod);
 		}
 		
-		if ($_POST["tipo_horario"] == "fecha_sesiones") {
+		if ($post["tipo_horario"] == "fecha_sesiones") {
 			// calcula Fecha Inicio / Termino de la Impartición
 			//	echo "Fechas por Sesiones ";
 			
-			if ($_POST["fecha1"] <> "") {
-				$relator = Decodear3($_POST["relator_SES1"]);
-				AgregaSesionesImparticion("1", $id_imparticion_decod, $_POST["fecha1"], $_POST["hora_desde1"], $_POST["hora_hasta1"], $_POST["observacion"], Decodear3($_POST["id_linea1"]), $relator, "");
+			if ($post["fecha1"] <> "") {
+				$relator = Decodear3($post["relator_SES1"]);
+				AgregaSesionesImparticion("1", $id_imparticion_decod, $post["fecha1"], $post["hora_desde1"], $post["hora_hasta1"], $post["observacion"], Decodear3($post["id_linea1"]), $relator, "");
 			}
-			if ($_POST["fecha2"] <> "") {
-				$relator = Decodear3($_POST["relator_SES2"]);
-				AgregaSesionesImparticion("2", $id_imparticion_decod, $_POST["fecha2"], $_POST["hora_desde2"], $_POST["hora_hasta2"], $_POST["observacion"], Decodear3($_POST["id_linea2"]), $relator, "");
+			if ($post["fecha2"] <> "") {
+				$relator = Decodear3($post["relator_SES2"]);
+				AgregaSesionesImparticion("2", $id_imparticion_decod, $post["fecha2"], $post["hora_desde2"], $post["hora_hasta2"], $post["observacion"], Decodear3($post["id_linea2"]), $relator, "");
 			}
-			if ($_POST["fecha3"] <> "") {
-				$relator = Decodear3($_POST["relator_SES3"]);
-				AgregaSesionesImparticion("3", $id_imparticion_decod, $_POST["fecha3"], $_POST["hora_desde3"], $_POST["hora_hasta3"], $_POST["observacion"], Decodear3($_POST["id_linea3"]), $relator, "");
+			if ($post["fecha3"] <> "") {
+				$relator = Decodear3($post["relator_SES3"]);
+				AgregaSesionesImparticion("3", $id_imparticion_decod, $post["fecha3"], $post["hora_desde3"], $post["hora_hasta3"], $post["observacion"], Decodear3($post["id_linea3"]), $relator, "");
 			}
-			if ($_POST["fecha4"] <> "") {
-				$relator = Decodear3($_POST["relator_SES4"]);
-				AgregaSesionesImparticion("4", $id_imparticion_decod, $_POST["fecha4"], $_POST["hora_desde4"], $_POST["hora_hasta4"], $_POST["observacion"], Decodear3($_POST["id_linea4"]), $relator, "");
+			if ($post["fecha4"] <> "") {
+				$relator = Decodear3($post["relator_SES4"]);
+				AgregaSesionesImparticion("4", $id_imparticion_decod, $post["fecha4"], $post["hora_desde4"], $post["hora_hasta4"], $post["observacion"], Decodear3($post["id_linea4"]), $relator, "");
 			}
-			if ($_POST["fecha5"] <> "") {
-				$relator = Decodear3($_POST["relator_SES5"]);
-				AgregaSesionesImparticion("5", $id_imparticion_decod, $_POST["fecha5"], $_POST["hora_desde5"], $_POST["hora_hasta5"], $_POST["observacion"], Decodear3($_POST["id_linea5"]), $relator, "");
+			if ($post["fecha5"] <> "") {
+				$relator = Decodear3($post["relator_SES5"]);
+				AgregaSesionesImparticion("5", $id_imparticion_decod, $post["fecha5"], $post["hora_desde5"], $post["hora_hasta5"], $post["observacion"], Decodear3($post["id_linea5"]), $relator, "");
 			}
-			if ($_POST["fecha6"] <> "") {
-				$relator = Decodear3($_POST["relator_SES6"]);
-				AgregaSesionesImparticion("6", $id_imparticion_decod, $_POST["fecha6"], $_POST["hora_desde6"], $_POST["hora_hasta6"], $_POST["observacion"], Decodear3($_POST["id_linea6"]), $relator, "");
-			}
-			
-			if ($_POST["fecha7"] <> "") {
-				$relator = Decodear3($_POST["relator_SES7"]);
-				AgregaSesionesImparticion("7", $id_imparticion_decod, $_POST["fecha7"], $_POST["hora_desde7"], $_POST["hora_hasta7"], $_POST["observacion"], Decodear3($_POST["id_linea7"]), $relator, "");
-			}
-			if ($_POST["fecha8"] <> "") {
-				$relator = Decodear3($_POST["relator_SES8"]);
-				AgregaSesionesImparticion("8", $id_imparticion_decod, $_POST["fecha8"], $_POST["hora_desde8"], $_POST["hora_hasta8"], $_POST["observacion"], Decodear3($_POST["id_linea8"]), $relator, "");
-			}
-			if ($_POST["fecha9"] <> "") {
-				$relator = Decodear3($_POST["relator_SES9"]);
-				AgregaSesionesImparticion("9", $id_imparticion_decod, $_POST["fecha9"], $_POST["hora_desde9"], $_POST["hora_hasta9"], $_POST["observacion"], Decodear3($_POST["id_linea9"]), $relator, "");
-			}
-			if ($_POST["fecha10"] <> "") {
-				$relator = Decodear3($_POST["relator_SES10"]);
-				AgregaSesionesImparticion("1", $id_imparticion_decod, $_POST["fecha10"], $_POST["hora_desde10"], $_POST["hora_hasta10"], $_POST["observacion"], Decodear3($_POST["id_linea10"]), $relator, "");
-			}
-			if ($_POST["fecha11"] <> "") {
-				$relator = Decodear3($_POST["relator_SES11"]);
-				AgregaSesionesImparticion("11", $id_imparticion_decod, $_POST["fecha11"], $_POST["hora_desde11"], $_POST["hora_hasta11"], $_POST["observacion"], Decodear3($_POST["id_linea11"]), $relator, "");
-			}
-			if ($_POST["fecha12"] <> "") {
-				$relator = Decodear3($_POST["relator_SES12"]);
-				AgregaSesionesImparticion("12", $id_imparticion_decod, $_POST["fecha12"], $_POST["hora_desde12"], $_POST["hora_hasta12"], $_POST["observacion"], Decodear3($_POST["id_linea12"]), $relator, "");
+			if ($post["fecha6"] <> "") {
+				$relator = Decodear3($post["relator_SES6"]);
+				AgregaSesionesImparticion("6", $id_imparticion_decod, $post["fecha6"], $post["hora_desde6"], $post["hora_hasta6"], $post["observacion"], Decodear3($post["id_linea6"]), $relator, "");
 			}
 			
-			if ($_POST["sesion_NEW"] > 0 and $_POST["hora_desde_NEW"] <> "") {
-				$relator = Decodear3($_POST["relator_NEW"]);
-				AgregaSesionesImparticion($_POST["sesion_NEW"], $id_imparticion_decod, $_POST["fecha_NEW"], $_POST["hora_desde_NEW"], $_POST["hora_hasta_NEW"], $_POST["observacion_NEW"], "", $relator, "1");
+			if ($post["fecha7"] <> "") {
+				$relator = Decodear3($post["relator_SES7"]);
+				AgregaSesionesImparticion("7", $id_imparticion_decod, $post["fecha7"], $post["hora_desde7"], $post["hora_hasta7"], $post["observacion"], Decodear3($post["id_linea7"]), $relator, "");
+			}
+			if ($post["fecha8"] <> "") {
+				$relator = Decodear3($post["relator_SES8"]);
+				AgregaSesionesImparticion("8", $id_imparticion_decod, $post["fecha8"], $post["hora_desde8"], $post["hora_hasta8"], $post["observacion"], Decodear3($post["id_linea8"]), $relator, "");
+			}
+			if ($post["fecha9"] <> "") {
+				$relator = Decodear3($post["relator_SES9"]);
+				AgregaSesionesImparticion("9", $id_imparticion_decod, $post["fecha9"], $post["hora_desde9"], $post["hora_hasta9"], $post["observacion"], Decodear3($post["id_linea9"]), $relator, "");
+			}
+			if ($post["fecha10"] <> "") {
+				$relator = Decodear3($post["relator_SES10"]);
+				AgregaSesionesImparticion("1", $id_imparticion_decod, $post["fecha10"], $post["hora_desde10"], $post["hora_hasta10"], $post["observacion"], Decodear3($post["id_linea10"]), $relator, "");
+			}
+			if ($post["fecha11"] <> "") {
+				$relator = Decodear3($post["relator_SES11"]);
+				AgregaSesionesImparticion("11", $id_imparticion_decod, $post["fecha11"], $post["hora_desde11"], $post["hora_hasta11"], $post["observacion"], Decodear3($post["id_linea11"]), $relator, "");
+			}
+			if ($post["fecha12"] <> "") {
+				$relator = Decodear3($post["relator_SES12"]);
+				AgregaSesionesImparticion("12", $id_imparticion_decod, $post["fecha12"], $post["hora_desde12"], $post["hora_hasta12"], $post["observacion"], Decodear3($post["id_linea12"]), $relator, "");
+			}
+			
+			if ($post["sesion_NEW"] > 0 and $post["hora_desde_NEW"] <> "") {
+				$relator = Decodear3($post["relator_NEW"]);
+				AgregaSesionesImparticion($post["sesion_NEW"], $id_imparticion_decod, $post["fecha_NEW"], $post["hora_desde_NEW"], $post["hora_hasta_NEW"], $post["observacion_NEW"], "", $relator, "1");
 			}
 			
 			$Fechas_MaxMin = Sesiones_2021_MaxMinFecha($id_imparticion_decod);
@@ -2140,85 +2138,85 @@
 		}
 		else {
 			//echo "Fechas Inicio Termino ";
-			$fecha_inicio = $_POST["fecha_desde_new_2"];
-			$fecha_termino = $_POST["fecha_hasta_new_2"];
-			$hora_desde = $_POST["hora_desde_new_2"];
-			$hora_hasta = $_POST["hora_hasta_new_2"];
-			$relator = Decodear3($_POST["relator"]);
+			$fecha_inicio = $post["fecha_desde_new_2"];
+			$fecha_termino = $post["fecha_hasta_new_2"];
+			$hora_desde = $post["hora_desde_new_2"];
+			$hora_hasta = $post["hora_hasta_new_2"];
+			$relator = Decodear3($post["relator"]);
 		}
 		
 		//echo "<br>$id_imparticion_decod Fechas $fecha_inicio - $fecha_termino, $hora_desde- $hora_hasta - relator $relator<br>";
 		
 		
 		$id_empresa = $_SESSION["id_empresa"];
-		$datos_curso = VerificoCursoPorEmpresa($_POST["curso"], $id_empresa);
-		$id_curso_2021 = BuscaIdCursoDadoIdImparticion_2021($_POST["curso"]);
+		$datos_curso = VerificoCursoPorEmpresa($post["curso"], $id_empresa);
+		$id_curso_2021 = BuscaIdCursoDadoIdImparticion_2021($post["curso"]);
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_curso = $_POST["curso"];
-		$codigo_imparticion = ($_POST["cod_imparticion"]);
-		/*	$fecha_inicio		=	$_POST["fecha"];
-			if($_POST["fecha_hasta"]=="")	{
-					$fecha_termino		=	$_POST["fecha"];
+		$id_curso = $post["curso"];
+		$codigo_imparticion = ($post["cod_imparticion"]);
+		/*	$fecha_inicio		=	$post["fecha"];
+			if($post["fecha_hasta"]=="")	{
+					$fecha_termino		=	$post["fecha"];
 				} else {
-					$fecha_termino		=	$_POST["fecha_hasta"];
+					$fecha_termino		=	$post["fecha_hasta"];
 				}
-			$hora_desde			=	$_POST["hora_desde"];
-			if($_POST["hora_hasta"]==""){
+			$hora_desde			=	$post["hora_desde"];
+			if($post["hora_hasta"]==""){
 				$hora_hasta			=	"23:59:59";
 				} else {
-				$hora_hasta			=	$_POST["hora_hasta"];
+				$hora_hasta			=	$post["hora_hasta"];
 			}
-			$observacion		=	$_POST["observacion"];
+			$observacion		=	$post["observacion"];
 			*/
 		$existe_inscripcion = DatosInscripcionConCodigo($codigo_imparticion);
 		if ($existe_inscripcion) {
 			//echo "<script>alert('Código de Imparticion ya existe');window.history.back();</script>"; exit;
 		}
 		
-		$direccion = ($_POST["direccion"]);
-		$ciudad = ($_POST["ciudad"]);
-		$cupos = ($_POST["cupos"]);
-		$ejecutivo = ($_POST["ejecutivo"]);
-		$id_malla = ($_POST["id_malla"]);
+		$direccion = ($post["direccion"]);
+		$ciudad = ($post["ciudad"]);
+		$cupos = ($post["cupos"]);
+		$ejecutivo = ($post["ejecutivo"]);
+		$id_malla = ($post["id_malla"]);
 		
-		$nombre = ($_POST["nombre"]);
-		$streaming = ($_POST["streaming"]);
-		$comentarios = trim(($_POST["comentarios"]));
-		$minimo_asistencia = ($_POST["minimo_asistencia"]);
-		$minimo_nota_aprobacion = ($_POST["minimo_nota_aprobacion"]);
-		$datos_post = $_POST;
-		Lista_curso_Crea_IMPARTICION_CreaImparticion($id_empresa, $codigo_imparticion, $datos_curso[0]->id, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_malla, $_POST["tipo_horario"], $datos_post, $sesiones, $ejecutivo, $comentarios, $observacion, $hora_desde, $hora_hasta, $nombre, $relator, $streaming, $minimo_asistencia, $minimo_nota_aprobacion, $_POST["ejecutivo_externo"]);
+		$nombre = ($post["nombre"]);
+		$streaming = ($post["streaming"]);
+		$comentarios = trim(($post["comentarios"]));
+		$minimo_asistencia = ($post["minimo_asistencia"]);
+		$minimo_nota_aprobacion = ($post["minimo_nota_aprobacion"]);
+		$datos_post = $post;
+		Lista_curso_Crea_IMPARTICION_CreaImparticion($id_empresa, $codigo_imparticion, $datos_curso[0]->id, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_malla, $post["tipo_horario"], $datos_post, $sesiones, $ejecutivo, $comentarios, $observacion, $hora_desde, $hora_hasta, $nombre, $relator, $streaming, $minimo_asistencia, $minimo_nota_aprobacion, $post["ejecutivo_externo"]);
 		
-		echo "<script>location.href='?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i=" . $_POST["id_curso_enc"] . "&id_imparticion=" . $id_imparticion_encoded . "';</script>";
+		echo "<script>location.href='?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i=" . $post["id_curso_enc"] . "&id_imparticion=" . $id_imparticion_encoded . "';</script>";
 		exit;
 	}
 	elseif ($seccion == "edimparti") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_curso = $_POST["curso"];
-		$codigo_imparticion = ($_POST["cod_imparticion"]);
-		$nuevo_codigo_imparticion = ($_POST["codigo_inscripcion"]);
+		$id_curso = $post["curso"];
+		$codigo_imparticion = ($post["cod_imparticion"]);
+		$nuevo_codigo_imparticion = ($post["codigo_inscripcion"]);
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_curso = $_POST["curso"];
-		$codigo_imparticion = ($_POST["cod_imparticion"]);
-		$nuevo_codigo_imparticion = ($_POST["codigo_inscripcion"]);
-		$comentarios = ($_POST["comentarios"]);
-		$direccion = ($_POST["direccion"]);
-		$ciudad = ($_POST["ciudad"]);
-		$cupos = ($_POST["cupos"]);
-		$sesiones = ($_POST["sesiones"]);
-		$ejecutivo = ($_POST["ejecutivo"]);
+		$id_curso = $post["curso"];
+		$codigo_imparticion = ($post["cod_imparticion"]);
+		$nuevo_codigo_imparticion = ($post["codigo_inscripcion"]);
+		$comentarios = ($post["comentarios"]);
+		$direccion = ($post["direccion"]);
+		$ciudad = ($post["ciudad"]);
+		$cupos = ($post["cupos"]);
+		$sesiones = ($post["sesiones"]);
+		$ejecutivo = ($post["ejecutivo"]);
 		$datos_curso = VerificoCursoPorEmpresa($id_curso, $id_empresa);
-		$id_audiencia = $_POST["id_audiencia"];
-		$tipo_audiencia = $_POST["tipo_audiencia"];
+		$id_audiencia = $post["id_audiencia"];
+		$tipo_audiencia = $post["tipo_audiencia"];
 		/*$tiene_Sesiones = FechaInicioTerminoImparticionPorEmpresa($codigo_imparticion, $id_empresa);
     if ($tiene_Sesiones) {
         foreach ($tiene_Sesiones as $sesion) {
             // Aca lo que hago, es por cada sesion, actualizo los datos.
-            $fecha = $_POST["fecha" . $sesion->id];
-            $desde_am = $_POST["desde_am" . $sesion->id];
-            $hasta_am = $_POST["hasta_am" . $sesion->id];
-            $desde_pm = $_POST["desde_pm" . $sesion->id];
-            $hasta_pm = $_POST["hasta_pm" . $sesion->id];
+            $fecha = $post["fecha" . $sesion->id];
+            $desde_am = $post["desde_am" . $sesion->id];
+            $hasta_am = $post["hasta_am" . $sesion->id];
+            $desde_pm = $post["desde_pm" . $sesion->id];
+            $hasta_pm = $post["hasta_pm" . $sesion->id];
             // echo "<br />desde am $desde_am hasta am $hasta_am<br />";
             // echo "desde pm $desde_pm hasta pm $hasta_pm<br />";
             // exit;
@@ -2235,14 +2233,14 @@
                 $suma_horas = sumar2Horas($rango_am . ":00", $rango_pm . ":00");
             }
             // echo $suma_horas;exit;
-            $rut_relator = $_POST["rut_relator" . $sesion->id];
+            $rut_relator = $post["rut_relator" . $sesion->id];
             $id_sesion = $sesion->id;
             ActualizarDatosSesionDeImparticion($fecha, $desde_am, $hasta_am, $desde_pm, $hasta_pm, $suma_horas, $rut_relator, $codigo_imparticion, $id_empresa, $sesion->id);
         }
     }
     for ($cantidad_sesiones = 1; $cantidad_sesiones <= 20; $cantidad_sesiones++) {
-        if ($_POST["fecha" . $cantidad_sesiones]) {
-            InsertaSesionPorImparticion($codigo_imparticion, $id_empresa, $_POST["fecha" . $cantidad_sesiones], $_POST["desde_am" . $cantidad_sesiones], $_POST["hasta_am" . $cantidad_sesiones], $_POST["desde_pm" . $cantidad_sesiones], $_POST["hasta_pm" . $cantidad_sesiones], $_POST["nume_horas" . $cantidad_sesiones], $_POST["rut_relator" . $cantidad_sesiones]);
+        if ($post["fecha" . $cantidad_sesiones]) {
+            InsertaSesionPorImparticion($codigo_imparticion, $id_empresa, $post["fecha" . $cantidad_sesiones], $post["desde_am" . $cantidad_sesiones], $post["hasta_am" . $cantidad_sesiones], $post["desde_pm" . $cantidad_sesiones], $post["hasta_pm" . $cantidad_sesiones], $post["nume_horas" . $cantidad_sesiones], $post["rut_relator" . $cantidad_sesiones]);
         }
     }*/
 		
@@ -2253,7 +2251,7 @@
         // Para el tema de las sesiones
         // Veo si esta imparticion tiene sesiones
         */
-			$datos_post = $_POST;
+			$datos_post = $post;
 			/* // ColocaObjetosPorCursoSiNotiene($id_empresa, $id_curso, $codigo_imparticion);
         // IMPARTICION_CreaImparticion($id_empresa, $codigo_imparticion, $id_curso, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_audiencia, $tipo_audiencia, $datos_post, $sesiones, $ejecutivo);
         // echo "<br />edimparti $id_empresa, $codigo_imparticion, $id_curso, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_audiencia, $tipo_audiencia, $datos_post, $sesiones, $ejecutivo, $comentarios, $nuevo_codigo_imparticion);";
@@ -2261,7 +2259,7 @@
         // $fechas_Imparticion[0]->inicio, $fechas_Imparticion[0]->termino,
         // IMPARTICION_ActualizaImparticion($id_empresa, $codigo_imparticion, $id_curso, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_audiencia, $tipo_audiencia, $datos_post, $sesiones, $ejecutivo, $comentarios, $nuevo_codigo_imparticion);
         */
-			IMPARTICION_ActualizaImparticion($id_empresa, $codigo_imparticion, $id_curso, $_POST["fecha"], $_POST["fecha"], $_POST["direccion"], $_POST["ciudad"], $_POST["cupos"], $id_audiencia, $tipo_audiencia, $datos_post, $sesiones, $ejecutivo, $comentarios, $nuevo_codigo_imparticion, $_POST["hora_desde"], $_POST["hora_hasta"], $_POST["observacion"]);
+			IMPARTICION_ActualizaImparticion($id_empresa, $codigo_imparticion, $id_curso, $post["fecha"], $post["fecha"], $post["direccion"], $post["ciudad"], $post["cupos"], $id_audiencia, $tipo_audiencia, $datos_post, $sesiones, $ejecutivo, $comentarios, $nuevo_codigo_imparticion, $post["hora_desde"], $post["hora_hasta"], $post["observacion"]);
 			/*
        	// if ($fechaT1 != '' and $fechaT2 != '' and $horaH1 != '' and $horaH2 != '') {
         //    UpdateRelObjetoImpT($fechaT1, $fechaT2, $horaH1, $horaH2, $codigo_imparticion, $id_empresa);
@@ -2471,16 +2469,16 @@
 	}
 	elseif ($seccion == "editImparticion") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_imparticion = Decodear3($_GET["i"]);
+		$id_imparticion = Decodear3($get["i"]);
 		
-		if (Decodear3($_GET["sesdel"])) {
-			//echo "borra ".Decodear3($_GET["sesdel"]);
-			$id_seborra = Decodear3($_GET["sesdel"]);
+		if (Decodear3($get["sesdel"])) {
+			//echo "borra ".Decodear3($get["sesdel"]);
+			$id_seborra = Decodear3($get["sesdel"]);
 			DelSesImpEn($id_seborra, $id_empresa);
 		}
 		
-		$cadena_ruts = $_GET["cadena"];
-		$cadena_ruts_postulantes = $_GET["cadena_post"];
+		$cadena_ruts = $get["cadena"];
+		$cadena_ruts_postulantes = $get["cadena_post"];
 		$arreglo_rut_inexistentes = explode(";", $cadena_ruts);
 		$arreglo_rut_inexistentes_postulantes = explode(";", $cadena_ruts_postulantes);
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
@@ -2549,7 +2547,7 @@
 	}
 	elseif ($seccion == "addImparticion") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_curso = Decodear($_GET["i"]);
+		$id_curso = Decodear($get["i"]);
 		
 		if ($id_curso) {
 		}
@@ -2669,12 +2667,12 @@
 		
 		CopiaParticipantes_InscripcionPotencial_($id_imparticion);
 		echo "<script>alert('Actualizados los participantes');
-    				location.href='?sw=MuestraBloqueCursoSeleccionadoDesdeMalla&i=" . $_POST["i"] . "&idpbbdd=" . $_POST["idpbbdd"] . "';</script>";
+    				location.href='?sw=MuestraBloqueCursoSeleccionadoDesdeMalla&i=" . $post["i"] . "&idpbbdd=" . $post["idpbbdd"] . "';</script>";
 		exit;
 	}
 	elseif ($seccion == "accionParticipantesImparticion_2022") {
-		$id_imparticion = Decodear3($_POST["ci"]);
-		$id_imparticion_GET = Decodear3($_POST["ci"]);
+		$id_imparticion = Decodear3($post["ci"]);
+		$id_imparticion_GET = Decodear3($post["ci"]);
 		$Imp = DatosCompletosImparticion_2021($id_imparticion_GET);
 		$id_modalidad = $Imp[0]->id_modalidad;
 		$id_empresa = $_SESSION["id_empresa"];
@@ -2784,9 +2782,9 @@
 		exit;
 	}
 	elseif ($seccion == "QR_2023") {
-		$id_imparticion = Decodear3($_GET["i"]);
+		$id_imparticion = Decodear3($get["i"]);
 		
-		if ($_GET["download"] == 1) {
+		if ($get["download"] == 1) {
 			//$Datos_Enc_Detalle=QR_Detalle_Download_Data($id_imparticion);
 			$id_encuesta = '90';
 			$Header_Preguntas = Reportes_detalle_headers_Preguntas_respuestas($id_encuesta);
@@ -2883,16 +2881,16 @@
 		//                $u->respuesta.";".
 		//                $u->fecha.";".
 		//                $u->nombre_relatores."
-		if (Decodear3($_GET["ididel"]) <> "") {
+		if (Decodear3($get["ididel"]) <> "") {
 			//echo "A";
-			EncuestaDeleteEncSat(Decodear3($_GET["ididel"]));
+			EncuestaDeleteEncSat(Decodear3($get["ididel"]));
 			//exit();
 		}
 		
-		if ($_POST["crear_enc_satisf"] == "1") {
+		if ($post["crear_enc_satisf"] == "1") {
 			QR_InsertRelatorIdImparticion($id_imparticion, "creada");
-			//print_r($_POST);
-			foreach ($_POST as $key => $value) {
+			//print_r($post);
+			foreach ($post as $key => $value) {
 				// $arr[3] will be updated with each value from $arr...
 				if ($key <> "crear_enc_satisf") {
 					QR_InsertRelatorIdImparticion($id_imparticion, $key);
@@ -2934,7 +2932,7 @@
 			$boton_eliminar = "";
 		}
 		else {
-			$boton_eliminar = "<a href='?sw=QR_2023&i=" . $_GET["i"] . "&ididel=" . $_GET["i"] . "' class='btn btn-link'>Eliminar Encuesta</a>";
+			$boton_eliminar = "<a href='?sw=QR_2023&i=" . $get["i"] . "&ididel=" . $get["i"] . "' class='btn btn-link'>Eliminar Encuesta</a>";
 		}
 		
 		
@@ -2973,7 +2971,7 @@
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
 		global $url_front_token_redirect;
 		//echo "<br><h2>".$u->nombre."</h2>";
-		$link = "&tipo=enc_sat&idi=" . $_GET["i"] . "";
+		$link = "&tipo=enc_sat&idi=" . $get["i"] . "";
 		//$link_enc=Encodear3($link);
 		$url_qr = $url_front_token_redirect . $link;
 		
@@ -3010,12 +3008,12 @@
 		exit();
 	}
 	elseif ($seccion == "VeProveedoresXImp2021") {
-		$id_imparticion = Decodear3($_GET["i"]);
+		$id_imparticion = Decodear3($get["i"]);
 		//echo "<br>->VeProveedoresXImp2021 -> id_imparticion $id_imparticion";
-		if (Decodear3($_GET["dl"]) <> "") {
-			Updatetbl_id_inscripcion_proveedores(Decodear3($_GET["dl"]), "0");
+		if (Decodear3($get["dl"]) <> "") {
+			Updatetbl_id_inscripcion_proveedores(Decodear3($get["dl"]), "0");
 		}
-		//print_r($_POST);
+		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
 		$PRINCIPAL = ListaProveedoresPorImparticiones_2021(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_listado_proveedores.html")), $id_imparticion, $_SESSION["id_empresa"]);
@@ -3065,7 +3063,7 @@
 		}
 		$PRINCIPAL = str_replace("{LISTA_PROVEEDORES_POR_IMPARTICION}", ($proveedores_lista), $PRINCIPAL);
 		$PRINCIPAL = str_replace("{OPTIONS_SERVICIO}", ($options_servicio), $PRINCIPAL);
-		$ota_cerrada = OtaCerrada2024(Decodear3($_GET["i"]));
+		$ota_cerrada = OtaCerrada2024(Decodear3($get["i"]));
 		if ($ota_cerrada > 0) {
 			$PRINCIPAL = str_replace("{DISPLAY_OTA_ABIERTA}", "display:none!important", $PRINCIPAL);
 		}
@@ -3074,12 +3072,12 @@
 		exit;
 	}
 	elseif ($seccion == "VeNotificarCuadroContable") {
-		$id_imparticion = Decodear3($_GET["i"]);
+		$id_imparticion = Decodear3($get["i"]);
 		//echo "<br>->VeNotificarCuadroContable -> id_imparticion $id_imparticion";
-		if (Decodear3($_GET["dl"]) <> "") {
-			Updatetbl_id_inscripcion_proveedores(Decodear3($_GET["dl"]), "0");
+		if (Decodear3($get["dl"]) <> "") {
+			Updatetbl_id_inscripcion_proveedores(Decodear3($get["dl"]), "0");
 		}
-		//print_r($_POST);
+		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
 		$PRINCIPAL = ListaCuadroContablePorImparticiones_2021(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_listado_notificacion.html")), $id_imparticion, $_SESSION["id_empresa"]);
@@ -3114,12 +3112,12 @@
 		exit;
 	}
 	elseif ($seccion == "accionEnviaNotificacionPorImparticion_2021") {
-		$subject = "" . $_POST["OTA"] . " " . $_POST["OTA_NOMBRE"];
-		$titulo = "" . $_POST["OTA"] . " " . $_POST["OTA_NOMBRE"];
+		$subject = "" . $post["OTA"] . " " . $post["OTA_NOMBRE"];
+		$titulo = "" . $post["OTA"] . " " . $post["OTA_NOMBRE"];
 		
 		$rut = $usuario->rut;
-		$email = $_POST["email1"];
-		$email2 = $_POST["email2"];
+		$email = $post["email1"];
+		$email2 = $post["email2"];
 		$nombre_completo = $usuario->nombre;
 		
 		$to = $email;
@@ -3134,42 +3132,42 @@
 Cuadro Contable<br>
 <strong>1.- Informaci&oacute;n para contabilización &Aacute;rea de Administraci&oacute;n:</strong>
                                         <br><br>
-                                        Nro de Cuenta: " . $_POST["DATA_CONTABLE_1"] . "<br>
-                                        Nombre de la Cuenta: " . $_POST["DATA_CONTABLE_2"] . "<br>
-                                        Centro de Costo: " . $_POST["DATA_CONTABLE_3"] . "<br>
+                                        Nro de Cuenta: " . $post["DATA_CONTABLE_1"] . "<br>
+                                        Nombre de la Cuenta: " . $post["DATA_CONTABLE_2"] . "<br>
+                                        Centro de Costo: " . $post["DATA_CONTABLE_3"] . "<br>
                                         <br><br>
                                             <strong>2.- Informaci&oacute;n de uno interno por Depto. Desarrollo y Formaci&oacute;n:</strong>
                                         <br><br>
-                                        Nombre de la OTA: " . $_POST["DATA_CONTABLE_4"] . "<br>
-                                        Nro de OTA: " . $_POST["DATA_CONTABLE_5"] . "<br>
-                                        Nombre proyecto o División: " . $_POST["DATA_CONTABLE_6"] . "<br>";
+                                        Nombre de la OTA: " . $post["DATA_CONTABLE_4"] . "<br>
+                                        Nro de OTA: " . $post["DATA_CONTABLE_5"] . "<br>
+                                        Nombre proyecto o División: " . $post["DATA_CONTABLE_6"] . "<br>";
 		
 		SendGrid_Email($to, $nombreto, $from, $nombrefrom, $tipo, $subject, $titulo, $subtitulo, $texto, $url, $texto_url, $texto2, $texto3, $texto4, $logo, $id_empresa, $url2, "Email_Masivo", $rut, $id_notificacion);
 		SendGrid_Email($to2, $nombreto2, $from, $nombrefrom, $tipo, $subject, $titulo, $subtitulo, $texto, $url, $texto_url, $texto2, $texto3, $texto4, $logo, $id_empresa, $url2, "Email_Masivo", $rut, $id_notificacion);
 		exit();
-		echo "<script>location.href='?sw=VeNotificarCuadroContable&i=" . $_GET["i"] . "';</script>";
+		echo "<script>location.href='?sw=VeNotificarCuadroContable&i=" . $get["i"] . "';</script>";
 		exit();
 		exit();
 	}
 	elseif ($seccion == "accionSubeProveedorPorImparticion_2021") {
-		//print_r($_POST);echo Decodear3($_GET["i"]);
-		if ($_POST["servicio_otorgado"] == 8) {
+		//print_r($post);echo Decodear3($get["i"]);
+		if ($post["servicio_otorgado"] == 8) {
 		}
 		else {
-			$_POST["otros_input"] = "";
+			$post["otros_input"] = "";
 		}
-		InsertProveedorImparticion2024(Decodear3($_GET["i"]), $_POST["proveedor"], $_POST["servicio_otorgado"], $_POST["otros_input"]);
-		echo "<script>location.href='?sw=VeProveedoresXImp2021&i=" . $_GET["i"] . "';</script>";
+		InsertProveedorImparticion2024(Decodear3($get["i"]), $post["proveedor"], $post["servicio_otorgado"], $post["otros_input"]);
+		echo "<script>location.href='?sw=VeProveedoresXImp2021&i=" . $get["i"] . "';</script>";
 		exit();
 		exit();
 	}
 	elseif ($seccion == "VeDocsXImp2021") {
-		$id_imparticion = Decodear3($_GET["i"]);
+		$id_imparticion = Decodear3($get["i"]);
 		//echo "<br>->id_imparticion $id_imparticion";$id_curso = Decodear($i);
-		if (Decodear3($_GET["dl"]) <> "") {
-			Updatetbl_id_inscripcion_documentos(Decodear3($_GET["dl"]), "0");
+		if (Decodear3($get["dl"]) <> "") {
+			Updatetbl_id_inscripcion_documentos(Decodear3($get["dl"]), "0");
 		}
-		//print_r($_POST);
+		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
 		$PRINCIPAL = ListaDocsPorImparticiones_2021(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_listado_documentos.html")), $id_imparticion, $_SESSION["id_empresa"]);
@@ -3209,29 +3207,29 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "VeColaboradoresXImp2021") {
-		$id_imparticion = Decodear3($_GET["i"]);
-		//$id_curso = Decodear($i);   //print_r($_POST);
-		$excel = $_GET["exc"];
+		$id_imparticion = Decodear3($get["i"]);
+		//$id_curso = Decodear($i);   //print_r($post);
+		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "hola id_imparticion $id_imparticion";exit();print_r($_GET);
-		if (Decodear3($_GET["del_rut_enc"]) <> "") {
-			//echo "$id_imparticion ".Decodear3($_GET["del_rut_enc"]);
-			DeleteInscripcionUsuarios_2022($id_imparticion, Decodear3($_GET["del_rut_enc"]));
-			echo "<script>alert('Participante " . Decodear3($_GET["del_rut_enc"]) . " eliminado de la imparticion');</script>";
+		//echo "hola id_imparticion $id_imparticion";exit();print_r($get);
+		if (Decodear3($get["del_rut_enc"]) <> "") {
+			//echo "$id_imparticion ".Decodear3($get["del_rut_enc"]);
+			DeleteInscripcionUsuarios_2022($id_imparticion, Decodear3($get["del_rut_enc"]));
+			echo "<script>alert('Participante " . Decodear3($get["del_rut_enc"]) . " eliminado de la imparticion');</script>";
 		}
 		//exit();
 		UpdateMinimo_asistenciaMinimo_nota_aprobacion_2021($id_imparticion);
-		if ($_GET["dl"] <> "") {
-			//echo "<br>Borrar ".$_GET["dl"];
-			actualizaArchivoImparticionRut_Id_2021($_GET["dl"]);
+		if ($get["dl"] <> "") {
+			//echo "<br>Borrar ".$get["dl"];
+			actualizaArchivoImparticionRut_Id_2021($get["dl"]);
 		}
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
-		if ($_POST["rut_col"] <> "") {
+		if ($post["rut_col"] <> "") {
 			$hoy = date("Y-m-d");
 			//echo "<br>id_imparticion $id_imparticion";
-			$Usu = TraeDatosUsuario($_POST["rut_col"]);
+			$Usu = TraeDatosUsuario($post["rut_col"]);
 			if ($Usu[0]->rut <> "") {
-				InsertNewInscripcionUsuarios_2022($datos_imparticion[0]->codigo_inscripcion, $_POST["rut_col"], $datos_imparticion[0]->id_curso, $datos_imparticion[0]->id_empresa, $hoy, "presencial");
+				InsertNewInscripcionUsuarios_2022($datos_imparticion[0]->codigo_inscripcion, $post["rut_col"], $datos_imparticion[0]->id_curso, $datos_imparticion[0]->id_empresa, $hoy, "presencial");
 			}
 			else {
 				echo "<script>alert('Rut no fue encontrado en la Base de Datos'); </script>";
@@ -3304,19 +3302,19 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "LibroClasesXImp2021") {
-		$id_imparticion = Decodear3($_GET["i"]);
-		//$id_curso = Decodear($i);   //print_r($_POST);
-		$excel = $_GET["exc"];
+		$id_imparticion = Decodear3($get["i"]);
+		//$id_curso = Decodear($i);   //print_r($post);
+		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
 		$PRINCIPAL = ListaColaboradoresPorImparticiones_LibroClases_2024(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_libro_clases.html")), $id_imparticion, $_SESSION["id_empresa"], "");
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "VeReportesXImp2021") {
-		$id_imparticion = Decodear3($_GET["i"]);
-		$id_curso = Decodear3($_GET["idc"]);
-		$enc_sat = ($_GET["EncSat"]);
-		$excel = $_GET["exc"];
+		$id_imparticion = Decodear3($get["i"]);
+		$id_curso = Decodear3($get["idc"]);
+		$enc_sat = ($get["EncSat"]);
+		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola id_imparticion $id_imparticion";exit();
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
@@ -3340,9 +3338,9 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "VeColaboradoresXImpXsess") {
-		$id_imparticion = Decodear3($_GET["i"]);
+		$id_imparticion = Decodear3($get["i"]);
 		$id_curso = Decodear($i);
-		$excel = $_GET["exc"];
+		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola $i $id_curso";
 		//exit();
@@ -3371,8 +3369,8 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "descargarInscritosPorImpart_2021") {
-		$codigo_inscripcion = Decodear3($_GET["ci"]);
-		$sp = $_GET["sp"];
+		$codigo_inscripcion = Decodear3($get["ci"]);
+		$sp = $get["sp"];
 		//echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_curso = DAtosCursoDadoIdInscripcion($codigo_inscripcion, $id_empresa);
@@ -3663,8 +3661,8 @@ Cuadro Contable<br>
 	}
 	
 	elseif ($seccion == "descargarReportesPorImpart_2023") {
-		$codigo_inscripcion = Decodear3($_GET["ci"]);
-		$sp = $_GET["sp"];
+		$codigo_inscripcion = Decodear3($get["ci"]);
+		$sp = $get["sp"];
 		//echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_curso = DAtosCursoDadoIdInscripcion($codigo_inscripcion, $id_empresa);
@@ -3965,7 +3963,7 @@ Cuadro Contable<br>
 	
 	
 	elseif ($seccion == "dltc") {
-		$id_curso = Decodear3($_GET["i"]);
+		$id_curso = Decodear3($get["i"]);
 		
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "id curso $id_curso id empresa $id_empresa";
@@ -3989,7 +3987,7 @@ Cuadro Contable<br>
 		}
 	}
 	elseif ($seccion == "dltImpart") {
-		$id_imparticion = Decodear3($_GET["i"]);
+		$id_imparticion = Decodear3($get["i"]);
 		//echo "id imparticion $id_imparticion";
 		//elimino de inscripcion_curso e inscripcion_usuarios
 		
@@ -4006,9 +4004,9 @@ Cuadro Contable<br>
 		}
 	}
 	elseif ($seccion == "dltImpartmalla") {
-		$id_imparticion = Decodear3($_GET["i"]);
-		$id_malla = Decodear3($_GET["id_malla_enc"]);
-		$id_programa = Decodear3($_GET["idpbbdd"]);
+		$id_imparticion = Decodear3($get["i"]);
+		$id_malla = Decodear3($get["id_malla_enc"]);
+		$id_programa = Decodear3($get["idpbbdd"]);
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "borrar id imparticion $id_imparticion, $id_malla";
 		
@@ -4031,7 +4029,7 @@ Cuadro Contable<br>
 	}
 	
 	elseif ($seccion == "descargarInscritosPorImpart_Elearning_2022") {
-		$codigo_inscripcion = Decodear3($_GET["ci"]);
+		$codigo_inscripcion = Decodear3($get["ci"]);
 		//echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_curso = DAtosCursoDadoIdInscripcion($codigo_inscripcion, $id_empresa);
@@ -4089,7 +4087,7 @@ Cuadro Contable<br>
 	}
 	
 	elseif ($seccion == "descargarUsuariosExternos_2022") {
-		$codigo_inscripcion = Decodear3($_GET["ci"]);
+		$codigo_inscripcion = Decodear3($get["ci"]);
 		//echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_curso = DAtosCursoDadoIdInscripcion($codigo_inscripcion, $id_empresa);
@@ -4190,7 +4188,7 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "descargarUsuariosManuales_2022") {
-		$codigo_inscripcion = Decodear3($_GET["ci"]);
+		$codigo_inscripcion = Decodear3($get["ci"]);
 		//echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_curso = DAtosCursoDadoIdInscripcion($codigo_inscripcion, $id_empresa);
@@ -4288,12 +4286,12 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "accionSubedocPorImparticion_2021") {
-		$id_imparticion = Decodear3($_POST["ci"]);
-		$id_imparticion_GET = Decodear3($_POST["ci"]);
-		$nombre = $_POST["nombre"];
+		$id_imparticion = Decodear3($post["ci"]);
+		$id_imparticion_GET = Decodear3($post["ci"]);
+		$nombre = $post["nombre"];
 		$insertados = 0;
 		$actualizados = 0;
-		$sp = $_GET["sp"];
+		$sp = $get["sp"];
 		$Imp = DatosCompletosImparticion_2021($id_imparticion_GET);
 		$Tipo_Imparticion = $Imp[0]->tipo_audiencia;
 		$id_modalidad = $Imp[0]->id_modalidad;
@@ -4322,11 +4320,11 @@ Cuadro Contable<br>
 	}
 	
 	elseif ($seccion == "accionSubeNotasPorImparticion_2021") {
-		$id_imparticion = Decodear3($_POST["ci"]);
-		$id_imparticion_GET = Decodear3($_POST["ci"]);
+		$id_imparticion = Decodear3($post["ci"]);
+		$id_imparticion_GET = Decodear3($post["ci"]);
 		$insertados = 0;
 		$actualizados = 0;
-		$sp = $_GET["sp"];
+		$sp = $get["sp"];
 		//echo "<br>accionSubeNotasPorImparticion_2021 ".$id_imparticion_GET;
 		$Imp = DatosCompletosImparticion_2021($id_imparticion_GET);
 		
@@ -4626,14 +4624,14 @@ Cuadro Contable<br>
 	elseif ($seccion == "lista_proveedores_otec") {
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/proveedores_otec/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
-		$tipo = $_GET["tipo"];
-		if (Decodear3($_GET["del"]) <> "") {
-			lista_proveedores_ejecutivos_delete_data(Decodear3($_GET["del"]), $tipo);
+		$tipo = $get["tipo"];
+		if (Decodear3($get["del"]) <> "") {
+			lista_proveedores_ejecutivos_delete_data(Decodear3($get["del"]), $tipo);
 		}
 		
-		if (Decodear3($_GET["change_active"]) <> "") {
-			$id_cambiar_estado_programa = Decodear3($_GET["change_active"]);
-			$var_activar = $_GET["activar"];
+		if (Decodear3($get["change_active"]) <> "") {
+			$id_cambiar_estado_programa = Decodear3($get["change_active"]);
+			$var_activar = $get["activar"];
 			if ($tipo == "programas") {
 				UpdateActivarPrograma_2024($id_cambiar_estado_programa, $var_activar);
 			}
@@ -4686,7 +4684,7 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "comunas_dado_regiones") {
-		$region = $_POST["region"];
+		$region = $post["region"];
 		//echo "region $region";
 		$id_empresa = $_SESSION["id_empresa"];
 		$comunas = Comunas_dado_id_regiones_2022($region);
@@ -4700,24 +4698,24 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "proveedores_ejecutivos_save") {
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($_POST);    exit();
+		//print_r($post);    exit();
 		
-		if ($_POST["tipo"] == "otec") {
-			$_POST["nombre"] = str_replace("Ñ", "N", $_POST["nombre"]);
-			$_POST["nombre"] = str_replace("ñ", "n", $_POST["nombre"]);
-			proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["descripcion"], $_POST["direccion"], $_POST["telefono"], $_POST["email"], $_POST["contacto"]);
+		if ($post["tipo"] == "otec") {
+			$post["nombre"] = str_replace("Ñ", "N", $post["nombre"]);
+			$post["nombre"] = str_replace("ñ", "n", $post["nombre"]);
+			proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["telefono"], $post["email"], $post["contacto"]);
 		}
-		elseif ($_POST["tipo"] == "ejecutivos") {
-			proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["descripcion"], $_POST["direccion"], $_POST["tipo_ejecutivo"], $_POST["email"], $_POST["contacto"]);
+		elseif ($post["tipo"] == "ejecutivos") {
+			proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["tipo_ejecutivo"], $post["email"], $post["contacto"]);
 		}
-		elseif ($_POST["tipo"] == "administradores") {
-			proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["descripcion"], $_POST["direccion"], $_POST["telefono"], $_POST["email"], $_POST["contacto"]);
+		elseif ($post["tipo"] == "administradores") {
+			proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["telefono"], $post["email"], $post["contacto"]);
 		}
-		elseif ($_POST["tipo"] == "relatores") {
-			//print_r($_POST); //exit();
-			if ($_POST["tipo_relator"] == "Interno") {
-				$_POST["rut"] = LimpiaRut($_POST["rut"]);
-				$Usu = TraeDatosUsuario($_POST["rut"]);
+		elseif ($post["tipo"] == "relatores") {
+			//print_r($post); //exit();
+			if ($post["tipo_relator"] == "Interno") {
+				$post["rut"] = LimpiaRut($post["rut"]);
+				$Usu = TraeDatosUsuario($post["rut"]);
 				if ($Usu[0]->nombre_completo == "") {
 					echo "<script>alert('Usuario No Encontrado en Base de Datos');location.href='?sw=lista_proveedores_otec&tipo=relatores';    </script>";
 					exit();
@@ -4726,14 +4724,14 @@ Cuadro Contable<br>
 					//print_r($Usu);
 					//$rut, $nombre, $descripcion, $direccion, $telefono, $email, $contacto
 					//rut, nombre, cargo, tipo, email, empresa,
-					proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $Usu[0]->nombre_completo, "", $Usu[0]->cargo, $_POST["tipo_relator"], $Usu[0]->email, $Usu[0]->nombre_empresa_holding);
+					proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $Usu[0]->nombre_completo, "", $Usu[0]->cargo, $post["tipo_relator"], $Usu[0]->email, $Usu[0]->nombre_empresa_holding);
 				}
 			}
-			elseif ($_POST["tipo_relator"] == "Externo") {
-				$_POST["rut"] = ($_POST["rut"]);
-				//print_r($_POST);
+			elseif ($post["tipo_relator"] == "Externo") {
+				$post["rut"] = ($post["rut"]);
+				//print_r($post);
 				//exit();
-				if ($_POST["nombre"] == "") {
+				if ($post["nombre"] == "") {
 					echo "<script>alert('Debes ingresar el nombre');location.href='?sw=lista_proveedores_otec&tipo=relatores';    </script>";
 					exit();
 				}
@@ -4741,14 +4739,14 @@ Cuadro Contable<br>
 					//print_r($Usu);
 					//$rut, $nombre, $descripcion, $direccion, $telefono, $email, $contacto
 					//rut, nombre, cargo, tipo, email, empresa,
-					proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], "", $_POST["cargo"], $_POST["tipo_relator"], $_POST["email"], $_POST["empresa"]);
+					proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], "", $post["cargo"], $post["tipo_relator"], $post["email"], $post["empresa"]);
 				}
 			}
-			elseif ($_POST["tipo_relator"] == "Extranjero") {
-				$_POST["rut"] = ($_POST["rut"]);
-				//print_r($_POST);
+			elseif ($post["tipo_relator"] == "Extranjero") {
+				$post["rut"] = ($post["rut"]);
+				//print_r($post);
 				//exit();
-				if ($_POST["nombre"] == "") {
+				if ($post["nombre"] == "") {
 					echo "<script>alert('Debes ingresar el nombre');location.href='?sw=lista_proveedores_otec&tipo=relatores';    </script>";
 					exit();
 				}
@@ -4760,17 +4758,17 @@ Cuadro Contable<br>
 					//print_r($Usu);
 					//$rut, $nombre, $descripcion, $direccion, $telefono, $email, $contacto
 					//rut, nombre, cargo, tipo, email, empresa,
-					proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $RutExtranjero, $_POST["nombre"], "", $_POST["cargo"], $_POST["tipo_relator"], $_POST["email"], $_POST["empresa"]);
+					proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $RutExtranjero, $post["nombre"], "", $post["cargo"], $post["tipo_relator"], $post["email"], $post["empresa"]);
 				}
 			}
-			//					proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["descripcion"], $_POST["direccion"], $_POST["telefono"], $_POST["email"], $_POST["contacto"]);
+			//					proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["telefono"], $post["email"], $post["contacto"]);
 			
 			
 		}
-		elseif ($_POST["tipo"] == "usuarios_manuales") {
-			$rut_completo = str_replace(".", "", $_POST["rut"]);
-			$_POST["rut"] = LimpiaRut($_POST["rut"]);
-			$Usu = TraeDatosUsuario($_POST["rut"]);
+		elseif ($post["tipo"] == "usuarios_manuales") {
+			$rut_completo = str_replace(".", "", $post["rut"]);
+			$post["rut"] = LimpiaRut($post["rut"]);
+			$Usu = TraeDatosUsuario($post["rut"]);
 			if ($Usu[0]->rut <> "" and $Usu[0]->empresa_holding == "") {
 				echo "<script>alert('Usuario ya existe en la base de datos');location.href='?sw=lista_proveedores_otec&tipo=usuarios_manuales';    </script>";
 				exit();
@@ -4779,15 +4777,15 @@ Cuadro Contable<br>
 				//print_r($Usu);
 				//$rut, $nombre, $descripcion, $direccion, $telefono, $email, $contacto
 				//rut, nombre, cargo, tipo, email, empresa,
-				proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["apellido"], $_POST["email"], $_POST["empresa"], $rut_completo, "");
+				proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["apellido"], $post["email"], $post["empresa"], $rut_completo, "");
 				
-				resetea_clave_2021_cambiado1($_POST["rut"], $id_empresa);
+				resetea_clave_2021_cambiado1($post["rut"], $id_empresa);
 			}
 		}
-		elseif ($_POST["tipo"] == "usuarios_externos") {
-			$rut_completo = str_replace(".", "", $_POST["rut"]);
-			$_POST["rut"] = LimpiaRut($_POST["rut"]);
-			$Usu = TraeDatosUsuario($_POST["rut"]);
+		elseif ($post["tipo"] == "usuarios_externos") {
+			$rut_completo = str_replace(".", "", $post["rut"]);
+			$post["rut"] = LimpiaRut($post["rut"]);
+			$Usu = TraeDatosUsuario($post["rut"]);
 			if ($Usu[0]->rut <> "" and $Usu[0]->empresa_holding == "") {
 				echo "<script>alert('Usuario ya existe en la base de datos');location.href='?sw=lista_proveedores_otec&tipo=usuarios_externos';    </script>";
 				exit();
@@ -4796,31 +4794,31 @@ Cuadro Contable<br>
 				//print_r($Usu);
 				//$rut, $nombre, $descripcion, $direccion, $telefono, $email, $contacto
 				//rut, nombre, cargo, tipo, email, empresa,
-				proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["apellido"], $_POST["email"], $_POST["empresa"], $rut_completo, $_POST["apellido_materno"]);
+				proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["apellido"], $post["email"], $post["empresa"], $rut_completo, $post["apellido_materno"]);
 				
-				resetea_clave_2021_cambiado1($_POST["rut"], $id_empresa);
+				resetea_clave_2021_cambiado1($post["rut"], $id_empresa);
 			}
 		}
-		elseif ($_POST["tipo"] == "direcciones") {
-			proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["descripcion"], $_POST["direccion"], $_POST["telefono"], $_POST["email"], $_POST["contacto"]);
+		elseif ($post["tipo"] == "direcciones") {
+			proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["telefono"], $post["email"], $post["contacto"]);
 		}
-		elseif ($_POST["tipo"] == "foco") {
-			proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["descripcion"], $_POST["direccion"], $_POST["telefono"], $_POST["email"], $_POST["contacto"]);
+		elseif ($post["tipo"] == "foco") {
+			proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["telefono"], $post["email"], $post["contacto"]);
 		}
-		elseif ($_POST["tipo"] == "programas") {
-			proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["descripcion"], $_POST["direccion"], $_POST["telefono"], $_POST["email"], $_POST["contacto"]);
+		elseif ($post["tipo"] == "programas") {
+			proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["telefono"], $post["email"], $post["contacto"]);
 		}
-		elseif ($_POST["tipo"] == "mallas_bch") {
-			proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["descripcion"], $_POST["direccion"], $_POST["telefono"], $_POST["email"], $_POST["contacto"]);
+		elseif ($post["tipo"] == "mallas_bch") {
+			proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["telefono"], $post["email"], $post["contacto"]);
 		}
-		elseif ($_POST["tipo"] == "categorias_bch") {
-			proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["descripcion"], $_POST["direccion"], $_POST["telefono"], $_POST["email"], $_POST["contacto"]);
+		elseif ($post["tipo"] == "categorias_bch") {
+			proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["telefono"], $post["email"], $post["contacto"]);
 		}
-		elseif ($_POST["tipo"] == "cuentas") {
-			proveedores_ejecutivos_save_insert_update($id_empresa, $_POST["tipo"], $_POST["id"], $_POST["rut"], $_POST["nombre"], $_POST["descripcion"], $_POST["direccion"], $_POST["telefono"], $_POST["email"], $_POST["contacto"]);
+		elseif ($post["tipo"] == "cuentas") {
+			proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["telefono"], $post["email"], $post["contacto"]);
 		}
 		
-		echo "<script>location.href='?sw=lista_proveedores_otec&tipo=" . $_POST["tipo"] . "';    </script>";
+		echo "<script>location.href='?sw=lista_proveedores_otec&tipo=" . $post["tipo"] . "';    </script>";
 		exit();
 	} // CREACION DE CURSOS PRESENCIALES
 	elseif ($seccion == "reporteJson_3_Pack_Cash_V6") {
@@ -4938,14 +4936,14 @@ Cuadro Contable<br>
 	} //**Rel idInscripcion rut Curso
 	elseif ($seccion == "rel_id_inscripcion_rut_curso") {
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($_POST);
+		//print_r($post);
 		
-		if ($_POST["create_filter"] == "1") {
+		if ($post["create_filter"] == "1") {
 			$Arrayc1c2c3c4 = reportes_online_trae_c1c2c3c4($id_empresa);
 			
-			if ($_POST["c1"] <> "") {
-				$_SESSION["c1h"] = " and (select c1 from tbl_reportes_online_usuario where rut=h.rut)='" . $_POST["c1"] . "' ";
-				$_SESSION["c1text"] = " " . $Arrayc1c2c3c4[0]->c1_texto . " ='" . $_POST["c1"] . "' ";
+			if ($post["c1"] <> "") {
+				$_SESSION["c1h"] = " and (select c1 from tbl_reportes_online_usuario where rut=h.rut)='" . $post["c1"] . "' ";
+				$_SESSION["c1text"] = " " . $Arrayc1c2c3c4[0]->c1_texto . " ='" . $post["c1"] . "' ";
 				$cuenta_filter++;
 			}
 			else {
@@ -4953,9 +4951,9 @@ Cuadro Contable<br>
 				$_SESSION["c1text"] = "";
 			}
 			
-			if ($_POST["c2"] <> "") {
-				$_SESSION["c2h"] = " and (select c2 from tbl_reportes_online_usuario where rut=h.rut)='" . $_POST["c2"] . "' ";
-				$_SESSION["c2text"] = " " . $Arrayc1c2c3c4[0]->c2_texto . " ='" . $_POST["c2"] . "' ";
+			if ($post["c2"] <> "") {
+				$_SESSION["c2h"] = " and (select c2 from tbl_reportes_online_usuario where rut=h.rut)='" . $post["c2"] . "' ";
+				$_SESSION["c2text"] = " " . $Arrayc1c2c3c4[0]->c2_texto . " ='" . $post["c2"] . "' ";
 				$cuenta_filter++;
 			}
 			else {
@@ -4963,9 +4961,9 @@ Cuadro Contable<br>
 				$_SESSION["c2text"] = "";
 			}
 			
-			if ($_POST["c3"] <> "") {
-				$_SESSION["c3h"] = " and (select c3 from tbl_reportes_online_usuario where rut=h.rut)='" . $_POST["c3"] . "' ";
-				$_SESSION["c3text"] = " " . $Arrayc1c2c3c4[0]->c3_texto . " ='" . $_POST["c3"] . "' ";
+			if ($post["c3"] <> "") {
+				$_SESSION["c3h"] = " and (select c3 from tbl_reportes_online_usuario where rut=h.rut)='" . $post["c3"] . "' ";
+				$_SESSION["c3text"] = " " . $Arrayc1c2c3c4[0]->c3_texto . " ='" . $post["c3"] . "' ";
 				$cuenta_filter++;
 			}
 			else {
@@ -4973,9 +4971,9 @@ Cuadro Contable<br>
 				$_SESSION["c3text"] = "";
 			}
 			
-			if ($_POST["c4"] <> "") {
-				$_SESSION["c4h"] = " and (select c4 from tbl_reportes_online_usuario where rut=h.rut)='" . $_POST["c4"] . "' ";
-				$_SESSION["c4text"] = " " . $Arrayc1c2c3c4[0]->c4_texto . " ='" . $_POST["c4"] . "' ";
+			if ($post["c4"] <> "") {
+				$_SESSION["c4h"] = " and (select c4 from tbl_reportes_online_usuario where rut=h.rut)='" . $post["c4"] . "' ";
+				$_SESSION["c4text"] = " " . $Arrayc1c2c3c4[0]->c4_texto . " ='" . $post["c4"] . "' ";
 				$cuenta_filter++;
 			}
 			else {
@@ -4983,10 +4981,10 @@ Cuadro Contable<br>
 				$_SESSION["c4text"] = "";
 			}
 			
-			if ($_POST["rut_colaborador"] <> "") {
-				$_SESSION["rut_colaborador"] = " and (select rut from tbl_reportes_online_usuario where rut=h.rut)='" . $_POST["rut_colaborador"] . "' ";
-				$UsuCol = TraeDatosUsuario($_POST["rut_colaborador"]);
-				$_SESSION["rut_colaborador_text"] = " Rut Colaborador = " . $_POST["rut_colaborador"] . " - " . $UsuCol[0]->nombre_completo . " ";
+			if ($post["rut_colaborador"] <> "") {
+				$_SESSION["rut_colaborador"] = " and (select rut from tbl_reportes_online_usuario where rut=h.rut)='" . $post["rut_colaborador"] . "' ";
+				$UsuCol = TraeDatosUsuario($post["rut_colaborador"]);
+				$_SESSION["rut_colaborador_text"] = " Rut Colaborador = " . $post["rut_colaborador"] . " - " . $UsuCol[0]->nombre_completo . " ";
 				$cuenta_filter++;
 			}
 			else {
@@ -5003,7 +5001,7 @@ Cuadro Contable<br>
 			$_SESSION["cuenta_filter"] = "";
 		}
 		
-		if ($_GET["clean"] == "1") {
+		if ($get["clean"] == "1") {
 			$_SESSION["c1text"] = "";
 			$_SESSION["c2text"] = "";
 			$_SESSION["c3text"] = "";
@@ -5021,7 +5019,7 @@ Cuadro Contable<br>
 		}
 		
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
-		$PRINCIPAL = str_replace("{ENTORNO}", fn_rel_id_inscripcion_rut_curso_lista(FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_rel_id_inscripcion_rut_curso.html")), $_SESSION["id_empresa"], $filtro, $_POST, $_GET, $_REQUEST, $excel), $PRINCIPAL);
+		$PRINCIPAL = str_replace("{ENTORNO}", fn_rel_id_inscripcion_rut_curso_lista(FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_rel_id_inscripcion_rut_curso.html")), $_SESSION["id_empresa"], $filtro, $post, $get, $request, $excel), $PRINCIPAL);
 		
 		$datos_empresa = DatosEmpresa($id_empresa);
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -5031,14 +5029,14 @@ Cuadro Contable<br>
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		
-		$programa_malla = explode(";", $_POST["programa_malla"]);
+		$programa_malla = explode(";", $post["programa_malla"]);
 		
-		data_rel_id_inscripcion_curso_Insert($_POST["id_inscripcion"], ($_POST["nombre_inscripcion"]), $_POST["fecha_inicio"], $_POST["fecha_termino"], $id_empresa, $_POST["rut_ejecutivo"], $_POST["id_curso"], $_POST["opcional"], $programa_malla[0], $programa_malla[1]);
+		data_rel_id_inscripcion_curso_Insert($post["id_inscripcion"], ($post["nombre_inscripcion"]), $post["fecha_inicio"], $post["fecha_termino"], $id_empresa, $post["rut_ejecutivo"], $post["id_curso"], $post["opcional"], $programa_malla[0], $programa_malla[1]);
 		//exit();
 		
 		
 		VerificaExtensionFilesAdmin($_FILES["file"]);
-		if (isset($_POST["action"])) {
+		if (isset($post["action"])) {
 			if (isset($_FILES["file"])) {
 				if ($_FILES["file"]["error"] > 0) {
 					echo "Return Code: " . $_FILES["file"]["error"] . "<br />";
@@ -5118,7 +5116,7 @@ Cuadro Contable<br>
 					}
 					
 					
-					$row_csv .= ", '" . $_POST["id_curso"] . "', '" . $_POST["id_inscripcion"] . "','" . $_POST["fecha_inicio"] . "','" . $_POST["fecha_termino"] . "','" . $_POST["rut_ejecutivo"] . "'";
+					$row_csv .= ", '" . $post["id_curso"] . "', '" . $post["id_inscripcion"] . "','" . $post["fecha_inicio"] . "','" . $post["fecha_termino"] . "','" . $post["rut_ejecutivo"] . "'";
 					
 					
 					//echo "<br>row_csv<br>$row_csv<br>";
@@ -5136,15 +5134,15 @@ Cuadro Contable<br>
 			}
 		}
 		
-		echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_curso=" . $_POST["id_curso"] . "';</script>";
+		echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_curso=" . $post["id_curso"] . "';</script>";
 		unlink("upload/" . $storagename);
 		exit;
 	}
 	elseif ($seccion == "usuarios_update_tbl_rel_id_inscripcion_rut_curso") {
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($_GET);
+		//print_r($get);
 		
-		if ($_POST["accion_id_inscripcion"] == "1") {
+		if ($post["accion_id_inscripcion"] == "1") {
 			VerificaExtensionFilesAdmin($_FILES["file"]);
 			
 			if (isset($_FILES["file"])) {
@@ -5220,14 +5218,14 @@ Cuadro Contable<br>
 						//echo "<br>-> Cuenta ".$cuenta." - Content " .$content;
 					}
 					
-					//echo "<br>rut_col<br>$rut_col<br>id_inscripcion<br>".$_POST["id_inscripcion"]."<br>";exit();
+					//echo "<br>rut_col<br>$rut_col<br>id_inscripcion<br>".$post["id_inscripcion"]."<br>";exit();
 					
-					if ($_POST["tipo_accion"] == "Eliminar") {
-						data_rel_id_inscripcion_rut_curso_Delete($_POST["id_inscripcion"], $rut_col);
+					if ($post["tipo_accion"] == "Eliminar") {
+						data_rel_id_inscripcion_rut_curso_Delete($post["id_inscripcion"], $rut_col);
 					}
 					
-					if ($_POST["tipo_accion"] == "Agregar") {
-						$Inscripcion = data_rel_id_inscripcion_full_inscripcion($_POST["id_inscripcion"]);
+					if ($post["tipo_accion"] == "Agregar") {
+						$Inscripcion = data_rel_id_inscripcion_full_inscripcion($post["id_inscripcion"]);
 						
 						$row_csv = "'" . $rut_col . "',
 										       								'" . $Inscripcion[0]->id_curso . "',
@@ -5251,18 +5249,18 @@ Cuadro Contable<br>
 			
 			
 			unlink("upload/" . $storagename);
-			echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_inscripcion=" . $_POST["id_inscripcion"] . "';</script>";
+			echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_inscripcion=" . $post["id_inscripcion"] . "';</script>";
 			exit;
 		}
 		
-		if ($_POST["accion_editar_fecha"] == "1") {
-			data_rel_id_inscripcion_rut_curso_Update($_POST["id_inscripcion"], $_POST["fecha_inicio"], $_POST["fecha_termino"], $_POST["rut_ejecutivo"]);
-			echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_inscripcion=" . $_POST["id_inscripcion"] . "';</script>";
+		if ($post["accion_editar_fecha"] == "1") {
+			data_rel_id_inscripcion_rut_curso_Update($post["id_inscripcion"], $post["fecha_inicio"], $post["fecha_termino"], $post["rut_ejecutivo"]);
+			echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_inscripcion=" . $post["id_inscripcion"] . "';</script>";
 			exit;
 		}
 		
-		if ($_GET["del_id_inscripcion_del"] <> "") {
-			data_rel_id_inscripcion_rut_curso_Delete_Full($_GET["del_id_inscripcion_del"]);
+		if ($get["del_id_inscripcion_del"] <> "") {
+			data_rel_id_inscripcion_rut_curso_Delete_Full($get["del_id_inscripcion_del"]);
 			echo "<script> alert('Id Inscripcion eliminada'); location.href='?sw=rel_id_inscripcion_rut_curso';</script>";
 			exit;
 		}
@@ -5279,12 +5277,12 @@ Cuadro Contable<br>
 		$id_empresa = $_SESSION["id_empresa"];
 		/*echo "<br><br>";
 
-		print_r($_POST);
+		print_r($post);
 		echo "<br>Sesion<br>";
 		print_r($_SESSION);
 		echo "<br><br>";*/
 		
-		if ($_GET["clean"] == "1") {
+		if ($get["clean"] == "1") {
 			$_SESSION["c1text"] = "";
 			$_SESSION["c2text"] = "";
 			$_SESSION["c3text"] = "";
@@ -5303,12 +5301,12 @@ Cuadro Contable<br>
 		}
 		
 		$texto_filtro = "";
-		if ($_POST["create_filter"] == "1") {
+		if ($post["create_filter"] == "1") {
 			$_SESSION["c1h"] = "";
 			$_SESSION["c1text"] = "";
 			$Arrayc1c2c3c4 = reportes_online_trae_c1c2c3c4($id_empresa);
 			$cuenta_c1_check = 0;
-			foreach ($_POST as $key => $value) {
+			foreach ($post as $key => $value) {
 				$cuenta_c1_check++;
 				if (strpos($key, "Gerencia") !== false) {
 					//echo "<br>->".$key." = ".$value."";
@@ -5326,37 +5324,37 @@ Cuadro Contable<br>
 				$_SESSION["c1h"] = " and (" . $QueryC1Checxbox . ") ";
 				$_SESSION["c1text"] = " " . $dato_txt_c1_titulo . "";
 			}
-			if ($_POST["c2"] <> "") {
-				$_SESSION["c2h"] = " and (select c2 from tbl_reportes_online_usuario where rut=h.rut)='" . $_POST["c2"] . "' ";
-				$_SESSION["c2text"] = " " . $Arrayc1c2c3c4[0]->c2_texto . " ='" . $_POST["c2"] . "' ";
+			if ($post["c2"] <> "") {
+				$_SESSION["c2h"] = " and (select c2 from tbl_reportes_online_usuario where rut=h.rut)='" . $post["c2"] . "' ";
+				$_SESSION["c2text"] = " " . $Arrayc1c2c3c4[0]->c2_texto . " ='" . $post["c2"] . "' ";
 				$cuenta_filter++;
 			}
 			else {
 				$_SESSION["c2h"] = "";
 				$_SESSION["c2text"] = "";
 			}
-			if ($_POST["c3"] <> "") {
-				$_SESSION["c3h"] = " and (select c3 from tbl_reportes_online_usuario where rut=h.rut)='" . $_POST["c3"] . "' ";
-				$_SESSION["c3text"] = " " . $Arrayc1c2c3c4[0]->c3_texto . " ='" . $_POST["c3"] . "' ";
+			if ($post["c3"] <> "") {
+				$_SESSION["c3h"] = " and (select c3 from tbl_reportes_online_usuario where rut=h.rut)='" . $post["c3"] . "' ";
+				$_SESSION["c3text"] = " " . $Arrayc1c2c3c4[0]->c3_texto . " ='" . $post["c3"] . "' ";
 				$cuenta_filter++;
 			}
 			else {
 				$_SESSION["c3h"] = "";
 				$_SESSION["c3text"] = "";
 			}
-			if ($_POST["c4"] <> "") {
-				$_SESSION["c4h"] = " and (select c4 from tbl_reportes_online_usuario where rut=h.rut)='" . $_POST["c4"] . "' ";
-				$_SESSION["c4text"] = " " . $Arrayc1c2c3c4[0]->c4_texto . " ='" . $_POST["c4"] . "' ";
+			if ($post["c4"] <> "") {
+				$_SESSION["c4h"] = " and (select c4 from tbl_reportes_online_usuario where rut=h.rut)='" . $post["c4"] . "' ";
+				$_SESSION["c4text"] = " " . $Arrayc1c2c3c4[0]->c4_texto . " ='" . $post["c4"] . "' ";
 				$cuenta_filter++;
 			}
 			else {
 				$_SESSION["c4h"] = "";
 				$_SESSION["c4text"] = "";
 			}
-			if ($_POST["rut_colaborador"] <> "") {
-				$_SESSION["rut_colaborador"] = " and (select rut from tbl_reportes_online_usuario where rut=h.rut)='" . $_POST["rut_colaborador"] . "' ";
-				$UsuCol = TraeDatosUsuario($_POST["rut_colaborador"]);
-				$_SESSION["rut_colaborador_text"] = " Rut Colaborador = " . $_POST["rut_colaborador"] . " - " . $UsuCol[0]->nombre_completo . " ";
+			if ($post["rut_colaborador"] <> "") {
+				$_SESSION["rut_colaborador"] = " and (select rut from tbl_reportes_online_usuario where rut=h.rut)='" . $post["rut_colaborador"] . "' ";
+				$UsuCol = TraeDatosUsuario($post["rut_colaborador"]);
+				$_SESSION["rut_colaborador_text"] = " Rut Colaborador = " . $post["rut_colaborador"] . " - " . $UsuCol[0]->nombre_completo . " ";
 				$cuenta_filter++;
 			}
 			else {
@@ -5377,16 +5375,16 @@ Cuadro Contable<br>
 		//echo " texto_filtro ".$_SESSION["dato_final_filtro"];
 		
 		
-		if ($_POST["agrupacion_nueva"] == "1") {
-			//print_r($_POST);
+		if ($post["agrupacion_nueva"] == "1") {
+			//print_r($post);
 			$id_agrupacion = reportes_online_maxAgrupacion();
-			foreach ($_POST as $key => $value) {
+			foreach ($post as $key => $value) {
 				//echo "<br>line<br>";			print_r($value);				echo "<br>key<br>";				print_r($key);
 				
 				if ($key == "nombre_agrupacion" or $key == "agrupacion_nueva") {
 					continue;
 				}
-				$nombre_agrupacion = $_POST["nombre_agrupacion"];
+				$nombre_agrupacion = $post["nombre_agrupacion"];
 				//echo "<br>id_agrupacion $id_agrupacion nombre_agrupacion $nombre_agrupacion, id_curso ".$key;
 				reportes_online_Insert_agrupacion_data($id_agrupacion, $nombre_agrupacion, $key);
 			}
@@ -5399,36 +5397,36 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "reportes_online_descarga") {
-		//print_r($_GET);
+		//print_r($get);
 		global $Desaparece_IDSap_ListaParticipantes;
-		if ($_POST["download_reportes_completos"] == "1") {
-			//print_r($_POST);
-			if ($_POST["rc_anos"] <> "") {
-				$_SESSION["op_rc_anos"] = $_POST["rc_anos"];
+		if ($post["download_reportes_completos"] == "1") {
+			//print_r($post);
+			if ($post["rc_anos"] <> "") {
+				$_SESSION["op_rc_anos"] = $post["rc_anos"];
 			}
 			else {
 				$_SESSION["op_rc_anos"] = "";
 			}
-			if ($_POST["rc_programa"] <> "") {
-				$_SESSION["op_rc_programa"] = $_POST["rc_programa"];
+			if ($post["rc_programa"] <> "") {
+				$_SESSION["op_rc_programa"] = $post["rc_programa"];
 			}
 			else {
 				$_SESSION["op_rc_programa"] = "";
 			}
-			if ($_POST["rc_gerencia"] <> "") {
-				$_SESSION["op_rc_gerencia"] = $_POST["rc_gerencia"];
+			if ($post["rc_gerencia"] <> "") {
+				$_SESSION["op_rc_gerencia"] = $post["rc_gerencia"];
 			}
 			else {
 				$_SESSION["op_rc_gerencia"] = "";
 			}
-			if ($_POST["rc_colaboradores"] <> "") {
-				$_SESSION["op_rc_colaboradores"] = $_POST["rc_colaboradores"];
+			if ($post["rc_colaboradores"] <> "") {
+				$_SESSION["op_rc_colaboradores"] = $post["rc_colaboradores"];
 			}
 			else {
 				$_SESSION["op_rc_colaboradores"] = "";
 			}
 			//echo "<br>sesion<br>";print_r($_SESSION);exit();
-			$_GET["tipo"] = $_POST["rc_tipo"];
+			$get["tipo"] = $post["rc_tipo"];
 		}
 		//echo "<br>sesion<br>";print_r($_SESSION);exit();
 		$cuenta_usuarios_inscritos = 0;
@@ -5439,21 +5437,21 @@ Cuadro Contable<br>
 		$estado_reprobado = 0;
 		$LISTA_PREGUNTAS_ENC_SATISFACCION = "";
 		
-		if ($_GET["tipo"] == "Curso") {
-			if ($_GET["vista"] == "graph") {
+		if ($get["tipo"] == "Curso") {
+			if ($get["vista"] == "graph") {
 				$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 				$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf.html")), $PRINCIPAL);
 				
 				
 				$PRINCIPAL = str_replace("{NOMBRE-CURSO}", ($Cur[0]->nombre), $PRINCIPAL);
 				
-				if ($_GET["enc_sat"] == "1") {
+				if ($get["enc_sat"] == "1") {
 					//echo "muestra Enc Sat";
 					
 					$row_excel_enc_sat .= "id_curso;curso;id_imparticion;fecha_inicio;fecha_termino\r\n";
 					$row_excel_enc_sat .= "" . $datos_imparticion_V2[0]->id_curso . ";" . $datos_imparticion_V2[0]->nombre_curso . ";" . $datos_imparticion_V2[0]->codigo_inscripcion . ";" . $datos_imparticion_V2[0]->fecha_inicio . ";" . $datos_imparticion_V2[0]->fecha_termino . "\r\n";
 					
-					$EncSat = EncuestaSatisfaccion_IdImparticionIdCurso_data("", $_GET["id"]);
+					$EncSat = EncuestaSatisfaccion_IdImparticionIdCurso_data("", $get["id"]);
 					//print_r($EncSat);
 					$cuenta = count($EncSat);
 					
@@ -5468,7 +5466,7 @@ Cuadro Contable<br>
 				   Encuesta de Satisfacción
 				  </div>
 				  <div style='text-align:right;'>
-				  	<a href='?sw=VeReportesXImp2021&amp;i=" . Encodear3($_GET["id_inscripcion"]) . "&amp;excel=2' class='btn btn-link'>Descargar Datos Encuestas Satisfaccion</a>
+				  	<a href='?sw=VeReportesXImp2021&amp;i=" . Encodear3($get["id_inscripcion"]) . "&amp;excel=2' class='btn btn-link'>Descargar Datos Encuestas Satisfaccion</a>
 				  </div>
 				  <div class='card-body    mg_20topbottom' style='padding-left: 20px;'>Encuestas Respondidas: $cuenta</div>
 				  ";
@@ -5497,7 +5495,7 @@ Cuadro Contable<br>
 					$row_excel_enc_sat .= "pregunta;cantidad1;porcentaje1;cantidad2;porcentaje2;cantidad3;porcentaje3;cantidad4;porcentaje5;cantidad5;porcentaje5\r\n";
 					foreach ($Preg as $unico) {
 						//Respuestas por Pregunta
-						$Resp = EncuestaSatisfaccion_BuscaRespuestas($EncSat[0]->id_encuesta, $unico->id_pregunta, "", $_GET["id"]);
+						$Resp = EncuestaSatisfaccion_BuscaRespuestas($EncSat[0]->id_encuesta, $unico->id_pregunta, "", $get["id"]);
 						$cuenta1 = 0;
 						$cuenta2 = 0;
 						$cuenta3 = 0;
@@ -5577,7 +5575,7 @@ Cuadro Contable<br>
 						
 						$row_excel_enc_sat .= "" . $unico->pregunta . ";" . $cuenta1 . ";" . $porc_1 . "%;" . $cuenta2 . ";" . $porc_2 . "%;" . $cuenta3 . ";" . $porc_3 . "%;" . $cuenta4 . ";" . $porc_4 . "%;" . $cuenta5 . ";" . $porc_5 . "%\r\n";
 					}
-					$Com = EncuestaSatisfaccion_BuscaComentarios($EncSat[0]->id_encuesta, "", $_GET["id"]);
+					$Com = EncuestaSatisfaccion_BuscaComentarios($EncSat[0]->id_encuesta, "", $get["id"]);
 					$row_encuesta_satisfaccion_pregunta .= "
 					<div class='card'>
 							<div class='row'>
@@ -5619,7 +5617,7 @@ Cuadro Contable<br>
 					
 					$LISTA_PREGUNTAS_ENC_SATISFACCION = $row_encuesta_satisfaccion_pregunta;
 					
-					if ($_GET["excel"] == "2") {
+					if ($get["excel"] == "2") {
 						// EXCEL ENCUESTA SATISFACCION
 						header('Content-Description: File Transfer');
 						header('Content-Type: application/csv');
@@ -5633,24 +5631,24 @@ Cuadro Contable<br>
 				$PRINCIPAL = str_replace("{ID_CURSO_ENV}", ($datos_imparticion_V2[0]->id_curso), $PRINCIPAL);
 			}
 			else {
-				$DatosCurso = DatosCursoDadoId($_GET["id"], $_SESSION["id_empresa"]);
+				$DatosCurso = DatosCursoDadoId($get["id"], $_SESSION["id_empresa"]);
 				
 				header('Content-Description: File Transfer');
 				header('Content-Type: application/csv');
-				header("Content-Disposition: attachment; filename=Reporte_Online_" . $_GET["tipo"] . "_" . $DatosCurso[0]->nombre . "_" . $_GET["id"] . ".csv");
+				header("Content-Disposition: attachment; filename=Reporte_Online_" . $get["tipo"] . "_" . $DatosCurso[0]->nombre . "_" . $get["id"] . ".csv");
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			}
 			
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
 			//print_r($Campos);exit();
 			
-			$array_lms_reportes_dado_id_curso = reportes_online_lms_reportes_dado_id_curso($_GET["id"]);
+			$array_lms_reportes_dado_id_curso = reportes_online_lms_reportes_dado_id_curso($get["id"]);
 			$handle = fopen('php://output', 'w');
 			
-			if ($_GET["vista"] == "graph") {
+			if ($get["vista"] == "graph") {
 				$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 				$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf.html")), $PRINCIPAL);
-				$Cur = DatosCursoDadoId($_GET["id"], $_SESSION["id_empresa"]);
+				$Cur = DatosCursoDadoId($get["id"], $_SESSION["id_empresa"]);
 				$PRINCIPAL = str_replace("{NOMBRE-CURSO}", ($Cur[0]->nombre), $PRINCIPAL);
 				if ($Desaparece_IDSap_ListaParticipantes == "SI_MUESTRA") {
 					$PRINCIPAL = str_replace("{TH_ID_SAP}", "<th class='width40'>IdSap</th>", $PRINCIPAL);
@@ -5719,7 +5717,7 @@ Cuadro Contable<br>
 					//echo "<h3>Resultado No lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
 				}
 				
-				if ($_GET["vista"] == "graph") {
+				if ($get["vista"] == "graph") {
 					//echo $Desaparece_IDSap_ListaParticipantes;
 					$muestra_id_sap = "";
 					if ($Desaparece_IDSap_ListaParticipantes == "SI_MUESTRA") {
@@ -5741,13 +5739,13 @@ Cuadro Contable<br>
 																			";
 				}
 				else {
-					$cur = reportes_online_curso_dado_idcurso($_GET["id"]);
-					$id_inscripcion = reportes_online_inscripcion_dado_idcurso_rut($unico->rut, $_GET["id"]);
+					$cur = reportes_online_curso_dado_idcurso($get["id"]);
+					$id_inscripcion = reportes_online_inscripcion_dado_idcurso_rut($unico->rut, $get["id"]);
 					//print_r($id_inscripcion);	Fecha_inicio													exit();
-					$Fechas_inicio = reportes_online_lms_reportes_consolidado_fechas_dado_id_programa("fecha_inicio", "min", $_GET["id"], $unico->rut, "id_curso");
+					$Fechas_inicio = reportes_online_lms_reportes_consolidado_fechas_dado_id_programa("fecha_inicio", "min", $get["id"], $unico->rut, "id_curso");
 					
 					//print_r($Fechas_inicio);
-					$Fechas_termino = reportes_online_lms_reportes_consolidado_fechas_dado_id_programa("fecha_termino", "max", $_GET["id"], $unico->rut, "id_curso");
+					$Fechas_termino = reportes_online_lms_reportes_consolidado_fechas_dado_id_programa("fecha_termino", "max", $get["id"], $unico->rut, "id_curso");
 					
 					
 					echo "" . $usu[0]->rut . ";" . $usu[0]->rut_completo . ";" . $usu[0]->nombre_completo . ";" . $usu[0]->cargo . ";" . $usu[0]->email . ";" . $usu[0]->empresa . ";" . $usu[0]->c1 . ";" . $usu[0]->c2 . ";" . $usu[0]->c3 . ";" . $usu[0]->c4 . ";" . $usu[0]->jefe . ";" . $cur[0]->id_curso . ";" . $cur[0]->curso . ";" . $unico->avance . ";" . $unico->estado . ";" . $unico->resultado . ";" . $Fechas_inicio . ";" . $Fechas_termino . ";" . $id_inscripcion[0]->id_inscripcion . ";" . $id_inscripcion[0]->fecha_inicio_inscripcion . ";" . $id_inscripcion[0]->fecha_termino_inscripcion . "\r\n";
@@ -5756,10 +5754,10 @@ Cuadro Contable<br>
 			}
 		}
 		
-		if ($_GET["tipo"] == "ProgramaDetalle") {
+		if ($get["tipo"] == "ProgramaDetalle") {
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/csv');
-			header("Content-Disposition: attachment; filename=Reporte_Online_" . $_GET["tipo"] . "_ID_" . $_GET["id"] . ".csv");
+			header("Content-Disposition: attachment; filename=Reporte_Online_" . $get["tipo"] . "_ID_" . $get["id"] . ".csv");
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			
 			
@@ -5768,7 +5766,7 @@ Cuadro Contable<br>
 			
 			
 			//echo "Programa";
-			$array_lms_reportes_dado_id_programa = reportes_online_lms_reportes_dado_id_programa($_GET["id"]);
+			$array_lms_reportes_dado_id_programa = reportes_online_lms_reportes_dado_id_programa($get["id"]);
 			//echo "<pre>";
 			
 			
@@ -5800,7 +5798,7 @@ Cuadro Contable<br>
 					continue;
 				}
 				
-				if ($_GET["vista"] == "graph") {
+				if ($get["vista"] == "graph") {
 					if ($unico->avance >= 100) {
 						// Chequea Resultado
 						$estado_finalizado++;
@@ -5851,7 +5849,7 @@ Cuadro Contable<br>
 				//fputcsv($handle, $row);
 			}
 			
-			if ($_GET["vista"] == "graph") {
+			if ($get["vista"] == "graph") {
 			}
 			else {
 				//ob_flush();
@@ -5861,10 +5859,10 @@ Cuadro Contable<br>
 			}
 		}
 		
-		if ($_GET["tipo"] == "ProgramaDetalle_historico") {
+		if ($get["tipo"] == "ProgramaDetalle_historico") {
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/csv');
-			header("Content-Disposition: attachment; filename=Reporte_Online_" . $_GET["tipo"] . "_ID_" . $_GET["id"] . "_Historico.csv");
+			header("Content-Disposition: attachment; filename=Reporte_Online_" . $get["tipo"] . "_ID_" . $get["id"] . "_Historico.csv");
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
@@ -5872,7 +5870,7 @@ Cuadro Contable<br>
 			
 			
 			//echo "Programa";
-			$array_lms_reportes_dado_id_programa = reportes_online_lms_reportes_dado_id_programa($_GET["id"]);
+			$array_lms_reportes_dado_id_programa = reportes_online_lms_reportes_dado_id_programa($get["id"]);
 			//echo "<pre>";
 			
 			
@@ -5907,7 +5905,7 @@ Cuadro Contable<br>
 					$vigente = "VIGENTE";
 				}
 				
-				if ($_GET["vista"] == "graph") {
+				if ($get["vista"] == "graph") {
 					if ($unico->avance >= 100) {
 						// Chequea Resultado
 						$estado_finalizado++;
@@ -5958,7 +5956,7 @@ Cuadro Contable<br>
 				//fputcsv($handle, $row);
 			}
 			
-			if ($_GET["vista"] == "graph") {
+			if ($get["vista"] == "graph") {
 			}
 			else {
 				//ob_flush();
@@ -5968,8 +5966,8 @@ Cuadro Contable<br>
 			}
 		}
 		
-		if ($_GET["tipo"] == "ProgramaConsolidado") {
-			if ($_GET["vista"] == "graph") {
+		if ($get["tipo"] == "ProgramaConsolidado") {
+			if ($get["vista"] == "graph") {
 				$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 				$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf_agrup.html")), $PRINCIPAL);
 				//echo "vista Graph";
@@ -5978,7 +5976,7 @@ Cuadro Contable<br>
 			else {
 				header('Content-Description: File Transfer');
 				header('Content-Type: application/csv');
-				header("Content-Disposition: attachment; filename=Reporte_Online_" . $_GET["tipo"] . "_ID_" . $_GET["id"] . ".csv");
+				header("Content-Disposition: attachment; filename=Reporte_Online_" . $get["tipo"] . "_ID_" . $get["id"] . ".csv");
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			}
 			
@@ -5986,7 +5984,7 @@ Cuadro Contable<br>
 			//print_r($Campos);
 			
 			//echo "Programa";
-			$array_lms_reportes_dado_id_programa_consolidado = reportes_online_lms_reportes_consolidado_dado_id_programa($_GET["id"]);
+			$array_lms_reportes_dado_id_programa_consolidado = reportes_online_lms_reportes_consolidado_dado_id_programa($get["id"]);
 			//echo "<pre>";							//print_r($array_lms_reportes_dado_id_programa);//exit;							//$cuenta_arreglo=count($array_lms_reportes_dado_id_programa);
 			//$items_mas=$cuenta_arreglo+1;							//echo "cuenta arreglo $cuenta_arreglo";							//$array_lms_reportes_dado_id_programa["$items_mas"]["rut"]="00000";
 			//$array_lms_reportes_dado_id_programa["$items_mas"]["id_curso"]=0;							//$array_lms_reportes_dado_id_programa["$items_mas"]["avance"]=0;
@@ -5994,8 +5992,8 @@ Cuadro Contable<br>
 			//$cuenta_arreglo2=count($array_lms_reportes_dado_id_programa);							//echo "cuenta arreglo 2 $cuenta_arreglo2";
 			//echo "<pre>";							//print_r($array_lms_reportes_dado_id_programa);//exit();
 			
-			if ($_GET["vista"] == "graph") {
-				$Prog = ObtieneDatosProgramasPorEmpresa($_GET["id"], $_SESSION["id_empresa"]);
+			if ($get["vista"] == "graph") {
+				$Prog = ObtieneDatosProgramasPorEmpresa($get["id"], $_SESSION["id_empresa"]);
 				$PRINCIPAL = str_replace("{NOMBRE-CURSO}", ($Prog[0]->nombre_programa), $PRINCIPAL);
 				if ($Desaparece_IDSap_ListaParticipantes == "SI_MUESTRA") {
 					$PRINCIPAL = str_replace("{TH_ID_SAP}", "<th class='width40'>IdSap</th>", $PRINCIPAL);
@@ -6020,13 +6018,13 @@ Cuadro Contable<br>
 					continue;
 				}
 				$CuentaLineaFull++;
-				$CuentaCursos = reportes_online_lms_reportes_consolidado_cuenta_cursos_dado_id_programa($_GET["id"], $unico2->rut);
+				$CuentaCursos = reportes_online_lms_reportes_consolidado_cuenta_cursos_dado_id_programa($get["id"], $unico2->rut);
 				
-				if ($_GET["vista"] == "graph") {
+				if ($get["vista"] == "graph") {
 				}
 				else {
-					$Fechas_inicio = reportes_online_lms_reportes_consolidado_fechas_dado_id_programa("fecha_inicio", "min", $_GET["id"], $unico2->rut, "id_programa");
-					$Fechas_termino = reportes_online_lms_reportes_consolidado_fechas_dado_id_programa("fecha_termino", "max", $_GET["id"], $unico2->rut, "id_programa");
+					$Fechas_inicio = reportes_online_lms_reportes_consolidado_fechas_dado_id_programa("fecha_inicio", "min", $get["id"], $unico2->rut, "id_programa");
+					$Fechas_termino = reportes_online_lms_reportes_consolidado_fechas_dado_id_programa("fecha_termino", "max", $get["id"], $unico2->rut, "id_programa");
 				}
 				
 				$Reporte = reportes_online_lms_reportes_busca_avance_resultado_dado_rut_id_curso($unico2->rut, $unico2->id_curso);
@@ -6123,7 +6121,7 @@ Cuadro Contable<br>
 				
 				
 				if ($CuentaCursos == $cuenta_avance) {
-					if ($_GET["vista"] == "graph") {
+					if ($get["vista"] == "graph") {
 						$muestra_id_sap = "";
 						if ($Desaparece_IDSap_ListaParticipantes == "SI_MUESTRA") {
 							$IdSap = reportes_online_usuario_rut_traeIdSapC3($rut_antiguo);
@@ -6143,9 +6141,9 @@ Cuadro Contable<br>
 																										";
 					}
 					else {
-						//$IdMalla=reportes_online_Malla_dado_id_curso_rut_programa($usu[0]->rut, $unico2->id_curso, $_GET["id"]);
+						//$IdMalla=reportes_online_Malla_dado_id_curso_rut_programa($usu[0]->rut, $unico2->id_curso, $get["id"]);
 						//$Malla=reportes_online_nombremalla($IdMalla);
-						//$Prog=reportes_online_curso_dado_programa($_GET["id"]);
+						//$Prog=reportes_online_curso_dado_programa($get["id"]);
 						
 						echo "" . $rut_antiguo . ";" . $usu[0]->rut_completo . ";" . $usu[0]->nombre_completo . ";" . $usu[0]->cargo . ";" . $usu[0]->email . ";" . $usu[0]->empresa . ";" . $usu[0]->c1 . ";" . $usu[0]->c2 . ";" . $usu[0]->c3 . ";" . $usu[0]->c4 . ";" . $usu[0]->jefe . ";" . $unico2->id_programa . ";" . $unico2->programa . ";" . $unico2->id_malla . ";" . $unico2->malla . ";" . $Estado_Avance . ";" . $estado . ";" . $Estado_Resultado . ";" . $Fecha_inicio . ";" . $Fecha_termino . "\r\n";
 					}
@@ -6158,7 +6156,7 @@ Cuadro Contable<br>
 			//echo "<h3>Cuenta_usuarios_inscritos $cuenta_usuarios_inscritos</h3>";
 			
 			
-			if ($_GET["vista"] == "graph") {
+			if ($get["vista"] == "graph") {
 			}
 			else {
 				//ob_flush();
@@ -6168,15 +6166,15 @@ Cuadro Contable<br>
 			}
 		}
 		
-		if ($_GET["tipo"] == "Colaborador") {
-			if ($_GET["vista"] == "graph") {
+		if ($get["tipo"] == "Colaborador") {
+			if ($get["vista"] == "graph") {
 				$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 				$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf.html")), $PRINCIPAL);
 			}
 			else {
 				header('Content-Description: File Transfer');
 				header('Content-Type: application/csv');
-				header("Content-Disposition: attachment; filename=Reporte_Online_" . $_GET["tipo"] . "_RUT_" . $_SESSION["rut_colaborador"] . ".csv");
+				header("Content-Disposition: attachment; filename=Reporte_Online_" . $get["tipo"] . "_RUT_" . $_SESSION["rut_colaborador"] . ".csv");
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			}
 			
@@ -6186,7 +6184,7 @@ Cuadro Contable<br>
 			$array_lms_reportes_dado_rut = reportes_online_lms_reportes_dado_rut($_SESSION["op_rc_colaboradores"]);
 			$handle = fopen('php://output', 'w');
 			
-			if ($_GET["vista"] == "graph") {
+			if ($get["vista"] == "graph") {
 				$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 				$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf.html")), $PRINCIPAL);
 			}
@@ -6219,7 +6217,7 @@ Cuadro Contable<br>
 					continue;
 				}
 				
-				if ($_GET["vista"] == "graph") {
+				if ($get["vista"] == "graph") {
 					if ($unico->avance >= 100) {
 						// Chequea Resultado
 						$estado_finalizado++;
@@ -6270,7 +6268,7 @@ Cuadro Contable<br>
 				//fputcsv($handle, $row);
 			}
 			
-			if ($_GET["vista"] == "graph") {
+			if ($get["vista"] == "graph") {
 			}
 			else {
 				//ob_flush();
@@ -6280,15 +6278,15 @@ Cuadro Contable<br>
 			}
 		}
 		
-		if ($_GET["tipo"] == "Completo") {
-			if ($_GET["vista"] == "graph") {
+		if ($get["tipo"] == "Completo") {
+			if ($get["vista"] == "graph") {
 				$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 				$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf.html")), $PRINCIPAL);
 			}
 			else {
 				header('Content-Description: File Transfer');
 				header('Content-Type: application/csv');
-				header("Content-Disposition: attachment; filename=Reporte_Online_" . $_GET["tipo"] . ".csv");
+				header("Content-Disposition: attachment; filename=Reporte_Online_" . $get["tipo"] . ".csv");
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			}
 			
@@ -6300,7 +6298,7 @@ Cuadro Contable<br>
 			$array_lms_reportes_dado_completo = reportes_online_lms_reportes_dado_completo();
 			$handle = fopen('php://output', 'w');
 			
-			if ($_GET["vista"] == "graph") {
+			if ($get["vista"] == "graph") {
 				$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 				$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf.html")), $PRINCIPAL);
 			}
@@ -6333,7 +6331,7 @@ Cuadro Contable<br>
 					continue;
 				}
 				
-				if ($_GET["vista"] == "graph") {
+				if ($get["vista"] == "graph") {
 					if ($unico->avance >= 100) {
 						// Chequea Resultado
 						$estado_finalizado++;
@@ -6384,7 +6382,7 @@ Cuadro Contable<br>
 				//fputcsv($handle, $row);
 			}
 			
-			if ($_GET["vista"] == "graph") {
+			if ($get["vista"] == "graph") {
 			}
 			else {
 				//	ob_flush();
@@ -6394,15 +6392,15 @@ Cuadro Contable<br>
 			}
 		}
 		
-		if ($_GET["tipo"] == "Historico") {
-			if ($_GET["vista"] == "graph") {
+		if ($get["tipo"] == "Historico") {
+			if ($get["vista"] == "graph") {
 				$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 				$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf.html")), $PRINCIPAL);
 			}
 			else {
 				header('Content-Description: File Transfer');
 				header('Content-Type: application/csv');
-				header("Content-Disposition: attachment; filename=Reporte_Historico_" . $_GET["tipo"] . ".csv");
+				header("Content-Disposition: attachment; filename=Reporte_Historico_" . $get["tipo"] . ".csv");
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			}
 			
@@ -6414,7 +6412,7 @@ Cuadro Contable<br>
 			$array_lms_reportes_dado_completo = reportes_online_lms_reportes_dado_completo();
 			$handle = fopen('php://output', 'w');
 			
-			if ($_GET["vista"] == "graph") {
+			if ($get["vista"] == "graph") {
 				$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 				$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf.html")), $PRINCIPAL);
 			}
@@ -6468,21 +6466,21 @@ Cuadro Contable<br>
 			exit();
 		}
 		
-		if ($_GET["tipo"] == "Agrupaciones") {
+		if ($get["tipo"] == "Agrupaciones") {
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/csv');
-			header("Content-Disposition: attachment; filename=Reporte_Online_" . $_GET["tipo"] . "_ID_" . $_GET["id"] . ".csv");
+			header("Content-Disposition: attachment; filename=Reporte_Online_" . $get["tipo"] . "_ID_" . $get["id"] . ".csv");
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
 			//print_r($Campos);
 			//exit();
 			
-			$array_lms_reportes_dado_id_agrupacion = reportes_online_lms_reportes_dado_id_agrupacion($_GET["id"]);
+			$array_lms_reportes_dado_id_agrupacion = reportes_online_lms_reportes_dado_id_agrupacion($get["id"]);
 			//print_r($array_lms_reportes_dado_id_agrupacion);	exit();
 			$handle = fopen('php://output', 'w');
 			
-			//if($_GET["vista"]=="graph"){
+			//if($get["vista"]=="graph"){
 			//$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 			//$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf.html")), $PRINCIPAL);
 			//} else {
@@ -6537,15 +6535,15 @@ Cuadro Contable<br>
 			exit();
 		}
 		
-		if ($_GET["tipo"] == "AgrupacionesHistorico") {
+		if ($get["tipo"] == "AgrupacionesHistorico") {
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/csv');
-			header("Content-Disposition: attachment; filename=Reporte_Agrupacion_Historico_" . $_GET["tipo"] . ".csv");
+			header("Content-Disposition: attachment; filename=Reporte_Agrupacion_Historico_" . $get["tipo"] . ".csv");
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
 			//print_r($Campos);
 			//exit();
-			$array_lms_reportes_dado_id_agrupacion = reportes_online_lms_reportes_dado_id_agrupacion($_GET["id"]);
+			$array_lms_reportes_dado_id_agrupacion = reportes_online_lms_reportes_dado_id_agrupacion($get["id"]);
 			$handle = fopen('php://output', 'w');
 			$cursos_nombres = reportes_online_ListaCursoDadoIdAgrupacion($array_lms_reportes_dado_id_agrupacion[0]->id_agrupacion);
 			$cuenta_cursos = count($cursos_nombres);
@@ -6593,13 +6591,13 @@ Cuadro Contable<br>
 			exit();
 		}
 		
-		if ($_GET["tipo"] == "AgrupacionesConsolidadoC1") {
-			$array_lms_reportes_dado_id_agrupacion = reportes_online_lms_reportes_dado_id_agrupacion($_GET["id"]);
+		if ($get["tipo"] == "AgrupacionesConsolidadoC1") {
+			$array_lms_reportes_dado_id_agrupacion = reportes_online_lms_reportes_dado_id_agrupacion($get["id"]);
 			//print_r($array_lms_reportes_dado_id_agrupacion);	exit();
 			
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/csv');
-			header("Content-Disposition: attachment; filename=Reporte_Online_Consolidado_" . $array_lms_reportes_dado_id_agrupacion[0]->nombre . "_" . $_GET["tipo"] . "_ID_" . $_GET["id"] . ".csv");
+			header("Content-Disposition: attachment; filename=Reporte_Online_Consolidado_" . $array_lms_reportes_dado_id_agrupacion[0]->nombre . "_" . $get["tipo"] . "_ID_" . $get["id"] . ".csv");
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
@@ -6610,7 +6608,7 @@ Cuadro Contable<br>
 			
 			$handle = fopen('php://output', 'w');
 			
-			//if($_GET["vista"]=="graph"){
+			//if($get["vista"]=="graph"){
 			//$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 			//$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf.html")), $PRINCIPAL);
 			//} else {
@@ -6707,16 +6705,16 @@ Cuadro Contable<br>
 		$PRINCIPAL = str_replace("{NUM_EN_PROCESO}", $estado_en_proceso, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{NUM_NO_INICIADOS}", $estado_no_iniciado, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{ROW_LISTADO_USUARIOS}", $row_lista_participantes, $PRINCIPAL);
-		$PRINCIPAL = str_replace("{TIPO}", $_GET["tipo"], $PRINCIPAL);
-		$PRINCIPAL = str_replace("{NOMBRE}", $_GET["bch_numoat"], $PRINCIPAL);
+		$PRINCIPAL = str_replace("{TIPO}", $get["tipo"], $PRINCIPAL);
+		$PRINCIPAL = str_replace("{NOMBRE}", $get["bch_numoat"], $PRINCIPAL);
 		
-		$PRINCIPAL = str_replace("{ID_CURSO_ENV}", $_GET["id"], $PRINCIPAL);
+		$PRINCIPAL = str_replace("{ID_CURSO_ENV}", $get["id"], $PRINCIPAL);
 		
 		
 		$PRINCIPAL = str_replace("{LISTA_PREGUNTAS_ENC_SATISFACCION}", $LISTA_PREGUNTAS_ENC_SATISFACCION, $PRINCIPAL);
 		
 		
-		if ($_GET["vista"] == "graph") {
+		if ($get["vista"] == "graph") {
 		}
 		else {
 			echo "\r\n";
@@ -6737,9 +6735,9 @@ Cuadro Contable<br>
 	elseif ($seccion == "notificaciones_email") {
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/notificaciones_email/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_instancia = $_GET["id_instancia"];
-		$tipo_instancia = $_GET["tipo_instancia"];
-		//print_r($_GET);    exit();
+		$id_instancia = $get["id_instancia"];
+		$tipo_instancia = $get["tipo_instancia"];
+		//print_r($get);    exit();
 		
 		if ($id_instancia <> "") {
 			$PRINCIPAL = str_replace("{ENTORNO}", notificaciones_email_lista_notificaciones(FuncionesTransversalesAdmin(file_get_contents("views/notificaciones_email/entorno_notificaciones_sin_crear.html")), $id_empresa, $id_categoria, $id_instancia, $tipo_instancia), $PRINCIPAL);
@@ -6755,12 +6753,12 @@ Cuadro Contable<br>
 	elseif ($seccion == "notificaciones_log_email_automaticas") {
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/notificaciones_email/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_instancia = $_GET["id_instancia"];
-		$tipo_instancia = $_GET["tipo_instancia"];
+		$id_instancia = $get["id_instancia"];
+		$tipo_instancia = $get["tipo_instancia"];
 		
 		$PRINCIPAL = str_replace("{ENTORNO}", notificaciones_log_email_automaticas_lista_notificaciones(FuncionesTransversalesAdmin(file_get_contents("views/notificaciones_email/entorno_notificaciones_log_email_automaticas.html")), $id_empresa, $id_categoria, $id_instancia, $tipo_instancia), $PRINCIPAL);
 		
-		$excel = $_GET["excel"];
+		$excel = $get["excel"];
 		if ($excel == "1") {
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/csv');
@@ -6785,16 +6783,16 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "notificaciones_email_notificaciones_Save") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id = Decodear3($_POST['id']);
-		$nombre = $_POST['nombre'];
-		$subject = $_POST['subject'];
-		$titulo = $_POST['titulo'];
-		$texto = $_POST['texto'];
+		$id = Decodear3($post['id']);
+		$nombre = $post['nombre'];
+		$subject = $post['subject'];
+		$titulo = $post['titulo'];
+		$texto = $post['texto'];
 		notificaciones_email_notificaciones_Save_data($id, $nombre, $subject, $titulo, $texto, $id_empresa);
 		echo "<script>location.href='?sw=notificaciones_email';</script>";
 	}
 	elseif ($seccion == "notificaciones_email_update_users") {
-		$id_notificacion = Decodear3($_GET["id"]);
+		$id_notificacion = Decodear3($get["id"]);
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/notificaciones_email/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
 		$Notificacion = notificaciones_email_notificaciones_usuarios_envios($id_notificacion, $id_empresa);
@@ -6812,7 +6810,7 @@ Cuadro Contable<br>
 		exit();
 	}
 	elseif ($seccion == "notificaciones_email_descargar_usuarios") {
-		$id_notificacion = Decodear3($_GET["id"]);
+		$id_notificacion = Decodear3($get["id"]);
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "<br>id_notificacion $id_notificacion";
 		$lista_usuarios_notificaciones = notificaciones_email_descargar_usuarios_data($id_empresa, $id_notificacion);
@@ -6875,7 +6873,7 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "notificaciones_email_usuarios_update") {
-		$id_notificacion = Decodear3($_POST["id_notificacion"]);
+		$id_notificacion = Decodear3($post["id_notificacion"]);
 		$archivo = $_FILES['excel']['name'];
 		VerificaExtensionFilesAdmin($_FILES["excel"]);
 		$tipo = $_FILES['excel']['type'];
@@ -6950,8 +6948,8 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "notificaciones_email_send_emails") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_notificacion = Decodear3($_GET["id"]);
-		$tipo = $_GET["tipo"];
+		$id_notificacion = Decodear3($get["id"]);
+		$tipo = $get["tipo"];
 		$array_envios = notificaciones_email_envios_usuarios($id_notificacion, $tipo, $id_empresa);
 		//print_r($array_envios);
 		//echo "<br>id_notificacion $id_notificacion, tipo $tipo"; exit();
@@ -6986,8 +6984,8 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "lista_encuestas_lb_descargar_usuarios") {
-		$id_encuesta = $_GET["id_encuesta"];
-		$tipo_usuario = $_GET["tipo_usuario"];
+		$id_encuesta = $get["id_encuesta"];
+		$tipo_usuario = $get["tipo_usuario"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "<br>id_encuesta $id_encuesta tipo_usuario $tipo_usuario id_empresa $id_empresa";
 		
@@ -7040,8 +7038,8 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "lista_cluster_lb_descargar_usuarios") {
-		$id_cluster = $_GET["id_cluster"];
-		$tipo_usuario = $_GET["tipo_usuario"];
+		$id_cluster = $get["id_cluster"];
+		$tipo_usuario = $get["tipo_usuario"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "<br>id_encuesta $id_encuesta tipo_usuario $tipo_usuario id_empresa $id_empresa";
 		if ($tipo_usuario == "Usuario") {
@@ -7107,7 +7105,7 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "Mediciones_Charts_Respuestas_EncuestaLB") {
-		$id_med = $_GET["idMed"];
+		$id_med = $get["idMed"];
 		$med = DatosMedicionAdmin($id_med);
 		//echo "<br>id_med<br>$id_med";
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/graficos/grafico_entorno.html"));
@@ -7119,9 +7117,9 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "DejarNoEvaluable") {
-		$evaluado = Decodear3($_GET["ev"]);
-		$evaluador = Decodear3($_GET["evr"]);
-		$id_proceso = Decodear3($_GET["ip"]);
+		$evaluado = Decodear3($get["ev"]);
+		$evaluador = Decodear3($get["evr"]);
+		$id_proceso = Decodear3($get["ip"]);
 		
 		//echo "$evaluado, $evaluador, $id_proceso";
 		ActualizaPerfilEvaluacionNoEvaluable($evaluado, $evaluador, $id_proceso);;
@@ -7133,9 +7131,9 @@ Cuadro Contable<br>
                             </script>";
 	}
 	elseif ($seccion == "AbrirCal") {
-		$evaluado = Decodear3($_GET["ev"]);
-		$evaluador = Decodear3($_GET["evr"]);
-		$id_proceso = Decodear3($_GET["ip"]);
+		$evaluado = Decodear3($get["ev"]);
+		$evaluador = Decodear3($get["evr"]);
+		$id_proceso = Decodear3($get["ip"]);
 		
 		echo "$evaluado, $evaluador, $id_proceso";
 		BorraRegistroValidacionCalibracion($evaluado, $evaluador, $id_proceso);
@@ -7153,12 +7151,12 @@ Cuadro Contable<br>
 	elseif ($seccion == "checkUserAdmin") {
 		session_start();
 		
-		$nombre_completo = $_GET["fullName"];
-		$nombre = $_GET["GivenName"];
-		$apellido = $_GET["FamilyName"];
-		$imagenUrl = $_GET["imageUrl"];
-		$email = $_GET["email"];
-		$user_content_key = $_GET["user_content_key"];
+		$nombre_completo = $get["fullName"];
+		$nombre = $get["GivenName"];
+		$apellido = $get["FamilyName"];
+		$imagenUrl = $get["imageUrl"];
+		$email = $get["email"];
+		$user_content_key = $get["user_content_key"];
 		$arreglo_email = $arreglo_archivo = explode("@", $email);
 		
 		if ($arreglo_email[1] == "gop.cl") {
@@ -7216,7 +7214,7 @@ Cuadro Contable<br>
 		/** Incluir la libreria PHPExcel */
 		require_once 'clases/PHPExcel.php';
 		
-		$idEmpresa = $_POST['id_empresa'];
+		$idEmpresa = $post['id_empresa'];
 		
 		// Crea un nuevo objeto PHPExcel
 		$objPHPExcel = new PHPExcel();
@@ -7344,7 +7342,7 @@ Cuadro Contable<br>
 		
 		CancelaProcesamientoPrevioCursos($idEmpresa);
 		
-		extract($_POST);
+		extract($post);
 		
 		$error_grave = "error";
 		
@@ -7617,14 +7615,14 @@ Cuadro Contable<br>
 	elseif ($seccion == "inicio") {
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/home.html"));
 		//        $PRINCIPAL=FuncionesTransversalesAdmin(file_get_contents("views/home.html"));
-		//$PRINCIPAL=Multifiltro(ListadoJefatura(FuncionesTransversalesAdmin(file_get_contents("views/dnc/home_consolidado.html")),$_POST));
+		//$PRINCIPAL=Multifiltro(ListadoJefatura(FuncionesTransversalesAdmin(file_get_contents("views/dnc/home_consolidado.html")),$post));
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 		//print_r($_SESSION);
 	}
 	elseif ($seccion == "addnoticia") {
-		$id_noticia = Decodear($_GET["i"]);
+		$id_noticia = Decodear($get["i"]);
 		
 		$PRINCIPAL = FormularioNoticia(FuncionesTransversalesAdmin(file_get_contents("views/noticias/form_add.html")), $id_noticia);
 		
@@ -7633,7 +7631,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "lms_slider") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$del_idfoto = ($_GET["del_idfoto"]);
+		$del_idfoto = ($get["del_idfoto"]);
 		
 		if ($del_idfoto != '') {
 			slider_delete($del_idfoto, $id_empresa);
@@ -7661,7 +7659,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "vista_norm") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$del_idfoto = ($_GET["del_idfoto"]);
+		$del_idfoto = ($get["del_idfoto"]);
 		
 		echo "
                             <script>
@@ -7680,7 +7678,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "reportdin") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$tipo_reporte = $_POST["tipo_reporte"];
+		$tipo_reporte = $post["tipo_reporte"];
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes/dinamicos/entorno.html"));
 		$PRINCIPAL = str_replace("{FILTROS}", FiltrosReportes(file_get_contents("views/reportes/dinamicos/filtros.html"), $arreglo_post, $id_empresa), $PRINCIPAL);
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -7996,22 +7994,22 @@ Cuadro Contable<br>
 <table>";
 	}
 	elseif ($seccion == "edobjs") {
-		$cargo = Decodear3($_GET["ca"]);
-		$jefe = Decodear3($_GET["rj"]);
+		$cargo = Decodear3($get["ca"]);
+		$jefe = Decodear3($get["rj"]);
 		echo $jefe;
 		$PRINCIPAL = ListadoObjetivosPorCargo(FuncionesTransversalesAdmin(file_get_contents("views/dnc/entorno_detalle_objetivos.html")), $jefe, $cargo);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "ediobadmin") {
-		$jefe = Decodear3($_POST["j"]);
-		$cargo = Decodear3($_POST["c"]);
+		$jefe = Decodear3($post["j"]);
+		$cargo = Decodear3($post["c"]);
 		$objetivos_dado_cargo_jefe = TraeObjetivosDadoCargoYJefe($jefe, $cargo);
 		foreach ($objetivos_dado_cargo_jefe as $ob) {
-			$objetivo = ($_POST["objetivo" . $ob->id]);
-			$conducta1 = ($_POST["conducta1" . $ob->id]);
-			$conducta2 = ($_POST["conducta2" . $ob->id]);
-			$conducta3 = ($_POST["conducta3" . $ob->id]);
+			$objetivo = ($post["objetivo" . $ob->id]);
+			$conducta1 = ($post["conducta1" . $ob->id]);
+			$conducta2 = ($post["conducta2" . $ob->id]);
+			$conducta3 = ($post["conducta3" . $ob->id]);
 			//Actualizo AHORA
 			ActualizarObjetivoDNCADMIN($objetivo, $conducta1, $conducta2, $conducta3, $ob->id);
 		}
@@ -8024,7 +8022,7 @@ location.href='?sw=veobj&i=$jefe';
 		exit;
 	}
 	elseif ($seccion == "veobj") {
-		$rut = $_GET["i"];
+		$rut = $get["i"];
 		
 		$PRINCIPAL = ListadoCargosPorJefe(FuncionesTransversalesAdmin(file_get_contents("views/dnc/entorno_detalle_cargos.html")), $rut);
 		
@@ -8032,8 +8030,8 @@ location.href='?sw=veobj&i=$jefe';
 		exit;
 	}
 	elseif ($seccion == "envCorreoMasivo") {
-		$id_inscripcion = Decodear3($_GET["ii"]);
-		$id_proceso = Decodear3($_GET["ip"]);
+		$id_inscripcion = Decodear3($get["ii"]);
+		$id_proceso = Decodear3($get["ip"]);
 		if ($id_inscripcion) {
 			$usuarios = TraigoListadoUsuariosAEnviarCorreoPorInscripcion($id_inscripcion, 1);
 		}
@@ -8079,7 +8077,7 @@ location.href='?sw=veobj&i=$jefe';
 		exit;
 	}
 	elseif ($seccion == "envCorreoMasivoPorProceso") {
-		$id_proceso = Decodear3($_GET["ip"]);
+		$id_proceso = Decodear3($get["ip"]);
 		$total_usuarios_por_proceso_enviados = TraigoUsuariosDadoIdPRocesoTotalEnviados($id_proceso);
 		$total_usuarios_por_proceso = TraigoUsuariosDadoIdPRocesoTotal($id_proceso);
 		$tipo_correo = $total_usuarios_por_proceso[0]->tipo_correo;
@@ -8122,8 +8120,8 @@ location.href='?sw=listProcesosCorreos';
 	}
 	elseif ($seccion == "EnvioInvitaciones_EvalMedicionUnica") {
 		//Busca Usuarios Activos para Enviar Invitacion Hoy
-		$idMed = $_GET["idMed"];
-		$id_proceso = Decodear3($_GET["ip"]);
+		$idMed = $get["idMed"];
+		$id_proceso = Decodear3($get["ip"]);
 		
 		$tipo_correo = $total_usuarios_por_proceso[0]->tipo_correo;
 		
@@ -8184,8 +8182,8 @@ location.href='?sw=lista_Mediciones_med';
 	}
 	elseif ($seccion == "EnvioInvitaciones_EvalMedicion") {
 		//Busca Usuarios Activos para Enviar Invitacion Hoy
-		$idMed = $_GET["idMed"];
-		$id_proceso = Decodear3($_GET["ip"]);
+		$idMed = $get["idMed"];
+		$id_proceso = Decodear3($get["ip"]);
 		
 		$tipo_correo = $total_usuarios_por_proceso[0]->tipo_correo;
 		
@@ -8249,12 +8247,12 @@ location.href='?sw=lista_Mediciones_med';
 		exit;
 	}
 	elseif ($seccion == "enviaCorreoTipo") {
-		if ($_GET["mas"] == "1") {
-			$rut = Decodear3($_GET["r"]);
-			$tipo_correo = $_GET["tipoCorreo"];
+		if ($get["mas"] == "1") {
+			$rut = Decodear3($get["r"]);
+			$tipo_correo = $get["tipoCorreo"];
 		}
-		$rut = Decodear3($_POST["r"]);
-		$tipo_correo = $_POST["tipoCorreo"];
+		$rut = Decodear3($post["r"]);
+		$tipo_correo = $post["tipoCorreo"];
 		//Traigo datos del Correo
 		
 		$TEMPLATE = ReplaceDatosDeCorreo($rut, $tipo_correo);
@@ -8271,8 +8269,8 @@ location.href='?sw=lista_Mediciones_med';
 		<?php
 	}
 	elseif ($seccion == "enviaCorreoTipoPorProceso") {
-		$id_proceso = Decodear3($_POST["idp"]);
-		$rut = Decodear3($_POST["r"]);
+		$id_proceso = Decodear3($post["idp"]);
+		$rut = Decodear3($post["r"]);
 		
 		$tipo = "text/html";
 		$id_empresa = $_SESSION["id_empresa"];
@@ -8303,7 +8301,7 @@ location.href='?sw=lista_Mediciones_med';
 		ActualizoEstadoEnvioCorreoPorProceso($rut, $id_proceso);
 	}
 	elseif ($seccion == "Download_Respuestas_EncuestaLB") {
-		$idMed = $_GET["idMed"];
+		$idMed = $get["idMed"];
 		$DatosMed = DatosMedicionAdmin($idMed);
 		$nombre_medicion = $DatosMed[0]->nombre;
 		$tipo_individual = $DatosMed[0]->tipo_medicion;
@@ -8355,7 +8353,7 @@ location.href='?sw=lista_Mediciones_med';
 		exit();
 	}
 	elseif ($seccion == "Download_Respuestas_EncuestaLB_BK") {
-		$idMed = $_GET["idMed"];
+		$idMed = $get["idMed"];
 		//echo "Download_Respuestas_EncuestaLB $idMed";   exit();
 		$DatosMed = DatosMedicionAdmin($idMed);
 		$nombre_medicion = $DatosMed[0]->nombre;
@@ -8503,7 +8501,7 @@ location.href='?sw=lista_Mediciones_med';
 	}
 	elseif ($seccion == "Encuestas_Replicar") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$idMed = $_GET["idMed"];
+		$idMed = $get["idMed"];
 		//echo "<br>idMed $idMed";
 		$idMed_Max = Encuestas_Busca_IdUltimoMasunoDos();
 		//echo "oasi";
@@ -8539,11 +8537,11 @@ location.href='?sw=lista_Mediciones_med';
 	elseif ($seccion == "lista_encuestas_lb") {
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/encuesta_lb/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
-		$ie = $_GET["ie"];
-		$desactiva = $_GET["desactiva"];
-		$activa = $_GET["activa"];
+		$ie = $get["ie"];
+		$desactiva = $get["desactiva"];
+		$activa = $get["activa"];
 		
-		$prosci = $_GET["prosci"];
+		$prosci = $get["prosci"];
 		
 		//SE ACTUALIZA TBL RESPUESTAS fullName
 		$fecha_inicial_check = "2020-07-01";
@@ -8567,9 +8565,9 @@ location.href='?sw=lista_Mediciones_med';
 	elseif ($seccion == "lista_encuestas_visualizacion_cluster") {
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/encuesta_lb/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
-		$ie = $_GET["ie"];
-		$desactiva = $_GET["desactiva"];
-		$activa = $_GET["activa"];
+		$ie = $get["ie"];
+		$desactiva = $get["desactiva"];
+		$activa = $get["activa"];
 		if ($ie <> '' and $activa == 1) {
 			Enc_ActualizaEstado($ie, "");
 		}
@@ -8586,9 +8584,9 @@ location.href='?sw=lista_Mediciones_med';
 	elseif ($seccion == "lista_encuestas_visualizacion_cluster_prosci") {
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/encuesta_lb/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
-		$ie = $_GET["ie"];
-		$desactiva = $_GET["desactiva"];
-		$activa = $_GET["activa"];
+		$ie = $get["ie"];
+		$desactiva = $get["desactiva"];
+		$activa = $get["activa"];
 		if ($ie <> '' and $activa == 1) {
 			Enc_ActualizaEstado($ie, "");
 		}
@@ -8606,27 +8604,27 @@ location.href='?sw=lista_Mediciones_med';
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/encuesta_lb/entorno.html"));
 		
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($_GET);
-		$Encuesta_array = DatosMedicionAdminUsers($_GET["id_encuesta"], $id_empresa);
+		//print_r($get);
+		$Encuesta_array = DatosMedicionAdminUsers($get["id_encuesta"], $id_empresa);
 		$num_usuarios = $Encuesta_array[0]->usuarios;
 		$num_editores = $Encuesta_array[0]->editores;
 		$num_visualizadores = $Encuesta_array[0]->visualizadores;
 		
-		if ($_GET["perfil"] == "Usuario") {
+		if ($get["perfil"] == "Usuario") {
 			$tipo_usuarios = "Usuarios Inscritos";
 			$tipo_usuario = "Usuario";
 			$encuesta = $Encuesta_array[0]->nombre;
 			$num_usuarios = $num_usuarios;
 		}
 		
-		if ($_GET["perfil"] == "Editor") {
+		if ($get["perfil"] == "Editor") {
 			$tipo_usuarios = "Editores";
 			$tipo_usuario = "Editor";
 			$encuesta = $Encuesta_array[0]->nombre;
 			$num_usuarios = $num_editores;
 		}
 		
-		if ($_GET["perfil"] == "Visualizador") {
+		if ($get["perfil"] == "Visualizador") {
 			$tipo_usuarios = "Visualizadores Resultados";
 			$tipo_usuario = "Visualizador";
 			$encuesta = $Encuesta_array[0]->nombre;
@@ -8639,7 +8637,7 @@ location.href='?sw=lista_Mediciones_med';
 		$PRINCIPAL = str_replace("{TIPO_USUARIOS}", $tipo_usuarios, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{TIPO_USUARIO}", $tipo_usuario, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{ENCUESTA}", ($encuesta), $PRINCIPAL);
-		$PRINCIPAL = str_replace("{ID_ENCUESTA}", $_GET["id_encuesta"], $PRINCIPAL);
+		$PRINCIPAL = str_replace("{ID_ENCUESTA}", $get["id_encuesta"], $PRINCIPAL);
 		$PRINCIPAL = str_replace("{NUM_TIPO_USUARIOS}", $num_usuarios, $PRINCIPAL);
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -8650,11 +8648,11 @@ location.href='?sw=lista_Mediciones_med';
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/encuesta_lb/entorno.html"));
 		
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($_GET);
-		$Clusterarray = DatosClusterAdminUsers($_GET["id_cluster"], $id_empresa);
+		//print_r($get);
+		$Clusterarray = DatosClusterAdminUsers($get["id_cluster"], $id_empresa);
 		$num_usuarios = $Clusterarray[0]->usuarios;
 		
-		if ($_GET["perfil"] == "Usuario") {
+		if ($get["perfil"] == "Usuario") {
 			$tipo_usuarios = "Usuarios Visualizadores";
 			$tipo_usuario = "Usuario";
 			$cluster = $Clusterarray[0]->nombre;
@@ -8668,7 +8666,7 @@ location.href='?sw=lista_Mediciones_med';
 		$PRINCIPAL = str_replace("{TIPO_USUARIOS}", $tipo_usuarios, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{TIPO_USUARIO}", $tipo_usuario, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{CLUSTER}", ($cluster), $PRINCIPAL);
-		$PRINCIPAL = str_replace("{ID_CLUSTER}", $_GET["id_cluster"], $PRINCIPAL);
+		$PRINCIPAL = str_replace("{ID_CLUSTER}", $get["id_cluster"], $PRINCIPAL);
 		$PRINCIPAL = str_replace("{NUM_TIPO_USUARIOS}", $num_usuarios, $PRINCIPAL);
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -8676,9 +8674,9 @@ location.href='?sw=lista_Mediciones_med';
 		exit();
 	}
 	elseif ($seccion == "lista_encuestas_lb_update") {
-		//print_r($_POST);
-		$tipo_usuario = $_POST["tipo_usuario"];
-		$id_encuesta = $_POST["id_encuesta"];
+		//print_r($post);
+		$tipo_usuario = $post["tipo_usuario"];
+		$id_encuesta = $post["id_encuesta"];
 		$archivo = $_FILES['excel']['name'];
 		VerificaExtensionFilesAdmin($_FILES["excel"]);
 		
@@ -8811,9 +8809,9 @@ location.href='?sw=lista_Mediciones_med';
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/encuesta_lb/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "<br>id_empresa $id_empresa";
-		$ie = $_GET["ie"];
-		$desactiva = $_GET["desactiva"];
-		$activa = $_GET["activa"];
+		$ie = $get["ie"];
+		$desactiva = $get["desactiva"];
+		$activa = $get["activa"];
 		
 		
 		$PRINCIPAL = str_replace("{ENTORNO_MEDICIONES}", lista_admin_encuestas_fn_lb(FuncionesTransversalesAdmin(file_get_contents("views/encuesta_lb/entorno_mediciones_admin_row.html")), $id_empresa, $id_categoria), $PRINCIPAL);
@@ -8824,7 +8822,7 @@ location.href='?sw=lista_Mediciones_med';
 		exit;
 	}
 	elseif ($seccion == "subcategoriaDadaCategoria") {
-		$categoria = $_POST["elegido"];
+		$categoria = $post["elegido"];
 		
 		// Traigo las subcategorias dada la categoria
 		
@@ -8834,48 +8832,48 @@ location.href='?sw=lista_Mediciones_med';
 		}
 	}
 	elseif ($seccion == "ActualizaDescripcionImagen") {
-		$id_archivo = $_POST["id_imagen"];
-		$nueva_descripcion = $_POST["descripcion"];
+		$id_archivo = $post["id_imagen"];
+		$nueva_descripcion = $post["descripcion"];
 		ActualizaDescripcionImagenConId($id_archivo, $nueva_descripcion);
 		echo "$nueva_descripcion";
 	}
 	elseif ($seccion == "admin_galeria") {
 		$id_empresa = $_SESSION["id_empresa"];
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/galeria/entorno.html"));
-		if ($_GET["n"] == "1") {
+		if ($get["n"] == "1") {
 			// $PRINCIPAL=lista_carpetas(FuncionesTransversales(file_get_contents("views/admin/galeria/admin.html")));
 			
 			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", lista_carpetas(FuncionesTransversalesAdmin(file_get_contents("views/admin/galeria/entorno_categorias.html")), $id_empresa), $PRINCIPAL);
 		}
 		
-		if ($_GET["n"] == "2") {
-			// $PRINCIPAL=lista_subcarpetas(FuncionesTransversales(file_get_contents("views/admin/galeria/admin.html")),$_GET["id"],$_GET["cn"]);
+		if ($get["n"] == "2") {
+			// $PRINCIPAL=lista_subcarpetas(FuncionesTransversales(file_get_contents("views/admin/galeria/admin.html")),$get["id"],$get["cn"]);
 			
-			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", lista_subcarpetas(FuncionesTransversalesAdmin(file_get_contents("views/admin/galeria/admin.html")), $_GET["id"], $_GET["cn"]), $PRINCIPAL);
+			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", lista_subcarpetas(FuncionesTransversalesAdmin(file_get_contents("views/admin/galeria/admin.html")), $get["id"], $get["cn"]), $PRINCIPAL);
 		}
 		
-		if ($_GET["n"] == "3") {
-			// $PRINCIPAL=lista_galeria_archivos(FuncionesTransversales(file_get_contents("views/admin/galeria/archivos.html")),$_GET["id"],$_GET["cn"],$_GET["id_sub"],$_GET["nsub"]);
+		if ($get["n"] == "3") {
+			// $PRINCIPAL=lista_galeria_archivos(FuncionesTransversales(file_get_contents("views/admin/galeria/archivos.html")),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"]);
 			
-			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", lista_galeria_archivos(FuncionesTransversalesAdmin(file_get_contents("views/admin/galeria/archivos.html")), $_GET["id"], $_GET["cn"], $_GET["id_sub"], $_GET["nsub"]), $PRINCIPAL);
+			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", lista_galeria_archivos(FuncionesTransversalesAdmin(file_get_contents("views/admin/galeria/archivos.html")), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"]), $PRINCIPAL);
 		}
 		
-		if ($_GET["n"] == "fc") {
-			// $PRINCIPAL=nueva_carpeta(file_get_contents("views/admin/galeria/nueva_categoria.html"),$_GET["id_cat"]);
+		if ($get["n"] == "fc") {
+			// $PRINCIPAL=nueva_carpeta(file_get_contents("views/admin/galeria/nueva_categoria.html"),$get["id_cat"]);
 			
-			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", nueva_carpeta(file_get_contents("views/admin/galeria/nueva_categoria.html"), $_GET["id_cat"]), $PRINCIPAL);
+			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", nueva_carpeta(file_get_contents("views/admin/galeria/nueva_categoria.html"), $get["id_cat"]), $PRINCIPAL);
 		}
 		
-		if ($_GET["n"] == "fs") {
-			// $PRINCIPAL=nuevo_album(file_get_contents("views/admin/galeria/nueva_sub_categoria.html"),$_GET["id_cat"],$_GET["cn"],$_GET["id_subcat"]);
+		if ($get["n"] == "fs") {
+			// $PRINCIPAL=nuevo_album(file_get_contents("views/admin/galeria/nueva_sub_categoria.html"),$get["id_cat"],$get["cn"],$get["id_subcat"]);
 			
-			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", nuevo_album(file_get_contents("views/admin/galeria/nueva_sub_categoria.html"), $_GET["id_cat"], $_GET["cn"], $_GET["id_subcat"]), $PRINCIPAL);
+			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", nuevo_album(file_get_contents("views/admin/galeria/nueva_sub_categoria.html"), $get["id_cat"], $get["cn"], $get["id_subcat"]), $PRINCIPAL);
 		}
 		
-		if ($_GET["n"] == "fa") {
-			// $PRINCIPAL=subir_archivo_galeria(file_get_contents("views/admin/galeria/subir_archivo.html"),$_GET["id"],$_GET["cn"],$_GET["id_sub"],$_GET["nsub"],$_GET["id_ar"]);
+		if ($get["n"] == "fa") {
+			// $PRINCIPAL=subir_archivo_galeria(file_get_contents("views/admin/galeria/subir_archivo.html"),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"],$get["id_ar"]);
 			
-			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", subir_archivo_galeria(file_get_contents("views/admin/galeria/subir_archivo.html"), $_GET["id"], $_GET["cn"], $_GET["id_sub"], $_GET["nsub"], $_GET["id_ar"]), $PRINCIPAL);
+			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", subir_archivo_galeria(file_get_contents("views/admin/galeria/subir_archivo.html"), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"], $get["id_ar"]), $PRINCIPAL);
 		}
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -8886,29 +8884,29 @@ location.href='?sw=lista_Mediciones_med';
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo CleanHTMLWhiteList($PRINCIPAL);exit;
 		
-		if ($_GET["n"] == "1") {
+		if ($get["n"] == "1") {
 			//$PRINCIPAL=lista_categorias(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")));
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_categorias(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/entorno_categorias.html")), $id_empresa), $PRINCIPAL);
 		}
-		if ($_GET["n"] == "2") {
-			//$PRINCIPAL=lista_subcategorias(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$_GET["id"],$_GET["cn"]);
-			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_subcategorias(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $_GET["id"], $_GET["cn"]), $PRINCIPAL);
+		if ($get["n"] == "2") {
+			//$PRINCIPAL=lista_subcategorias(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$get["id"],$get["cn"]);
+			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_subcategorias(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $get["id"], $get["cn"]), $PRINCIPAL);
 		}
-		if ($_GET["n"] == "3") {
-			//$PRINCIPAL=lista_archivos(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$_GET["id"],$_GET["cn"],$_GET["id_sub"],$_GET["nsub"]);
-			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_archivos(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $_GET["id"], $_GET["cn"], $_GET["id_sub"], $_GET["nsub"]), $PRINCIPAL);
+		if ($get["n"] == "3") {
+			//$PRINCIPAL=lista_archivos(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"]);
+			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_archivos(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"]), $PRINCIPAL);
 		}
-		if ($_GET["n"] == "fc") {
-			//$PRINCIPAL=nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"),$_GET["id_cat"]);
-			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"), $_GET["id_cat"]), $PRINCIPAL);
+		if ($get["n"] == "fc") {
+			//$PRINCIPAL=nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"),$get["id_cat"]);
+			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"), $get["id_cat"]), $PRINCIPAL);
 		}
-		if ($_GET["n"] == "fs") {
-			//$PRINCIPAL=nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"),$_GET["id_cat"],$_GET["cn"],$_GET["id_subcat"]);
-			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"), $_GET["id_cat"], $_GET["cn"], $_GET["id_subcat"]), $PRINCIPAL);
+		if ($get["n"] == "fs") {
+			//$PRINCIPAL=nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"),$get["id_cat"],$get["cn"],$get["id_subcat"]);
+			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"), $get["id_cat"], $get["cn"], $get["id_subcat"]), $PRINCIPAL);
 		}
-		if ($_GET["n"] == "fa") {
-			//$PRINCIPAL=subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"),$_GET["id"],$_GET["cn"],$_GET["id_sub"],$_GET["nsub"],$_GET["id_ar"]);
-			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"), $_GET["id"], $_GET["cn"], $_GET["id_sub"], $_GET["nsub"], $_GET["id_ar"]), $PRINCIPAL);
+		if ($get["n"] == "fa") {
+			//$PRINCIPAL=subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"],$get["id_ar"]);
+			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"], $get["id_ar"]), $PRINCIPAL);
 		}
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
@@ -8918,30 +8916,30 @@ location.href='?sw=lista_Mediciones_med';
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo CleanHTMLWhiteList($PRINCIPAL);exit;
 		
-		if ($_GET["n"] == "1") {
+		if ($get["n"] == "1") {
 			//$PRINCIPAL=lista_categorias(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")));
 			$PRINCIPAL = str_replace("{ENTORNO_PREGUNTASYRESPUESTAS}", lista_preguntasyrespuestas(FuncionesTransversalesAdmin(file_get_contents("views/preguntasyrespuestas/entorno_categorias.html")), $id_empresa, $id_categoria), $PRINCIPAL);
 		}
 		
-		if ($_GET["n"] == "2") {
-			//$PRINCIPAL=lista_subcategorias(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$_GET["id"],$_GET["cn"]);
-			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_subcategorias(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $_GET["id"], $_GET["cn"]), $PRINCIPAL);
+		if ($get["n"] == "2") {
+			//$PRINCIPAL=lista_subcategorias(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$get["id"],$get["cn"]);
+			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_subcategorias(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $get["id"], $get["cn"]), $PRINCIPAL);
 		}
-		if ($_GET["n"] == "3") {
-			//$PRINCIPAL=lista_archivos(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$_GET["id"],$_GET["cn"],$_GET["id_sub"],$_GET["nsub"]);
-			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_archivos(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $_GET["id"], $_GET["cn"], $_GET["id_sub"], $_GET["nsub"]), $PRINCIPAL);
+		if ($get["n"] == "3") {
+			//$PRINCIPAL=lista_archivos(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"]);
+			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_archivos(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"]), $PRINCIPAL);
 		}
-		if ($_GET["n"] == "fc") {
-			//$PRINCIPAL=nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"),$_GET["id_cat"]);
-			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"), $_GET["id_cat"]), $PRINCIPAL);
+		if ($get["n"] == "fc") {
+			//$PRINCIPAL=nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"),$get["id_cat"]);
+			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"), $get["id_cat"]), $PRINCIPAL);
 		}
-		if ($_GET["n"] == "fs") {
-			//$PRINCIPAL=nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"),$_GET["id_cat"],$_GET["cn"],$_GET["id_subcat"]);
-			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"), $_GET["id_cat"], $_GET["cn"], $_GET["id_subcat"]), $PRINCIPAL);
+		if ($get["n"] == "fs") {
+			//$PRINCIPAL=nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"),$get["id_cat"],$get["cn"],$get["id_subcat"]);
+			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"), $get["id_cat"], $get["cn"], $get["id_subcat"]), $PRINCIPAL);
 		}
-		if ($_GET["n"] == "fa") {
-			//$PRINCIPAL=subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"),$_GET["id"],$_GET["cn"],$_GET["id_sub"],$_GET["nsub"],$_GET["id_ar"]);
-			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"), $_GET["id"], $_GET["cn"], $_GET["id_sub"], $_GET["nsub"], $_GET["id_ar"]), $PRINCIPAL);
+		if ($get["n"] == "fa") {
+			//$PRINCIPAL=subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"],$get["id_ar"]);
+			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"], $get["id_ar"]), $PRINCIPAL);
 		}
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
@@ -8950,16 +8948,16 @@ location.href='?sw=lista_Mediciones_med';
 		InsertLogPrueba();
 	}
 	elseif ($seccion == "ordenarSliders") {
-		//print_r($_POST);
-		$id_empresa = Decodear3($_POST["id_emp"]);
+		//print_r($post);
+		$id_empresa = Decodear3($post["id_emp"]);
 		//echo $id_empresa;
 		//Con el id empresa, traigo todos los sliders
 		$tnoticias1 = TotalNoticiasSlider($id_empresa);
 		foreach ($tnoticias1 as $not) {
-			//echo $not->id." ".$_POST["orden_".$not->id];
+			//echo $not->id." ".$post["orden_".$not->id];
 			//echo "<br>";
 			//Aca actualizo el campo Slider Activo
-			ActualizoSliderActivo($not->id, $_POST["orden_" . $not->id]);
+			ActualizoSliderActivo($not->id, $post["orden_" . $not->id]);
 		}
 		echo "
 <script>
@@ -8982,12 +8980,12 @@ location.href='?sw=linoticias#BloqueSlider';
 	}
 	elseif ($seccion == "ordenarNoticiasCampoOrden") {
 		//aca deberia traer todas las noticias con estado 4, y no son slider de la empresa correspondiente
-		//print_r($_POST);
+		//print_r($post);
 		$noticias = TodasLasNoticiasPublicadasSinSlider($_SESSION["id_empresa"]);
 		foreach ($noticias as $not) {
-			if ($_POST["orden_" . $not->id] > 0) {
+			if ($post["orden_" . $not->id] > 0) {
 				//Actualizo el campo orden de la tabla noticia
-				ActualizaCampoOrdenPorIdNoticia($not->id, $_POST["orden_" . $not->id]);
+				ActualizaCampoOrdenPorIdNoticia($not->id, $post["orden_" . $not->id]);
 			}
 		}
 		echo "
@@ -8998,8 +8996,8 @@ location.href='?sw=linoticias';
 		exit;
 	}
 	elseif ($seccion == "edPaginaAccion") {
-		$id_pagina = Decodear3($_POST["id_pagina"]);
-		$contenido = ($_POST["editor"]);
+		$id_pagina = Decodear3($post["id_pagina"]);
+		$contenido = ($post["editor"]);
 		//Aca actualizo el contenido de la tabla dado el id
 		ActualizoContenidosPagina($id_pagina, $contenido);
 		
@@ -9011,26 +9009,26 @@ location.href='?sw=lipaginas';
 		exit;
 	}
 	elseif ($seccion == "edpagina") {
-		$id_pagina = Decodear3($_GET["i"]);
+		$id_pagina = Decodear3($get["i"]);
 		$PRINCIPAL = FormularioPagina(FuncionesTransversalesAdmin(file_get_contents("views/paginas/form_add.html")), $id_pagina);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "edinoti") {
-		$id_empresa = Decodear($_GET["i"]);
+		$id_empresa = Decodear($get["i"]);
 		$PRINCIPAL = FormularioNoticia(FuncionesTransversalesAdmin(file_get_contents("views/noticias/form_add.html")), $id_empresa);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "addcategoria") {
-		$id_menu = Decodear3($_GET["i"]);
+		$id_menu = Decodear3($get["i"]);
 		$PRINCIPAL = AccionCategoria(FuncionesTransversalesAdmin(file_get_contents("views/categorias/formulario.html")), $id_menu);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "dltsubmenu") {
-		$id_submenu = Decodear3($_GET["is"]);
-		$id_menu = Decodear3($_GET["i"]);
+		$id_submenu = Decodear3($get["is"]);
+		$id_menu = Decodear3($get["i"]);
 		
 		BorroSubMenu($id_submenu);
 		
@@ -9042,17 +9040,17 @@ location.href='?sw=asigsub&i=" . Encodear3($id_menu) . "';
 		exit;
 	}
 	elseif ($seccion == "asigsubmenu") {
-		print_r($_GET);
+		print_r($get);
 	}
 	elseif ($seccion == "addmenu") {
-		$id_menu = Decodear3($_GET["i"]);
+		$id_menu = Decodear3($get["i"]);
 		$PRINCIPAL = AccionMenu(FuncionesTransversalesAdmin(file_get_contents("views/menu_secundario/formulario.html")), $id_menu);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "addcat") {
-		$categoria = ($_POST["nombre"]);
-		$descripcion = ($_POST["descripcion"]);
+		$categoria = ($post["nombre"]);
+		$descripcion = ($post["descripcion"]);
 		echo "$categoria $descripcion";
 		InsertaCategoriaNoticia($categoria, $descripcion);
 		//Inserto registro de la categoria
@@ -9065,14 +9063,14 @@ location.href='?sw=listcategorias';
 		exit;
 	}
 	elseif ($seccion == "addm") {
-		$nombre = ($_POST["nombre"]);
-		$descripcion = ($_POST["descripcion"]);
-		$tipo_link = $_POST["tipo_contenido"];
+		$nombre = ($post["nombre"]);
+		$descripcion = ($post["descripcion"]);
+		$tipo_link = $post["tipo_contenido"];
 		if ($tipo_link == "2") {
-			$link = ($_POST["template_predefinido"]);
+			$link = ($post["template_predefinido"]);
 		}
 		elseif ($tipo_link == "3") {
-			$link = ($_POST["link"]);
+			$link = ($post["link"]);
 		}
 		else {
 			$link = "";
@@ -9089,33 +9087,33 @@ location.href='?sw=listmenus';
 		exit;
 	}
 	elseif ($seccion == "edm") {
-		$id_menu = Decodear3($_POST["idme"]);
-		$nombre = ($_POST["nombre"]);
-		$tipo_link = $_POST["tipo_contenido"];
-		$id_submenu = Decodear3($_POST["is"]);
+		$id_menu = Decodear3($post["idme"]);
+		$nombre = ($post["nombre"]);
+		$tipo_link = $post["tipo_contenido"];
+		$id_submenu = Decodear3($post["is"]);
 		if ($tipo_link == "2") {
-			$link = ($_POST["template_predefinido"]);
+			$link = ($post["template_predefinido"]);
 		}
 		elseif ($tipo_link == "3") {
-			$link = ($_POST["link"]);
+			$link = ($post["link"]);
 		}
 		else {
 			$link = "";
 		}
 		
-		//$link=($_POST["link"]);
+		//$link=($post["link"]);
 		
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		//DAtos Submenu
-		$nombre_submenu = ($_POST["nombre_submenu"]);
-		$tipo_link_submenu = $_POST["tipo_contenido_submenu"];
+		$nombre_submenu = ($post["nombre_submenu"]);
+		$tipo_link_submenu = $post["tipo_contenido_submenu"];
 		
 		if ($tipo_link_submenu == "2") {
-			$link_submenu = ($_POST["template_predefinido_submenu"]);
+			$link_submenu = ($post["template_predefinido_submenu"]);
 		}
 		elseif ($tipo_link_submenu == "3") {
-			$link_submenu = ($_POST["link_submenu"]);
+			$link_submenu = ($post["link_submenu"]);
 		}
 		else {
 			$link_submenu = "";
@@ -9134,9 +9132,9 @@ location.href='?sw=listmenus';
 		
 		//Recorro 5 vueltas, para ver si vienen sub menus por el nivel 1
 		/*for($i=1;$i<=5;$i++){
-    if($_POST["nombre".$i] && $_POST["link".$i]){
+    if($post["nombre".$i] && $post["link".$i]){
     //Inserto Submenu n2
-    InsertaMenuN2(($_POST["nombre".$i]), ($_POST["link".$i]), $id_menu);
+    InsertaMenuN2(($post["nombre".$i]), ($post["link".$i]), $id_menu);
 
     }
     }*/
@@ -9169,9 +9167,9 @@ location.href='?sw=listmenus';
 		exit;
 	}
 	elseif ($seccion == "eddatoscat") {
-		$id_categoria = Decodear3($_POST["idcat"]);
-		$nombre_categoria = ($_POST["nombre"]);
-		$descripcion = ($_POST["descripcion"]);
+		$id_categoria = Decodear3($post["idcat"]);
+		$nombre_categoria = ($post["nombre"]);
+		$descripcion = ($post["descripcion"]);
 		//aca actualizo los datos de la categoria
 		ActualizoDatosCategoriaNoticia($id_categoria, $nombre_categoria, $descripcion);
 		echo "
@@ -9182,8 +9180,8 @@ location.href='?sw=asigsubc&i=" . Encodear3($id_categoria) . "';
 		exit;
 	}
 	elseif ($seccion == "dltsubcat") {
-		$id_categoria = Decodear3($_GET["i"]);
-		$id_sub_categoria = Decodear3($_GET["is"]);
+		$id_categoria = Decodear3($get["i"]);
+		$id_sub_categoria = Decodear3($get["is"]);
 		
 		BorroSubCategoria($id_sub_categoria);
 		echo "$id_categoria, $id_sub_categoria";
@@ -9196,17 +9194,17 @@ location.href='?sw=asigsubc&i=" . Encodear3($id_categoria) . "';
 		exit;
 	}
 	elseif ($seccion == "asigsubc") {
-		$id_menu = Decodear3($_GET["i"]);
-		$id_subcategoria = Decodear3($_GET["is"]);
+		$id_menu = Decodear3($get["i"]);
+		$id_subcategoria = Decodear3($get["is"]);
 		
 		$PRINCIPAL = AccionSubCategoria(FuncionesTransversalesAdmin(file_get_contents("views/categorias/formularioSubCategoria.html")), $id_menu, $id_subcategoria);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "addsubcate") {
-		$id_categoria = Decodear3($_POST["idcat"]);
-		$nombre = ($_POST["nombre"]);
-		$descripcion = ($_POST["descripcion"]);
+		$id_categoria = Decodear3($post["idcat"]);
+		$nombre = ($post["nombre"]);
+		$descripcion = ($post["descripcion"]);
 		echo "$id_categoria, $nombre, $descripcion";
 		InsertaSubCategoriaNoticia($nombre, $descripcion, $id_categoria);
 		
@@ -9218,10 +9216,10 @@ location.href='?sw=asigsubc&i=" . Encodear3($id_categoria) . "';
 		exit;
 	}
 	elseif ($seccion == "eddsubcate") {
-		$id_categoria = Decodear3($_POST["idcat"]);
-		$id_subcategoria = Decodear3($_POST["idsubcat"]);
-		$nombre = ($_POST["nombre"]);
-		$descripcion = ($_POST["descripcion"]);
+		$id_categoria = Decodear3($post["idcat"]);
+		$id_subcategoria = Decodear3($post["idsubcat"]);
+		$nombre = ($post["nombre"]);
+		$descripcion = ($post["descripcion"]);
 		echo "$id_categoria, $id_subcategoria, $nombre, $descripcion";
 		//Actualizo los datos
 		ActualizoSubCategoria($id_subcategoria, $nombre, $descripcion);
@@ -9234,15 +9232,15 @@ location.href='?sw=asigsubc&i=" . Encodear3($id_categoria) . "';
 		exit;
 	}
 	elseif ($seccion == "asigsub") {
-		$id_menu = Decodear3($_GET["i"]);
-		$id_submenu = Decodear3($_GET["is"]);
+		$id_menu = Decodear3($get["i"]);
+		$id_submenu = Decodear3($get["is"]);
 		
 		$PRINCIPAL = AccionMenu(FuncionesTransversalesAdmin(file_get_contents("views/menu_secundario/fomulario_nivel2.html")), $id_menu, $id_submenu);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "deletenoticia") {
-		$id_noticia = $_GET['id_noticia'];
+		$id_noticia = $get['id_noticia'];
 		BorrarNoticia($id_noticia);
 		echo "
 <script>
@@ -9264,7 +9262,7 @@ location.href='?sw=linoticias';
 		exit;
 	}
 	elseif ($seccion == "muestraDatosFiltro2") {
-		$nombre_indicador = $_POST["elegido"];
+		$nombre_indicador = $post["elegido"];
 		$datos_Campos = TraeDistictDadoCampoPorEmpresa($nombre_indicador, $_SESSION["id_empresa"]);
 		echo "<option value='-'>Todas</option>";
 		foreach ($datos_Campos as $dat) {
@@ -9272,7 +9270,7 @@ location.href='?sw=linoticias';
 		}
 	}
 	elseif ($seccion == "muestraDatosFiltro2Campo2") {
-		$campo1 = $_POST["elegido"];
+		$campo1 = $post["elegido"];
 		
 		$campos = TraeCampos($_SESSION["id_empresa"]);
 		//Dado lo datos del campo 1, obtengo datos del campo 2
@@ -9283,7 +9281,7 @@ location.href='?sw=linoticias';
 		}
 	}
 	elseif ($seccion == "muestraDatosFiltro3Campo3") {
-		$campo2 = $_POST["elegido"];
+		$campo2 = $post["elegido"];
 		
 		$campos = TraeCampos($_SESSION["id_empresa"]);
 		//Dado lo datos del campo 1, obtengo datos del campo 2
@@ -9306,7 +9304,7 @@ location.href='?sw=linoticias';
 		exit;
 	}
 	elseif ($seccion == "muestrasubfamilia") {
-		$id_familia = $_POST["elegido"];
+		$id_familia = $post["elegido"];
 		//$total=CantidadCursosPorPrograma($id_programa);
 		$subfamilias = TraeSubFamilias($id_familia);
 		echo "<option value='-'>Todas</option>";
@@ -9318,7 +9316,7 @@ location.href='?sw=linoticias';
 	elseif ($seccion == "procesa_reporte_indicadores") {
 		$numero_series = 3;
 		for ($i = 1; $i <= $numero_series; $i++) {
-			$valores = EjecutaQueryIndicadores($_POST, $i);
+			$valores = EjecutaQueryIndicadores($post, $i);
 			$arreglo_datos_indicadores[$i]["valores"] = $valores;
 		}
 		
@@ -9327,14 +9325,14 @@ location.href='?sw=linoticias';
 		$id_empresa = $_SESSION["id_empresa"];
 		//$PRINCIPAL=FiltrosReportes(FuncionesTransversalesAdmin(file_get_contents("views/indicadores/index.html")), $arreglo_post);
 		//$PRINCIPAL = str_replace("{FILTROS}",FiltrosReportes(file_get_contents("views/reportes/encabezado_solo_filtros.html"), $arreglo_post, $id_empresa),$PRINCIPAL);
-		$DATOS = FiltrosIndicadores(FuncionesTransversalesAdmin(file_get_contents("views/indicadores/index.html")), $_POST, $numero_series);
+		$DATOS = FiltrosIndicadores(FuncionesTransversalesAdmin(file_get_contents("views/indicadores/index.html")), $post, $numero_series);
 		$PRINCIPAL = $DATOS[0];
 		$PRINCIPAL = MuestraIndicadores($PRINCIPAL, $valores, $arreglo_datos_indicadores, $numero_series, $DATOS[1], $DATOS[2]);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "nombreindicador") {
-		$nombre_indicador = $_POST["elegido"];
+		$nombre_indicador = $post["elegido"];
 		//$total=CantidadCursosPorPrograma($id_programa);
 		$indicadores = TraeIndicadoresSelect($nombre_indicador);
 		echo "<option value='-'>Todas</option>";
@@ -9360,7 +9358,7 @@ location.href='?sw=linoticias';
 		exit;
 	}
 	elseif ($seccion == "sk_reportes") {
-		$arreglo_post = $_POST;
+		$arreglo_post = $post;
 		
 		$PRINCIPAL = FiltrosReportes(FuncionesTransversalesAdmin(file_get_contents("views/reportes/sk_home_reportes_consolidados.html")), $arreglo_post);
 		$PRINCIPAL = str_replace("{FILTROS}", FiltrosReportes(file_get_contents("views/reportes/sk_filtros_superiores.html"), $arreglo_post), $PRINCIPAL);
@@ -9370,7 +9368,7 @@ location.href='?sw=linoticias';
 		exit;
 	}
 	elseif ($seccion == "sk_reportes_encsat") {
-		$arreglo_post = $_POST;
+		$arreglo_post = $post;
 		
 		$PRINCIPAL = FiltrosReportes(FuncionesTransversalesAdmin(file_get_contents("views/reportes/enc_satisfaccion/sk_enc_sat_home_reportes_consolidados.html")), $arreglo_post);
 		$PRINCIPAL = str_replace("{FILTROS}", FiltrosReportes(file_get_contents("views/reportes/enc_satisfaccion/sk_enc_sat_filtros_superiores.html"), $arreglo_post), $PRINCIPAL);
@@ -9380,7 +9378,7 @@ location.href='?sw=linoticias';
 		exit;
 	}
 	elseif ($seccion == "muestra_centro_costo") {
-		$id_empresa_holding = $_POST["elegido"];
+		$id_empresa_holding = $post["elegido"];
 		
 		$datos = DatosParaCombo1($id_empresa_holding);
 		echo "<option value='0'>-Seleccione-</option>";
@@ -9389,7 +9387,7 @@ location.href='?sw=linoticias';
 		}
 	}
 	elseif ($seccion == "muestra_programas_dada_malla") {
-		$id_malla = $_POST["elegido"];
+		$id_malla = $post["elegido"];
 		//Total programas por malla
 		$programas = ProgramasDadoMalla($id_malla);
 		echo "<option value=''>Todas</option>";
@@ -9399,7 +9397,7 @@ location.href='?sw=linoticias';
 		}
 	}
 	elseif ($seccion == "muestra_cursos_dado_programa") {
-		$id_programa = $_POST["elegido2"];
+		$id_programa = $post["elegido2"];
 		$total = CantidadCursosPorPrograma($id_programa);
 		echo "<option value=''>Todas</option>";
 		
@@ -9408,7 +9406,7 @@ location.href='?sw=linoticias';
 		}
 	}
 	elseif ($seccion == "muestra_unidad_negocio") {
-		$centro_costo = $_POST["elegido2"];
+		$centro_costo = $post["elegido2"];
 		$datos = DatosParaCombo2($centro_costo);
 		//$datos=TotalCursos2();
 		
@@ -9424,7 +9422,7 @@ location.href='?sw=linoticias';
 		exit;
 	}
 	elseif ($seccion == "consolidado_dnc") {
-		$arreglo_post = $_POST;
+		$arreglo_post = $post;
 		$PRINCIPAL = MuestraConsolidadoPorCargo(FiltrosReportes(FuncionesTransversalesAdmin(file_get_contents("views/dnc/dnc_vista_cargo_rod.html")), $arreglo_post), $arreglo_post);
 		$PRINCIPAL = MuestraConsolidadoPorCursoG(FiltrosReportes(FuncionesTransversalesAdmin($PRINCIPAL), $arreglo_post), $arreglo_post);
 		$PRINCIPAL = MuestraConsolidadoPorCursoT(FiltrosReportes(FuncionesTransversalesAdmin($PRINCIPAL), $arreglo_post), $arreglo_post);
@@ -9471,8 +9469,8 @@ location.href='?sw=linoticias';
 		}
 	}
 	elseif ($seccion == "reporte_compra_cartera") {
-		$id_objeto = $_GET["ido"];
-		$id_malla = $_GET["im"];
+		$id_objeto = $get["ido"];
+		$id_malla = $get["im"];
 		header('Content-type: text/plain');
 		$fechahoy = date("Y-m-d") . " " . date("H:i:s");
 		header('Content-Disposition: attachment; filename=Reporte_' . $id_objeto . '_' . $fechahoy . '.csv');
@@ -9907,11 +9905,11 @@ location.href='?sw=linoticias';
 		else {
 			$id_proceso = $id_proceso_sgd;
 		}
-		$id_proceso_get = Decodear3($_GET["i"]);
+		$id_proceso_get = Decodear3($get["i"]);
 		if ($id_proceso_get) {
 			$id_proceso = $id_proceso_get;
 		}
-		$excel = $_GET["excel"];
+		$excel = $get["excel"];
 		if ($excel == "1") {
 			header("Content-Type: application/vnd.ms-excel");
 			header("Content-Disposition: attachment; filename=SGD_Resultado.xls");
@@ -9979,11 +9977,11 @@ location.href='?sw=linoticias';
 		else {
 			$id_proceso = $id_proceso_sgd;
 		}
-		$id_proceso_get = Decodear3($_GET["i"]);
+		$id_proceso_get = Decodear3($get["i"]);
 		if ($id_proceso_get) {
 			$id_proceso = $id_proceso_get;
 		}
-		$excel = $_GET["excel"];
+		$excel = $get["excel"];
 		if ($excel == "1") {
 			header("Content-Type: application/vnd.ms-excel");
 			header("Content-Disposition: attachment; filename=SGD_Resultado.xls");
@@ -10052,10 +10050,10 @@ location.href='?sw=linoticias';
 		}
 	}
 	elseif ($seccion == "SGD_CalibracionEvaluado") {
-		$arreglo_post = $_POST;
+		$arreglo_post = $post;
 		$id_proceso = $id_proceso_sgd;
 		$id_empresa = $_SESSION["id_empresa"];
-		$excel = $_GET["excel"];
+		$excel = $get["excel"];
 		if ($excel == "1") {
 			header("Content-Type: application/vnd.ms-excel");
 			header("Content-Disposition: attachment; filename=SGD_Calibracion.xls");
@@ -10076,23 +10074,23 @@ location.href='?sw=linoticias';
 		}
 	}
 	elseif ($seccion == "SGD_Matriz_updateData") {
-		//print_r($_POST);
+		//print_r($post);
 		
-		$id_sgd_relaciones = $_POST["id_sgd_relaciones"];
-		$id_solicitud = $_POST["id_solicitud"];
+		$id_sgd_relaciones = $post["id_sgd_relaciones"];
+		$id_solicitud = $post["id_solicitud"];
 		
-		$evaluado = LimpiaRut($_POST["NuevoEvaluado"]);
-		$evaluador = LimpiaRut($_POST["NuevoEvaluador"]);
-		$validador = LimpiaRut($_POST["NuevoValidador"]);
-		$calibrador = LimpiaRut($_POST["NuevoCalibrador"]);
-		$id_proceso = LimpiaRut($_POST["id_proceso"]);
-		$perfil_evaluacion = ($_POST["perfil"]);
+		$evaluado = LimpiaRut($post["NuevoEvaluado"]);
+		$evaluador = LimpiaRut($post["NuevoEvaluador"]);
+		$validador = LimpiaRut($post["NuevoValidador"]);
+		$calibrador = LimpiaRut($post["NuevoCalibrador"]);
+		$id_proceso = LimpiaRut($post["id_proceso"]);
+		$perfil_evaluacion = ($post["perfil"]);
 		
-		$evaluador_original = $_POST["evaluador_original"];
-		$validador_original = $_POST["validador_original"];
-		$calibrador_original = $_POST["calibrador_original"];
-		$calibrador_original = $_POST["calibrador_original"];
-		$perfil_original = $_POST["perfil_original"];
+		$evaluador_original = $post["evaluador_original"];
+		$validador_original = $post["validador_original"];
+		$calibrador_original = $post["calibrador_original"];
+		$calibrador_original = $post["calibrador_original"];
+		$perfil_original = $post["perfil_original"];
 		
 		//SGD_borra_Sesion_finalizado($evaluado, $evaluador, $id_proceso);
 		SGD_MATRIZ_updateData($id_solicitud, $id_sgd_relaciones, $evaluado, $evaluador, $validador, $calibrador, $perfil_evaluacion);
@@ -10114,16 +10112,16 @@ location.href='?sw=SGD_Matriz&b=si&re=" . Encodear3($evaluado) . "&i=" . Encodea
 		exit;
 	}
 	elseif ($seccion == "SGD_Matriz_InsertData") {
-		//print_r($_POST);
+		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
 		
-		$id_proceso = $_POST["id_proceso"];
-		$evaluado = LimpiaRut($_POST["NuevoEvaluado"]);
-		$evaluador = LimpiaRut($_POST["NuevoEvaluador"]);
-		$validador = LimpiaRut($_POST["NuevoValidador"]);
-		$calibrador = LimpiaRut($_POST["NuevoCalibrador"]);
-		$perfil = ($_POST["nuevo_perfil_eval"]);
-		$subperfil = ($_POST["nuevo_sub_perfil_eval"]);
+		$id_proceso = $post["id_proceso"];
+		$evaluado = LimpiaRut($post["NuevoEvaluado"]);
+		$evaluador = LimpiaRut($post["NuevoEvaluador"]);
+		$validador = LimpiaRut($post["NuevoValidador"]);
+		$calibrador = LimpiaRut($post["NuevoCalibrador"]);
+		$perfil = ($post["nuevo_perfil_eval"]);
+		$subperfil = ($post["nuevo_sub_perfil_eval"]);
 		
 		//SGD_MATRIZ_InsertData($id_proceso, $evaluado, $evaluador, $validador, $calibrador, $id_empresa);
 		SGD_MATRIZ_InsertDataFull($id_proceso, $evaluado, $evaluador, $validador, $calibrador, $id_empresa, $perfil, $subperfil);
@@ -10140,12 +10138,12 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		//echo $fechahoy;
 		//exit;
 		
-		$rut = $_POST["rut"];
-		$id_malla = $_POST["malla_seleccionada"];
+		$rut = $post["rut"];
+		$id_malla = $post["malla_seleccionada"];
 		$id_empresa = $_SESSION["id_empresa"];
-		$opcional = $_POST["opcional"];
-		$opcional_inscripcion = $_POST["opcional"];
-		$id_programa = $_POST["id_programa"];
+		$opcional = $post["opcional"];
+		$opcional_inscripcion = $post["opcional"];
+		$id_programa = $post["id_programa"];
 		$hoy = date("Y-m-d");
 		//echo "rut $rut, $id_malla,$id_empresa,$opcional, $id_programa, opcional_inscripcion $opcional_inscripcion";
 		//exit();
@@ -10154,8 +10152,8 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		//echo "<script>location.href='?sw=listProgramas';</script>";
 	}
 	elseif ($seccion == "eliminaRelacionMallaUsuario") {
-		$rut = Decodear3($_GET["r"]);
-		$id_malla = Decodear3($_GET["imall"]);
+		$rut = Decodear3($get["r"]);
+		$id_malla = Decodear3($get["imall"]);
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		BorraUsuarioRelacionMallaUsuario($id_malla, $rut, $id_empresa);
@@ -10169,9 +10167,9 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 	elseif ($seccion == "ConsultaUsuarioPRogramaMalla") {
 		$fechahoy = date("Y-m-d") . " " . date("H:i:s");
 		$id_empresa = $_SESSION["id_empresa"];
-		//$id_malla=$_POST["id_malla"];
-		$codigo_programa = $_POST["codigo_programa"];
-		$rut = preg_replace("[\s+]", "", $_POST["rut"]);
+		//$id_malla=$post["id_malla"];
+		$codigo_programa = $post["codigo_programa"];
+		$rut = preg_replace("[\s+]", "", $post["rut"]);
 		
 		$arreglo_ruts = explode(";", trim($rut));
 		
@@ -10242,8 +10240,8 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 	}
 	elseif ($seccion == "listProgramas") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_programa = $_GET["id_programa"];
-		$id_curso = $_GET["id_curso"];
+		$id_programa = $get["id_programa"];
+		$id_curso = $get["id_curso"];
 		//actualiza LMS Reportes de inscripcion usuario
 		//SActualizaLmsReporteInscripcionCierre($id_empresa);
 		ActualizaDatosLmsReportesUsuariosNull();
@@ -10254,8 +10252,8 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 	}
 	elseif ($seccion == "listProgramasI") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_programa = $_GET["id_programa"];
-		$id_curso = $_GET["id_curso"];
+		$id_programa = $get["id_programa"];
+		$id_curso = $get["id_curso"];
 		//actualiza LMS Reportes de inscripcion usuario
 		//SActualizaLmsReporteInscripcionCierre($id_empresa);
 		ActualizaDatosLmsReportesUsuariosNull();
@@ -10266,7 +10264,7 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 	}
 	elseif ($seccion == "listProgramaCursoAsistenciaExts") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_curso = $_GET["id_curso"];
+		$id_curso = $get["id_curso"];
 		
 		//actualiza LMS Reportes de inscripcion usuario
 		//SActualizaLmsReporteInscripcionCierre($id_empresa);//echo "id_empresa $id_empresa, id_programa $id_programa, id_curso $id_curso";
@@ -10283,7 +10281,7 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		exit;
 	}
 	elseif ($seccion == "histprocesomasivocorreos") {
-		$id_proceso = Decodear3($_GET["i"]);
+		$id_proceso = Decodear3($get["i"]);
 		
 		$PRINCIPAL = ListadoUsuariosProProcesoEnvioCorreo(FuncionesTransversalesAdmin(file_get_contents("views/correos/listado_usuarios_por_proceso.html")), $id_proceso);
 		
@@ -10293,10 +10291,10 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 	elseif ($seccion == "listcursos") {
 		$id_empresa = $_SESSION["id_empresa"];
 		
-		$exportar_a_excel = $_POST["ex"];
-		$pagina = $_GET["p"];
+		$exportar_a_excel = $post["ex"];
+		$pagina = $get["p"];
 		if ($exportar_a_excel == "1") {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$fechahoy = date("Y-m-d") . " " . date("H:i:s");
 			header("Content-Type: application/vnd.ms-excel");
 			header("Content-Disposition: attachment; filename=" . $fechahoy . ".xls");
@@ -10307,7 +10305,7 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 			echo($PRINCIPAL);
 		}
 		else {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$PRINCIPAL = FiltrosListadoCursos(ListadoCursosAdmin(FuncionesTransversalesAdmin(file_get_contents("views/curso/entorno_listado.html")), $arreglo_post, $pagina, $id_empresa), $arreglo_post, $pagina);
 			echo CleanHTMLWhiteList($PRINCIPAL);
 			exit;
@@ -10325,14 +10323,14 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		}
 		$PRINCIPAL = str_replace("{OPTIONS_UNIDAD_NEGOCIO}", ($html_option), $PRINCIPAL);
 		
-		$id_proceso = Decodear3($_GET["i"]);
+		$id_proceso = Decodear3($get["i"]);
 		if ($id_proceso) {
 			$PRINCIPAL = str_replace("{ID_PROCESO_ENCODEADO}", Encodear3($id_proceso), $PRINCIPAL);
 			TruncarTablaUsuariosEnvioCorreoPorProceso($id_proceso);
 		}
 		
-		if ($_POST["idpro"]) {
-			$id_proceso = Decodear3($_POST["idpro"]);
+		if ($post["idpro"]) {
+			$id_proceso = Decodear3($post["idpro"]);
 			TruncarTablaUsuariosEnvioCorreoPorProceso($id_proceso);
 			$PRINCIPAL = str_replace("{ID_PROCESO_ENCODEADO}", Encodear3($id_proceso), $PRINCIPAL);
 			//Hago todo el tema del excel.
@@ -10391,9 +10389,9 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 			//FIN DE SECCION PARA SUBIR EXCEL
 		}
 		
-		if ($_POST["unidad_negocio"]) {
+		if ($post["unidad_negocio"]) {
 			//traigo todos los usuarios con ese criterio
-			$usuarios = TRaeTablaUsuarioDadoUnidadNegocio($id_empresa, $_POST["unidad_negocio"]);
+			$usuarios = TRaeTablaUsuarioDadoUnidadNegocio($id_empresa, $post["unidad_negocio"]);
 			foreach ($usuarios as $usu) {
 				InsertoUsuariosPorProcesoCorreo($usu->rut, $usu->nombre_completo, $usu->cargo, $usu->email, $usu->gerencia, $usu->id_empr, $id_proceso);
 				$total_insertar++;
@@ -10426,10 +10424,10 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		exit;
 	}
 	elseif ($seccion == "PreviewCorreoNewsletter") {
-		$id_noticia = $_POST["id_noticia"];
-		$fila = $_POST["fila"];
-		$columna = $_POST["columna"];
-		$id_correo = $_POST["id_correo"];
+		$id_noticia = $post["id_noticia"];
+		$fila = $post["fila"];
+		$columna = $post["columna"];
+		$id_correo = $post["id_correo"];
 		//Actualizo o inserto relacion noticia
 		$verifico = VerificoNoticiaFilaColumna($id_correo, $fila, $columna);
 		if ($verifico) {
@@ -10447,7 +10445,7 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		echo $template_correo;
 	}
 	elseif ($seccion == "crearProcesoEnvio") {
-		$rut_otec = Decodear3($_GET["rot"]);
+		$rut_otec = Decodear3($get["rot"]);
 		$id_empresa = $_SESSION["id_empresa"];
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/correos/" . $id_empresa . "_formulario_ingresa.html"));
 		$PRINCIPAL = str_replace("{OPTIONS_TIPOS_CORREOS}", OptionsGenericoNombreDadoValoresPorEmpresa("tbl_correos", "", "asunto", "id", "order by asunto", $_SESSION["id_empresa"]), $PRINCIPAL);
@@ -10485,21 +10483,21 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		exit;
 	}
 	elseif ($seccion == "adprocesenv") {
-		$nombre_proceso = ($_POST["nombre_proceso"]);
-		$descripcion_proceso = ($_POST["descripcion_proceso"]);
-		$tipoCorreo = $_POST["tipoCorreo"];
+		$nombre_proceso = ($post["nombre_proceso"]);
+		$descripcion_proceso = ($post["descripcion_proceso"]);
+		$tipoCorreo = $post["tipoCorreo"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($_POST);
+		//print_r($post);
 		
-		$subject = ($_POST["subject"]);
-		$titulo1 = ($_POST["titulo1"]);
-		$subtitulo1 = ($_POST["subtitulo1"]);
-		$texto1 = ($_POST["texto1"]);
-		$texto2 = ($_POST["texto2"]);
-		$texto3 = ($_POST["texto3"]);
-		$texto4 = ($_POST["texto4"]);
-		$texto_url = ($_POST["texto_url"]);
-		$url = ($_POST["url"]);
+		$subject = ($post["subject"]);
+		$titulo1 = ($post["titulo1"]);
+		$subtitulo1 = ($post["subtitulo1"]);
+		$texto1 = ($post["texto1"]);
+		$texto2 = ($post["texto2"]);
+		$texto3 = ($post["texto3"]);
+		$texto4 = ($post["texto4"]);
+		$texto_url = ($post["texto_url"]);
+		$url = ($post["url"]);
 		
 		InsertaProcesoEnvio($nombre_proceso, $descripcion_proceso, $tipoCorreo, $id_empresa, $subject, $titulo1, $subtitulo1, $texto1, $texto2, $texto3, $texto4, $texto_url, $url);
 		
@@ -10515,18 +10513,18 @@ location.href='?sw=listProcesosCorreos';
 		//solo le agregue el sufijo tmp_ev_
 	}
 	elseif ($seccion == "adprocesenvusuarios") {
-		$nombre_proceso = ($_POST["nombre_proceso"]);
-		$descripcion_proceso = ($_POST["descripcion_proceso"]);
-		$tipoCorreo = $_POST["tipoCorreo"];
+		$nombre_proceso = ($post["nombre_proceso"]);
+		$descripcion_proceso = ($post["descripcion_proceso"]);
+		$tipoCorreo = $post["tipoCorreo"];
 	}
 	elseif ($seccion == "listusuco") {
-		$arreglo_post = $_POST;
+		$arreglo_post = $post;
 		
-		$pagina = $_GET["p"];
+		$pagina = $get["p"];
 		
-		$arreglo_url = $_GET["arra"];
+		$arreglo_url = $get["arra"];
 		
-		$miarray = $_GET["arra"];
+		$miarray = $get["arra"];
 		$array_para_recibir_via_url = stripslashes($miarray);
 		$array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
 		$matriz_completa = unserialize($array_para_recibir_via_url, ['allowed_classes' => false]);
@@ -10682,9 +10680,9 @@ location.href='?sw=listProcesosCorreos';
 	}
 	elseif ($seccion == "dltrelcurmallacla") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_curso = $_GET["idc"];
-		$id_malla = $_GET["idm"];
-		$id_clasificacion = $_GET["idclas"];
+		$id_curso = $get["idc"];
+		$id_malla = $get["idm"];
+		$id_clasificacion = $get["idclas"];
 		EliminarelacionMalaCursoclasificacionEmpresa($id_malla, $id_clasificacion, $id_curso, $id_empresa);
 		echo "<script>location.href='?sw=vista_mallas_clasificaciones_cursos_objetos';</script>";
 	}
@@ -10711,10 +10709,10 @@ echo "<br>".Encodear3('bch_mi_1399');
 */
 		
 		$id_empresa = $_SESSION["id_empresa"];
-		$ejecuta = $_GET["exe"];
+		$ejecuta = $get["exe"];
 		$id_empresa = $_SESSION["id_empresa"];
-		$exportar_a_excel = $_GET["ex"];
-		$rut_colaborador = Decodear3($_GET["rcol"]);
+		$exportar_a_excel = $get["ex"];
+		$rut_colaborador = Decodear3($get["rcol"]);
 		
 		$num_colab_activos = num_colaboradores_activos($id_empresa);
 		$num_usuarios = $num_colab_activos[0]->CuentaUsuarios;
@@ -10756,7 +10754,7 @@ echo "<br>".Encodear3('bch_mi_1399');
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		$id_empresa = $_SESSION["id_empresa"];
-		$exportar_a_excel = $_GET["ex"];
+		$exportar_a_excel = $get["ex"];
 		
 		if ($exportar_a_excel == "1") {
 			$fechahoy = date("Y-m-d") . " " . date("H:i:s");
@@ -10789,7 +10787,7 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 	elseif ($seccion == "listdncsolicitudes") {
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_empresa = $_SESSION["id_empresa"];
-		$exportar_a_excel = $_GET["ex"];
+		$exportar_a_excel = $get["ex"];
 		
 		if ($exportar_a_excel == "1") {
 			$fechahoy = date("Y-m-d") . " " . date("H:i:s");
@@ -10821,20 +10819,20 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 	}
 	elseif ($seccion == "estadisticas2") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$case = $_GET["case"];
+		$case = $get["case"];
 		
 		$PRINCIPAL = GeneraEstadisticasGeneralesPorCaseDetalle(FuncionesTransversalesAdmin(file_get_contents("views/estadisticas/entorno_listado.html")), $id_empresa, $case);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "estadisticas1") {
-		$arreglo_fechas = explode("-", $_POST["daterange-btn"]);
+		$arreglo_fechas = explode("-", $post["daterange-btn"]);
 		$fecha_inicio = trim(str_replace("/", "-", $arreglo_fechas[0]));
 		$fecha_termino = trim(str_replace("/", "-", $arreglo_fechas[1]));
 		$id_empresa = $_SESSION["id_empresa"];
-		$tipo_estadistica = $_POST["tipo_estadistica"];
+		$tipo_estadistica = $post["tipo_estadistica"];
 		
-		$tipo_est = $_GET["tipo_est"];
+		$tipo_est = $get["tipo_est"];
 		
 		$PRINCIPAL = GeneraEstadisticasGeneralesPorCase(FuncionesTransversalesAdmin(file_get_contents("views/estadisticas/entorno_listado.html")), $id_empresa, $fecha_inicio, $fecha_termino, $tipo_est);
 		
@@ -10845,8 +10843,8 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 			$options_case .= "<option value='" . $case->case . "'>" . $case->nombre . "</option>";
 		}
 		$PRINCIPAL = str_replace("{OPTIONS_ESTADISTICAS}", $options_case, $PRINCIPAL);
-		if ($_POST["daterange-btn"]) {
-			$PRINCIPAL = str_replace("{VALOR_RANGO_FECHAS}", $_POST["daterange-btn"], $PRINCIPAL);
+		if ($post["daterange-btn"]) {
+			$PRINCIPAL = str_replace("{VALOR_RANGO_FECHAS}", $post["daterange-btn"], $PRINCIPAL);
 		}
 		else {
 			$PRINCIPAL = str_replace("{VALOR_RANGO_FECHAS}", "", $PRINCIPAL);
@@ -10860,13 +10858,13 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 		exit;
 	}
 	elseif ($seccion == "listparticipantes") {
-		$PRINCIPAL = ListaParticipantes(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/participantes/entorno_listado.html")), $_SESSION["id_empresa"], $_GET["r"], $_GET["t"], $_GET["p"], $_GET["d"], $_GET["c1"], $_GET["c2"], $_GET["c3"], $_GET["c4"]);
+		$PRINCIPAL = ListaParticipantes(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/participantes/entorno_listado.html")), $_SESSION["id_empresa"], $get["r"], $get["t"], $get["p"], $get["d"], $get["c1"], $get["c2"], $get["c3"], $get["c4"]);
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "excelEstadisticas") {
-		$tipo = $_GET["tipo"];
+		$tipo = $get["tipo"];
 		$id_empresa = $_SESSION["id_empresa"];
 		$listado = Estadisticas_Query($id_empresa, $tipo);
 		$fechahoy = date("Y-m-d") . " " . date("H:i:s");
@@ -10904,10 +10902,10 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 		}
 	}
 	elseif ($seccion == "listusuSiga") {
-		$arreglo_post = $_POST;
-		$exportar_a_excel = $_POST["ex"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$arreglo_post = $post;
+		$exportar_a_excel = $post["ex"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		$array_para_recibir_via_url = stripslashes($miarray);
 		$array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
 		$matriz_completa = unserialize($array_para_recibir_via_url, ['allowed_classes' => false]);
@@ -10938,10 +10936,10 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 		exit;
 	}
 	elseif ($seccion == "listusuauto") {
-		$arreglo_post = $_POST;
-		$exportar_a_excel = $_POST["ex"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$arreglo_post = $post;
+		$exportar_a_excel = $post["ex"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		$array_para_recibir_via_url = stripslashes($miarray);
 		$array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
 		$matriz_completa = unserialize($array_para_recibir_via_url, ['allowed_classes' => false]);
@@ -10956,11 +10954,11 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 		exit;
 	}
 	elseif ($seccion == "SaveaddProcesosPorAn") {
-		$tipo_proceso_evaluacion = $_POST["tipo_proceso_evaluacion"];
-		$id_proceso_anual = Decodear3($_POST["ipa"]);
-		$nombre_proceso = ($_POST["nombre_proceso"]);
-		$descripcion_proceso = ($_POST["descripcion_proceso"]);
-		$arreglo_fechas = explode("-", $_POST["fechas"]);
+		$tipo_proceso_evaluacion = $post["tipo_proceso_evaluacion"];
+		$id_proceso_anual = Decodear3($post["ipa"]);
+		$nombre_proceso = ($post["nombre_proceso"]);
+		$descripcion_proceso = ($post["descripcion_proceso"]);
+		$arreglo_fechas = explode("-", $post["fechas"]);
 		$fecha_inicio = trim(str_replace("/", "-", $arreglo_fechas[0]));
 		$fecha_termino = trim(str_replace("/", "-", $arreglo_fechas[1]));
 		$id_empresa = $_SESSION["id_empresa"];
@@ -10992,43 +10990,43 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 	}
 	elseif ($seccion == "addProcesosPorAn") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_proceso_anual = Decodear3($_GET["i"]);
+		$id_proceso_anual = Decodear3($get["i"]);
 		$PRINCIPAL = ColocaDatosProcesoAnual(FuncionesTransversalesAdmin(file_get_contents("views/procesos/" . $id_empresa . "_formulario_agrega_procesos_por_ano.html")), $id_proceso_anual, $id_empresa);
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "ActualizaDatosProcesoAnual") {
-		$id_proceso = $_POST["id_proceso"];
-		$nombre = ($_POST["nombre"]);
-		$descripcion = ($_POST["descripcion"]);
-		$fecha_inicio = ($_POST["fecha_inicio"]);
-		$fecha_termino = ($_POST["fecha_termino"]);
+		$id_proceso = $post["id_proceso"];
+		$nombre = ($post["nombre"]);
+		$descripcion = ($post["descripcion"]);
+		$fecha_inicio = ($post["fecha_inicio"]);
+		$fecha_termino = ($post["fecha_termino"]);
 		//Actualizo los datos del proceso
 		//ActualizaDatosProcesoEvaluacion($id_proceso, $nombre, $descripcion_proceso, $fecha_inicio_proceso, $fecha_termino_proceso);
 		ActualizaDatosProcesoAnual($id_proceso, $nombre, $descripcion, $fecha_inicio, $fecha_termino);
 		echo '<div class="etiqueta  label-success">Datos Actualizados</div>';
 	}
 	elseif ($seccion == "ActualizaDatosProcesoEvaluacion") {
-		$id_proceso = $_POST["id_proceso"];
-		$nombre = ($_POST["nombre"]);
-		$descripcion_proceso = ($_POST["descripcion_proceso"]);
-		$fecha_inicio_proceso = ($_POST["fecha_inicio_proceso"]);
-		$fecha_termino_proceso = ($_POST["fecha_termino_proceso"]);
+		$id_proceso = $post["id_proceso"];
+		$nombre = ($post["nombre"]);
+		$descripcion_proceso = ($post["descripcion_proceso"]);
+		$fecha_inicio_proceso = ($post["fecha_inicio_proceso"]);
+		$fecha_termino_proceso = ($post["fecha_termino_proceso"]);
 		//Actualizo los datos del proceso
 		ActualizaDatosProcesoEvaluacion($id_proceso, $nombre, $descripcion_proceso, $fecha_inicio_proceso, $fecha_termino_proceso);
 		echo '<div class="etiqueta  label-success">Datos Actualizados</div>';
 	}
 	elseif ($seccion == "GeneraReporteBitacora") {
 		EncabezadoExcel("SabanaBitacora");
-		$ano = $_GET["agn"];
+		$ano = $get["agn"];
 		$PRINCIPAL = GeneraBitacora($_SESSION["id_empresa"], $ano);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 	elseif ($seccion == "GeneraReportePlanes") {
 		EncabezadoExcel("SabanaPlanes");
-		$ano = $_GET["agn"];
+		$ano = $get["agn"];
 		$PRINCIPAL = GeneraBitacora($_SESSION["id_empresa"], $ano);
 		//EncabezadoExcel("ReporteEvaluadoEvaluador");
 		$PRINCIPAL = GeneraPlanesDeAccion(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/resultadosVersion2/planes/entorno_listado_relaciones_excel.html")), $arreglo_post, $pagina, "usuarios", 1, "", 1);
@@ -11037,8 +11035,8 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 		exit;
 	}
 	elseif ($seccion == "openEval") {
-		$id = Decodear3($_GET["i"]);
-		$id_proceso = Decodear3($_GET["ip"]);
+		$id = Decodear3($get["i"]);
+		$id_proceso = Decodear3($get["ip"]);
 		EliminaRegistroEvaluadoEvaluadorFinalizado($id);
 		echo "
 <script>
@@ -11046,14 +11044,14 @@ location.href='?sw=veRelacionesPorPoceso&i=" . Encodear3($id_proceso) . "';
 </script>";
 	}
 	elseif ($seccion == "ProcesoActivoAnual") {
-		$id_proceso_activo = Decodear3($_POST["proceso_activo"]);
+		$id_proceso_activo = Decodear3($post["proceso_activo"]);
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		$datos_procesos_anuales = ProcesosAnualesPorEmpresa($id_empresa);
 		
 		foreach ($datos_procesos_anuales as $proc_anual) {
 			//por cada proceso, veo si esta desativado o no
-			if ($_POST["proceso_desactivado_" . $proc_anual->id] == "on") {
+			if ($post["proceso_desactivado_" . $proc_anual->id] == "on") {
 				//si ya esta desactivado, lo desactivo
 				$datos_proceso = DatosProcesoAnualPorIdAnual($proc_anual->id);
 				if ($datos_proceso[0]->desactivado == "1") {
@@ -11076,10 +11074,10 @@ location.href='?sw=ProcAnual';
 	}
 	elseif ($seccion == "GuardaDatosHomeSGD") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$titulo = ($_POST["titulo"]);
-		$introduccion = ($_POST["introduccion"]);
-		$competencias_transversales = ($_POST["competencias_transversales"]);
-		$competencias_liderazgo = ($_POST["competencias_liderazgo"]);
+		$titulo = ($post["titulo"]);
+		$introduccion = ($post["introduccion"]);
+		$competencias_transversales = ($post["competencias_transversales"]);
+		$competencias_liderazgo = ($post["competencias_liderazgo"]);
 		ActualizarDatosHomeSGD($id_empresa, $titulo, $introduccion, $competencias_transversales, $competencias_liderazgo);
 		echo "
 <script>
@@ -11087,7 +11085,7 @@ location.href='?sw=ContenidoInicial';
 </script>";
 	}
 	elseif ($seccion == "dltTipsSGD") {
-		$id = Decodear3($_GET["i"]);
+		$id = Decodear3($get["i"]);
 		EliminaBloqueTips($id);
 		
 		echo "
@@ -11096,7 +11094,7 @@ location.href='?sw=ContenidosTips';
 </script>";
 	}
 	elseif ($seccion == "dltImportanteSGD") {
-		$id = Decodear3($_GET["i"]);
+		$id = Decodear3($get["i"]);
 		EliminaBloqueImportante($id);
 		
 		echo "
@@ -11105,7 +11103,7 @@ location.href='?sw=ContenidosImportante';
 </script>";
 	}
 	elseif ($seccion == "AddDatoTip") {
-		$texto = ($_POST["texto"]);
+		$texto = ($post["texto"]);
 		InsertaTextoTips($_SESSION["id_empresa"], $texto);
 		echo "
 <script>
@@ -11113,7 +11111,7 @@ location.href='?sw=ContenidosTips';
 </script>";
 	}
 	elseif ($seccion == "AddDatoImportante") {
-		$texto = ($_POST["texto"]);
+		$texto = ($post["texto"]);
 		InsertaTextoImportante($_SESSION["id_empresa"], $texto);
 		echo "
 <script>
@@ -11151,10 +11149,10 @@ location.href='?sw=ContenidosImportante';
 		exit;
 	}
 	elseif ($seccion == "ProcAnual") {
-		$arreglo_post = $_POST;
-		$exportar_a_excel = $_POST["ex"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$arreglo_post = $post;
+		$exportar_a_excel = $post["ex"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		$array_para_recibir_via_url = stripslashes($miarray);
 		$array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
 		$matriz_completa = unserialize($array_para_recibir_via_url, ['allowed_classes' => false]);
@@ -11174,8 +11172,8 @@ location.href='?sw=ContenidosImportante';
 		echo "grafico ranking competencias";
 	}
 	elseif ($seccion == "ResumenEvaluadoEvaluadoresPorCriterio") {
-		$id_proceso = $_GET["i"];
-		$campo_criterio = $_GET["campo_criterio"];
+		$id_proceso = $get["i"];
+		$campo_criterio = $get["campo_criterio"];
 		
 		$tabla = ListadoRelacionesEvaluadoEvaluadorProProceso(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/tabla_superior_resumen_evaluado_evaluador.html")), $arreglo_post, $pagina, "usuarios", $id_proceso, $rut_evaluador, $exportar_a_excel, $campo_criterio, "", "");
 		$tabla = str_replace("{ENCABEZADO_DINAMICO}", MuestraEncabezadoPorProceso($id_proceso), $tabla);
@@ -11185,16 +11183,16 @@ location.href='?sw=ContenidosImportante';
 	elseif ($seccion == "veRelacionesPorPoceso") {
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_empresa = DatosEmpresa($id_empresa);
-		$id_proceso = Decodear3($_GET["i"]);
-		$rut_evaluador = Decodear3($_GET["revr"]);
+		$id_proceso = Decodear3($get["i"]);
+		$rut_evaluador = Decodear3($get["revr"]);
 		
-		$criterio = Decodear3($_GET["cri"]);
-		$valor_criterio = Decodear3($_GET["valcri"]);
+		$criterio = Decodear3($get["cri"]);
+		$valor_criterio = Decodear3($get["valcri"]);
 		
-		$arreglo_post = $_POST;
-		$exportar_a_excel = $_GET["ex"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$arreglo_post = $post;
+		$exportar_a_excel = $get["ex"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		$array_para_recibir_via_url = stripslashes($miarray);
 		$array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
 		$matriz_completa = unserialize($array_para_recibir_via_url, ['allowed_classes' => false]);
@@ -11237,9 +11235,9 @@ location.href='?sw=ContenidosImportante';
 		} else if ($seccion == "ReporteDetalleEstado") {
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_empresa = DatosEmpresa($id_empresa);
-		$id_proceso = Decodear3($_GET["i"]);
+		$id_proceso = Decodear3($get["i"]);
 		
-		$exportar_a_excel = $_GET["ex"];
+		$exportar_a_excel = $get["ex"];
 		
 		if ($exportar_a_excel == 1) {
 			EncabezadoExcel("ReporteAvanceEstados");
@@ -11255,8 +11253,8 @@ location.href='?sw=ContenidosImportante';
 		exit;
 	}
 		else if ($seccion == "ResumenEvaluadoresPorCriterio") {
-		$id_proceso = $_GET["idproceso"];
-		$campo_criterio = $_GET["campo_criterio"];
+		$id_proceso = $get["idproceso"];
+		$campo_criterio = $get["campo_criterio"];
 		
 		$tabla = ListadoEvaluadoresPorProceso(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/tabla_superior_resumen.html")), $arreglo_post, $pagina, "usuarios", $id_proceso, "", $campo_criterio, "", "");
 		$tabla = str_replace("{ENCABEZADO_DINAMICO}", MuestraEncabezadoPorProceso($id_proceso), $tabla);
@@ -11265,8 +11263,8 @@ location.href='?sw=ContenidosImportante';
 		echo $tabla;
 	}
 		else if ($seccion == "ResumenEvaluadoresPorCriterioFijacion") {
-		$id_proceso = $_GET["idproceso"];
-		$campo_criterio = $_GET["campo_criterio"];
+		$id_proceso = $get["idproceso"];
+		$campo_criterio = $get["campo_criterio"];
 		
 		//$tabla=ListadoEvaluadoresPorProceso(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/".$_SESSION["id_empresa"]."_tabla_superior_resumen_fijacion.html")),$arreglo_post, $pagina, "usuarios", $id_proceso, "", $campo_criterio, "", "");
 		$tabla = ListadoEvaluadoresPorProcesoFijacion(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/" . $_SESSION["id_empresa"] . "_tabla_superior_resumen_fijacion.html")), $arreglo_post, $pagina, "usuarios", $id_proceso, $exportar_a_excel, "", $criterio, $valor_criterio, $_SESSION["id_empresa"], $campo_criterio);
@@ -11278,13 +11276,13 @@ location.href='?sw=ContenidosImportante';
 	}
 		else if ($seccion == "veEvaluadorPorProcesoResultados") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_proceso = Decodear3($_GET["i"]);
-		$criterio = Decodear3($_GET["cri"]);
-		$valor_criterio = Decodear3($_GET["valcri"]);
-		$arreglo_post = $_POST;
-		$exportar_a_excel = $_GET["ex"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$id_proceso = Decodear3($get["i"]);
+		$criterio = Decodear3($get["cri"]);
+		$valor_criterio = Decodear3($get["valcri"]);
+		$arreglo_post = $post;
+		$exportar_a_excel = $get["ex"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		$array_para_recibir_via_url = stripslashes($miarray);
 		$array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
 		$matriz_completa = unserialize($array_para_recibir_via_url, ['allowed_classes' => false]);
@@ -11308,21 +11306,21 @@ location.href='?sw=ContenidosImportante';
 	}
 		else if ($seccion == "veRelacionesPorPocesoResultados") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_proceso = Decodear3($_GET["i"]);
-		$rut_evaluador = Decodear3($_GET["revr"]);
-		$resumen = $_GET["resumen"];
-		$filtro1 = $_POST["filtro1"];
-		$filtro2 = $_POST["filtro2"];
-		$criterio = Decodear3($_GET["cri"]);
-		$valor_criterio = Decodear3($_GET["valcri"]);
+		$id_proceso = Decodear3($get["i"]);
+		$rut_evaluador = Decodear3($get["revr"]);
+		$resumen = $get["resumen"];
+		$filtro1 = $post["filtro1"];
+		$filtro2 = $post["filtro2"];
+		$criterio = Decodear3($get["cri"]);
+		$valor_criterio = Decodear3($get["valcri"]);
 		
-		$tipo_reporte = $_POST["tipo_reporte"];
+		$tipo_reporte = $post["tipo_reporte"];
 		
-		$arreglo_post = $_POST;
-		//$exportar_a_excel=$_GET["ex"];
-		$exportar_a_excel = $_GET["ex"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$arreglo_post = $post;
+		//$exportar_a_excel=$get["ex"];
+		$exportar_a_excel = $get["ex"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		$array_para_recibir_via_url = stripslashes($miarray);
 		$array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
 		$matriz_completa = unserialize($array_para_recibir_via_url, ['allowed_classes' => false]);
@@ -11393,17 +11391,17 @@ location.href='?sw=ContenidosImportante';
 		}
 		else if ($seccion == "veRelacionesPorPocesoResultadosBK") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_proceso = Decodear3($_GET["i"]);
-		$rut_evaluador = Decodear3($_GET["revr"]);
+		$id_proceso = Decodear3($get["i"]);
+		$rut_evaluador = Decodear3($get["revr"]);
 		
-		$criterio = Decodear3($_GET["cri"]);
-		$valor_criterio = Decodear3($_GET["valcri"]);
+		$criterio = Decodear3($get["cri"]);
+		$valor_criterio = Decodear3($get["valcri"]);
 		
-		$arreglo_post = $_POST;
-		//$exportar_a_excel=$_GET["ex"];
-		$exportar_a_excel = $_POST["excel"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$arreglo_post = $post;
+		//$exportar_a_excel=$get["ex"];
+		$exportar_a_excel = $post["excel"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		$array_para_recibir_via_url = stripslashes($miarray);
 		$array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
 		$matriz_completa = unserialize($array_para_recibir_via_url, ['allowed_classes' => false]);
@@ -11446,9 +11444,9 @@ location.href='?sw=ContenidosImportante';
 	<?php
 		}
 		else if ($seccion == "resetEval") {
-		$rut_evaluado = Decodear3($_GET["re"]);
-		$rut_evaluador = Decodear3($_GET["revr"]);
-		$id_proceso = Decodear3($_GET["ip"]);
+		$rut_evaluado = Decodear3($get["re"]);
+		$rut_evaluador = Decodear3($get["revr"]);
+		$id_proceso = Decodear3($get["ip"]);
 		//echo "$rut_evaluado, $rut_evaluador, $id_proceso";
 		ReseteaDataEvaluacion($rut_evaluado, $rut_evaluador, $id_proceso);
 		echo "
@@ -11457,9 +11455,9 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 </script>";
 	}
 		else if ($seccion == "abrEval") {
-		$rut_evaluado = Decodear3($_GET["re"]);
-		$rut_evaluador = Decodear3($_GET["revr"]);
-		$id_proceso = Decodear3($_GET["ip"]);
+		$rut_evaluado = Decodear3($get["re"]);
+		$rut_evaluador = Decodear3($get["revr"]);
+		$id_proceso = Decodear3($get["ip"]);
 		//echo "$rut_evaluado, $rut_evaluador, $id_proceso";
 		AbrirEvaluacion($rut_evaluado, $rut_evaluador, $id_proceso);
 		echo "
@@ -11468,16 +11466,16 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 </script>";
 	} else if ($seccion == "GestionRelacionesPorProceso") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_proceso = Decodear3($_GET["i"]);
-		$rut_evaluador = Decodear3($_GET["revr"]);
+		$id_proceso = Decodear3($get["i"]);
+		$rut_evaluador = Decodear3($get["revr"]);
 		
-		$criterio = Decodear3($_GET["cri"]);
-		$valor_criterio = Decodear3($_GET["valcri"]);
+		$criterio = Decodear3($get["cri"]);
+		$valor_criterio = Decodear3($get["valcri"]);
 		
-		$arreglo_post = $_POST;
-		$exportar_a_excel = $_GET["ex"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$arreglo_post = $post;
+		$exportar_a_excel = $get["ex"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		$array_para_recibir_via_url = stripslashes($miarray);
 		$array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
 		$matriz_completa = unserialize($array_para_recibir_via_url, ['allowed_classes' => false]);
@@ -11522,13 +11520,13 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 		else if ($seccion == "veEvaluadorPorProceso") {
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_empresa = DatosEmpresa($id_empresa);
-		$id_proceso = Decodear3($_GET["i"]);
-		$criterio = Decodear3($_GET["cri"]);
-		$valor_criterio = Decodear3($_GET["valcri"]);
-		$arreglo_post = $_POST;
-		$exportar_a_excel = $_GET["ex"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$id_proceso = Decodear3($get["i"]);
+		$criterio = Decodear3($get["cri"]);
+		$valor_criterio = Decodear3($get["valcri"]);
+		$arreglo_post = $post;
+		$exportar_a_excel = $get["ex"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		$array_para_recibir_via_url = stripslashes($miarray);
 		$array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
 		$matriz_completa = unserialize($array_para_recibir_via_url, ['allowed_classes' => false]);
@@ -11586,13 +11584,13 @@ $("#capa3").load('?sw=ResumenEvaluadoresPorCriterio&idproceso=<?php echo $id_pro
 	} else if ($seccion == "veEvaluadorPorProcesoFijacion") {
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_empresa = DatosEmpresa($id_empresa);
-		$id_proceso = Decodear3($_GET["i"]);
-		$criterio = Decodear3($_GET["cri"]);
-		$valor_criterio = Decodear3($_GET["valcri"]);
-		$arreglo_post = $_POST;
-		$exportar_a_excel = $_GET["ex"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$id_proceso = Decodear3($get["i"]);
+		$criterio = Decodear3($get["cri"]);
+		$valor_criterio = Decodear3($get["valcri"]);
+		$arreglo_post = $post;
+		$exportar_a_excel = $get["ex"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		$array_para_recibir_via_url = stripslashes($miarray);
 		$array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
 		$matriz_completa = unserialize($array_para_recibir_via_url, ['allowed_classes' => false]);
@@ -11600,7 +11598,7 @@ $("#capa3").load('?sw=ResumenEvaluadoresPorCriterio&idproceso=<?php echo $id_pro
 			$arreglo_post = $matriz_completa;
 		}
 		
-		$tipo = $_GET["tipo"];
+		$tipo = $get["tipo"];
 		if ($tipo == 2) {
 		if ($exportar_a_excel == 1) {
 			EncabezadoExcel("ReporteEvaluador");
@@ -11643,8 +11641,8 @@ $("#capa3").load('?sw=ResumenEvaluadoresPorCriterio&idproceso=<?php echo $id_pro
 	<?php
 		}
 		elseif ($tipo == 6) {
-			//$id_proceso=Decodear3($_GET["idprocesorel"]);
-			$id_proceso = Decodear3($_GET["i"]);
+			//$id_proceso=Decodear3($get["idprocesorel"]);
+			$id_proceso = Decodear3($get["i"]);
 			
 			$PRINCIPAL = ListadoEvaluadoresPorProcesoMediociclo(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/" . $id_empresa . "_entorno_listado_evaluadores_proceso_medio_ciclo.html")), $arreglo_post, $pagina, "usuarios", $id_proceso, $exportar_a_excel, "", $criterio, $valor_criterio, $id_empresa, "");
 			$PRINCIPAL = str_replace("{ID_PROCESO_ENCODEADO}", Encodear3($id_proceso), $PRINCIPAL);
@@ -11656,13 +11654,13 @@ $("#capa3").load('?sw=ResumenEvaluadoresPorCriterio&idproceso=<?php echo $id_pro
 		else if ($seccion == "veEvaluadoEvaluadorPorProcesoFijacion") {
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_empresa = DatosEmpresa($id_empresa);
-		$id_proceso = Decodear3($_GET["i"]);
-		$criterio = Decodear3($_GET["cri"]);
-		$valor_criterio = Decodear3($_GET["valcri"]);
-		$arreglo_post = $_POST;
-		$exportar_a_excel = $_GET["ex"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$id_proceso = Decodear3($get["i"]);
+		$criterio = Decodear3($get["cri"]);
+		$valor_criterio = Decodear3($get["valcri"]);
+		$arreglo_post = $post;
+		$exportar_a_excel = $get["ex"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		
 		$fechahoy = date("Y-m-d") . "|" . date("H:i:s");
 		header("Content-Type: application/vnd.ms-excel");
@@ -11676,13 +11674,13 @@ $("#capa3").load('?sw=ResumenEvaluadoresPorCriterio&idproceso=<?php echo $id_pro
 		else if ($seccion == "veEvaluadoEvaluadorPorProcesoMedioCiclo") {
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_empresa = DatosEmpresa($id_empresa);
-		$id_proceso = Decodear3($_GET["i"]);
-		$criterio = Decodear3($_GET["cri"]);
-		$valor_criterio = Decodear3($_GET["valcri"]);
-		$arreglo_post = $_POST;
-		$exportar_a_excel = $_GET["ex"];
-		$pagina = $_GET["p"];
-		$miarray = $_GET["arra"];
+		$id_proceso = Decodear3($get["i"]);
+		$criterio = Decodear3($get["cri"]);
+		$valor_criterio = Decodear3($get["valcri"]);
+		$arreglo_post = $post;
+		$exportar_a_excel = $get["ex"];
+		$pagina = $get["p"];
+		$miarray = $get["arra"];
 		
 		$fechahoy = date("Y-m-d") . "|" . date("H:i:s");
 		header("Content-Type: application/vnd.ms-excel");
@@ -11694,7 +11692,7 @@ $("#capa3").load('?sw=ResumenEvaluadoresPorCriterio&idproceso=<?php echo $id_pro
 		echo($PRINCIPAL);
 	}
 		else if ($seccion == "relPreguntasAlternativas") {
-		$id_pregunta = Decodear3($_GET["i"]);
+		$id_pregunta = Decodear3($get["i"]);
 		$PRINCIPAL = ListadoRelacionesPreguntasAlternativas(FuncionesTransversalesAdmin(file_get_contents("views/preguntas/formulario_rel_competencia_pregunta.html")), $id_pregunta);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
@@ -11705,10 +11703,10 @@ $("#capa3").load('?sw=ResumenEvaluadoresPorCriterio&idproceso=<?php echo $id_pro
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	} else if ($seccion == "listbaspersonas") {
-		$exportar_a_excel = $_POST["ex"];
-		$pagina = $_GET["p"];
+		$exportar_a_excel = $post["ex"];
+		$pagina = $get["p"];
 		if ($exportar_a_excel == "1") {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$fechahoy = date("Y-m-d") . " " . date("H:i:s");
 			header("Content-Type: application/vnd.ms-excel");
 			header("Content-Disposition: attachment; filename=" . $fechahoy . ".xls");
@@ -11719,19 +11717,19 @@ $("#capa3").load('?sw=ResumenEvaluadoresPorCriterio&idproceso=<?php echo $id_pro
 			echo($PRINCIPAL);
 		}
 		else {
-			$arreglo_post = $_POST;
+			$arreglo_post = $post;
 			$PRINCIPAL = FiltrosListadoCursos(ListadoCursosAdmin(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_listado.html")), $arreglo_post, $pagina), $arreglo_post, $pagina);
 			echo CleanHTMLWhiteList($PRINCIPAL);
 			exit;
 		}
 	}
 		else if ($seccion == "agreotec") {
-		$rut = ($_POST["rut_otec"]);
-		$nombre_otec = ($_POST["nombre_otec"]);
-		$direccion_otec = ($_POST["direccion_otec"]);
-		$telefono_otec = ($_POST["telefono_otec"]);
-		$email_otec = ($_POST["email_otec"]);
-		$contacto_otec = ($_POST["contacto_otec"]);
+		$rut = ($post["rut_otec"]);
+		$nombre_otec = ($post["nombre_otec"]);
+		$direccion_otec = ($post["direccion_otec"]);
+		$telefono_otec = ($post["telefono_otec"]);
+		$email_otec = ($post["email_otec"]);
+		$contacto_otec = ($post["contacto_otec"]);
 		InsertaOtec($rut, $nombre_otec, $direccion_otec, $telefono_otec, $email_otec, $contacto_otec);
 		
 		echo "
@@ -11740,7 +11738,7 @@ $("#capa3").load('?sw=ResumenEvaluadoresPorCriterio&idproceso=<?php echo $id_pro
 location.href='?sw=listotec';
 </script>";
 	} else if ($seccion == "DeleteProcesoAnual") {
-		$id_proceso_anual = ($_GET["iproan"]);
+		$id_proceso_anual = ($get["iproan"]);
 		
 		EliminaProcesoAnual($id_proceso_anual);
 		
@@ -11751,8 +11749,8 @@ location.href='?sw=ProcAnual';
 		exit;
 	}
 		else if ($seccion == "DeleteProcesoEval") {
-		$id_proceso_anual = Decodear3($_GET["iproan"]);
-		$id_proceso = Decodear3($_GET["ip"]);
+		$id_proceso_anual = Decodear3($get["iproan"]);
+		$id_proceso = Decodear3($get["ip"]);
 		
 		EliminaProcesoEval($id_proceso);
 		EliminaProcesoEval($id_proceso + 1);
@@ -11763,13 +11761,13 @@ location.href='?sw=ProcAnual';
 </script>";
 		exit;
 	} else if ($seccion == "edotec") {
-		$id = Decodear3($_POST["id"]);
-		$rut = ($_POST["rut_otec"]);
-		$nombre_otec = ($_POST["nombre_otec"]);
-		$direccion_otec = ($_POST["direccion_otec"]);
-		$telefono_otec = ($_POST["telefono_otec"]);
-		$email_otec = ($_POST["email_otec"]);
-		$contacto_otec = ($_POST["contacto_otec"]);
+		$id = Decodear3($post["id"]);
+		$rut = ($post["rut_otec"]);
+		$nombre_otec = ($post["nombre_otec"]);
+		$direccion_otec = ($post["direccion_otec"]);
+		$telefono_otec = ($post["telefono_otec"]);
+		$email_otec = ($post["email_otec"]);
+		$contacto_otec = ($post["contacto_otec"]);
 		ActualizaDatosOtec($rut, $nombre_otec, $direccion_otec, $telefono_otec, $email_otec, $contacto_otec);
 		
 		echo "
@@ -11779,7 +11777,7 @@ location.href='?sw=listotec';
 </script>";
 	}
 		else if ($seccion == "addotec") {
-		$rut_otec = Decodear3($_GET["rot"]);
+		$rut_otec = Decodear3($get["rot"]);
 		$PRINCIPAL = formularioOtec(FuncionesTransversalesAdmin(file_get_contents("views/otec/formulario_ingresa.html")), $rut_otec);
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -11792,9 +11790,9 @@ location.href='?sw=listotec';
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	} else if ($seccion == "listotec") {
-		$arreglo_post = $_POST;
-		$exportar_a_excel = $_POST["ex"];
-		$pagina = $_GET["p"];
+		$arreglo_post = $post;
+		$exportar_a_excel = $post["ex"];
+		$pagina = $get["p"];
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		$PRINCIPAL = ListadoOtec(FuncionesTransversalesAdmin(file_get_contents("views/otec/entorno_listado.html")), $id_empresa);
@@ -11808,15 +11806,15 @@ location.href='?sw=listotec';
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	} else if ($seccion == "addaccrel") {
-		$id_empresa = Decodear3($_POST["id_empresa"]);
-		$id_proceso = Decodear3($_POST["id_proceso"]);
-		$rut_evaluado = $_POST["rutevaluado"];
-		$rut_evaluador = $_POST["rutevaluador"];
-		$rut_validador = $_POST["rutvalidador"];
-		$rut_calibrador = $_POST["rutcalibrador"];
-		$perfil_evaluacion = $_POST["perfil_evaluacion"];
-		$subperfil_evaluacion = $_POST["subperfil_evaluacion"];
-		$comentarios = ($_POST["comentarios"]);
+		$id_empresa = Decodear3($post["id_empresa"]);
+		$id_proceso = Decodear3($post["id_proceso"]);
+		$rut_evaluado = $post["rutevaluado"];
+		$rut_evaluador = $post["rutevaluador"];
+		$rut_validador = $post["rutvalidador"];
+		$rut_calibrador = $post["rutcalibrador"];
+		$perfil_evaluacion = $post["perfil_evaluacion"];
+		$subperfil_evaluacion = $post["subperfil_evaluacion"];
+		$comentarios = ($post["comentarios"]);
 		
 		if ($id_empresa == 28) {
 			$rut_validador = $rut_calibrador;
@@ -11831,24 +11829,24 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 </script>";
 	}
 		else if ($seccion == "updaccrel") {
-		$id_empresa = Decodear3($_POST["id_empresa"]);
-		$id_proceso = Decodear3($_POST["id_proceso"]);
-		$rut_evaluado = $_POST["rutevaluado"];
-		$rut_evaluador = $_POST["rutevaluador"];
-		$rut_validador = $_POST["rutvalidador"];
-		$rut_calibrador = $_POST["rutcalibrador"];
-		$rut_evaluador_original = $_POST["evaluador_original"];
+		$id_empresa = Decodear3($post["id_empresa"]);
+		$id_proceso = Decodear3($post["id_proceso"]);
+		$rut_evaluado = $post["rutevaluado"];
+		$rut_evaluador = $post["rutevaluador"];
+		$rut_validador = $post["rutvalidador"];
+		$rut_calibrador = $post["rutcalibrador"];
+		$rut_evaluador_original = $post["evaluador_original"];
 		
 		if ($id_empresa == 22) {
-			$rut_calibrador = $_POST["rutvalidador"];
+			$rut_calibrador = $post["rutvalidador"];
 		}
 		if ($id_empresa == 28) {
-			$rut_validador = $_POST["rutcalibrador"];
+			$rut_validador = $post["rutcalibrador"];
 		}
-		$perfil_evaluacion = $_POST["perfil_evaluacion"];
-		$subperfil_evaluacion = $_POST["subperfil_evaluacion"];
-		$comentarios = ($_POST["comentarios"]);
-		$data = trim($_POST["data"]);
+		$perfil_evaluacion = $post["perfil_evaluacion"];
+		$subperfil_evaluacion = $post["subperfil_evaluacion"];
+		$comentarios = ($post["comentarios"]);
+		$data = trim($post["data"]);
 		if ($data == "traspasa") {
 			$alert = "Si el evaluado tiene evaluacion, por el evaluador, la informacion fue traspasada al nuevo evaluador";
 		}
@@ -11878,7 +11876,7 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 	}
 		else if ($seccion == "autocompletarUsuarios") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$buscar = ($_GET["q"]);
+		$buscar = ($get["q"]);
 		$allData = allPersonasPorNombrePorEmpresaAdmin($buscar, $id_empresa);
 		echo $allData;
 	} else if ($seccion == "EjemplocomboBox") {
@@ -11891,12 +11889,12 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 	}
 		else if ($seccion == "autocompletarNombreTNT") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$buscar = ($_GET["q"]);
+		$buscar = ($get["q"]);
 		$allData = allPersonasPorNombrePorEmpresa($buscar, $id_empresa);
 		//$allData = allPersonasPorNombre($buscar);
 		echo $allData;
 	} else if ($seccion == "accionmalla") {
-		$id_malla = Decodear($_GET["i"]);
+		$id_malla = Decodear($get["i"]);
 		
 		if ($id_malla) {
 			$PRINCIPAL = FormularioMalla(FuncionesTransversalesAdmin(file_get_contents("views/malla/formulario_malla.html")), $id_malla);
@@ -11909,12 +11907,12 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 		exit;
 	}
 		else if ($seccion == "admallla") {
-		$nombre_malla = (trim($_POST["nombre_malla"]));
-		$descripcion_malla = (trim($_POST["descripcion_malla"]));
-		$tipo_malla = trim($_POST["tipo_malla"]);
-		$certificable = trim($_POST["certificable"]);
-		$ponderacion = trim($_POST["ponderacion"]);
-		$tipo_fecha = trim($_POST["tipo_fecha"]);
+		$nombre_malla = (trim($post["nombre_malla"]));
+		$descripcion_malla = (trim($post["descripcion_malla"]));
+		$tipo_malla = trim($post["tipo_malla"]);
+		$certificable = trim($post["certificable"]);
+		$ponderacion = trim($post["ponderacion"]);
+		$tipo_fecha = trim($post["tipo_fecha"]);
 		//Agrego la malla a la tabla tbl_malla
 		InsertaMalla(($nombre_malla), ($descripcion_malla), $tipo_malla, $certificable, $ponderacion, $tipo_fecha);
 		echo "
@@ -11923,7 +11921,7 @@ alert('Malla ingresada exitosamente');
 location.href='?sw=listmallas';
 </script>";
 	} else if ($seccion == "accionprograma") {
-		$id_programa = Decodear($_GET["i"]);
+		$id_programa = Decodear($get["i"]);
 		if ($id_programa) {
 			$PRINCIPAL = FormularioPrograma(FuncionesTransversalesAdmin(file_get_contents("views/programa/formulario_edita.html")), $id_programa);
 		}
@@ -11935,22 +11933,22 @@ location.href='?sw=listmallas';
 		exit;
 	}
 		else if ($seccion == "relcursonivel") {
-		$id_nivel = Decodear($_GET["i"]);
+		$id_nivel = Decodear($get["i"]);
 		
 		$PRINCIPAL = ListadoRelacionesNivelCurso(FuncionesTransversalesAdmin(file_get_contents("views/nivel/formulario_rel_nivel_curso.html")), $id_nivel);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 		else if ($seccion == "relmallaprog") {
-		$id_malla = Decodear($_GET["i"]);
+		$id_malla = Decodear($get["i"]);
 		//$PRINCIPAL=ListadoRelacionesNivelCurso(FuncionesTransversalesAdmin(file_get_contents("views/nivel/formulario_rel_nivel_curso.html")), $id_nivel);
 		$PRINCIPAL = ListadoRelacionesMallaPrograma(FuncionesTransversalesAdmin(file_get_contents("views/malla/formulario_rel_malla_programa.html")), $id_malla);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 		else if ($seccion == "saveSeguPorEvPorCat") {
-		$rut_evaluado = Decodear3($_POST["re"]);
-		$id_categoria = Decodear3($_POST["ic"]);
+		$rut_evaluado = Decodear3($post["re"]);
+		$id_categoria = Decodear3($post["ic"]);
 		$pasos = PasosPorSeguimientoCategoria($id_categoria);
 		$contador_datos = 0;
 		foreach ($pasos as $pasos_evaluado) {
@@ -11958,15 +11956,15 @@ location.href='?sw=listmallas';
 			$tiene_respuesta = SeguimientoVerificoRespuestaPorRutCatePaso($rut_evaluado, $pasos_evaluado->id, $id_categoria);
 			if ($tiene_respuesta) {
 				//actualiza
-				if (trim($_POST[$rut_evaluado . "_" . $pasos_evaluado->id])) {
-					SeguimientoActualizaRespuestas($rut_evaluado, $pasos_evaluado->id, $id_categoria, ($_POST[$rut_evaluado . "_" . $pasos_evaluado->id]));
+				if (trim($post[$rut_evaluado . "_" . $pasos_evaluado->id])) {
+					SeguimientoActualizaRespuestas($rut_evaluado, $pasos_evaluado->id, $id_categoria, ($post[$rut_evaluado . "_" . $pasos_evaluado->id]));
 					$contador_datos++;
 				}
 			}
 			else {
 				//inserto
-				if (trim($_POST[$rut_evaluado . "_" . $pasos_evaluado->id])) {
-					SeguimientoInsertoRespuesta($rut_evaluado, $pasos_evaluado->id, $id_categoria, ($_POST[$rut_evaluado . "_" . $pasos_evaluado->id]));
+				if (trim($post[$rut_evaluado . "_" . $pasos_evaluado->id])) {
+					SeguimientoInsertoRespuesta($rut_evaluado, $pasos_evaluado->id, $id_categoria, ($post[$rut_evaluado . "_" . $pasos_evaluado->id]));
 					$contador_datos++;
 				}
 			}
@@ -11987,11 +11985,11 @@ location.href='?sw=seguimiento&ic=" . Encodear3($id_categoria) . "#ROW_" . $rut_
 		exit;
 	}
 		else if ($seccion == "seguimiento") {
-		$id_malla = Decodear($_GET["i"]);
+		$id_malla = Decodear($get["i"]);
 		$id_empresa = $_SESSION["id_empresa"];
-		$categoria = $_GET["categoria"];
-		$id_categoria_por_get = Decodear3($_GET["ic"]);
-		$excel = $_GET["ex"];
+		$categoria = $get["categoria"];
+		$id_categoria_por_get = Decodear3($get["ic"]);
+		$excel = $get["ex"];
 		if ($id_categoria_por_get) {
 			$categoria = $id_categoria_por_get;
 		}
@@ -12016,8 +12014,8 @@ location.href='?sw=seguimiento&ic=" . Encodear3($id_categoria) . "#ROW_" . $rut_
 		exit;
 	}
 		else if ($seccion == "dltcompperfil") {
-		$id_competencia = Decodear3($_GET["idc"]);
-		$id_perfil = Decodear3($_GET["idper"]);
+		$id_competencia = Decodear3($get["idc"]);
+		$id_perfil = Decodear3($get["idper"]);
 		
 		EliminaRelacionCompetenciaPerfilEvaluacion($id_perfil, $id_competencia);
 		echo "
@@ -12027,7 +12025,7 @@ location.href='?sw=relPerfilesCompetencias&i=" . Encodear3($id_perfil) . "';
 </script>";
 	}
 		else if ($seccion == "relPerfilesCompetencias") {
-		$id_perfil = Decodear3($_GET["i"]);
+		$id_perfil = Decodear3($get["i"]);
 		//$PRINCIPAL=ListadoRelacionesNivelCurso(FuncionesTransversalesAdmin(file_get_contents("views/nivel/formulario_rel_nivel_curso.html")), $id_nivel);
 		//$PRINCIPAL=ListadoRelacionesMallaPrograma(FuncionesTransversalesAdmin(file_get_contents("views/malla/formulario_rel_malla_programa.html")), $id_malla);
 		$PRINCIPAL = ListadoRelacionesPerfilCompetencias(FuncionesTransversalesAdmin(file_get_contents("views/instrumentos/formulario_rel_perfil_competencia.html")), $id_perfil);
@@ -12035,18 +12033,18 @@ location.href='?sw=relPerfilesCompetencias&i=" . Encodear3($id_perfil) . "';
 		exit;
 	}
 		else if ($seccion == "relCompetenciasPreguntas") {
-		$id_competencia = Decodear3($_GET["i"]);
+		$id_competencia = Decodear3($get["i"]);
 		
 		$PRINCIPAL = ListadoRelacionesCompetenciasPreguntas2(FuncionesTransversalesAdmin(file_get_contents("views/competencias/formulario_rel_competencia_pregunta.html")), $id_competencia);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 		else if ($seccion == "adrel") {
-		$id_nivel = Decodear3($_POST["in"]);
-		if ($_POST["cursos"]) {
-			for ($i = 0; $i < count($_POST["cursos"]); $i++) {
+		$id_nivel = Decodear3($post["in"]);
+		if ($post["cursos"]) {
+			for ($i = 0; $i < count($post["cursos"]); $i++) {
 				//Inserto un registro en la tabla rel nivel curso
-				InsertaRelNivelCurso($id_nivel, $_POST["cursos"][$i]);
+				InsertaRelNivelCurso($id_nivel, $post["cursos"][$i]);
 			}
 			
 			echo "
@@ -12058,11 +12056,11 @@ location.href='?sw=relcursonivel&i=" . Encodear($id_nivel) . "';
 		}
 	}
 		else if ($seccion == "adrelm") {
-		$id_malla = Decodear3($_POST["i"]);
-		if ($_POST["programas"]) {
-			for ($i = 0; $i < count($_POST["programas"]); $i++) {
+		$id_malla = Decodear3($post["i"]);
+		if ($post["programas"]) {
+			for ($i = 0; $i < count($post["programas"]); $i++) {
 				//Inserto un registro en la tabla rel nivel curso
-				InsertaRelacionMallaPrograma($id_malla, $_POST["programas"][$i]);
+				InsertaRelacionMallaPrograma($id_malla, $post["programas"][$i]);
 			}
 			
 			echo "
@@ -12074,12 +12072,12 @@ location.href='?sw=relmallaprog&i=" . Encodear($id_malla) . "';
 		}
 	}
 		else if ($seccion == "adrelpc") {
-		$id_perfil = Decodear3($_POST["i"]);
-		if ($_POST["competencias"]) {
-			for ($i = 0; $i < count($_POST["competencias"]); $i++) {
+		$id_perfil = Decodear3($post["i"]);
+		if ($post["competencias"]) {
+			for ($i = 0; $i < count($post["competencias"]); $i++) {
 				//Inserto un registro en la tabla rel nivel curso
-				//InsertaRelacionMallaPrograma($id_malla, $_POST["programas"][$i]);
-				InsertaCompetenciaPerfil($id_perfil, $_POST["competencias"][$i]);
+				//InsertaRelacionMallaPrograma($id_malla, $post["programas"][$i]);
+				InsertaCompetenciaPerfil($id_perfil, $post["competencias"][$i]);
 			}
 			
 			echo "
@@ -12091,12 +12089,12 @@ location.href='?sw=relPerfilesCompetencias&i=" . Encodear3($id_perfil) . "';
 		}
 	}
 		else if ($seccion == "adrelpregcomp") {
-		$id_competencia = Decodear3($_POST["i"]);
-		if ($_POST["competencias"]) {
-			for ($i = 0; $i < count($_POST["competencias"]); $i++) {
+		$id_competencia = Decodear3($post["i"]);
+		if ($post["competencias"]) {
+			for ($i = 0; $i < count($post["competencias"]); $i++) {
 				//Inserto un registro en la tabla rel nivel curso
-				//InsertaRelacionMallaPrograma($id_malla, $_POST["programas"][$i]);
-				InsertaPreguntaCompetencia($id_competencia, $_POST["competencias"][$i]);
+				//InsertaRelacionMallaPrograma($id_malla, $post["programas"][$i]);
+				InsertaPreguntaCompetencia($id_competencia, $post["competencias"][$i]);
 			}
 			
 			echo "
@@ -12108,11 +12106,11 @@ location.href='?sw=relCompetenciasPreguntas&i=" . Encodear3($id_competencia) . "
 		}
 	}
 		else if ($seccion == "ednivel") {
-		$id_nivel = Decodear(Decodear($_POST["id"]));
-		$nombre_nivel = (trim($_POST["nombre_nivel"]));
-		$descripcion_nivel = ($_POST["descripcion_nivel"]);
-		$programa = ($_POST["programa"]);
-		$tutor = ($_POST["tutor"]);
+		$id_nivel = Decodear(Decodear($post["id"]));
+		$nombre_nivel = (trim($post["nombre_nivel"]));
+		$descripcion_nivel = ($post["descripcion_nivel"]);
+		$programa = ($post["programa"]);
+		$tutor = ($post["tutor"]);
 		//Actualizo PRograma
 		ActualizaNivel($id_nivel, $nombre_nivel, $descripcion_nivel, $programa, $tutor);
 		echo "
@@ -12123,7 +12121,7 @@ location.href='?sw=listniveles';
 		exit;
 	}
 		else if ($seccion == "desuario") {
-		$rut = trim(Decodear3($_GET["r"]));
+		$rut = trim(Decodear3($get["r"]));
 		DesvinculaUsuario($rut);
 		echo "
 <script>
@@ -12132,7 +12130,7 @@ location.href='?sw=listusu';
 		exit;
 	}
 		else if ($seccion == "desuarioSeg") {
-		$rut = trim(Decodear3($_GET["r"]));
+		$rut = trim(Decodear3($get["r"]));
 		DesvinculaUsuario($rut);
 		echo "
 <script>
@@ -12141,7 +12139,7 @@ location.href='?sw=seguimiento&categoria=5';
 		exit;
 	}
 		else if ($seccion == "desuarioSiga") {
-		$rut = trim(Decodear3($_GET["r"]));
+		$rut = trim(Decodear3($get["r"]));
 		DesvinculaUsuario($rut);
 		echo "
 <script>
@@ -12151,7 +12149,7 @@ location.href='?sw=listusuSiga';
 	}
 		
 		else if ($seccion == "accionbasepersonasSiga") {
-		$rut = Decodear3($_GET["r"]);
+		$rut = Decodear3($get["r"]);
 		if ($rut) {
 			$PRINCIPAL = FormularioUsuarioSIGA(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/formulario_ingresa_SIGA.html")), $rut);
 		}
@@ -12163,7 +12161,7 @@ location.href='?sw=listusuSiga';
 		exit;
 	}
 		else if ($seccion == "accionbasepersonasSiga") {
-		$rut = Decodear3($_GET["r"]);
+		$rut = Decodear3($get["r"]);
 		if ($rut) {
 			$PRINCIPAL = FormularioUsuarioSIGA(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/formulario_ingresa_SIGA.html")), $rut);
 		}
@@ -12175,16 +12173,16 @@ location.href='?sw=listusuSiga';
 		exit;
 	}
 		else if ($seccion == "eddrelac") {
-		$id_proceso = Decodear3($_GET["i"]);
-		$rut_evaluado = Decodear3($_GET["re"]);
-		$rut_evaluador = Decodear3($_GET["revr"]);
+		$id_proceso = Decodear3($get["i"]);
+		$rut_evaluado = Decodear3($get["re"]);
+		$rut_evaluador = Decodear3($get["revr"]);
 		$id_empresa = $_SESSION["id_empresa"];
 		$PRINCIPAL = FormularioEditaRelacionSGD(FuncionesTransversalesAdmin(file_get_contents("views/sgd_relaciones/" . $id_empresa . "_formulario_edita.html")), $id_empresa, $id_proceso, $rut_evaluado, $rut_evaluador);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 		else if ($seccion == "addNuevaRelacion") {
-		$id_proceso = Decodear3($_GET["i"]);
+		$id_proceso = Decodear3($get["i"]);
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		if ($rut) {
@@ -12198,9 +12196,9 @@ location.href='?sw=listusuSiga';
 		exit;
 	}
 		else if ($seccion == "accionbasepersonas") {
-		$rut = Decodear3($_GET["r"]);
+		$rut = Decodear3($get["r"]);
 		$id_empresa = $_SESSION["id_empresa"];
-		$reset = ($_GET["resetpass"]);
+		$reset = ($get["resetpass"]);
 		
 		if ($reset == 1) {
 			resetea_clave2017($rut);
@@ -12238,9 +12236,9 @@ location.href='?sw=listusuSiga';
 					$PRINCIPAL = FormularioUsuario(ColocaCamposParaFormulario(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/vista_usuario_dinamico.html")), $id_empresa, "editar"), $rut, $_SESSION["id_empresa"]);
 				}
 				
-				$PRINCIPAL = ColocaDatosPorPersonaweb($PRINCIPAL, $rut, $_POST["fecha_inicio"], $_POST["fecha_termino"], $id_empresa);
+				$PRINCIPAL = ColocaDatosPorPersonaweb($PRINCIPAL, $rut, $post["fecha_inicio"], $post["fecha_termino"], $id_empresa);
 				
-				$PRINCIPAL = str_replace("{RUT_ENCODEADO}", $_GET["r"], $PRINCIPAL);
+				$PRINCIPAL = str_replace("{RUT_ENCODEADO}", $get["r"], $PRINCIPAL);
 				$PRINCIPAL = str_replace("{URL_FRONT}", $url_front, $PRINCIPAL);
 				$PRINCIPAL = str_replace("{MODIFICACIONCLAVE}", $txt, $PRINCIPAL);
 				
@@ -12263,7 +12261,7 @@ location.href='?sw=listusuSiga';
 	}
 		else if ($seccion == "lms_lista_historicos_admin") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$rut = $_GET["rut"];
+		$rut = $get["rut"];
 		$rut_enc = Encodear3($rut);
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/historicos/" . $id_empresa . "_entorno.html"));
 		$PRINCIPAL = str_replace("{ENTORNO}", Lista_Busca_Cursos_historicos_admin(FuncionesTransversalesAdmin(file_get_contents("views/historicos/" . $id_empresa . "_listado_historicos.html")), $id_empresa, $rut), $PRINCIPAL);
@@ -12276,13 +12274,13 @@ location.href='?sw=listusuSiga';
 	}
 		else if ($seccion == "lms_lista_cursos_historicos_admin") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$rut = $_POST["rut"];
+		$rut = $post["rut"];
 		//echo "rut $rut";
 		//echo "<br>";
 		$array_usuario = TraeDatosUsuario($rut);
-		//print_r($_POST);
+		//print_r($post);
 		
-		foreach ($_POST as $unico) {
+		foreach ($post as $unico) {
 			if ($unico != $rut and $unico != "Generar Certificados") {
 				//echo "<br>unico ".$unico;
 				$data_array_insc = VistaCursosHistoricosDataAdminPorCurso($rut, $unico, $id_empresa);
@@ -12305,19 +12303,19 @@ location.href='?sw=listusuSiga';
 		$PRINCIPAL = str_replace("{FECHA_ACTUAL}", $hoy, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{LISTA_CURSOS_HISTORICOS}", $txt_cursos, $PRINCIPAL);
 		
-		//    $PRINCIPAL = str_replace("{ENTORNO}",Lista_Certificados_Busca_Cursos_historicos_admin(FuncionesTransversalesAdmin(file_get_contents("views/historicos/".$id_empresa."_certificado_cursos.html")), $id_empresa, $rut, $_POST),$PRINCIPAL);
+		//    $PRINCIPAL = str_replace("{ENTORNO}",Lista_Certificados_Busca_Cursos_historicos_admin(FuncionesTransversalesAdmin(file_get_contents("views/historicos/".$id_empresa."_certificado_cursos.html")), $id_empresa, $rut, $post),$PRINCIPAL);
 		$datos_empresa = DatosEmpresa($id_empresa);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 		else if ($seccion == "lms_lista_historicos_admin_2") {
-		$rut = $_GET["rut"];
+		$rut = $get["rut"];
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_gerencia = $_POST["id_gerencia"];
-		$id_departamento = $_POST["id_departamento"];
-		$id_zona = $_POST["id_zona"];
-		$gerencia = $_POST["gerencia"];
-		//$rut_enc = Decodear3($_GET["rut_enc"]);
+		$id_gerencia = $post["id_gerencia"];
+		$id_departamento = $post["id_departamento"];
+		$id_zona = $post["id_zona"];
+		$gerencia = $post["gerencia"];
+		//$rut_enc = Decodear3($get["rut_enc"]);
 		// echo "rut_enc $rut_enc";
 		// echo "$id_gerencia,$id_departamento,$id_zona";
 		$DatosUsuario = mp_buscaDATOSPERSONAS($rut, $id_empresa);
@@ -12356,9 +12354,9 @@ location.href='?sw=listusuSiga';
 	}
 		else if ($seccion == "adProcAnual") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$nombre_proceso = ($_POST["nombre_proceso"]);
-		$descripcion_proceso = ($_POST["descripcion_proceso"]);
-		$ano = $_POST["ano"];
+		$nombre_proceso = ($post["nombre_proceso"]);
+		$descripcion_proceso = ($post["descripcion_proceso"]);
+		$ano = $post["ano"];
 		//Antes que todo, verifico si para este año y para esta empresa, ya existe un proceso del mismo año
 		$tiene_proceso_anual = VerificaProcesoAnualPorEmpresa($ano, $id_empresa);
 		if ($tiene_proceso_anual) {
@@ -12376,7 +12374,7 @@ location.href='?sw=ProcAnual';
 		exit;
 	}
 		else if ($seccion == "accionProcesoAnual") {
-		$id = Decodear3($_GET["ipa"]);
+		$id = Decodear3($get["ipa"]);
 		if ($rut) {
 			$PRINCIPAL = FormularioProcesosAnuales(FuncionesTransversalesAdmin(file_get_contents("views/procesos/formulario_ingresa.html")), $id);
 		}
@@ -12393,7 +12391,7 @@ location.href='?sw=ProcAnual';
 		exit;
 	}
 		else if ($seccion == "accioncurso") {
-		$id_curso = Decodear($_GET["i"]);
+		$id_curso = Decodear($get["i"]);
 		if ($id_curso) {
 			$PRINCIPAL = FormularioCurso(FuncionesTransversalesAdmin(file_get_contents("views/curso/formulario_edita.html")), $id_curso);
 		}
@@ -12405,8 +12403,8 @@ location.href='?sw=ProcAnual';
 		exit;
 	}
 		else if ($seccion == "GR") {
-		$id_inscripcion = Decodear3($_GET["ii"]);
-		$rut_empresa_holding = Decodear3($_GET["reh"]);
+		$id_inscripcion = Decodear3($get["ii"]);
+		$rut_empresa_holding = Decodear3($get["reh"]);
 		
 		//$datos_inscripcion=DatosInscripcionConMasInfo($id_inscripcion, $rut_empresa_holding);
 		$datos_inscripcion = DatosInscripcionConMasInfoV2($id_inscripcion, $rut_empresa_holding);
@@ -12569,7 +12567,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		echo($PRINCIPAL);
 	}
 		else if ($seccion == "InfEncXInsc") {
-		$id_inscripcion = Decodear3($_GET["ii"]);
+		$id_inscripcion = Decodear3($get["ii"]);
 		$PRINCIPAL = FiltrosReportes(FuncionesTransversalesAdmin(file_get_contents("views/reportes/enc_satisfaccion/sk_enc_sat_home_reportes_consolidados.html")), $arreglo_post);
 		$PRINCIPAL = str_replace("{RESULTADOS}", FiltrosReportes(file_get_contents("views/reportes/enc_satisfaccion/sk_enc_sat_resultados_consolidados.html"), $arreglo_post), $PRINCIPAL);
 		$datos_inscripcion = DatosInscripcion2($id_inscripcion);
@@ -12627,7 +12625,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		exit;
 	}
 		else if ($seccion == "InfEncXInsc2") {
-		$id_inscripcion = Decodear3($_GET["ii"]);
+		$id_inscripcion = Decodear3($get["ii"]);
 		$PRINCIPAL = FiltrosReportes(FuncionesTransversalesAdmin(file_get_contents("views/reporte/reporteGW.html")), $arreglo_post);
 		
 		$PRINCIPAL = str_replace("{LISTADO_DIMENSIONES}", ($row_dim), $PRINCIPAL);
@@ -12642,17 +12640,17 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		exit;
 	}
 		else if ($seccion == "listinsc") {
-		$arreglo_post = $_POST;
-		$orderBy = $_GET["orderBy"];
+		$arreglo_post = $post;
+		$orderBy = $get["orderBy"];
 		$PRINCIPAL = FiltrosReportes(ListadoInscripciones(FuncionesTransversalesAdmin(file_get_contents("views/inscripcion/entorno_listado.html")), $arreglo_post, $orderBy), $arreglo_post);
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 		else if ($seccion == "listaInscripcionesT") {
-		$i = $_GET["i"];
+		$i = $get["i"];
 		$id_curso = Decodear($i);
-		$excel = $_GET["excel"];
+		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola $i $id_curso";//exit();
 		if ($excel == 1) {
@@ -12673,18 +12671,18 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		exit;
 	}
 		else if ($seccion == "listaEncuestasSatisfaccion") {
-		$i = $_GET["i"];
+		$i = $get["i"];
 		$id_curso = Decodear($i);
-		$excel = $_GET["excel"];
+		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola $i $id_curso";//exit();
 		
 		$sendemail = 0;
-		$id_inscripcion = $_GET["idinscripcion"];
-		$sendemail = $_GET["sendemail"];
+		$id_inscripcion = $get["idinscripcion"];
+		$sendemail = $get["sendemail"];
 		
-		$rut_solo = $_GET["solorut"];
-		$rut_individual = $_GET["rut_individual"];
+		$rut_solo = $get["solorut"];
+		$rut_individual = $get["rut_individual"];
 		
 		//echo "id_inscripcion $id_inscripcion sendemail $sendemail rut_solo $rut_solo, $excel";
 		//echo "idinscripcion $id_inscripcion sendemail $sendemail";
@@ -12712,7 +12710,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		exit;
 	}
 		else if ($seccion == "VeSesionXImp") {
-		$id_imparticion = Decodear3($_GET["i"]);
+		$id_imparticion = Decodear3($get["i"]);
 		$id_curso = Decodear($i);
 		//echo "hola $i $id_curso";
 		//exit();
@@ -12723,7 +12721,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		exit;
 	}
 		else if ($seccion == "subeNotasPorImparticion") {
-		$id_imparticion = Decodear3($_GET["i"]);
+		$id_imparticion = Decodear3($get["i"]);
 		$id_curso = Decodear($i);
 		//echo "hola $i $id_curso";
 		//exit();
@@ -12736,13 +12734,13 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 	}
 		else if ($seccion == "ActualizaAsistenciaGlobalPorImparticion") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_imparticion = $_POST["id_imparticion"];
-		$porcentaje_avance = round($_POST["porcentaje_avance"]);
-		$nota = round($_POST["nota"]);
-		//$nota=$_POST["nota"];
+		$id_imparticion = $post["id_imparticion"];
+		$porcentaje_avance = round($post["porcentaje_avance"]);
+		$nota = round($post["nota"]);
+		//$nota=$post["nota"];
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
-		//print_r($_POST);exit;
-		$rut = $_POST["rut"];
+		//print_r($post);exit;
+		$rut = $post["rut"];
 		//Veo si el usuario, con rut, empresa, curso, imparticion, está en inscripcion cierre, si no, lo agrego, si está, lo edito
 		$existe_en_cierre = VerificaEnTablaCierreCursoEmpresRutInscripcion($datos_imparticion[0]->id_curso, $rut, $id_empresa, $id_imparticion);
 		if ($existe_en_cierre) {
@@ -12766,9 +12764,9 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		echo $bloque_asistencia;
 	}
 		else if ($seccion == "ColocaAvanceAsistenciaPorSesionImparticion") {
-		$id_imparticion = $_POST["id_imparticion"];
-		$id_sesion = $_POST["id_sesion"];
-		$rut = $_POST["rut"];
+		$id_imparticion = $post["id_imparticion"];
+		$id_sesion = $post["id_sesion"];
+		$rut = $post["rut"];
 		$id_empresa = $_SESSION["id_empresa"];
 		$avance = CalculaAsistenciaEnBaseASesiones($rut, $id_imparticion, $id_empresa);
 		
@@ -12801,11 +12799,11 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 	}
 		else if ($seccion == "ColocaAsistenciaPorSesionImparticion") {
 		//$fechahoy = date("Y-m-d")." ".date("H:i:s");
-		//print_r($_POST);
+		//print_r($post);
 		//echo "<br>$fechahoy";
-		$id_imparticion = $_POST["id_imparticion"];
-		$id_sesion = $_POST["id_sesion"];
-		$rut = $_POST["rut"];
+		$id_imparticion = $post["id_imparticion"];
+		$id_sesion = $post["id_sesion"];
+		$rut = $post["rut"];
 		$id_empresa = $_SESSION["id_empresa"];
 		$usuario_chequeado = TraigoRegistrosPorSesionDeCheckinPorUsuario($id_imparticion, $id_sesion, $id_empresa, $rut);
 		if ($usuario_chequeado) {
@@ -12827,9 +12825,9 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		}
 	}
 		else if ($seccion == "VeColaboradoresXImpXsessResumen") {
-		$id_imparticion = Decodear3($_GET["i"]);
+		$id_imparticion = Decodear3($get["i"]);
 		$id_curso = Decodear($i);
-		$excel = $_GET["exc"];
+		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola $i $id_curso";
 		//exit();
@@ -12858,10 +12856,10 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		exit;
 	}
 		else if ($seccion == "GuardaAsistenciasPorImparticion") {
-		//print_r($_POST);
+		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_imparticion = Decodear3($_POST["id_imparticion"]);
-		$id_curso = Decodear3($_POST["id_curso"]);
+		$id_imparticion = Decodear3($post["id_imparticion"]);
+		$id_curso = Decodear3($post["id_curso"]);
 		//echo "<br><br> id curso $id_curso id imparticion $id_imparticion";
 		
 		
@@ -12869,11 +12867,11 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		$total_sesiones = InsSesionesImparticion($id_empresa, $id_imparticion);
 		
 		$total_usuarios_por_inscripcion = IMPARTICION_UsuariosPorInscripcionConDatos($id_imparticion, $id_empresa);
-		//print_r($_POST);exit;
+		//print_r($post);exit;
 		foreach ($total_usuarios_por_inscripcion as $usu) {
 			foreach ($total_sesiones as $sesion) {
-				if ($_POST["asistencia_" . $usu->rut . "_" . $sesion->id . "_" . $id_imparticion] == "on") {
-					//echo $_POST["asistencia_".$usu->rut."_".$sesion->id."_".$id_imparticion];
+				if ($post["asistencia_" . $usu->rut . "_" . $sesion->id . "_" . $id_imparticion] == "on") {
+					//echo $post["asistencia_".$usu->rut."_".$sesion->id."_".$id_imparticion];
 					//echo "asistencia_".$usu->rut."_".$sesion."_".$id_imparticion." ";
 					$usuario_chequeado = TraigoRegistrosPorSesionDeCheckinPorUsuario($id_imparticion, $sesion->id, $id_empresa, $usu->rut);
 					if ($usuario_chequeado) {
@@ -12922,7 +12920,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 	}
 		else if ($seccion == "GuardaAsistenciasPorImparticionAsisNota"){
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_imparticion = Decodear3($_POST["id_imparticion"]);
+		$id_imparticion = Decodear3($post["id_imparticion"]);
 		//echo $id_imparticion;
 		//echo "<br>";
 		$total_usuarios_por_inscripcion = IMPARTICION_UsuariosPorInscripcionConDatos($id_imparticion, $id_empresa);
@@ -12931,10 +12929,10 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 			
 			$existe_en_cierre = VerificaEnTablaCierreCursoEmpresRutInscripcion($datos_imparticion[0]->id_curso, $usu->rut, $id_empresa, $id_imparticion);
 			if ($existe_en_cierre) {
-				actualizaTablaCierreRut($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $_POST["avance_" . $usu->rut], $id_empresa, $_POST["nota_" . $usu->rut]);
+				actualizaTablaCierreRut($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $post["avance_" . $usu->rut], $id_empresa, $post["nota_" . $usu->rut]);
 			}
 			else {
-				InsertaTablaCierreRutCursoImparticionAsistenciaEmpresa($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $_POST["avance_" . $usu->rut], $id_empresa, $_POST["nota_" . $usu->rut]);
+				InsertaTablaCierreRutCursoImparticionAsistenciaEmpresa($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $post["avance_" . $usu->rut], $id_empresa, $post["nota_" . $usu->rut]);
 			}
 		}
 		echo "<script>location.href='?sw=VeColaboradoresXImp2021&i=" . Encodear3($id_imparticion) . "';</script>";
@@ -12942,7 +12940,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		
 		else if ($seccion == "GuardaAsistenciasPorImparticionAsisNota_2021"){
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_imparticion = Decodear3($_POST["id_imparticion"]);
+		$id_imparticion = Decodear3($post["id_imparticion"]);
 		//echo $id_imparticion;
 		
 		
@@ -12952,10 +12950,10 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 			$existe_en_cierre = VerificaEnTablaCierreCursoEmpresRutInscripcion($datos_imparticion[0]->id_curso, $usu->rut, $id_empresa, $id_imparticion);
 			
 			$estado = "3";
-			if ($_POST["estado_" . $usu->rut] == "APROBADO") {
+			if ($post["estado_" . $usu->rut] == "APROBADO") {
 				$estado = "1";
 			}
-			if ($_POST["estado_" . $usu->rut] == "REPROBADO") {
+			if ($post["estado_" . $usu->rut] == "REPROBADO") {
 				$estado = "1";
 			}
 			
@@ -12968,25 +12966,25 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 				// Evaluo solo Nota y Nota Aprobación
 				//echo $datos_imparticion[0]->minimo_nota_aprobacion;
 				//echo "<br>";
-				//echo $_POST["nota_".$usu->rut];
+				//echo $post["nota_".$usu->rut];
 				
 				if ($datos_imparticion[0]->minimo_nota_aprobacion > 0) {
-					if ($_POST["nota_" . $usu->rut] >= $datos_imparticion[0]->minimo_nota_aprobacion) {
-						$_POST["estado_" . $usu->rut] = "APROBADO";
+					if ($post["nota_" . $usu->rut] >= $datos_imparticion[0]->minimo_nota_aprobacion) {
+						$post["estado_" . $usu->rut] = "APROBADO";
 					}
 					else {
-						$_POST["estado_" . $usu->rut] = "REPROBADO";
+						$post["estado_" . $usu->rut] = "REPROBADO";
 					}
 				}
 				
-				actualizaTablaCierreRut_2021($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $_POST["avance_" . $usu->rut], $id_empresa, $_POST["nota_" . $usu->rut], $_POST["nota_diagnostico_" . $usu->rut], $estado, $_POST["estado_" . $usu->rut]);
+				actualizaTablaCierreRut_2021($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $post["avance_" . $usu->rut], $id_empresa, $post["nota_" . $usu->rut], $post["nota_diagnostico_" . $usu->rut], $estado, $post["estado_" . $usu->rut]);
 			}
 			else {
-				InsertaTablaCierreRutCursoImparticionAsistenciaEmpresa_2021($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $_POST["avance_" . $usu->rut], $id_empresa, $_POST["nota_" . $usu->rut], $_POST["nota_diagnostico_" . $usu->rut], $estado, $_POST["estado_" . $usu->rut]);
+				InsertaTablaCierreRutCursoImparticionAsistenciaEmpresa_2021($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $post["avance_" . $usu->rut], $id_empresa, $post["nota_" . $usu->rut], $post["nota_diagnostico_" . $usu->rut], $estado, $post["estado_" . $usu->rut]);
 			}
 			
 			
-			ImparticionSesionesAsistenciaPorSesion_2021($id_imparticion, $usu->rut, $_POST["ses_1_" . $usu->rut], $_POST["ses_2_" . $usu->rut], $_POST["ses_3_" . $usu->rut], $_POST["ses_4_" . $usu->rut], $_POST["ses_5_" . $usu->rut], $_POST["ses_6_" . $usu->rut], $_POST["ses_7_" . $usu->rut], $_POST["ses_8_" . $usu->rut], $_POST["ses_9_" . $usu->rut], $_POST["ses_10_" . $usu->rut], $_POST["ses_11_" . $usu->rut], $_POST["ses_12_" . $usu->rut]);
+			ImparticionSesionesAsistenciaPorSesion_2021($id_imparticion, $usu->rut, $post["ses_1_" . $usu->rut], $post["ses_2_" . $usu->rut], $post["ses_3_" . $usu->rut], $post["ses_4_" . $usu->rut], $post["ses_5_" . $usu->rut], $post["ses_6_" . $usu->rut], $post["ses_7_" . $usu->rut], $post["ses_8_" . $usu->rut], $post["ses_9_" . $usu->rut], $post["ses_10_" . $usu->rut], $post["ses_11_" . $usu->rut], $post["ses_12_" . $usu->rut]);
 		}
 		
 		$archivo = "";
@@ -13023,37 +13021,37 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		
 		else if ($seccion == "GuardaAsistenciasPorImparticionAsisNota_Manual_2021"){
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_imparticion = Decodear3($_POST["id_imparticion"]);
+		$id_imparticion = Decodear3($post["id_imparticion"]);
 		
 		
 		//echo "<br>id_imparticion ".$id_imparticion;
-		//echo "<br>";echo "<preP>";print_r($_POST);echo "</pre>";echo "<br>";
+		//echo "<br>";echo "<preP>";print_r($post);echo "</pre>";echo "<br>";
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
 		$total_usuarios_por_inscripcion = IMPARTICION_UsuariosPorInscripcionConDatos($id_imparticion, $id_empresa);
 		foreach ($total_usuarios_por_inscripcion as $usu) {
 			//echo "<br><br>rut ".$usu->rut;
 			$existe_en_cierre = VerificaEnTablaCierreCursoEmpresRutInscripcion($datos_imparticion[0]->id_curso, $usu->rut, $id_empresa, $id_imparticion);
-			/*echo " <br>estado ".$_POST["estado_".$usu->rut];
-        echo "estado ".$_POST["estado_".$usu->rut];
-        echo " <br>avance ".$_POST["avance_".$usu->rut];
-        echo " <br>avance ".$_POST["nota_".$usu->rut];
-        echo " <br>nota_diagnostico ".$_POST["nota_diagnostico_".$usu->rut];*/
+			/*echo " <br>estado ".$post["estado_".$usu->rut];
+        echo "estado ".$post["estado_".$usu->rut];
+        echo " <br>avance ".$post["avance_".$usu->rut];
+        echo " <br>avance ".$post["nota_".$usu->rut];
+        echo " <br>nota_diagnostico ".$post["nota_diagnostico_".$usu->rut];*/
 			$id_curso = $datos_imparticion[0]->id_curso;
 			//echo " <br>id curso $id_curso";
 			$DatosCursoImparticion2021 = DatosCursoImparticion2021($datos_imparticion[0]->id_curso, $id_imparticion);
 			//exit();
 			if ($existe_en_cierre) {
-				actualizaTablaCierreRut_2021_SoloEstado($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $AvanceSesion, $id_empresa, $_POST["nota_" . $usu->rut], $_POST["nota_diagnostico_" . $usu->rut], $estado, $_POST["estado_" . $usu->rut]);
+				actualizaTablaCierreRut_2021_SoloEstado($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $AvanceSesion, $id_empresa, $post["nota_" . $usu->rut], $post["nota_diagnostico_" . $usu->rut], $estado, $post["estado_" . $usu->rut]);
 			}
 			else {
-				InsertaTablaCierreRutCursoImparticionAsistenciaEmpresa_2021($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $_POST["avance_" . $usu->rut], $id_empresa, $_POST["nota_" . $usu->rut], $_POST["nota_diagnostico_" . $usu->rut], $estado, $_POST["estado_" . $usu->rut]);
+				InsertaTablaCierreRutCursoImparticionAsistenciaEmpresa_2021($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $post["avance_" . $usu->rut], $id_empresa, $post["nota_" . $usu->rut], $post["nota_diagnostico_" . $usu->rut], $estado, $post["estado_" . $usu->rut]);
 			}
 			
 			// observaciones
 			
-			//if($_POST["observaciones_".$usu->rut."_".$_POST["id_imparticion"]]<>""){
-			//echo "rut ".$usu->rut." -> id_imparticion ".$_POST["id_imparticion"]." -> ".$_POST["observaciones_".$usu->rut."_".$_POST["id_imparticion"]];
-			Update_Observaciones_RutIdImparticion_2023($usu->rut, $id_imparticion, $_POST["observaciones_" . $usu->rut . "_" . $_POST["id_imparticion"]]);
+			//if($post["observaciones_".$usu->rut."_".$post["id_imparticion"]]<>""){
+			//echo "rut ".$usu->rut." -> id_imparticion ".$post["id_imparticion"]." -> ".$post["observaciones_".$usu->rut."_".$post["id_imparticion"]];
+			Update_Observaciones_RutIdImparticion_2023($usu->rut, $id_imparticion, $post["observaciones_" . $usu->rut . "_" . $post["id_imparticion"]]);
 			//}
 		}
 		//exit();
@@ -13062,11 +13060,11 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		
 		else if ($seccion == "sgd_reportes_capacitacion") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$arreglo_post = $_POST;
+		$arreglo_post = $post;
 		$array_para_enviar_via_url = serialize($arreglo_post);
 		$array_para_enviar_via_url = urlencode($array_para_enviar_via_url);
 		$filtros_superiores = "";
-		$exportar_a_excel = $_POST["excel"];
+		$exportar_a_excel = $post["excel"];
 		
 		$arreglo_post = sgd_buscar_proceso($id_empresa);
 		
@@ -13151,11 +13149,11 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 	}
 	elseif ($seccion == "sgd_resultados") {
     $id_empresa = $_SESSION["id_empresa"];
-    $arreglo_post = $_POST;
+    $arreglo_post = $post;
     $array_para_enviar_via_url = serialize($arreglo_post);
     $array_para_enviar_via_url = urlencode($array_para_enviar_via_url);
     $filtros_superiores = "";
-    $exportar_a_excel = $_POST["excel"];
+    $exportar_a_excel = $post["excel"];
 //print_r($arreglo_post);
     //$arreglo_post=sgd_buscar_proceso($id_empresa);
 
@@ -13213,9 +13211,9 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
         else if ($seccion == "lms_reportes_sgd_por_criterio_resultados_geneles") {
 			$PRINCIPAL="";
     $id_empresa = $_SESSION["id_empresa"];
-    $criterio = $_GET["campo_criterio"];
-    $miarray = $_GET["array_post"];
-    $nombre_campo = $_GET["nombre_campo"];
+    $criterio = $get["campo_criterio"];
+    $miarray = $get["array_post"];
+    $nombre_campo = $get["nombre_campo"];
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
     //$arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
@@ -13225,9 +13223,9 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
 }
         else if ($seccion == "lms_reportes_sgd_por_criterio") {
     $id_empresa = $_SESSION["id_empresa"];
-    $criterio = $_GET["campo_criterio"];
-    $miarray = $_GET["array_post"];
-    $nombre_campo = $_GET["nombre_campo"];
+    $criterio = $get["campo_criterio"];
+    $miarray = $get["array_post"];
+    $nombre_campo = $get["nombre_campo"];
 
 //echo "<br>$nombre_campo,$criterio";
     $array_para_recibir_via_url = stripslashes($miarray);
@@ -13240,9 +13238,9 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
 }
         else if ($seccion == "lms_reportes_sgd_por_criterio_resultados") {
     $id_empresa = $_SESSION["id_empresa"];
-    $criterio = $_GET["campo_criterio"];
-    $miarray = $_GET["array_post"];
-    $nombre_campo = $_GET["nombre_campo"];
+    $criterio = $get["campo_criterio"];
+    $miarray = $get["array_post"];
+    $nombre_campo = $get["nombre_campo"];
 
 //echo "<br>$nombre_campo,$criterio";
     $array_para_recibir_via_url = stripslashes($miarray);
@@ -13255,9 +13253,9 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
 }
         else if ($seccion == "lms_reportes_capacitacion_por_criterio") {
     $id_empresa = $_SESSION["id_empresa"];
-    $criterio = $_GET["campo_criterio"];
-    $miarray = $_GET["array_post"];
-    $nombre_campo = $_GET["nombre_campo"];
+    $criterio = $get["campo_criterio"];
+    $miarray = $get["array_post"];
+    $nombre_campo = $get["nombre_campo"];
 
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
@@ -13269,9 +13267,9 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
 }
         else if ($seccion == "MuestraBox") {
     $id_empresa = $_SESSION["id_empresa"];
-    $criterio = $_GET["campo_criterio"];
-    $miarray = $_GET["array_post"];
-    $nombre_campo = $_GET["nombre_campo"];
+    $criterio = $get["campo_criterio"];
+    $miarray = $get["array_post"];
+    $nombre_campo = $get["nombre_campo"];
 
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
@@ -13284,9 +13282,9 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
 }
 else if ($seccion == "lms_reportes_capacitacion_por_criterio_resultados_genelesTrivia") {
     $id_empresa = $_SESSION["id_empresa"];
-    $criterio = $_GET["campo_criterio"];
-    $miarray = $_GET["array_post"];
-    $nombre_campo = $_GET["nombre_campo"];
+    $criterio = $get["campo_criterio"];
+    $miarray = $get["array_post"];
+    $nombre_campo = $get["nombre_campo"];
 
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
@@ -13297,9 +13295,9 @@ else if ($seccion == "lms_reportes_capacitacion_por_criterio_resultados_genelesT
 }
 else if ($seccion == "lms_reportes_capacitacion_por_criterio_resultados_genelesPorMalla") {
     $id_empresa = $_SESSION["id_empresa"];
-    $criterio = $_GET["campo_criterio"];
-    $miarray = $_GET["array_post"];
-    $nombre_campo = $_GET["nombre_campo"];
+    $criterio = $get["campo_criterio"];
+    $miarray = $get["array_post"];
+    $nombre_campo = $get["nombre_campo"];
 
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
@@ -13331,9 +13329,9 @@ else if ($seccion == "lms_reportes_capacitacion_por_criterio_resultados_genelesP
 }
 else if ($seccion == "lms_reportes_capacitacion_por_criterio_resultados_geneles") {
     $id_empresa = $_SESSION["id_empresa"];
-    $criterio = $_GET["campo_criterio"];
-    $miarray = $_GET["array_post"];
-    $nombre_campo = $_GET["nombre_campo"];
+    $criterio = $get["campo_criterio"];
+    $miarray = $get["array_post"];
+    $nombre_campo = $get["nombre_campo"];
 
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
@@ -13347,8 +13345,8 @@ else if ($seccion == "lms_reportes_capacitacion_por_criterio_resultados_geneles"
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "filtro_malla_por_foco") {
-    $foco = $_POST["foco"];
-    $arreglo_post = $_POST;
+    $foco = $post["foco"];
+    $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
     $programas = REL_MALLA_CURSO_TraeMallasDadoFoco($id_empresa, $arreglo_post);
@@ -13360,8 +13358,8 @@ else if ($seccion == "filtro_malla_por_foco") {
     echo ($options);
 }
 else if ($seccion == "filtro_malla_por_PROGRAMAbbddo") {
-    $programabbdd = $_POST["programabbdd"];
-    $arreglo_post = $_POST;
+    $programabbdd = $post["programabbdd"];
+    $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
     //$programas = REL_MALLA_CURSO_TraeMallasDadoFoco($id_empresa, $arreglo_post);
@@ -13374,8 +13372,8 @@ else if ($seccion == "filtro_malla_por_PROGRAMAbbddo") {
     echo ($options);
 }
  elseif ($seccion == "filtro_programabbdd_por_foco_creacion_cursosElearning") {
-    $foco = $_POST["foco"];
-    $arreglo_post = $_POST;
+    $foco = $post["foco"];
+    $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
 
     // Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
@@ -13394,10 +13392,10 @@ else if ($seccion == "filtro_malla_por_PROGRAMAbbddo") {
     echo ($options);
 }
 else if ($seccion == "filtro_programabbdd_por_foco_creacion_cursosElearningDadoProgGlobal") {
-    // print_r($_POST);
+    // print_r($post);
 
-    $programa = $_POST["programa_bbdd_global"];
-    $arreglo_post = $_POST;
+    $programa = $post["programa_bbdd_global"];
+    $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
 
     // Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
@@ -13418,7 +13416,7 @@ else if ($seccion == "filtro_programabbdd_por_foco_creacion_cursosElearningDadoP
     echo ($options);
 }
 else if ($seccion == "mallapordivision") {
-    $id_tipo = $_POST["id_tipo"];
+    $id_tipo = $post["id_tipo"];
 
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
@@ -13433,8 +13431,8 @@ else if ($seccion == "mallapordivision") {
     echo ($options);
 }
 else if ($seccion == "jefepormallapordivision") {
-    $id_tipo = $_POST["id_tipo"];
-    $id_malla = $_POST["id_malla"];
+    $id_tipo = $post["id_tipo"];
+    $id_malla = $post["id_malla"];
 
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
@@ -13449,9 +13447,9 @@ else if ($seccion == "jefepormallapordivision") {
     echo ($options);
 }
 else if ($seccion == "filtro_programaGlobal_por_foco") {
-    $foco = $_POST["foco"];
-    $e = $_POST["ejecutivo"];
-    $arreglo_post = $_POST;
+    $foco = $post["foco"];
+    $e = $post["ejecutivo"];
+    $arreglo_post = $post;
 
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
@@ -13465,10 +13463,10 @@ else if ($seccion == "filtro_programaGlobal_por_foco") {
     echo ($options);
 }
 else if ($seccion == "filtro_programabbdd_elearning_por_foco_programa") {
-    $foco = $_POST["foco"];
-    $e = $_POST["ejecutivo"];
-    $arreglo_post = $_POST;
-    //print_r($_POST);
+    $foco = $post["foco"];
+    $e = $post["ejecutivo"];
+    $arreglo_post = $post;
+    //print_r($post);
     $id_empresa = $_SESSION["id_empresa"];
 
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
@@ -13482,9 +13480,9 @@ else if ($seccion == "filtro_programabbdd_elearning_por_foco_programa") {
     echo ($options);
 }
 else if ($seccion == "filtro_programabbdd_por_foco") {
-    $foco = $_POST["foco"];
-    $e = $_POST["ejecutivo"];
-    $arreglo_post = $_POST;
+    $foco = $post["foco"];
+    $e = $post["ejecutivo"];
+    $arreglo_post = $post;
 
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
@@ -13498,7 +13496,7 @@ else if ($seccion == "filtro_programabbdd_por_foco") {
     echo ($options);
 }
 else if ($seccion == "filtro_objetos_por_foco") {
-    $arreglo_post = $_POST;
+    $arreglo_post = $post;
 
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
@@ -13511,7 +13509,7 @@ else if ($seccion == "filtro_objetos_por_foco") {
     echo ($options);
 }
 else if ($seccion == "filtro_ejecutivos_reportes") {
-    $arreglo_post = $_POST;
+    $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
     $imparticiones = REL_MALLA_CURSO_TraeImparticionesDadoFoco($id_empresa, $arreglo_post);
@@ -13523,8 +13521,8 @@ else if ($seccion == "filtro_ejecutivos_reportes") {
     echo ($options);
 }
 else if ($seccion == "filtro_imparticion_por_foco") {
-    $foco = $_POST["foco"];
-    $arreglo_post = $_POST;
+    $foco = $post["foco"];
+    $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
     $programas = REL_MALLA_CURSO_TraeImparticionesDadoFoco($id_empresa, $arreglo_post);
@@ -13536,8 +13534,8 @@ else if ($seccion == "filtro_imparticion_por_foco") {
     echo ($options);
 }
 else if ($seccion == "filtro_curso_por_foco_id") {
-    $foco = $_POST["foco"];
-    $arreglo_post = $_POST;
+    $foco = $post["foco"];
+    $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
     $programas = REL_MALLA_CURSO_TraeCursosDadoFoco($id_empresa, $arreglo_post);
@@ -13551,8 +13549,8 @@ else if ($seccion == "filtro_curso_por_foco_id") {
 }
 
 else if ($seccion == "filtro_curso_por_foco") {
-    $foco = $_POST["foco"];
-    $arreglo_post = $_POST;
+    $foco = $post["foco"];
+    $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
     $programas = REL_MALLA_CURSO_TraeCursosDadoFoco($id_empresa, $arreglo_post);
@@ -13565,7 +13563,7 @@ else if ($seccion == "filtro_curso_por_foco") {
     echo ($options);
 }
 else if ($seccion == "filtro_ejecutivos_por_programas") {
-    $ejecutivo = $_POST["ejecutivo"];
+    $ejecutivo = $post["ejecutivo"];
     $id_empresa = $_SESSION["id_empresa"];
 //traigo los cursos por ejecutivo
     $programas = ProgramasPorEjecutivoEmpresa($ejecutivo, $id_empresa);
@@ -13577,7 +13575,7 @@ else if ($seccion == "filtro_ejecutivos_por_programas") {
     echo ($options);
 }
 else if ($seccion == "filtro_ejecutivos_por_mallas") {
-    $ejecutivo = $_POST["ejecutivo"];
+    $ejecutivo = $post["ejecutivo"];
     $id_empresa = $_SESSION["id_empresa"];
 //traigo los cursos por ejecutivo
     $mallas = MallasPorEjecutivoEmpresa($ejecutivo, $id_empresa);
@@ -13589,7 +13587,7 @@ else if ($seccion == "filtro_ejecutivos_por_mallas") {
     echo ($options);
 }
 else if ($seccion == "filtro_ejecutivos_por_clasificacion") {
-    $ejecutivo = $_POST["ejecutivo"];
+    $ejecutivo = $post["ejecutivo"];
     $id_empresa = $_SESSION["id_empresa"];
 //traigo los cursos por ejecutivo
     $clasificaciones = ClasificacionPorEjecutivoEmpresa($ejecutivo, $id_empresa);
@@ -13601,7 +13599,7 @@ else if ($seccion == "filtro_ejecutivos_por_clasificacion") {
     echo ($options);
 }
 else if ($seccion == "filtro_ejecutivos_por_foco") {
-    $ejecutivo = $_POST["ejecutivo"];
+    $ejecutivo = $post["ejecutivo"];
     $id_empresa = $_SESSION["id_empresa"];
 //traigo los cursos por ejecutivo
     $focos = FocosPorEjecutivoEmpresa($ejecutivo, $id_empresa);
@@ -13613,7 +13611,7 @@ else if ($seccion == "filtro_ejecutivos_por_foco") {
     echo ($options);
 }
 else if ($seccion == "filtro_ejecutivos_por_curso") {
-    $ejecutivo = $_POST["ejecutivo"];
+    $ejecutivo = $post["ejecutivo"];
     $id_empresa = $_SESSION["id_empresa"];
 //traigo los cursos por ejecutivo
     $cursos = CursosPorEjecutivo($ejecutivo);
@@ -13625,8 +13623,8 @@ else if ($seccion == "filtro_ejecutivos_por_curso") {
     echo ($options);
 }
 else if ($seccion == "filtro_clasificacion_por_foco") {
-    $foco = $_POST["foco"];
-    $arreglo_post = $_POST;
+    $foco = $post["foco"];
+    $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
     $options .= "<option value='0'>Todas</option>";
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
@@ -13640,7 +13638,7 @@ else if ($seccion == "filtro_clasificacion_por_foco") {
     echo ($options);
 }
 else if ($seccion == "filtro_objetos_por_curso") {
-    $arreglo_post = $_POST;
+    $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
     $objetos = REL_MALLA_CURSO_TraeObjetosDadoFoco($id_empresa, $arreglo_post);
     $options .= "<option value='0'>Todos</option>";
@@ -13652,7 +13650,7 @@ else if ($seccion == "filtro_objetos_por_curso") {
 else if ($seccion == "filtros_dinamicos_por_campos") {
     $id_empresa = $_SESSION["id_empresa"];
     $datos_empresa = DatosEmpresa($id_empresa);
-    $arreglo_post = $_POST;
+    $arreglo_post = $post;
     print_r($arreglo_post);
 //traigo el total de campos de subida para el filtro
     $campos_subida = REL_MALLA_CURSO_trarCamposSubidaParaReporte($id_empresa);
@@ -13660,7 +13658,7 @@ else if ($seccion == "filtros_dinamicos_por_campos") {
     $html_filtros = "";
     $vuelta = 1;
 
-//print_r($_POST);
+//print_r($post);
     foreach ($campos_subida as $campo) {
         if ($vuelta == 1) {
             $html_filtros .= "<div class=''>";
@@ -13673,10 +13671,10 @@ else if ($seccion == "filtros_dinamicos_por_campos") {
         $options = "";
         $options .= "<option value='0'>Todos</option>";
         foreach ($valores_option as $valor) {
-            if ($_POST[$campo->campo]) {
-                for ($contador_valores = 0; $contador_valores < count($_POST[$campo->campo]); $contador_valores++) {
-//echo $_POST[$campo->campo][$contador_valores]." - ".$valor->valor."<br>";
-                    if ($_POST[$campo->campo][$contador_valores] == $valor->valor) {
+            if ($post[$campo->campo]) {
+                for ($contador_valores = 0; $contador_valores < count($post[$campo->campo]); $contador_valores++) {
+//echo $post[$campo->campo][$contador_valores]." - ".$valor->valor."<br>";
+                    if ($post[$campo->campo][$contador_valores] == $valor->valor) {
                         $selected = "selected='selected'";
                         break;
                     } else {
@@ -13703,10 +13701,10 @@ else if ($seccion == "filtros_dinamicos_por_campos") {
 else if ($seccion == "lms_reportes_capacitacion_Full") {
     $id_empresa = $_SESSION["id_empresa"];
     $fechahoy = date("Y-m-d");
-    $ejecutivo = $_POST["ejecutivo"];
+    $ejecutivo = $post["ejecutivo"];
     $nombre_ejecutivo = buscanombre($ejecutivo);
-    $fecha_inicio = $_POST["fecha_inicio"];
-    $fecha_termino = $_POST["fecha_termino"];
+    $fecha_inicio = $post["fecha_inicio"];
+    $fecha_termino = $post["fecha_termino"];
 
     $txt_e = "";
     $txt_fi = "";
@@ -13730,10 +13728,10 @@ else if ($seccion == "lms_reportes_capacitacion_Full") {
     }
 }
 else if ($seccion == "VeLinkEnc") {
-    $i = $_GET["i"];
-    $ienc = $_GET["ienc"];
-    $ii = $_GET["ii"];
-    $r = $_GET["r"];
+    $i = $get["i"];
+    $ienc = $get["ienc"];
+    $ii = $get["ii"];
+    $r = $get["r"];
 
     $url = $url_front . "/front/?sw=homeEncuesta&i={ID_OBJETO_ENCODEADO}&ienc={ID_ENCUESTA_ENCODEADA}&tt=2&idc=&ii={ID_INSCRIPCION_ENCODEADA}&r={RUT_USUARIO_ENCODEADO}&hl=1";
     $url = str_replace("{ID_OBJETO_ENCODEADO}", $i, $url);
@@ -13744,40 +13742,40 @@ else if ($seccion == "VeLinkEnc") {
 }
 else if ($seccion == "lms_reportes_capacitacion_por_ejecutivos") {
     $id_empresa = $_SESSION["id_empresa"];
-//print_r($_POST);
+//print_r($post);
 
-    if (isset($_POST['web'])) {
+    if (isset($post['web'])) {
         //web action
         $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_ejecutivos_con_datos.html"));
-        $PRINCIPAL = ColocaDatosPorEjecutivo($PRINCIPAL, $_POST["ejecutivo"], $_POST["fecha_inicio"], $_POST["fecha_termino"], $id_empresa);
-    } else if (isset($_POST['web_txt'])) {
+        $PRINCIPAL = ColocaDatosPorEjecutivo($PRINCIPAL, $post["ejecutivo"], $post["fecha_inicio"], $post["fecha_termino"], $id_empresa);
+    } else if (isset($post['web_txt'])) {
         //export web filter
-        if ($_POST["ejecutivo"] != '') {$txt_e = "_" . $_POST["ejecutivo"];}
-        if ($_POST["fecha_inicio"] != '') {$txt_fi = "_" . $fecha_inicio;
+        if ($post["ejecutivo"] != '') {$txt_e = "_" . $post["ejecutivo"];}
+        if ($post["fecha_inicio"] != '') {$txt_fi = "_" . $fecha_inicio;
             $txt_show_fi = " del " . $fecha_inicio;}
-        if ($_POST["fecha_termino"] != '') {$txt_ft = "_" . $fecha_termino;
+        if ($post["fecha_termino"] != '') {$txt_ft = "_" . $fecha_termino;
             $txt_show_ft = " al " . $fecha_termino;}
         $txt = $txt_e . $txt_fi . $txt_ft;
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_por_Ejecutivo_Resumen_' . $txt . '.csv');
         echo "CODIGO IMPARTICION;EJECUTIVO;EJECUTIVO NOMBRE;FOCO ESTRATEGICO;PROGRAMA;PROGRAMA_ELEARNING;NOMBRE INTERNO IMPARTICION;TIPO CURSO;ANNO INICIO;MES INICIO;FECHA INICIO;ANNO FIN;MES TERMINO;FECHA TERMINO;FORMATO STATUS;HORAS TOTALES;LUGAR DE EJECUCION(DIRECCION);INSCRITOS;ASISTENTES;INCOMPLETOS;INASISTENTES;\r\n";
-        $Total_Rows_full = ConsultaDataPorEjecutivo($_POST["ejecutivo"], $_POST["fecha_inicio"], $_POST["fecha_termino"]);
+        $Total_Rows_full = ConsultaDataPorEjecutivo($post["ejecutivo"], $post["fecha_inicio"], $post["fecha_termino"]);
         foreach ($Total_Rows_full as $Unico) {
             $numhoras = str_replace('.', ',', $Unico->horas);
             echo $Unico->id_inscripcion . ";" . $Unico->rut_ejecutivo . ";" . $Unico->ejecutivo . ";" . $Unico->foco_global . ";" . $Unico->programa_global . ";" . $Unico->programa . ";" . $Unico->curso . ";" . $Unico->tipo_curso . ";" . $Unico->anno_inicio . ";" . $Unico->mes_inicio . ";" . $Unico->fecha_inicio . ";" . $Unico->anno_termino . ";" . $Unico->mes_termino . ";" . $Unico->fecha_termino . ";" . $Unico->status . ";" . $numhoras . ";" . $Unico->lugar . ";" . $Unico->inscritos . ";" . $Unico->asistentes . ";" . $Unico->incompletos . ";" . $Unico->inasistentes . "\r\n";
         }
-    } else if (isset($_POST['txt'])) {
+    } else if (isset($post['txt'])) {
         //export txt action
-        if ($_POST["ejecutivo"] != '' and $_POST["ejecutivo"] != '0') {$txt_e = "_" . $_POST["ejecutivo"];}
-        if ($_POST["fecha_inicio"] != '') {$txt_fi = "_" . $fecha_inicio;
+        if ($post["ejecutivo"] != '' and $post["ejecutivo"] != '0') {$txt_e = "_" . $post["ejecutivo"];}
+        if ($post["fecha_inicio"] != '') {$txt_fi = "_" . $fecha_inicio;
             $txt_show_fi = " del " . $fecha_inicio;}
-        if ($_POST["fecha_termino"] != '') {$txt_ft = "_" . $fecha_termino;
+        if ($post["fecha_termino"] != '') {$txt_ft = "_" . $fecha_termino;
             $txt_show_ft = " al " . $fecha_termino;}
         $txt = $txt_e . $txt_fi . $txt_ft;
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_Completo_' . $txt . '.csv');
         echo "CORRELATIVO IMPARTICION;RUT PARTICIPANTE;NOMBRE COMPLETO;CARGO;UNIDAD (CENCO);DEPENDENCIA (R3);FONDO (R2);GERENCIA (R1);EMPRESA;JEFE PERS.;JEFE PERS. NOMBRE;EJECUTIVO; EJECUTIVO NOMBRE;FOCO ESTRATEGICO;PROGRAMA;PROGRAMA_ELEARNING;NOMBRE INTERNO IMPARTICION;TIPO CURSO;ANNO INICIO;MES INICIO;FECHA INICIO;ANNO FIN;MES TERMINO;FECHA TERMINO;FORMATO STATUS;ASISTENCIA;EVALUACION;HORAS TOTALES;LUGAR DE EJECUCION(DIRECCION);CURSO OPCIONAL; ID_CURSO;\r\n";
-        $Total_Rows_full = Tragotb_DatosdesdeFull_Filtros($_POST["ejecutivo"], $_POST["fecha_inicio"], $_POST["fecha_termino"]);
+        $Total_Rows_full = Tragotb_DatosdesdeFull_Filtros($post["ejecutivo"], $post["fecha_inicio"], $post["fecha_termino"]);
         //echo "<pre>";          print_r($Total_Rows_full);
         //         exit();
         foreach ($Total_Rows_full as $Unico) {
@@ -13815,7 +13813,7 @@ else if ($seccion == "lms_reportes_capacitacion_por_ejecutivos") {
     $PRINCIPAL = str_replace("{VAR_ARREGLO}", $array_para_enviar_via_url, $PRINCIPAL);
 
     $datos_empresa = DatosEmpresa($id_empresa);
-    $nombre_ejecutivo = TraeNombreUsuario($_POST["ejecutivo"]);
+    $nombre_ejecutivo = TraeNombreUsuario($post["ejecutivo"]);
 
     $PRINCIPAL = str_replace("{NOMBRE_EJECUTIVO}", $nombre_ejecutivo[0]->nombre_completo, $PRINCIPAL);
 
@@ -13839,17 +13837,17 @@ else if ($seccion == "lms_reportes_capacitacion_por_ejecutivos") {
 else if ($seccion == "lms_reportes_capacitacion_por_relatores") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    if (isset($_POST['web_txt'])) {
-        if ($_POST["relator"] != '') {$txt_e = "_" . $_POST["relator"];}
-        if ($_POST["fecha_inicio"] != '') {$txt_fi = "_" . $fecha_inicio;
+    if (isset($post['web_txt'])) {
+        if ($post["relator"] != '') {$txt_e = "_" . $post["relator"];}
+        if ($post["fecha_inicio"] != '') {$txt_fi = "_" . $fecha_inicio;
             $txt_show_fi = " del " . $fecha_inicio;}
-        if ($_POST["fecha_termino"] != '') {$txt_ft = "_" . $fecha_termino;
+        if ($post["fecha_termino"] != '') {$txt_ft = "_" . $fecha_termino;
             $txt_show_ft = " al " . $fecha_termino;}
         $txt = $txt_e . $txt_fi . $txt_ft;
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_por_Relator_Imparticion_' . $txt . '.csv');
         echo "CODIGO IMPARTICION;RUT_RELATOR;NOMBRE_RELATOR;TIPO_RELATOR;EMPRESA_RELATOR;EJECUTIVO;EJECUTIVO NOMBRE;NOMBRE INTERNO IMPARTICION;FECHA INICIO;FECHA TERMINO;HORAS_RELATOR\r\n";
-        $Total_Rows_full = ConsultaDataPorRelator($_POST["relator"], $_POST["fecha_inicio"], $_POST["fecha_termino"], "", $id_empresa);
+        $Total_Rows_full = ConsultaDataPorRelator($post["relator"], $post["fecha_inicio"], $post["fecha_termino"], "", $id_empresa);
         //print_r($Total_Rows_full);
         foreach ($Total_Rows_full as $Unico) {
             //print_r($Unico);
@@ -13857,17 +13855,17 @@ else if ($seccion == "lms_reportes_capacitacion_por_relatores") {
 
             echo $Unico->codigo_inscripcion . ";" . $Unico->RutRelator . ";" . $Unico->NombreRelator . ";" . $Unico->CargoRelator . ";" . $Unico->EmpresaRelator . ";" . $Unico->RutEjecutivo . ";" . $Unico->NombreEjecutivo . ";" . $Unico->NombreCurso . ";" . $Unico->fecha_inicio . ";" . $Unico->fecha_termino . ";" . $Unico->numero_horas . "\r\n";
         }
-    } elseif (isset($_POST['txt'])) {
-        if ($_POST["relator"] != '') {$txt_e = "_" . $_POST["relator"];}
-        if ($_POST["fecha_inicio"] != '') {$txt_fi = "_" . $fecha_inicio;
+    } elseif (isset($post['txt'])) {
+        if ($post["relator"] != '') {$txt_e = "_" . $post["relator"];}
+        if ($post["fecha_inicio"] != '') {$txt_fi = "_" . $fecha_inicio;
             $txt_show_fi = " del " . $fecha_inicio;}
-        if ($_POST["fecha_termino"] != '') {$txt_ft = "_" . $fecha_termino;
+        if ($post["fecha_termino"] != '') {$txt_ft = "_" . $fecha_termino;
             $txt_show_ft = " al " . $fecha_termino;}
         $txt = $txt_e . $txt_fi . $txt_ft;
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_por_Relator_Imparticion_' . $txt . '.csv');
         echo "RUT_RELATOR;NOMBRE_RELATOR;TIPO_RELATOR;EMPRESA_RELATOR;HORAS_RELATOR\r\n";
-        $Total_Rows_full = ConsultaDataPorRelator($_POST["relator"], $_POST["fecha_inicio"], $_POST["fecha_termino"], "1", $id_empresa);
+        $Total_Rows_full = ConsultaDataPorRelator($post["relator"], $post["fecha_inicio"], $post["fecha_termino"], "1", $id_empresa);
         //print_r($Total_Rows_full);
         foreach ($Total_Rows_full as $Unico) {
             //print_r($Unico);
@@ -13882,7 +13880,7 @@ else if ($seccion == "lms_reportes_capacitacion_por_relatores") {
     $PRINCIPAL = str_replace("{VAR_ARREGLO}", $array_para_enviar_via_url, $PRINCIPAL);
 
     $datos_empresa = DatosEmpresa($id_empresa);
-    $nombre_ejecutivo = TraeNombreUsuario($_POST["ejecutivo"]);
+    $nombre_ejecutivo = TraeNombreUsuario($post["ejecutivo"]);
 
     $PRINCIPAL = str_replace("{NOMBRE_EJECUTIVO}", $nombre_ejecutivo[0]->nombre_completo, $PRINCIPAL);
 
@@ -13905,21 +13903,21 @@ else if ($seccion == "lms_reportes_capacitacion_por_relatores") {
 }
 else if ($seccion == "lms_reportes_capacitacion_por_persona") {
     $id_empresa = $_SESSION["id_empresa"];
-    $rut_usuario = LimpiaRut($_POST["rut"]);
-//print_r($_POST);
+    $rut_usuario = LimpiaRut($post["rut"]);
+//print_r($post);
 
-    if (isset($_POST['web'])) {
+    if (isset($post['web'])) {
         //web action
 
         $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_personas_con_datos.html"));
-        $PRINCIPAL = ColocaDatosPorPersona($PRINCIPAL, $rut_usuario, $_POST["fecha_inicio"], $_POST["fecha_termino"], $id_empresa);
-    } else if (isset($_POST['txt'])) {
+        $PRINCIPAL = ColocaDatosPorPersona($PRINCIPAL, $rut_usuario, $post["fecha_inicio"], $post["fecha_termino"], $id_empresa);
+    } else if (isset($post['txt'])) {
         //export txt action
 
         if ($rut_usuario != '') {$txt_e = "_" . $rut_usuario;}
-        if ($_POST["fecha_inicio"] != '') {$txt_fi = "_" . $fecha_inicio;
+        if ($post["fecha_inicio"] != '') {$txt_fi = "_" . $fecha_inicio;
             $txt_show_fi = " del " . $fecha_inicio;}
-        if ($_POST["fecha_termino"] != '') {$txt_ft = "_" . $fecha_termino;
+        if ($post["fecha_termino"] != '') {$txt_ft = "_" . $fecha_termino;
             $txt_show_ft = " al " . $fecha_termino;}
 
         $txt = $txt_e . $txt_fi . $txt_ft;
@@ -13927,7 +13925,7 @@ else if ($seccion == "lms_reportes_capacitacion_por_persona") {
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_' . $txt . '.csv');
         echo "CORRELATIVO IMPARTICION;RUT PARTICIPANTE;NOMBRE COMPLETO;CARGO;UNIDAD (CENCO);DEPENDENCIA (R3);FONDO (R2);GERENCIA (R1);EMPRESA;JEFE PERS.;JEFE PERS. NOMBRE;EJECUTIVO; EJECUTIVO NOMBRE;FOCO ESTRATEGICO;PROGRAMA;NOMBRE INTERNO IMPARTICION;TIPO CURSO;ANNO INICIO;MES INICIO;FECHA INICIO;ANNO FIN;MES TERMINO;FECHA TERMINO;FORMATO STATUS;ASISTENCIA;EVALUACION;HORAS TOTALES;LUGAR DE EJECUCION(DIRECCION);CURSO OPCIONAL\r\n";
-        $Total_Rows_full = Tragotb_DatosdesdeFull_FiltrosPersona($rut_usuario, $_POST["fecha_inicio"], $_POST["fecha_termino"]);
+        $Total_Rows_full = Tragotb_DatosdesdeFull_FiltrosPersona($rut_usuario, $post["fecha_inicio"], $post["fecha_termino"]);
 
         foreach ($Total_Rows_full as $Unico) {
             $numhoras = str_replace('.', ',', $Unico->horas);
@@ -13968,9 +13966,9 @@ else if ($seccion == "lms_reportes_capacitacion_por_persona") {
 else if ($seccion == "lms_reportes_capacitacion_completo") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    if ($_POST["ejecutivo"]) {
+    if ($post["ejecutivo"]) {
         $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_completo_con_datos.html"));
-        $PRINCIPAL = ColocaDatosPorEjecutivo($PRINCIPAL, $_POST["ejecutivo"], $id_empresa);
+        $PRINCIPAL = ColocaDatosPorEjecutivo($PRINCIPAL, $post["ejecutivo"], $id_empresa);
     } else {
         $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_completo.html"));
     }
@@ -13996,7 +13994,7 @@ else if ($seccion == "lms_reportes_capacitacion_completo") {
 else if ($seccion == "lms_reportes_capacitacion_por_usuarios") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    $rut = LimpiaRut($_POST["rut"]);
+    $rut = LimpiaRut($post["rut"]);
     if ($rut) {
         $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_usuarios_con_datos.html"));
         $PRINCIPAL = ColocaDatosPorUsuarioDatos($PRINCIPAL, $rut, $id_empresa);
@@ -14014,11 +14012,11 @@ else if ($seccion == "lms_reportes_capacitacion_por_usuarios") {
 }
 else if ($seccion == "lms_reportes_inscripcion_cursos_presenciales") {
     $id_empresa = $_SESSION["id_empresa"];
-    $arreglo_post = $_POST;
+    $arreglo_post = $post;
     $array_para_enviar_via_url = serialize($arreglo_post);
     $array_para_enviar_via_url = urlencode($array_para_enviar_via_url);
     $filtros_superiores = "";
-    $exportar_a_excel = $_POST["excel"];
+    $exportar_a_excel = $post["excel"];
 
     if (count($arreglo_post) > 0) {
         if ($exportar_a_excel == 1) {
@@ -14071,11 +14069,11 @@ $PRINCIPAL = ReporteInscripcionCursos(FuncionesTransversalesAdmin(file_get_conte
 }
 else if ($seccion == "lms_reportes_encuesta_satisfaccion") {
     $id_empresa = $_SESSION["id_empresa"];
-    $arreglo_post = $_POST;
+    $arreglo_post = $post;
     $array_para_enviar_via_url = serialize($arreglo_post);
     $array_para_enviar_via_url = urlencode($array_para_enviar_via_url);
     $filtros_superiores = "";
-    $exportar_a_excel = $_POST["excel"];
+    $exportar_a_excel = $post["excel"];
 //echo $exportar_a_excel;
     if (count($arreglo_post) > 0) {
         if ($exportar_a_excel == 1) {
@@ -14159,12 +14157,12 @@ else if ($seccion == "Lms_reporte_MuestraInformeEncParticipantesExcel") {
     $id_empresa = $_SESSION["id_empresa"];
     $excel = 1;
 
-    $miarray_objeto = $_GET["arreglo_objeto"];
+    $miarray_objeto = $get["arreglo_objeto"];
     $array_para_recibir_via_url_objeto = stripslashes($miarray_objeto);
     $array_para_recibir_via_url_objeto = urldecode($array_para_recibir_via_url_objeto);
     $arreglo_post_objetos = unserialize($array_para_recibir_via_url_objeto,['allowed_classes' => false]);
 
-    $miarray = $_GET["arreglo_post"];
+    $miarray = $get["arreglo_post"];
     $array_para_recibir_via_url_post = stripslashes($miarray);
     $array_para_recibir_via_url_post = urldecode($array_para_recibir_via_url_post);
     $arreglo_post = unserialize($array_para_recibir_via_url_post,['allowed_classes' => false]);
@@ -14183,30 +14181,30 @@ else if ($seccion == "Lms_reporte_MuestraInformeEncParticipantesExcel") {
 
     $fechahoy = date("Y-m-d");
     header("Content-Type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=" . $nombre_archivo . "_" . $_GET["tipo_reporte"] . "_" . $fechahoy . ".xls");
+    header("Content-Disposition: attachment; filename=" . $nombre_archivo . "_" . $get["tipo_reporte"] . "_" . $fechahoy . ".xls");
     header("Pragma: no-cache");
     header("Expires: 0");
 
     echo "<meta charset='UTF-8'>";
 
-    if ($_GET["tipo_reporte"] == "participantes") {
+    if ($get["tipo_reporte"] == "participantes") {
         $PRINCIPAL = Lms_reporte_MuestraInformeEncParticipantes($PRINCIPAL, $id_empresa, $arreglo_post_objetos, $arreglo_post, $valor, $excel);
     }
 
-    if ($_GET["tipo_reporte"] == "listadocursos") {
+    if ($get["tipo_reporte"] == "listadocursos") {
 //print_R($arreglo_post);exit;
         $PRINCIPAL = Lms_reporte_MuestraListaCursosEnc($PRINCIPAL, $id_empresa, $arreglo_post, $excel);
     }
 
-    if ($_GET["tipo_reporte"] == "resultadosencsatisfaccion") {
+    if ($get["tipo_reporte"] == "resultadosencsatisfaccion") {
 //echo "resultados";
         $PRINCIPAL = Lms_reporte_MuestraInformeEnc($PRINCIPAL, $id_empresa, $arreglo_post_objetos, $arreglo_post, $valor, $excel);
     }
 
-    if ($_GET["tipo_reporte"] == "resultadosencLiterales") {
+    if ($get["tipo_reporte"] == "resultadosencLiterales") {
         $PRINCIPAL = Lms_reporte_MuestraInformeEncLiterales($PRINCIPAL, $id_empresa, $arreglo_post_objetos, $arreglo_post, $valor, $excel);
     }
-    if ($_GET["tipo_reporte"] == "detallePreguntas") {
+    if ($get["tipo_reporte"] == "detallePreguntas") {
         $PRINCIPAL = Lms_reporte_MuestraInformeEncPregunta($PRINCIPAL, $id_empresa, $arreglo_post_objetos, "", "", $excel, "", $arreglo_post_objetos);
     }
 
@@ -14231,9 +14229,9 @@ else if($seccion=="EncodearClavesAdmin"){
 }
 else if ($seccion == "admin_dashboard") {
 
-    $filtro         = $_POST['filtro'];
-    $fecha_inicio   = $_POST['fecha_inicio'];
-    $fecha_termino  = $_POST['fecha_termino'];
+    $filtro         = $post['filtro'];
+    $fecha_inicio   = $post['fecha_inicio'];
+    $fecha_termino  = $post['fecha_termino'];
 
     // echo "fecha inicion $fecha_inicio, termino $fecha_termino" ;
 
@@ -14248,12 +14246,12 @@ else if ($seccion == "admin_dashboard") {
 else if ($seccion == "EmpresasExt_Save") {
     $id_empresa = $_SESSION["id_empresa"];
     $ejecutivo = $_SESSION["user_"];
-    $rut = $_POST['rut'];
-    $nombre = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
-    $dominio = $_POST['dominio'];
-    $malla = $_POST['malla'];
-    //echo "Eventos_Save";//print_r($_POST); exit();
+    $rut = $post['rut'];
+    $nombre = $post['nombre'];
+    $descripcion = $post['descripcion'];
+    $dominio = $post['dominio'];
+    $malla = $post['malla'];
+    //echo "Eventos_Save";//print_r($post); exit();
 
     Empresas_Ext_Save_data($rut, $nombre, $descripcion, $dominio, $malla, $ejecutivo, $id_empresa);
     echo "<script>        location.href='?sw=ext_empresas&id_dimension=" . $id_dimension . "';        </script>";
@@ -14261,14 +14259,14 @@ else if ($seccion == "EmpresasExt_Save") {
 else if ($seccion == "EmpresasExtDivision_Save") {
     $id_empresa = $_SESSION["id_empresa"];
     $ejecutivo = $_SESSION["user_"];
-    $rut = $_POST['rut'];
-    $codigo = $_POST['codigo'];
-    $division = ($_POST['division']);
-    $sindicato = ($_POST['sindicato']);
+    $rut = $post['rut'];
+    $codigo = $post['codigo'];
+    $division = ($post['division']);
+    $sindicato = ($post['sindicato']);
 
-//print_r($_POST);   sleep(3);
+//print_r($post);   sleep(3);
 
-    //echo "Eventos_Save";//print_r($_POST); exit();
+    //echo "Eventos_Save";//print_r($post); exit();
 
     EmpresasExtDivision_Save_data($rut, $codigo, $division, $sindicato, $ejecutivo, $id_empresa);
     echo "<script>        location.href='?sw=ext_empresas&id_dimension=" . $id_dimension . "';        </script>";
@@ -14276,27 +14274,27 @@ else if ($seccion == "EmpresasExtDivision_Save") {
 else if ($seccion == "Eventos_Save") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    $id = $_POST['id'];
-    $codigo = $_POST['codigo'];
-    $id_dimension = $_POST['id_dimension'];
+    $id = $post['id'];
+    $codigo = $post['codigo'];
+    $id_dimension = $post['id_dimension'];
 
-    $nombre = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
-    $instruccion = $_POST['instruccion'];
-    $id_categoria = $_POST['id_categoria'];
-    $postulable = $_POST['postulable'];
+    $nombre = $post['nombre'];
+    $descripcion = $post['descripcion'];
+    $instruccion = $post['instruccion'];
+    $id_categoria = $post['id_categoria'];
+    $postulable = $post['postulable'];
 
-    $fecha_inicio = $_POST['fecha_inicio'];
-    $hora_inicio = $_POST['hora_inicio'];
-    $fecha_termino = $_POST['fecha_termino'];
-    $hora_termino = $_POST['hora_termino'];
-    $direccion = $_POST['direccion'];
-    $region = $_POST['region'];
-    $link = $_POST['link'];
-    $visible = $_POST['visible'];
+    $fecha_inicio = $post['fecha_inicio'];
+    $hora_inicio = $post['hora_inicio'];
+    $fecha_termino = $post['fecha_termino'];
+    $hora_termino = $post['hora_termino'];
+    $direccion = $post['direccion'];
+    $region = $post['region'];
+    $link = $post['link'];
+    $visible = $post['visible'];
 
 //echo "Eventos_Save";
-    //print_r($_POST); exit();
+    //print_r($post); exit();
 
     Eventos_Save_data($codigo, $id_dimension, $nombre, $descripcion, $instruccion, $id_categoria, $postulable,
         $fecha_inicio, $hora_inicio, $fecha_termino, $hora_termino, $direccion, $region, $link, $visible, $id_empresa);
@@ -14305,36 +14303,36 @@ else if ($seccion == "Eventos_Save") {
 else if ($seccion == "emb_tareas_Save") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    $id = $_POST['id'];
-    $codigo = $_POST['codigo'];
-    $nombre = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
-    $link_material = $_POST['link_material'];
-    $accion = $_POST['accion'];
-    $descripcion_accion = $_POST['descripcion_accion'];
-    $duracion = $_POST['duracion'];
-    $fecha_termino = $_POST['fecha_termino'];
+    $id = $post['id'];
+    $codigo = $post['codigo'];
+    $nombre = $post['nombre'];
+    $descripcion = $post['descripcion'];
+    $link_material = $post['link_material'];
+    $accion = $post['accion'];
+    $descripcion_accion = $post['descripcion_accion'];
+    $duracion = $post['duracion'];
+    $fecha_termino = $post['fecha_termino'];
 
-    $id = $_POST['id'];
-    $codigo = $_POST['codigo'];
-    $id_grupo_interes = $_POST['id_grupo_interes'];
-    $nombre = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
-    $duracion = $_POST['duracion'];
+    $id = $post['id'];
+    $codigo = $post['codigo'];
+    $id_grupo_interes = $post['id_grupo_interes'];
+    $nombre = $post['nombre'];
+    $descripcion = $post['descripcion'];
+    $duracion = $post['duracion'];
 
-    $link_material = $_POST['link_material'];
-    $link_material2 = $_POST['link_material2'];
-    $link_material3 = $_POST['link_material3'];
+    $link_material = $post['link_material'];
+    $link_material2 = $post['link_material2'];
+    $link_material3 = $post['link_material3'];
 
-    $pregunta1 = $_POST['pregunta1'];
-    $pregunta2 = $_POST['pregunta2'];
-    $pregunta3 = $_POST['pregunta3'];
+    $pregunta1 = $post['pregunta1'];
+    $pregunta2 = $post['pregunta2'];
+    $pregunta3 = $post['pregunta3'];
 
-    $accion = $_POST['accion'];
-    $descripcion_accion = $_POST['descripcion_accion'];
-    $link_archivo_trabajo = $_POST['link_archivo_trabajo'];
-    $instruccion_tutor = $_POST['instruccion_tutor'];
-    $link_tutor = $_POST['link_tutor'];
+    $accion = $post['accion'];
+    $descripcion_accion = $post['descripcion_accion'];
+    $link_archivo_trabajo = $post['link_archivo_trabajo'];
+    $instruccion_tutor = $post['instruccion_tutor'];
+    $link_tutor = $post['link_tutor'];
 
     emb_tareas_Save_data($codigo, $id_grupo_interes, $nombre, $descripcion, $duracion, $link_material, $link_material2, $link_material3,
         $accion, $descripcion_accion, $link_archivo_trabajo, $instruccion_tutor, $link_tutor,
@@ -14344,21 +14342,21 @@ else if ($seccion == "emb_tareas_Save") {
 else if ($seccion == "notificaciones_Save") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    //print_r($_POST);
+    //print_r($post);
 
-    $id = $_POST['id'];
-    $codigo = $_POST['codigo'];
-    $nombre = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
-    $tipomensaje = $_POST['tipomensaje'];
+    $id = $post['id'];
+    $codigo = $post['codigo'];
+    $nombre = $post['nombre'];
+    $descripcion = $post['descripcion'];
+    $tipomensaje = $post['tipomensaje'];
 
-    $subject = $_POST['subject'];
-    $titulo1 = $_POST['titulo1'];
-    $subtitulo1 = $_POST['subtitulo1'];
-    $texto1 = $_POST['texto1'];
-    $texto2 = $_POST['texto2'];
-    $texto3 = $_POST['texto3'];
-    $texto4 = $_POST['texto4'];
+    $subject = $post['subject'];
+    $titulo1 = $post['titulo1'];
+    $subtitulo1 = $post['subtitulo1'];
+    $texto1 = $post['texto1'];
+    $texto2 = $post['texto2'];
+    $texto3 = $post['texto3'];
+    $texto4 = $post['texto4'];
 
     $tipo = "text/html";
 
@@ -14375,18 +14373,18 @@ else if ($seccion == "notificaciones") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "notificaciones_a_buscar") {
-    //print_r($_POST) ;
+    //print_r($post) ;
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/notificaciones/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
 
-    $generar = ($_POST['generar']);
-    $id_programa = ($_POST['id_programa']);
+    $generar = ($post['generar']);
+    $id_programa = ($post['id_programa']);
     if ($generar == 1) {
         NotificacionesBuscaPendientesAutomatico($id_empresa, $url_front, $url_front_admin_full, $logo, $from, $nombrefrom, $id_programa);
     }
 
-    $copia = ($_GET['copia']);
-    $tipoenvio = ($_GET['tipo']);
+    $copia = ($get['copia']);
+    $tipoenvio = ($get['tipo']);
 
     if ($copia == 1) {
         Copia_lista_notificaciones_a_buscar_detalle($id_empresa, $tipoenvio);
@@ -14400,31 +14398,31 @@ else if ($seccion == "notificaciones_a_buscar") {
 else if ($seccion == "notificaciones_Save") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    $id = $_POST['id'];
-    $codigo = $_POST['codigo'];
-    $nombre = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
-    $link_material = $_POST['link_material'];
-    $accion = $_POST['accion'];
-    $descripcion_accion = $_POST['descripcion_accion'];
-    $duracion = $_POST['duracion'];
+    $id = $post['id'];
+    $codigo = $post['codigo'];
+    $nombre = $post['nombre'];
+    $descripcion = $post['descripcion'];
+    $link_material = $post['link_material'];
+    $accion = $post['accion'];
+    $descripcion_accion = $post['descripcion_accion'];
+    $duracion = $post['duracion'];
 
-    $id = $_POST['id'];
-    $codigo = $_POST['codigo'];
-    $id_grupo_interes = $_POST['id_grupo_interes'];
-    $nombre = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
-    $duracion = $_POST['duracion'];
+    $id = $post['id'];
+    $codigo = $post['codigo'];
+    $id_grupo_interes = $post['id_grupo_interes'];
+    $nombre = $post['nombre'];
+    $descripcion = $post['descripcion'];
+    $duracion = $post['duracion'];
 
-    $link_material = $_POST['link_material'];
-    $link_material2 = $_POST['link_material2'];
-    $link_material3 = $_POST['link_material3'];
+    $link_material = $post['link_material'];
+    $link_material2 = $post['link_material2'];
+    $link_material3 = $post['link_material3'];
 
-    $accion = $_POST['accion'];
-    $descripcion_accion = $_POST['descripcion_accion'];
-    $link_archivo_trabajo = $_POST['link_archivo_trabajo'];
-    $instruccion_tutor = $_POST['instruccion_tutor'];
-    $link_tutor = $_POST['link_tutor'];
+    $accion = $post['accion'];
+    $descripcion_accion = $post['descripcion_accion'];
+    $link_archivo_trabajo = $post['link_archivo_trabajo'];
+    $instruccion_tutor = $post['instruccion_tutor'];
+    $link_tutor = $post['link_tutor'];
 
     emb_tareas_Save_data($codigo, $id_grupo_interes, $nombre, $descripcion, $duracion, $link_material, $link_material2, $link_material3,
         $accion, $descripcion_accion, $link_archivo_trabajo, $instruccion_tutor, $link_tutor, $id_empresa);
@@ -14432,12 +14430,12 @@ else if ($seccion == "notificaciones_Save") {
 }
 else if ($seccion == "notificaciones_Edit") {
     $id_empresa = $_SESSION["id_empresa"];
-    $rut = LimpiaRut($_POST['rut']);
-    $id_tarea = ($_POST['id_tarea']);
-    $link = ($_POST['link']);
-    $comentarios = ($_POST['comentarios']);
-    $trabajaste = ($_POST['trabajaste']);
-    $estado = ($_POST['estado']);
+    $rut = LimpiaRut($post['rut']);
+    $id_tarea = ($post['id_tarea']);
+    $link = ($post['link']);
+    $comentarios = ($post['comentarios']);
+    $trabajaste = ($post['trabajaste']);
+    $estado = ($post['estado']);
 
     emb_tareas_Edit_data($rut, $id_tarea, $link, $comentarios, $trabajaste, $estado, $id_empresa);
 
@@ -14446,11 +14444,11 @@ else if ($seccion == "notificaciones_Edit") {
 else if ($seccion == "reportes_online_personas_2020") {
     $id_empresa = $_SESSION["id_empresa"];
 		$user_admin	=	$_SESSION["admin_"];
-		//print_r($_POST);
+		//print_r($post);
 
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_full/" . $id_empresa . "_entorno.html"));
 		$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_full/" . $id_empresa . "_entorno_reportes_online.html")), $PRINCIPAL);
-		$rut_usuario	=	LimpiaRut($_POST["rut_usuario"]);
+		$rut_usuario	=	LimpiaRut($post["rut_usuario"]);
 
 		//echo "<br>rut_usuario $rut_usuario<br>";exit();
 		$Usu=TraeUsuarioRut($rut_usuario);
@@ -14560,7 +14558,7 @@ else if ($seccion == "reportes_online_personas_2020") {
 else if ($seccion == "reportes_online_cursos_2020") {
 
     $id_empresa = $_SESSION["id_empresa"];
-    // print_r($_POST);	    // BUSCA DUPLICACIONES REPORTES FULL
+    // print_r($post);	    // BUSCA DUPLICACIONES REPORTES FULL
 
 
     $array_duplicaciones=ReporteFull_Duplicados_data($id_empresa);
@@ -14568,46 +14566,46 @@ else if ($seccion == "reportes_online_cursos_2020") {
         BorraDuplicacionesReporteFull($unico->rut, $unico->id_inscripcion, $unico->id_curso, $unico->asistencia, $unico->evaluacion);
     }
 
-	    	$cursoscol=$_POST[cursoscol];
-  		  $vigente=$_POST[vigente];
+	    	$cursoscol=$post[cursoscol];
+  		  $vigente=$post[vigente];
 					// BUSCA NOMBRE ARCHIVO
 
-        $id_foco        = $_POST[foco];
-        $id_programa    = $_POST[programaglobal];
-        $id_programa_elearning = $_POST[programabbdd];
-        $id_malla       = $_POST[malla];
-        $id_curso       = $_POST[cursos];
-        $id_curso3      = $_POST[cursos3];
-        $tipo_filtro    = $_POST[tipo_filtro];
+        $id_foco        = $post[foco];
+        $id_programa    = $post[programaglobal];
+        $id_programa_elearning = $post[programabbdd];
+        $id_malla       = $post[malla];
+        $id_curso       = $post[cursos];
+        $id_curso3      = $post[cursos3];
+        $tipo_filtro    = $post[tipo_filtro];
 
         if($id_curso3<>'0' and $id_curso=='0'){$id_curso=$id_curso3;}
 
-        $imparticion    = $_POST[imparticion];
-        $ejecutivo      = $_POST[ejecutivo];
-        $modalidad      = $_POST[modalidad];
-        $fecha_inicio   = $_POST[fecha_inicio];
-        $fecha_termino  = $_POST[fecha_termino];
-        $estado         = $_POST[estado];
+        $imparticion    = $post[imparticion];
+        $ejecutivo      = $post[ejecutivo];
+        $modalidad      = $post[modalidad];
+        $fecha_inicio   = $post[fecha_inicio];
+        $fecha_termino  = $post[fecha_termino];
+        $estado         = $post[estado];
 
         $txt= $id_foco.$id_programa.$id_programa_elearning.$id_malla.$id_curso. $fecha_inicio.$fecha_termino. $estado;
 		    //echo "<br>cursoscol $cursoscol";   exit();
 
     if ($vigente== "cursoscol") {
         //echo "hola";
-        $id_foco        = $_POST[foco];
-        $id_programa    = $_POST[programaglobal];
-        $id_programa_elearning = $_POST[programabbdd];
-        $id_malla       = $_POST[malla];
-        $id_curso       = $_POST[cursos];
-        $id_curso3      = $_POST[cursos3];
-        $tipo_filtro    = $_POST[tipo_filtro];
+        $id_foco        = $post[foco];
+        $id_programa    = $post[programaglobal];
+        $id_programa_elearning = $post[programabbdd];
+        $id_malla       = $post[malla];
+        $id_curso       = $post[cursos];
+        $id_curso3      = $post[cursos3];
+        $tipo_filtro    = $post[tipo_filtro];
         if($id_curso3<>'0' and $id_curso=='0'){$id_curso=$id_curso3;}
-        $imparticion    = $_POST[imparticion];
-        $ejecutivo      = $_POST[ejecutivo];
-        $modalidad      = $_POST[modalidad];
-        $fecha_inicio   = $_POST[fecha_inicio];
-        $fecha_termino  = $_POST[fecha_termino];
-        $estado         = $_POST[estado];
+        $imparticion    = $post[imparticion];
+        $ejecutivo      = $post[ejecutivo];
+        $modalidad      = $post[modalidad];
+        $fecha_inicio   = $post[fecha_inicio];
+        $fecha_termino  = $post[fecha_termino];
+        $estado         = $post[estado];
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_Full_' . $txt . '.csv');
         echo "rut;rut_completo;nombre;cargo;c1;c2;c3;c4;";
@@ -14706,21 +14704,21 @@ if(count($array_rut_id_curso_l2)==0){
                    exit();
         }
 
-    if ($_POST[GeneraExcel] == "GeneraExcel") {
-        $id_foco        = $_POST[foco];
-        $id_programa    = $_POST[programaglobal];
-        $id_programa_elearning = $_POST[programabbdd];
-        $id_malla       = $_POST[malla];
-        $id_curso       = $_POST[cursos];
-        $id_curso3      = $_POST[cursos3];
-        $tipo_filtro    = $_POST[tipo_filtro];
+    if ($post[GeneraExcel] == "GeneraExcel") {
+        $id_foco        = $post[foco];
+        $id_programa    = $post[programaglobal];
+        $id_programa_elearning = $post[programabbdd];
+        $id_malla       = $post[malla];
+        $id_curso       = $post[cursos];
+        $id_curso3      = $post[cursos3];
+        $tipo_filtro    = $post[tipo_filtro];
         if($id_curso3<>'0' and $id_curso=='0'){$id_curso=$id_curso3;}
-        $imparticion    = $_POST[imparticion];
-        $ejecutivo      = $_POST[ejecutivo];
-        $modalidad      = $_POST[modalidad];
-        $fecha_inicio   = $_POST[fecha_inicio];
-        $fecha_termino  = $_POST[fecha_termino];
-        $estado         = $_POST[estado];
+        $imparticion    = $post[imparticion];
+        $ejecutivo      = $post[ejecutivo];
+        $modalidad      = $post[modalidad];
+        $fecha_inicio   = $post[fecha_inicio];
+        $fecha_termino  = $post[fecha_termino];
+        $estado         = $post[estado];
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_Full_' . $txt . '.csv');
         echo "rut;rut_completo;nombre;cargo;c1;c2;c3;c4;id_foco;foco;id_programa_global;programa_global;id_programa;programa;id_curso;curso;id_inscripcion;nombre_inscripcion;id_malla;malla;fecha_inicio_inscripcion;fecha_termino_inscripcion;tipo_curso;fecha_inicio;anno_inicio;mes_inicio;fecha_termino;anno_termino;mes_termino;estado;modalidad;asistencia;evaluacion;horas;lugar;curso_opcional;rut_ejecutivo;ejecutivo;rut_jefe;jefe;empresa\r\n";
@@ -14791,7 +14789,7 @@ if(count($array_rut_id_curso_l2)==0){
         }
 
 
-			if($_POST["id_programa_express"]<>""){
+			if($post["id_programa_express"]<>""){
 
 
 
@@ -14807,7 +14805,7 @@ if(count($array_rut_id_curso_l2)==0){
 else if ($seccion == "reportes_online_cursos_2020_v2") {
 
     $id_empresa = $_SESSION["id_empresa"];
-    // print_r($_POST);	    // BUSCA DUPLICACIONES REPORTES FULL
+    // print_r($post);	    // BUSCA DUPLICACIONES REPORTES FULL
 
 
     $array_duplicaciones=ReporteFull_Duplicados_data($id_empresa);
@@ -14815,45 +14813,45 @@ else if ($seccion == "reportes_online_cursos_2020_v2") {
         BorraDuplicacionesReporteFull($unico->rut, $unico->id_inscripcion, $unico->id_curso, $unico->asistencia, $unico->evaluacion);
     }
 
-	    	$cursoscol=$_POST[cursoscol];
-  		  $vigente=$_POST[vigente];
+	    	$cursoscol=$post[cursoscol];
+  		  $vigente=$post[vigente];
 					// BUSCA NOMBRE ARCHIVO
 
-        $id_foco        = $_POST[foco];
-        $id_programa    = $_POST[programaglobal];
-        $id_programa_elearning = $_POST[programabbdd];
-        $id_malla       = $_POST[malla];
-        $id_curso       = $_POST[cursos];
-        $id_curso3      = $_POST[cursos3];
-        $tipo_filtro    = $_POST[tipo_filtro];
+        $id_foco        = $post[foco];
+        $id_programa    = $post[programaglobal];
+        $id_programa_elearning = $post[programabbdd];
+        $id_malla       = $post[malla];
+        $id_curso       = $post[cursos];
+        $id_curso3      = $post[cursos3];
+        $tipo_filtro    = $post[tipo_filtro];
 
         if($id_curso3<>'0' and $id_curso=='0'){$id_curso=$id_curso3;}
 
-        $imparticion    = $_POST[imparticion];
-        $ejecutivo      = $_POST[ejecutivo];
-        $modalidad      = $_POST[modalidad];
-        $fecha_inicio   = $_POST[fecha_inicio];
-        $fecha_termino  = $_POST[fecha_termino];
-        $estado         = $_POST[estado];
+        $imparticion    = $post[imparticion];
+        $ejecutivo      = $post[ejecutivo];
+        $modalidad      = $post[modalidad];
+        $fecha_inicio   = $post[fecha_inicio];
+        $fecha_termino  = $post[fecha_termino];
+        $estado         = $post[estado];
 
         $txt= $id_foco.$id_programa.$id_programa_elearning.$id_malla.$id_curso. $fecha_inicio.$fecha_termino. $estado;
 		    //echo "<br>cursoscol $cursoscol";   exit();
 
-    if ($_POST[GeneraExcel] == "GeneraExcel") {
-        $id_foco        = $_POST[foco];
-        $id_programa    = $_POST[programaglobal];
-        $id_programa_elearning = $_POST[programabbdd];
-        $id_malla       = $_POST[malla];
-        $id_curso       = $_POST[cursos];
-        $id_curso3      = $_POST[cursos3];
-        $tipo_filtro    = $_POST[tipo_filtro];
+    if ($post[GeneraExcel] == "GeneraExcel") {
+        $id_foco        = $post[foco];
+        $id_programa    = $post[programaglobal];
+        $id_programa_elearning = $post[programabbdd];
+        $id_malla       = $post[malla];
+        $id_curso       = $post[cursos];
+        $id_curso3      = $post[cursos3];
+        $tipo_filtro    = $post[tipo_filtro];
         if($id_curso3<>'0' and $id_curso=='0'){$id_curso=$id_curso3;}
-        $imparticion    = $_POST[imparticion];
-        $ejecutivo      = $_POST[ejecutivo];
-        $modalidad      = $_POST[modalidad];
-        $fecha_inicio   = $_POST[fecha_inicio];
-        $fecha_termino  = $_POST[fecha_termino];
-        $estado         = $_POST[estado];
+        $imparticion    = $post[imparticion];
+        $ejecutivo      = $post[ejecutivo];
+        $modalidad      = $post[modalidad];
+        $fecha_inicio   = $post[fecha_inicio];
+        $fecha_termino  = $post[fecha_termino];
+        $estado         = $post[estado];
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_Full_' . $txt . '.csv');
         echo "rut;rut_completo;nombre;cargo;c1;c2;c3;c4;id_foco;foco;id_programa_global;programa_global;id_programa;programa;id_curso;curso;id_inscripcion;nombre_inscripcion;id_malla;malla;fecha_inicio_inscripcion;fecha_termino_inscripcion;tipo_curso;fecha_inicio;anno_inicio;mes_inicio;fecha_termino;anno_termino;mes_termino;estado;modalidad;asistencia;evaluacion;horas;lugar;curso_opcional;rut_ejecutivo;ejecutivo;rut_jefe;jefe;empresa\r\n";
@@ -14924,7 +14922,7 @@ else if ($seccion == "reportes_online_cursos_2020_v2") {
         }
 
 
-			if($_POST["id_programa_express"]<>""){
+			if($post["id_programa_express"]<>""){
 
 
 
@@ -14967,49 +14965,49 @@ foreach (range(1, 5) as $value)
 }
 else if ($seccion == "lms_reportes_full") {
     $id_empresa = $_SESSION["id_empresa"];
-    // print_r($_POST);
+    // print_r($post);
     // BUSCA DUPLICACIONES REPORTES FULL
     $array_duplicaciones=ReporteFull_Duplicados_data($id_empresa);
     foreach ($array_duplicaciones as $unico){
         BorraDuplicacionesReporteFull($unico->rut, $unico->id_inscripcion, $unico->id_curso, $unico->asistencia, $unico->evaluacion);
     }
-    $cursoscol=$_POST[cursoscol];
-    $vigente=$_POST[vigente];
+    $cursoscol=$post[cursoscol];
+    $vigente=$post[vigente];
 // BUSCA NOMBRE ARCHIVO
-        $id_foco        = $_POST[foco];
-        $id_programa    = $_POST[programaglobal];
-        $id_programa_elearning = $_POST[programabbdd];
-        $id_malla       = $_POST[malla];
-        $id_curso       = $_POST[cursos];
-        $id_curso3      = $_POST[cursos3];
-        $tipo_filtro    = $_POST[tipo_filtro];
+        $id_foco        = $post[foco];
+        $id_programa    = $post[programaglobal];
+        $id_programa_elearning = $post[programabbdd];
+        $id_malla       = $post[malla];
+        $id_curso       = $post[cursos];
+        $id_curso3      = $post[cursos3];
+        $tipo_filtro    = $post[tipo_filtro];
         if($id_curso3<>'0' and $id_curso=='0'){$id_curso=$id_curso3;}
-        $imparticion    = $_POST[imparticion];
-        $ejecutivo      = $_POST[ejecutivo];
-        $modalidad      = $_POST[modalidad];
-        $fecha_inicio   = $_POST[fecha_inicio];
-        $fecha_termino  = $_POST[fecha_termino];
-        $estado         = $_POST[estado];
+        $imparticion    = $post[imparticion];
+        $ejecutivo      = $post[ejecutivo];
+        $modalidad      = $post[modalidad];
+        $fecha_inicio   = $post[fecha_inicio];
+        $fecha_termino  = $post[fecha_termino];
+        $estado         = $post[estado];
 
         $txt= $id_foco.$id_programa.$id_programa_elearning.$id_malla.$id_curso. $fecha_inicio.$fecha_termino. $estado;
 		    //echo "<br>cursoscol $cursoscol";   exit();
 
     if ($vigente== "cursoscol") {
         //echo "hola";
-        $id_foco        = $_POST[foco];
-        $id_programa    = $_POST[programaglobal];
-        $id_programa_elearning = $_POST[programabbdd];
-        $id_malla       = $_POST[malla];
-        $id_curso       = $_POST[cursos];
-        $id_curso3      = $_POST[cursos3];
-        $tipo_filtro    = $_POST[tipo_filtro];
+        $id_foco        = $post[foco];
+        $id_programa    = $post[programaglobal];
+        $id_programa_elearning = $post[programabbdd];
+        $id_malla       = $post[malla];
+        $id_curso       = $post[cursos];
+        $id_curso3      = $post[cursos3];
+        $tipo_filtro    = $post[tipo_filtro];
         if($id_curso3<>'0' and $id_curso=='0'){$id_curso=$id_curso3;}
-        $imparticion    = $_POST[imparticion];
-        $ejecutivo      = $_POST[ejecutivo];
-        $modalidad      = $_POST[modalidad];
-        $fecha_inicio   = $_POST[fecha_inicio];
-        $fecha_termino  = $_POST[fecha_termino];
-        $estado         = $_POST[estado];
+        $imparticion    = $post[imparticion];
+        $ejecutivo      = $post[ejecutivo];
+        $modalidad      = $post[modalidad];
+        $fecha_inicio   = $post[fecha_inicio];
+        $fecha_termino  = $post[fecha_termino];
+        $estado         = $post[estado];
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_Full_' . $txt . '.csv');
         echo "rut;rut_completo;nombre;cargo;c1;c2;c3;c4;";
@@ -15108,21 +15106,21 @@ if(count($array_rut_id_curso_l2)==0){
                    exit();
         }
 
-    if ($_POST[GeneraExcel] == "GeneraExcel") {
-        $id_foco        = $_POST[foco];
-        $id_programa    = $_POST[programaglobal];
-        $id_programa_elearning = $_POST[programabbdd];
-        $id_malla       = $_POST[malla];
-        $id_curso       = $_POST[cursos];
-        $id_curso3      = $_POST[cursos3];
-        $tipo_filtro    = $_POST[tipo_filtro];
+    if ($post[GeneraExcel] == "GeneraExcel") {
+        $id_foco        = $post[foco];
+        $id_programa    = $post[programaglobal];
+        $id_programa_elearning = $post[programabbdd];
+        $id_malla       = $post[malla];
+        $id_curso       = $post[cursos];
+        $id_curso3      = $post[cursos3];
+        $tipo_filtro    = $post[tipo_filtro];
         if($id_curso3<>'0' and $id_curso=='0'){$id_curso=$id_curso3;}
-        $imparticion    = $_POST[imparticion];
-        $ejecutivo      = $_POST[ejecutivo];
-        $modalidad      = $_POST[modalidad];
-        $fecha_inicio   = $_POST[fecha_inicio];
-        $fecha_termino  = $_POST[fecha_termino];
-        $estado         = $_POST[estado];
+        $imparticion    = $post[imparticion];
+        $ejecutivo      = $post[ejecutivo];
+        $modalidad      = $post[modalidad];
+        $fecha_inicio   = $post[fecha_inicio];
+        $fecha_termino  = $post[fecha_termino];
+        $estado         = $post[estado];
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_Full_' . $txt . '.csv');
         echo "rut;rut_completo;nombre;cargo;c1;c2;c3;c4;id_foco;foco;id_programa_global;programa_global;id_programa;programa;id_curso;curso;id_inscripcion;nombre_inscripcion;id_malla;malla;fecha_inicio_inscripcion;fecha_termino_inscripcion;tipo_curso;fecha_inicio;anno_inicio;mes_inicio;fecha_termino;anno_termino;mes_termino;estado;modalidad;asistencia;evaluacion;horas;lugar;curso_opcional;rut_ejecutivo;ejecutivo;rut_jefe;jefe;empresa\r\n";
@@ -15193,23 +15191,23 @@ if(count($array_rut_id_curso_l2)==0){
         }
 
 
-			if($_POST["id_programa_express"]<>""){
+			if($post["id_programa_express"]<>""){
 
 					Check2020_Reportes_IdProgramaNull_data($_SESSION["id_empresa"]);
 					$hoy = date("Y-m-d");
 
 					header('Content-type: text/plain');
-        	header('Content-Disposition: attachment; filename=Reporte_Online_' . $_POST["id_programa_express"] . '_' . $hoy . '.csv');
+        	header('Content-Disposition: attachment; filename=Reporte_Online_' . $post["id_programa_express"] . '_' . $hoy . '.csv');
 
-						$Programa=ObtieneDatosProgramasPorEmpresa($_POST["id_programa_express"], $id_empresa);
-        		echo "IdPrograma;".$_POST["id_programa_express"]."\r\n";
+						$Programa=ObtieneDatosProgramasPorEmpresa($post["id_programa_express"], $id_empresa);
+        		echo "IdPrograma;".$post["id_programa_express"]."\r\n";
         		echo "Programa;".$Programa[0]->nombre_programa."\r\n";
         		echo "\r\n";
 
 				// Resumen
 						$num_ausentismo=0;$num_noiniciados=0;$num_enproceso=0;$num_aprobados=0;$num_reprobados=0;$num_participantes=0;
 
-					 $array_programa = Reportes_Express_Resultado($_POST["id_programa_express"],$_POST["fecha_inicio_exp"],$_POST["fecha_termino_exp"]);
+					 $array_programa = Reportes_Express_Resultado($post["id_programa_express"],$post["fecha_inicio_exp"],$post["fecha_termino_exp"]);
 		       foreach ($array_programa as $Unico_reporte){
 
 
@@ -15363,16 +15361,16 @@ if(count($array_rut_id_curso_l2)==0){
 
 			}
 
-			if($_POST["rut_express"]<>""){
+			if($post["rut_express"]<>""){
 						$hoy = date("Y-m-d");
 						header('Content-type: text/plain');
-        		header('Content-Disposition: attachment; filename=Reporte_Online_' . $_POST["rut_express"] . '_' . $hoy . '.csv');
+        		header('Content-Disposition: attachment; filename=Reporte_Online_' . $post["rut_express"] . '_' . $hoy . '.csv');
 
 
 
         		echo "rut;rut_completo;nombre;cargo;division;zona;departamento;cui;id_programa;programa;id_malla;malla;id_curso;curso;avance_asistencia;resultado_evaluacion;fecha_inicio;fecha_termino;curso_opcional;estado;fecha_inscripcion;jefe;Evaluacion_Satistaccion;Comentario_Satisfaccion\r\n";
 
-					 $array_programa = Reportes_Express_Resultado($_POST["id_programa_express"],$_POST["fecha_inicio_exp"],$_POST["fecha_termino_exp"],$_POST["rut_express"]);
+					 $array_programa = Reportes_Express_Resultado($post["id_programa_express"],$post["fecha_inicio_exp"],$post["fecha_termino_exp"],$post["rut_express"]);
 		       foreach ($array_programa as $Unico_reporte){
 								$Unico_reporte->Comentario_Satisfaccion = preg_replace("/[\r\n|\n|\r]+/", PHP_EOL, $Unico_reporte->Comentario_Satisfaccion);
 								$Unico_reporte->Comentario_Satisfaccion = preg_replace("/[\r\n|\n|\r]+/", " ", $Unico_reporte->Comentario_Satisfaccion);
@@ -15395,49 +15393,49 @@ if(count($array_rut_id_curso_l2)==0){
 }
 else if ($seccion == "lms_reportes_full_v2") {
     $id_empresa = $_SESSION["id_empresa"];
-    // print_r($_POST);
+    // print_r($post);
     // BUSCA DUPLICACIONES REPORTES FULL
     $array_duplicaciones=ReporteFull_Duplicados_data($id_empresa);
     foreach ($array_duplicaciones as $unico){
         BorraDuplicacionesReporteFull($unico->rut, $unico->id_inscripcion, $unico->id_curso, $unico->asistencia, $unico->evaluacion);
     }
-    $cursoscol=$_POST[cursoscol];
-    $vigente=$_POST[vigente];
+    $cursoscol=$post[cursoscol];
+    $vigente=$post[vigente];
 // BUSCA NOMBRE ARCHIVO
-        $id_foco        = $_POST[foco];
-        $id_programa    = $_POST[programaglobal];
-        $id_programa_elearning = $_POST[programabbdd];
-        $id_malla       = $_POST[malla];
-        $id_curso       = $_POST[cursos];
-        $id_curso3      = $_POST[cursos3];
-        $tipo_filtro    = $_POST[tipo_filtro];
+        $id_foco        = $post[foco];
+        $id_programa    = $post[programaglobal];
+        $id_programa_elearning = $post[programabbdd];
+        $id_malla       = $post[malla];
+        $id_curso       = $post[cursos];
+        $id_curso3      = $post[cursos3];
+        $tipo_filtro    = $post[tipo_filtro];
         if($id_curso3<>'0' and $id_curso=='0'){$id_curso=$id_curso3;}
-        $imparticion    = $_POST[imparticion];
-        $ejecutivo      = $_POST[ejecutivo];
-        $modalidad      = $_POST[modalidad];
-        $fecha_inicio   = $_POST[fecha_inicio];
-        $fecha_termino  = $_POST[fecha_termino];
-        $estado         = $_POST[estado];
+        $imparticion    = $post[imparticion];
+        $ejecutivo      = $post[ejecutivo];
+        $modalidad      = $post[modalidad];
+        $fecha_inicio   = $post[fecha_inicio];
+        $fecha_termino  = $post[fecha_termino];
+        $estado         = $post[estado];
 
         $txt= $id_foco.$id_programa.$id_programa_elearning.$id_malla.$id_curso. $fecha_inicio.$fecha_termino. $estado;
 		    //echo "<br>cursoscol $cursoscol";   exit();
 
 
-    if ($_POST[GeneraExcel] == "GeneraExcel") {
-        $id_foco        = $_POST[foco];
-        $id_programa    = $_POST[programaglobal];
-        $id_programa_elearning = $_POST[programabbdd];
-        $id_malla       = $_POST[malla];
-        $id_curso       = $_POST[cursos];
-        $id_curso3      = $_POST[cursos3];
-        $tipo_filtro    = $_POST[tipo_filtro];
+    if ($post[GeneraExcel] == "GeneraExcel") {
+        $id_foco        = $post[foco];
+        $id_programa    = $post[programaglobal];
+        $id_programa_elearning = $post[programabbdd];
+        $id_malla       = $post[malla];
+        $id_curso       = $post[cursos];
+        $id_curso3      = $post[cursos3];
+        $tipo_filtro    = $post[tipo_filtro];
         if($id_curso3<>'0' and $id_curso=='0'){$id_curso=$id_curso3;}
-        $imparticion    = $_POST[imparticion];
-        $ejecutivo      = $_POST[ejecutivo];
-        $modalidad      = $_POST[modalidad];
-        $fecha_inicio   = $_POST[fecha_inicio];
-        $fecha_termino  = $_POST[fecha_termino];
-        $estado         = $_POST[estado];
+        $imparticion    = $post[imparticion];
+        $ejecutivo      = $post[ejecutivo];
+        $modalidad      = $post[modalidad];
+        $fecha_inicio   = $post[fecha_inicio];
+        $fecha_termino  = $post[fecha_termino];
+        $estado         = $post[estado];
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_Full_' . $txt . '.csv');
         echo "rut;rut_completo;nombre;cargo;c1;c2;c3;c4;id_foco;foco;id_programa_global;programa_global;id_programa;programa;id_curso;curso;id_inscripcion;nombre_inscripcion;id_malla;malla;fecha_inicio_inscripcion;fecha_termino_inscripcion;tipo_curso;fecha_inicio;anno_inicio;mes_inicio;fecha_termino;anno_termino;mes_termino;estado;modalidad;asistencia;evaluacion;horas;lugar;curso_opcional;rut_ejecutivo;ejecutivo;rut_jefe;jefe;empresa\r\n";
@@ -15508,24 +15506,24 @@ else if ($seccion == "lms_reportes_full_v2") {
         }
 
 
-			if($_POST["id_programa_express"]<>""){
+			if($post["id_programa_express"]<>""){
 
 					Check2020_Reportes_IdProgramaNull_data($_SESSION["id_empresa"]);
 
 					header('Content-Type: text/csv');
-        	header('Content-Disposition: attachment; filename=Reporte_Online_' . $_POST["id_programa_express"] . '_' . $hoy . '.csv');
+        	header('Content-Disposition: attachment; filename=Reporte_Online_' . $post["id_programa_express"] . '_' . $hoy . '.csv');
 
 
 					$hoy = date("Y-m-d");
 
 
-						$Programa=ObtieneDatosProgramasPorEmpresa($_POST["id_programa_express"], $id_empresa);
+						$Programa=ObtieneDatosProgramasPorEmpresa($post["id_programa_express"], $id_empresa);
 
 
 				// Resumen
 						$num_ausentismo=0;$num_noiniciados=0;$num_enproceso=0;$num_aprobados=0;$num_reprobados=0;$num_participantes=0;
 
-					 $array_programa = Reportes_Express_Resultado_v2($_POST["id_programa_express"],$_POST["fecha_inicio_exp"],$_POST["fecha_termino_exp"]);
+					 $array_programa = Reportes_Express_Resultado_v2($post["id_programa_express"],$post["fecha_inicio_exp"],$post["fecha_termino_exp"]);
 		       foreach ($array_programa as $Unico_reporte){
 
 							$num_participantes++;
@@ -15588,7 +15586,7 @@ else if ($seccion == "formacion_continua") {
 else if ($seccion == "eventos_gestion") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/eventos/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
-    $id_dimension = $_GET["id_dimension"];
+    $id_dimension = $get["id_dimension"];
     $PRINCIPAL = str_replace("{ENTORNO}", lista_eventos_gestion(FuncionesTransversalesAdmin(file_get_contents("views/eventos/entorno_eventos_gestion.html")), $id_empresa, $id_dimension), $PRINCIPAL);
 
     $PRINCIPAL = str_replace("{ID_DIMENSION}", ($id_dimension), $PRINCIPAL);
@@ -15599,7 +15597,7 @@ else if ($seccion == "eventos_gestion") {
 else if ($seccion == "ext_empresas_gestion") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/ext_empresas/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
-    $id_dimension = $_GET["id_dimension"];
+    $id_dimension = $get["id_dimension"];
     $PRINCIPAL = str_replace("{ENTORNO}", lista_Ext_Empresas_gestion(FuncionesTransversalesAdmin(file_get_contents("views/ext_empresas/entorno_ext_empresas_gestion.html")), $id_empresa, $id_dimension), $PRINCIPAL);
 
     $PRINCIPAL = str_replace("{ID_DIMENSION}", ($id_dimension), $PRINCIPAL);
@@ -15609,21 +15607,21 @@ else if ($seccion == "ext_empresas_gestion") {
 }
 else if ($seccion == "lista_notificaciones_textos") {
     $id_empresa = $_SESSION["id_empresa"];
-	$array_post=$_POST;
-     //print_r($_POST); //print_r($_FILES); //exit();
+	$array_post=$post;
+     //print_r($post); //print_r($_FILES); //exit();
 
-$filtro_creador=$_POST["filtro_creador"];
-$filtro_mes_ano=$_POST["filtro_mes_ano"];
+$filtro_creador=$post["filtro_creador"];
+$filtro_mes_ano=$post["filtro_mes_ano"];
 
-$titulo			=	$_POST["titulo"];
-$asunto			=	$_POST["asunto"];
-$texto			=	$_POST["texto"];
-
-
-if($_GET["del"]==1 and $_GET["id_not"]){
+$titulo			=	$post["titulo"];
+$asunto			=	$post["asunto"];
+$texto			=	$post["texto"];
 
 
-	DeleteNotificacionCreacionMatriz($_GET["id_not"]);
+if($get["del"]==1 and $get["id_not"]){
+
+
+	DeleteNotificacionCreacionMatriz($get["id_not"]);
 
 }
 
@@ -15651,16 +15649,16 @@ $texto=str_replace(" strong ", "<strong>", $texto);
 }
 else if ($seccion == "lista_notificaciones") {
     $id_empresa 		= 	$_SESSION["id_empresa"];
-	$array_post			=	$_POST;
+	$array_post			=	$post;
 
-$id_publicacion_envio	=	Decodear3($_POST["id_publicacion"]);
-$tipo_notificaciones	=	($_POST["tipo_notificaciones"]);
+$id_publicacion_envio	=	Decodear3($post["id_publicacion"]);
+$tipo_notificaciones	=	($post["tipo_notificaciones"]);
 
 //echo "<br>";
 //echo "<br>id_publicacion_envio $id_publicacion_envio";
 //echo "<br>tipo_notificaciones $tipo_notificaciones";
 //echo "<br>";
-//print_r($_POST);
+//print_r($post);
 
 
 
@@ -15717,14 +15715,14 @@ echo "<script>window.location.href = '?sw=lista_notificaciones'</script>";
 	//echo "<script>alert('Notificaciones Enviados');    window.close();    </script>";
 }
 
-	$nombre_publicacion			=$_POST["nombre_documento"];
-	$descripcion_documento		=$_POST["descripcion_documento"];
+	$nombre_publicacion			=$post["nombre_documento"];
+	$descripcion_documento		=$post["descripcion_documento"];
 
-	$id_documento				=$_POST["documento"];
-	$id_audiencia				=$_POST["audiencia"];
+	$id_documento				=$post["documento"];
+	$id_audiencia				=$post["audiencia"];
 
-	$fecha_inicio				=$_POST["fecha_inicio"];
-	$fecha_termino				=$_POST["fecha_termino"];
+	$fecha_inicio				=$post["fecha_inicio"];
+	$fecha_termino				=$post["fecha_termino"];
 
     $PRINCIPAL 		= FuncionesTransversalesAdmin(file_get_contents("views/incentivos/entorno.html"));
     $PRINCIPAL 		= str_replace("{ENTORNO}", lista_noti_fn(FuncionesTransversalesAdmin(file_get_contents("views/incentivos/entorno_notificaciones.html")), $id_empresa, $id_categoria, $campo1, $campo2, $campo3, $campo4, $campo5, $campo6, $excluir, $nombre_audiencia, $descripcion_audiencia, $unico_filtro, $id_documento), $PRINCIPAL);
@@ -15739,16 +15737,16 @@ echo "<script>window.location.href = '?sw=lista_notificaciones'</script>";
 }
 else if ($seccion == "vista_usuario_matriz") {
     $id_empresa = $_SESSION["id_empresa"];
-	$array_post=$_POST;
+	$array_post=$post;
 	//print_r($_SESSION);
-	$nombre_publicacion			=$_POST["nombre_documento"];
-	$descripcion_documento		=$_POST["descripcion_documento"];
+	$nombre_publicacion			=$post["nombre_documento"];
+	$descripcion_documento		=$post["descripcion_documento"];
 
-	$id_documento					=$_POST["documento"];
-	$id_audiencia					=$_POST["audiencia"];
+	$id_documento					=$post["documento"];
+	$id_audiencia					=$post["audiencia"];
 
-	$fecha_inicio				=$_POST["fecha_inicio"];
-	$fecha_termino				=$_POST["fecha_termino"];
+	$fecha_inicio				=$post["fecha_inicio"];
+	$fecha_termino				=$post["fecha_termino"];
 
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/incentivos/entorno.html"));
     $PRINCIPAL = str_replace("{ENTORNO}", lista_talent(FuncionesTransversalesAdmin(file_get_contents("views/incentivos/entorno_vista_usuario.html")), $id_empresa, $id_categoria, $campo1, $campo2, $campo3, $campo4, $campo5, $campo6, $excluir, $nombre_audiencia, $descripcion_audiencia, $unico_filtro, $id_documento), $PRINCIPAL);
@@ -15784,9 +15782,9 @@ else if ($seccion == "ReportesInscripcionesT") {
 else if ($seccion == "academia_lider_vista_gestion") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    $r1 = $_POST['r1'];
-    $r2 = $_POST['r2'];
-    $r3 = $_POST['r3'];
+    $r1 = $post['r1'];
+    $r2 = $post['r2'];
+    $r3 = $post['r3'];
 
     //echo "academia_lider_vista";
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/academia_lider/entorno.html"));
@@ -15797,9 +15795,9 @@ else if ($seccion == "academia_lider_vista_gestion") {
 else if ($seccion == "academia_lider_vista") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    $r1 = $_POST['r1'];
-    $r2 = $_POST['r2'];
-    $r3 = $_POST['r3'];
+    $r1 = $post['r1'];
+    $r2 = $post['r2'];
+    $r3 = $post['r3'];
 
     //echo "academia_lider_vista";
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/academia_lider/entorno.html"));
@@ -15809,10 +15807,10 @@ else if ($seccion == "academia_lider_vista") {
 }
 else if ($seccion == "Clima_Encuesta_Seguimiento") {
     $id_empresa = $_SESSION["id_empresa"];
-    $r1 = $_POST['r1'];
-    $r2 = $_POST['r2'];
-    $r3 = $_POST['r3'];
-    $filtro = $_POST['filtro'];
+    $r1 = $post['r1'];
+    $r2 = $post['r2'];
+    $r3 = $post['r3'];
+    $filtro = $post['filtro'];
 
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/clima/entorno.html"));
     $PRINCIPAL = str_replace("{ENTORNO}", lista_clima_Seguimiento(FuncionesTransversalesAdmin(file_get_contents("views/clima/entorno_clima_seguimiento.html")), $id_empresa, $filtro), $PRINCIPAL);
@@ -15822,14 +15820,14 @@ else if ($seccion == "Clima_Encuesta_Seguimiento") {
 else if ($seccion == "Clima_Encuesta_Reportes") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    $r1 = $_POST['r1'];
-    $r2 = $_POST['r2'];
-    $r3 = $_POST['r3'];
-    $filtro = $_POST['filtro'];
+    $r1 = $post['r1'];
+    $r2 = $post['r2'];
+    $r3 = $post['r3'];
+    $filtro = $post['filtro'];
 
-    $id_tipo = $_POST['id_tipo'];
-    $id_malla = $_POST['id_malla'];
-    $id_jefatura = $_POST['id_jefatura'];
+    $id_tipo = $post['id_tipo'];
+    $id_malla = $post['id_malla'];
+    $id_jefatura = $post['id_jefatura'];
 
     if ($id_tipo != '') {$filtro1 = $id_tipo;} else { $filtro1 = "";}
     if ($id_malla != '') {$filtro2 = $id_malla;} else { $filtro2 = "";}
@@ -15844,10 +15842,10 @@ else if ($seccion == "Clima_Encuesta_Reportes") {
 }
 else if ($seccion == "formacioncontinua_validacion_admin") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_tipo = $_REQUEST["id"];
-    $idenc = Decodear3($_GET["idenc"]);
-    $idFC = Decodear3($_GET["idFC"]);
-    $v = ($_GET["v"]);
+    $id_tipo = $request["id"];
+    $idenc = Decodear3($get["idenc"]);
+    $idFC = Decodear3($get["idFC"]);
+    $v = ($get["v"]);
 
     //echo "<br>idenc $idenc v $v, idFC $idFC, id_tipo $id_tipo";   sleep(3);
     //exit();
@@ -15859,10 +15857,10 @@ else if ($seccion == "formacioncontinua_validacion_admin") {
 }
 else if ($seccion == "formacioncontinua_validacion") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_tipo = $_REQUEST["id"];
-    $idenc = Decodear3($_GET["idenc"]);
-    $d = $_GET["d"];
-    $v = $_GET["v"];
+    $id_tipo = $request["id"];
+    $idenc = Decodear3($get["idenc"]);
+    $d = $get["d"];
+    $v = $get["v"];
 
     $array_usuario = TraeUsuarioBecas($idenc, $id_empresa);
     $rut_usuario = $array_usuario[0]->rut;
@@ -15939,25 +15937,25 @@ else if ($seccion == "formacioncontinua_validacion") {
 }
 else if ($seccion == "eventos_gestion_detalle") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_dimension = $_REQUEST["id_dimension"];
-    $codigo = $_REQUEST["codigo"];
+    $id_dimension = $request["id_dimension"];
+    $codigo = $request["codigo"];
 
 
-    $rut_col=$_GET["rutcol"];
-    $del=$_GET["del"];
+    $rut_col=$get["rutcol"];
+    $del=$get["del"];
 
     //echo "rutcol $rut_col $del";
 
     if($del<>'' and $rut_col<>''){
         EventosBorrarInscrito($rut_col,$codigo, $id_empresa);
     }
-    //print_r($_POST);
-    $id_tipo = $_REQUEST["id"];
-    $idenc = Decodear3($_GET["idenc"]);
-    $d = $_GET["d"];
-    $v = $_GET["v"];
+    //print_r($post);
+    $id_tipo = $request["id"];
+    $idenc = Decodear3($get["idenc"]);
+    $d = $get["d"];
+    $v = $get["v"];
 
-    $send_emails = $_GET["send_emails"];
+    $send_emails = $get["send_emails"];
     //echo "<br>$id_empresa codigo $codigo id_dimension $id_dimension send $send_emails";
 
     if ($send_emails == 1) {
@@ -16045,13 +16043,13 @@ else if ($seccion == "eventos_gestion_detalle") {
 }
 else if ($seccion == "empresas_ext_Usuarios_Detalle") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_dimension = $_REQUEST["id_dimension"];
-    $rut_ext = $_REQUEST["rut_ext"];
-    //print_r($_POST);
-    $id_tipo = $_REQUEST["id"];
-    $idenc = Decodear3($_GET["idenc"]);
-    $d = $_GET["d"];
-    $v = $_GET["v"];
+    $id_dimension = $request["id_dimension"];
+    $rut_ext = $request["rut_ext"];
+    //print_r($post);
+    $id_tipo = $request["id"];
+    $idenc = Decodear3($get["idenc"]);
+    $d = $get["d"];
+    $v = $get["v"];
 
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/ext_empresas/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
@@ -16066,13 +16064,13 @@ else if ($seccion == "empresas_ext_Usuarios_Detalle") {
 else if ($seccion == "CertificacionT_vista") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    //print_r($_POST);
-    $id_tipo = $_REQUEST["id"];
-    $idenc = Decodear3($_GET["idenc"]);
-    $d = $_GET["d"];
-    $v = $_GET["v"];
-    $id_curso = $_REQUEST["id_curso"];
-    $id_inscripcion = $_REQUEST["id_inscripcion"];
+    //print_r($post);
+    $id_tipo = $request["id"];
+    $idenc = Decodear3($get["idenc"]);
+    $d = $get["d"];
+    $v = $get["v"];
+    $id_curso = $request["id_curso"];
+    $id_inscripcion = $request["id_inscripcion"];
 
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/certificacionT/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
@@ -16083,11 +16081,11 @@ else if ($seccion == "CertificacionT_vista") {
 else if ($seccion == "talent_vista") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    //print_r($_POST);
-    $id_tipo = $_REQUEST["id"];
-    $idenc = Decodear3($_GET["idenc"]);
-    $d = $_GET["d"];
-    $v = $_GET["v"];
+    //print_r($post);
+    $id_tipo = $request["id"];
+    $idenc = Decodear3($get["idenc"]);
+    $d = $get["d"];
+    $v = $get["v"];
 
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/talent/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
@@ -16098,14 +16096,14 @@ else if ($seccion == "talent_vista") {
 else if ($seccion == "talent_vista_perfil") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    //print_r($_POST);
+    //print_r($post);
 
-    $id_tipo = $_REQUEST["id_tipo"];
-    $rut_col = $_REQUEST["rut_col"];
+    $id_tipo = $request["id_tipo"];
+    $rut_col = $request["rut_col"];
 
-    $idenc = Decodear3($_GET["idenc"]);
-    $d = $_GET["d"];
-    $v = $_GET["v"];
+    $idenc = Decodear3($get["idenc"]);
+    $d = $get["d"];
+    $v = $get["v"];
 
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/talent/entorno_solo.html"));
     $id_empresa = $_SESSION["id_empresa"];
@@ -16147,11 +16145,11 @@ else if ($seccion == "notificaciones_asignacion_final") {
 }
 else if ($seccion == "usuarios_insert_tbl_usuario_temporal_empresa") {
     $id_empresa = $_SESSION["id_empresa"];
-    //echo "<br /><br />"; print_r($_POST); echo "<br /><br />";
+    //echo "<br /><br />"; print_r($post); echo "<br /><br />";
 
     DeleteFullTbl("tbl_usuario_temporal", $id_empresa);
 
-		extract($_POST);
+		extract($post);
     $error_grave = "error";
     $archivo = $_FILES['excel']['name'];VerificaExtensionFilesAdmin($_FILES["excel"]);
     $tipo = $_FILES['excel']['type'];
@@ -16553,7 +16551,7 @@ $sindi_glosa
 }
 else if ($seccion == "gestion_usuario_data") {
     require_once 'clases/PHPExcel.php';
-    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $_POST['id_eval'];   // $programa = $_POST['program'];    // Crea un nuevo objeto PHPExcel
+    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $post['id_eval'];   // $programa = $post['program'];    // Crea un nuevo objeto PHPExcel
     $objPHPExcel = new PHPExcel();
     $styleArray = array('font' => array('bold' => false, 'color' => array('rgb' => '222222'), ));
     $objPHPExcel->getProperties()->setCreator("GO")->setLastModifiedBy("GO")->setTitle("Plantilla")->setSubject("Plantilla")->setDescription("Plantilla")->setKeywords("Excel Office 2007 openxml php")->setCategory("Plantilla");
@@ -16760,7 +16758,7 @@ else if ($seccion == "gestion_usuario_data") {
 }
 else if ($seccion == "gestion_usuario_clave") {
     require_once 'clases/PHPExcel.php';
-    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $_POST['id_eval'];   // $programa = $_POST['program'];    // Crea un nuevo objeto PHPExcel
+    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $post['id_eval'];   // $programa = $post['program'];    // Crea un nuevo objeto PHPExcel
     $objPHPExcel = new PHPExcel();
     $styleArray = array('font' => array('bold' => false, 'color' => array('rgb' => '222222'), ));
     $objPHPExcel->getProperties()->setCreator("GO")->setLastModifiedBy("GO")->setTitle("Plantilla")->setSubject("Plantilla")->setDescription("Plantilla")->setKeywords("Excel Office 2007 openxml php")->setCategory("Plantilla");
@@ -16821,7 +16819,7 @@ else if ($seccion == "gestion_usuario_clave") {
 }
 else if ($seccion == "puntos_descarga_asignacion") {
     require_once 'clases/PHPExcel.php';
-    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $_POST['id_eval'];   // $programa = $_POST['program'];    // Crea un nuevo objeto PHPExcel
+    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $post['id_eval'];   // $programa = $post['program'];    // Crea un nuevo objeto PHPExcel
     $objPHPExcel = new PHPExcel();
     $styleArray = array('font' => array('bold' => false, 'color' => array('rgb' => '222222'), ));
     $objPHPExcel->getProperties()->setCreator("GO")->setLastModifiedBy("GO")->setTitle("Plantilla")->setSubject("Plantilla")->setDescription("Plantilla")->setKeywords("Excel Office 2007 openxml php")->setCategory("Plantilla");
@@ -16890,8 +16888,8 @@ else if ($seccion == "puntos_descarga_asignacion") {
 }
 else if ($seccion == "Cursos_Ext_Descarga_notas") {
     require_once 'clases/PHPExcel.php';
-    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $_POST['id_eval'];   // $programa = $_POST['program'];    // Crea un nuevo objeto PHPExcel
-    $id_curso = $_POST['id_curso'];
+    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $post['id_eval'];   // $programa = $post['program'];    // Crea un nuevo objeto PHPExcel
+    $id_curso = $post['id_curso'];
 
     $objPHPExcel = new PHPExcel();
     $styleArray = array('font' => array('bold' => false, 'color' => array('rgb' => '222222'), ));
@@ -16962,8 +16960,8 @@ else if ($seccion == "Cursos_Ext_Descarga_notas") {
 }
 else if ($seccion == "usuarios_update_empresa") {
     $id_empresa = $_SESSION["id_empresa"];
-    //echo "<br /><br />"; print_r($_POST); echo "<br /><br />";
-    extract($_POST);
+    //echo "<br /><br />"; print_r($post); echo "<br /><br />";
+    extract($post);
     $error_grave = "error";
     $archivo = $_FILES['excel']['name'];VerificaExtensionFilesAdmin($_FILES["excel"]);
     $tipo = $_FILES['excel']['type'];
@@ -17019,11 +17017,11 @@ else if ($seccion == "usuarios_update_empresa") {
     exit;
 }
 else if ($seccion == "Eventos_Inscritos_update") {
-    $id_empresa = $_SESSION["id_empresa"]; // echo "<br /><br />"; print_r($_POST); echo "<br /><br />";
-    $codigo = $_REQUEST["codigo"];
-    $id_dimension = $_REQUEST["id_dimension"];
+    $id_empresa = $_SESSION["id_empresa"]; // echo "<br /><br />"; print_r($post); echo "<br /><br />";
+    $codigo = $request["codigo"];
+    $id_dimension = $request["id_dimension"];
     //echo "<br>id_empresa $id_empresa  codigo $codigo  id_dimension $id_dimension";exit();
-    extract($_POST);
+    extract($post);
     $error_grave = "error";
     $archivo = $_FILES['excel']['name'];VerificaExtensionFilesAdmin($_FILES["excel"]);
     $tipo = $_FILES['excel']['type'];
@@ -17094,8 +17092,8 @@ else if($seccion=="VCl"){
 
 }
 else if ($seccion == "notificaciones_update_asignacion") {
-    $id_empresa = $_SESSION["id_empresa"]; // echo "<br /><br />"; print_r($_POST); echo "<br /><br />";
-    extract($_POST);
+    $id_empresa = $_SESSION["id_empresa"]; // echo "<br /><br />"; print_r($post); echo "<br /><br />";
+    extract($post);
     $error_grave = "error";
     $archivo = $_FILES['excel']['name'];VerificaExtensionFilesAdmin($_FILES["excel"]);
     $tipo = $_FILES['excel']['type'];
@@ -17145,12 +17143,12 @@ else if ($seccion == "notificaciones_update_asignacion") {
 else if ($seccion == "actualizacion_usuarios") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/usuarios_gestion/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
-    $temporal_actualizar = $_GET["temporal_actualizar"];
-    $procesar = $_GET["procesar"];
+    $temporal_actualizar = $get["temporal_actualizar"];
+    $procesar = $get["procesar"];
 		//echo "clave";
 		$clave_nueva=$CLXIdDpw&_9255;
 		$clave_enc=Encriptar($clave_nueva);
-		 		$descargar_xls = $_GET["descargar_xls"];
+		 		$descargar_xls = $get["descargar_xls"];
 		 	/*	if($descargar_xls==1){
 
 		 		    header('Content-type: text/plain');
@@ -17260,10 +17258,10 @@ else if ($seccion == "actualizacion_usuarios") {
 		 		}
 
 				$bloqueo="";
-				if($_POST["bc"]<>""){
+				if($post["bc"]<>""){
 
 
-					$rut_COL=$_POST["bc"];
+					$rut_COL=$post["bc"];
 					$rut_COL = limpiaRut($rut_COL);
 					$clave=buscaModificacionclave($rut_COL);
 					//Verifico si está bloqueado
@@ -17280,8 +17278,8 @@ else if ($seccion == "actualizacion_usuarios") {
 					";
 				}
 
-			if($_POST["idSap"]<>""){
-					$rut_COL=$_POST["idSap"];
+			if($post["idSap"]<>""){
+					$rut_COL=$post["idSap"];
 					//$rut_COL = limpiaRut($rut_COL);
 					$rut_col=BuscaRutDadoRutEmailIdSap_2021($rut_COL);
 					$Usu=TraeUsuarioRut($rut_col);
@@ -17355,12 +17353,12 @@ else if ($seccion == "vista_incognita") {
 
 		global $url_vista_incognita;
 		//echo "<br>url_vista_incognita $url_vista_incognita<br>";
-		//print_r($_POST);
-		$rut_enc=Encodear3($_POST["bc"]);
+		//print_r($post);
+		$rut_enc=Encodear3($post["bc"]);
 		//echo "<br>rut_enc $rut_enc<br>";
 		$id_empresa = $_SESSION["id_empresa"];
-		$Datos_usu=TraeDatosUsuario($_POST["bc"]);
-		if($_POST["bc"]<>"" and $Datos_usu[0]->rut){
+		$Datos_usu=TraeDatosUsuario($post["bc"]);
+		if($post["bc"]<>"" and $Datos_usu[0]->rut){
 			echo "<script>alert('Ingresando a Vista Incognita de ".($Datos_usu[0]->nombre_completo)."');</script>";
 			echo "<script>location.href='".$url_vista_incognita."".$rut_enc."';</script>";
 			exit();
@@ -17377,7 +17375,7 @@ else if ($seccion == "actualizacion_permiso_unico") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/usuarios_gestion/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
 
-		$descargar_xls = $_GET["descargar_xls"];
+		$descargar_xls = $get["descargar_xls"];
  		if($descargar_xls==1){
  		    header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=BBDD_Permiso_Unico_Colectivo_' . $rut_enviado . '.csv');
@@ -17403,7 +17401,7 @@ else if ($seccion == "actualizacion_contingencia_ubicacion_colaboradores") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/usuarios_gestion/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
 
-		$descargar_xls = $_GET["descargar_xls"];
+		$descargar_xls = $get["descargar_xls"];
  		if($descargar_xls==1){
  		    header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=BBDD_Ubicacion_Colaboradores_' . $rut_enviado . '.csv');
@@ -17437,7 +17435,7 @@ else if ($seccion == "actualizacion_control_dotacion_2021_dia") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/usuarios_gestion/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
 
-		$descargar_xls = $_GET["descargar_xls"];
+		$descargar_xls = $get["descargar_xls"];
  		if($descargar_xls==1){
  		    header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=BBDD_ControlDotacion_2021_dia_' . $rut_enviado . '.csv');
@@ -17473,7 +17471,7 @@ else if ($seccion == "actualizacion_control_dotacion_opciones") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/usuarios_gestion/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
 
-		$descargar_xls = $_GET["descargar_xls"];
+		$descargar_xls = $get["descargar_xls"];
  		if($descargar_xls==1){
  		    header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=BBDD_Control_Dotacion_Opciones_' . $rut_enviado . '.csv');
@@ -17500,9 +17498,9 @@ else if ($seccion == "actualizacion_control_dotacion_opciones") {
 }
 else if ($seccion == "usuarios_insert_tbl_usuario_ausentismo_empresa") {
     $id_empresa = $_SESSION["id_empresa"];
-    									//echo "<br /><br />"; print_r($_POST); echo "<br /><br />";print_r($_FILES); echo "<br /><br />";
+    									//echo "<br /><br />"; print_r($post); echo "<br /><br />";print_r($_FILES); echo "<br /><br />";
     VerificaExtensionFilesAdmin($_FILES["file"]);
-    if ( isset($_POST["action"]) ) {
+    if ( isset($post["action"]) ) {
 			   if ( isset($_FILES["file"])) {
 			        if ($_FILES["file"]["error"] > 0) {	echo "Return Code: " . $_FILES["file"]["error"] . "<br />";	}
 			        else {
@@ -17581,7 +17579,7 @@ else if ($seccion == "actualizacion_usuarios_hhee") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/usuarios_gestion/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
 
-		$descargar_xls = $_GET["descargar_xls"];
+		$descargar_xls = $get["descargar_xls"];
  		if($descargar_xls==1){
  		    header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Lista_Usuario_HH_EE' . $rut_enviado . '.csv');
@@ -17612,9 +17610,9 @@ else if ($seccion == "actualizacion_usuarios_hhee") {
 }
 else if ($seccion == "usuarios_insert_tbl_usuario_hhee_empresa") {
     $id_empresa = $_SESSION["id_empresa"];
-    									//echo "<br /><br />"; print_r($_POST); echo "<br /><br />";print_r($_FILES); echo "<br /><br />";
+    									//echo "<br /><br />"; print_r($post); echo "<br /><br />";print_r($_FILES); echo "<br /><br />";
     VerificaExtensionFilesAdmin($_FILES["file"]);
-    if ( isset($_POST["action"]) ) {
+    if ( isset($post["action"]) ) {
 			   if ( isset($_FILES["file"])) {
 			        if ($_FILES["file"]["error"] > 0) {	echo "Return Code: " . $_FILES["file"]["error"] . "<br />";	}
 			        else {
@@ -17702,8 +17700,8 @@ else if ($seccion == "usuarios_insert_tbl_usuario_hhee_empresa") {
 else if ($seccion == "ReporteFullUsuario") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/usuarios_gestion/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
-    $temporal_actualizar = $_GET["temporal_actualizar"];
-    $rut_enviado = LimpiaRut($_POST["rut"]);
+    $temporal_actualizar = $get["temporal_actualizar"];
+    $rut_enviado = LimpiaRut($post["rut"]);
 
 
     if ($rut_enviado<>"") {
@@ -17744,10 +17742,10 @@ else if ($seccion == "notificaciones_asignacion") {
 }
 else if ($seccion == "PP_save_relatores") {
     $id_empresa = $_SESSION["id_empresa"];
-    $rut_experto = LimpiaRut($_POST['rut_experto']);
-    $nombrecat = MP_BuscaCatDadoId($_POST['grupo_interes_mp_nuevo'], $id_empresa);
-    //echo $_POST['nuevogrupo_interes'];
-    MP_SavenuevoExpertogrupointeres(($_POST['grupo_interes_mp_nuevo']), $nombrecat, $rut_experto, $id_empresa);
+    $rut_experto = LimpiaRut($post['rut_experto']);
+    $nombrecat = MP_BuscaCatDadoId($post['grupo_interes_mp_nuevo'], $id_empresa);
+    //echo $post['nuevogrupo_interes'];
+    MP_SavenuevoExpertogrupointeres(($post['grupo_interes_mp_nuevo']), $nombrecat, $rut_experto, $id_empresa);
     echo "
         <script>
         location.href='?sw=mejores_practicas_edit_expertos';
@@ -17756,7 +17754,7 @@ else if ($seccion == "PP_save_relatores") {
 else if ($seccion == "usuarios_relatores") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/relatores/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
-    $excel = $_GET["excel"];
+    $excel = $get["excel"];
     if ($excel == 1) {
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename=Reporte_por_Ejecutivo_Resumen_' . $txt . '.csv');
@@ -18586,7 +18584,7 @@ else if ($seccion == "preguntados_usuario") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/preguntados/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
     $id_objeto = "be_preguntados_m1";
-    $excel = $_GET["excel"];
+    $excel = $get["excel"];
 
     if ($excel == 1) {
         $txt = $txt_e . $txt_fi . $txt_ft;
@@ -18610,7 +18608,7 @@ else if ($seccion == "preguntados_pregunta") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/preguntados/entorno_preguntas.html"));
     $id_empresa = $_SESSION["id_empresa"];
     $id_objeto = "be_preguntados_m1";
-    $excel = $_GET["excel"];
+    $excel = $get["excel"];
 
     if ($excel == 1) {
         $txt = $txt_e . $txt_fi . $txt_ft;
@@ -18751,7 +18749,7 @@ else if ($seccion == "adcurm") {
 }
 else if ($seccion == "procesa_excel") {
     CancelaProcesamientoPrevio();
-    extract($_POST);
+    extract($post);
     if ($action == "upload") {
 //cargamos el archivo al servidor con el mismo nombre
         //solo le agregue el sufijo tmp_ev_
@@ -18837,7 +18835,7 @@ else if ($seccion == "procesa_excel_u") {
 
     CancelaProcesamientoPrevioUsuarios();
 
-    extract($_POST);
+    extract($post);
 
     $error_grave = "error";
 
@@ -19032,7 +19030,7 @@ else if ($seccion == "procesa_excel_u") {
 }
 else if ($seccion == "procesa_excel_uBK") {
     CancelaProcesamientoPrevioUsuarios();
-    extract($_POST);
+    extract($post);
     $id_empresa = $_SESSION["id_empresa"];
     $error_grave = "error";
     if ($action == "upload") {
@@ -19192,9 +19190,9 @@ else if ($seccion == "procesa_excel_uBK") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "procesa_excel_inscripciones") {
-    $id_inscripcion = Decodear3($_POST["idi"]);
+    $id_inscripcion = Decodear3($post["idi"]);
 
-    extract($_POST);
+    extract($post);
     if ($action == "upload") {
 //cargamos el archivo al servidor con el mismo nombre
         //solo le agregue el sufijo tmp_ev_
@@ -19256,11 +19254,11 @@ location.href='?sw=accioninsc&ii=" . Encodear3($id_inscripcion) . "#seccionInscr
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "procesa_excel_cierre_inscripciones") {
-    $id_inscripcion = Decodear3($_POST["idi"]);
+    $id_inscripcion = Decodear3($post["idi"]);
 //elimino todos los de la id inscripcion
     BorraUsuariosCierre($id_inscripcion);
 
-    extract($_POST);
+    extract($post);
     if ($action == "upload") {
 //cargamos el archivo al servidor con el mismo nombre
         //solo le agregue el sufijo tmp_ev_
@@ -19392,7 +19390,7 @@ location.href='?sw=listusu&exe=1';
     exit;
 }
 else if ($seccion == "accionobjeto") {
-    $id_objeto = Decodear($_GET["i"]);
+    $id_objeto = Decodear($get["i"]);
     if ($id_objeto) {
         $PRINCIPAL = FormularioObjeto(FuncionesTransversalesAdmin(file_get_contents("views/objeto/formulario_edita.html")), $id_objeto);
     } else {
@@ -19408,7 +19406,7 @@ else if ($seccion == "addeval") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "accionEvaluacion") {
-    $id_eval = Decodear3($_GET["i"]);
+    $id_eval = Decodear3($get["i"]);
     if ($id_eval) {
         $PRINCIPAL = FormularioEvaluacion(FuncionesTransversalesAdmin(file_get_contents("views/evaluaciones/formulario_edita.html")), $id_eval);
     } else {
@@ -19418,8 +19416,8 @@ else if ($seccion == "accionEvaluacion") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "adeval") {
-    $nombre_evaluacion = (trim($_POST["nombre_evaluacion"]));
-    $descripcion_evaluacion = (trim($_POST["descripcion_evaluacion"]));
+    $nombre_evaluacion = (trim($post["nombre_evaluacion"]));
+    $descripcion_evaluacion = (trim($post["descripcion_evaluacion"]));
 //inserta registro
     InsertaEvaluacion($nombre_evaluacion, $descripcion_evaluacion);
 
@@ -19430,10 +19428,10 @@ location.href='?sw=addeval';
 </script>";
 }
 else if ($seccion == "adtexto") {
-    print_r($_POST);
-    $texto_pregunta = (trim($_POST["descripcion_pregunta"]));
-    $id_evaluacion = Decodear3($_GET["i"]);
-    $tipo_pregunta = $_POST["tippre"];
+    print_r($post);
+    $texto_pregunta = (trim($post["descripcion_pregunta"]));
+    $id_evaluacion = Decodear3($get["i"]);
+    $tipo_pregunta = $post["tippre"];
     InsertaPreguntaPorEvaluacion($texto_pregunta, $id_evaluacion, $tipo_pregunta, "", "");
 
 //Obtengo la ultmia pregunta con un MAX()
@@ -19447,16 +19445,16 @@ location.href='?sw=accionEvaluacion&i=" . Encodear3($id_evaluacion) . "';
 </script>";
 }
 else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos") {
-//print_r($_POST);print_r($_GET);
-    $id_malla = $_POST["malla"];
-    $id_programa = $_REQUEST["programa"];
-    $rut = LimpiaRut($_POST["rut"]);
-    $id_evaluacion = $_POST["id_evaluacion"];
-    $id_objeto = $_GET["id_objeto"];
-    $id_curso_sent = $_GET["id_curso_sent"];
+//print_r($post);print_r($get);
+    $id_malla = $post["malla"];
+    $id_programa = $request["programa"];
+    $rut = LimpiaRut($post["rut"]);
+    $id_evaluacion = $post["id_evaluacion"];
+    $id_objeto = $get["id_objeto"];
+    $id_curso_sent = $get["id_curso_sent"];
     $id_empresa = $_SESSION["id_empresa"];
 
-    //print_r($_POST);
+    //print_r($post);
 
     if ($id_objeto != '' and $id_curso_sent == "") {
         $id_curso_sent_array = BuscaCursoDadoIdObjeto($id_objeto, $id_empresa);
@@ -19474,11 +19472,11 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos") {
 }
 else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveMalla") {
     $id_empresa = $_SESSION["id_empresa"];
-    $malla_nombre = $_POST["malla_nombre"];
-    $malla_descripcion = $_POST["malla_descripcion"];
-    $id_malla_sugerido = $_POST["id_malla_sugerido"];
-    $id_programa = $_POST["id_programa"];
-    $id_foco = $_POST["id_foco"];
+    $malla_nombre = $post["malla_nombre"];
+    $malla_descripcion = $post["malla_descripcion"];
+    $id_malla_sugerido = $post["id_malla_sugerido"];
+    $id_programa = $post["id_programa"];
+    $id_foco = $post["id_foco"];
 
     InsertMallaLmsMalla($id_malla_sugerido, $malla_nombre, $malla_descripcion, $id_empresa);
     InsertClasLmsClas($id_malla_sugerido, $malla_nombre, $malla_descripcion, $id_empresa);
@@ -19486,7 +19484,7 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveMalla") {
 
     echo "
                     <script>
-                    location.href='?sw=vista_mallas_clasificaciones_cursos_objetos&programa=" . $_POST[id_programa] . "';
+                    location.href='?sw=vista_mallas_clasificaciones_cursos_objetos&programa=" . $post[id_programa] . "';
                     </script>";
     exit;
 
@@ -19494,16 +19492,16 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveMalla") {
 }
 else if ($seccion == "vista_mallas_clasificaciones_cursos_objetosInsertaRel") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_malla = $_POST["id_malla"];
-    $id_programa = $_POST["id_programa"];
-    $id_clasificacion = $_POST["id_clasificacion"];
-    $id_curso = $_POST["id_curso"];
+    $id_malla = $post["id_malla"];
+    $id_programa = $post["id_programa"];
+    $id_clasificacion = $post["id_clasificacion"];
+    $id_curso = $post["id_curso"];
 
     InsertMallaRelLmsMallaClaCurso($id_malla, $id_clasificacion, $id_curso, $id_programa, $id_empresa);
 
     echo "
                     <script>
-                    location.href='?sw=vista_mallas_clasificaciones_cursos_objetos&programa=" . $_POST[id_programa] . "';
+                    location.href='?sw=vista_mallas_clasificaciones_cursos_objetos&programa=" . $post[id_programa] . "';
                     </script>";
     exit;
 
@@ -19511,40 +19509,40 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetosInsertaRel") {
 }
 else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveObj") {
     $id_empresa = $_SESSION["id_empresa"];
-    $nombre_objeto = $_POST["objeto_nombre"];
-    $objeto_descripcion = $_POST["objeto_descripcion"];
-    $objeto_tipo = $_POST["objeto_tipo"];
-    $objeto_url = $_POST["objeto_url"];
-    $objeto_duracion = $_POST["objeto_duracion"];
-    $objeto_orden = $_POST["objeto_orden"];
-    $objeto_numpreguntas = $_POST["objeto_numpreguntas"];
-    $objeto_aprobacion = $_POST["objeto_aprobacion"];
-    $id_curso = $_POST["id_curso"];
-    $id_programa = $_POST["id_programa"];
-    $id_objeto = $_POST["id_objeto"];
-    $id_objeto_editar = $_POST["id_objeto_editar"];
-    $id_evaluacion = $_POST["id_evaluacion"];
-    $objeto_url = $_POST["objeto_url"];
-    $objeto_permitir_ver_nota = $_POST["objeto_permitir_ver_nota"];
-    $objeto_recalcular_notas = $_POST["objeto_recalcular_notas"];
-    $objeto_distribucion_opciones = $_POST["objeto_distribucion_opciones"];
-    $objeto_duracion_evaluacion_total = $_POST["objeto_duracion_evaluacion_total"];
-    $objeto_intentos = $_POST["objeto_intentos"];
+    $nombre_objeto = $post["objeto_nombre"];
+    $objeto_descripcion = $post["objeto_descripcion"];
+    $objeto_tipo = $post["objeto_tipo"];
+    $objeto_url = $post["objeto_url"];
+    $objeto_duracion = $post["objeto_duracion"];
+    $objeto_orden = $post["objeto_orden"];
+    $objeto_numpreguntas = $post["objeto_numpreguntas"];
+    $objeto_aprobacion = $post["objeto_aprobacion"];
+    $id_curso = $post["id_curso"];
+    $id_programa = $post["id_programa"];
+    $id_objeto = $post["id_objeto"];
+    $id_objeto_editar = $post["id_objeto_editar"];
+    $id_evaluacion = $post["id_evaluacion"];
+    $objeto_url = $post["objeto_url"];
+    $objeto_permitir_ver_nota = $post["objeto_permitir_ver_nota"];
+    $objeto_recalcular_notas = $post["objeto_recalcular_notas"];
+    $objeto_distribucion_opciones = $post["objeto_distribucion_opciones"];
+    $objeto_duracion_evaluacion_total = $post["objeto_duracion_evaluacion_total"];
+    $objeto_intentos = $post["objeto_intentos"];
 
-    $accion_edita = $_POST["edit"];
-    $objeto_tipo_evaluacion = $_POST["objeto_tipo_evaluacion"];
-    $objeto_nombre_evaluacion = $_POST["objeto_nombre_evaluacion"];
+    $accion_edita = $post["edit"];
+    $objeto_tipo_evaluacion = $post["objeto_tipo_evaluacion"];
+    $objeto_nombre_evaluacion = $post["objeto_nombre_evaluacion"];
 
-    $fecha_inicio = $_POST["fecha_inicio"];
-    $hora_inicio = $_POST["hora_inicio"];
-    $fecha_termino = $_POST["fecha_termino"];
-    $hora_termino = $_POST["hora_termino"];
+    $fecha_inicio = $post["fecha_inicio"];
+    $hora_inicio = $post["hora_inicio"];
+    $fecha_termino = $post["fecha_termino"];
+    $hora_termino = $post["hora_termino"];
 
     if ($objeto_nombre_evaluacion != "" and $nombre_objeto == '') {$nombre_objeto = $objeto_nombre_evaluacion;}
     if ($objeto_tipo_evaluacion != "" and $objeto_tipo == '') {$objeto_tipo = $objeto_tipo_evaluacion;}
 
-    $titulo_cierre = $_POST["titulo_cierre"];
-    $texto_cierre = $_POST["texto_cierre"];
+    $titulo_cierre = $post["titulo_cierre"];
+    $texto_cierre = $post["texto_cierre"];
 
     $tamano = $_FILES["archivo"]['size'];
     $tipo = $_FILES["archivo"]['type'];
@@ -19603,7 +19601,7 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveObj") {
 
     echo "
     <script>
-            location.href='?sw=vista_mallas_clasificaciones_cursos_objetos&programa=" . $_POST[id_programa] . "&id_curso_sent=" . $id_curso . "';
+            location.href='?sw=vista_mallas_clasificaciones_cursos_objetos&programa=" . $post[id_programa] . "&id_curso_sent=" . $id_curso . "';
     </script>";
     exit;
 
@@ -19611,39 +19609,39 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveObj") {
 }
 else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveObj_eliminapregunta") {
     $id_empresa = $_SESSION["id_empresa"];
-    $nombre_objeto = $_POST["objeto_nombre"];
-    $objeto_descripcion = $_POST["objeto_descripcion"];
-    $objeto_tipo = $_POST["objeto_tipo"];
-    $objeto_url = $_POST["objeto_url"];
-    $objeto_duracion = $_POST["objeto_duracion"];
-    $objeto_orden = $_POST["objeto_orden"];
-    $objeto_numpreguntas = $_POST["objeto_numpreguntas"];
-    $objeto_aprobacion = $_POST["objeto_aprobacion"];
-    $id_curso = $_POST["id_curso"];
-    $id_programa = $_POST["id_programa"];
-    $id_objeto = $_POST["id_objeto"];
-    $id_evaluacion = $_POST["id_evaluacion"];
-    $objeto_url = $_POST["objeto_url"];
-    $objeto_permitir_ver_nota = $_POST["objeto_permitir_ver_nota"];
-    $objeto_recalcular_notas = $_POST["objeto_recalcular_notas"];
-    $objeto_distribucion_opciones = $_POST["objeto_distribucion_opciones"];
-    $objeto_duracion_evaluacion_total = $_POST["objeto_duracion_evaluacion_total"];
-    $objeto_intentos = $_POST["objeto_intentos"];
+    $nombre_objeto = $post["objeto_nombre"];
+    $objeto_descripcion = $post["objeto_descripcion"];
+    $objeto_tipo = $post["objeto_tipo"];
+    $objeto_url = $post["objeto_url"];
+    $objeto_duracion = $post["objeto_duracion"];
+    $objeto_orden = $post["objeto_orden"];
+    $objeto_numpreguntas = $post["objeto_numpreguntas"];
+    $objeto_aprobacion = $post["objeto_aprobacion"];
+    $id_curso = $post["id_curso"];
+    $id_programa = $post["id_programa"];
+    $id_objeto = $post["id_objeto"];
+    $id_evaluacion = $post["id_evaluacion"];
+    $objeto_url = $post["objeto_url"];
+    $objeto_permitir_ver_nota = $post["objeto_permitir_ver_nota"];
+    $objeto_recalcular_notas = $post["objeto_recalcular_notas"];
+    $objeto_distribucion_opciones = $post["objeto_distribucion_opciones"];
+    $objeto_duracion_evaluacion_total = $post["objeto_duracion_evaluacion_total"];
+    $objeto_intentos = $post["objeto_intentos"];
 
-    $id_pregunta = $_POST["id_pregunta"];
+    $id_pregunta = $post["id_pregunta"];
 
-    $accion_edita = $_POST["edit"];
+    $accion_edita = $post["edit"];
 
-    $objeto_tipo_evaluacion = $_POST["objeto_tipo_evaluacion"];
-    $objeto_nombre_evaluacion = $_POST["objeto_nombre_evaluacion"];
+    $objeto_tipo_evaluacion = $post["objeto_tipo_evaluacion"];
+    $objeto_nombre_evaluacion = $post["objeto_nombre_evaluacion"];
 
-    $fecha_inicio = $_POST["fecha_inicio"];
-    $hora_inicio = $_POST["hora_inicio"];
-    $fecha_termino = $_POST["fecha_termino"];
-    $hora_termino = $_POST["hora_termino"];
+    $fecha_inicio = $post["fecha_inicio"];
+    $hora_inicio = $post["hora_inicio"];
+    $fecha_termino = $post["fecha_termino"];
+    $hora_termino = $post["hora_termino"];
 
-    $titulo_cierre = $_POST["titulo_cierre"];
-    $texto_cierre = $_POST["texto_cierre"];
+    $titulo_cierre = $post["titulo_cierre"];
+    $texto_cierre = $post["texto_cierre"];
 
     $tamano = $_FILES["archivo"]['size'];
     $tipo = $_FILES["archivo"]['type'];
@@ -19663,7 +19661,7 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveObj_elimin
 
     echo "
                     <script>
-                    location.href='?sw=vista_mallas_clasificaciones_cursos_objetos&programa=" . $_POST[id_programa] . "';
+                    location.href='?sw=vista_mallas_clasificaciones_cursos_objetos&programa=" . $post[id_programa] . "';
                     </script>";
     exit;
 
@@ -19671,20 +19669,20 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveObj_elimin
 }
 else if ($seccion == "ListadoMantenedor") {
     $id_empresa = $_SESSION["id_empresa"];
-    $arreglo_post = $_POST;
-    if ($_GET["tipo"]) {
-        $arreglo_post = $_GET;
+    $arreglo_post = $post;
+    if ($get["tipo"]) {
+        $arreglo_post = $get;
     }
-//if ($_GET["orden"]!=""){
-    //ordena_campo($_GET["orden_anterior"],$_GET["orden"],$_GET["tabla"],$_GET["campo"],$_SESSION["id_empresa"]);
+//if ($get["orden"]!=""){
+    //ordena_campo($get["orden_anterior"],$get["orden"],$get["tabla"],$get["campo"],$_SESSION["id_empresa"]);
 
 //}
     $PRINCIPAL = FuncionListadoMantenedores(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/mantenedor/index.html")), $id_empresa, $arreglo_post);
     $PRINCIPAL = str_replace("{ID_EMPRESA}", $id_empresa, $PRINCIPAL);
 
-    if ($_POST["tipo"] == "objeto") {
+    if ($post["tipo"] == "objeto") {
         $PRINCIPAL = str_replace("{DISPLAY_TIPO_OBJETO}", "", $PRINCIPAL);
-        $PRINCIPAL = str_replace("{SELECTED" . $_POST["tipo_objeto"] . "}", "selected", $PRINCIPAL);
+        $PRINCIPAL = str_replace("{SELECTED" . $post["tipo_objeto"] . "}", "selected", $PRINCIPAL);
     } else {
         $PRINCIPAL = str_replace("{DISPLAY_TIPO_OBJETO}", 'style="display: none"', $PRINCIPAL);
     }
@@ -19693,9 +19691,9 @@ else if ($seccion == "ListadoMantenedor") {
 }
 else if ($seccion == "audiencias") {
     $id_empresa = $_SESSION["id_empresa"];
-    $arreglo_post = $_POST;
-//if ($_GET["orden"]!=""){
-    //ordena_campo($_GET["orden_anterior"],$_GET["orden"],$_GET["tabla"],$_GET["campo"],$_SESSION["id_empresa"]);
+    $arreglo_post = $post;
+//if ($get["orden"]!=""){
+    //ordena_campo($get["orden_anterior"],$get["orden"],$get["tabla"],$get["campo"],$_SESSION["id_empresa"]);
 
 //}
     $PRINCIPAL = FuncionListadoMantenedores(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/audiencias/index.html")), $id_empresa, $arreglo_post);
@@ -19707,9 +19705,9 @@ else if ($seccion == "audiencias") {
 }
 else if ($seccion == "programas") {
     $id_empresa = $_SESSION["id_empresa"];
-    $arreglo_post = $_POST;
-//if ($_GET["orden"]!=""){
-    //ordena_campo($_GET["orden_anterior"],$_GET["orden"],$_GET["tabla"],$_GET["campo"],$_SESSION["id_empresa"]);
+    $arreglo_post = $post;
+//if ($get["orden"]!=""){
+    //ordena_campo($get["orden_anterior"],$get["orden"],$get["tabla"],$get["campo"],$_SESSION["id_empresa"]);
 
 //}
     $PRINCIPAL = FuncionListadoMantenedores(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/programas/index.html")), $id_empresa, $arreglo_post);
@@ -19719,9 +19717,9 @@ else if ($seccion == "programas") {
 }
 else if ($seccion == "audiencias_programas") {
     $id_empresa = $_SESSION["id_empresa"];
-    $arreglo_post = $_POST;
-//if ($_GET["orden"]!=""){
-    //ordena_campo($_GET["orden_anterior"],$_GET["orden"],$_GET["tabla"],$_GET["campo"],$_SESSION["id_empresa"]);
+    $arreglo_post = $post;
+//if ($get["orden"]!=""){
+    //ordena_campo($get["orden_anterior"],$get["orden"],$get["tabla"],$get["campo"],$_SESSION["id_empresa"]);
 
 //}
     $PRINCIPAL = FuncionListadoMantenedores(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/audiencias_programas/index.html")), $id_empresa, $arreglo_post);
@@ -19739,8 +19737,8 @@ else if ($seccion == "creacAudie") {
     $id_ultimo = AUDIENCIA_TraeUltimo($id_empresa);
     $id_audiencia = $id_ultimo[0]->ultimo_id;
     foreach ($campos as $camp) {
-        if ($_POST[$camp->campo]) {
-//echo $camp->campo." ".$_POST[$camp->campo]."<br>";
+        if ($post[$camp->campo]) {
+//echo $camp->campo." ".$post[$camp->campo]."<br>";
             //Lo guardo en la tabla de
             AUDIENCIA_InsertaCamposinAudiencia($id_empresa, $camp->campo, $id_audiencia);
         }
@@ -19759,10 +19757,10 @@ else if ($seccion == "audiencias_creacion") {
 }
 else if ($seccion == "GuardaCampoPorCampo") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_audiencia = Decodear3($_GET["ia"]);
+    $id_audiencia = Decodear3($get["ia"]);
 
     $campos = AUDIENCIA_CamposPorAudiencia($id_empresa, $id_audiencia);
-    $arreglo_post = $_POST;
+    $arreglo_post = $post;
 
     foreach ($campos as $camp) {
 //$detalle_campos=AUDIENCIA_SelectDistinc($id_empresa, $camp->campo);
@@ -19772,8 +19770,8 @@ else if ($seccion == "GuardaCampoPorCampo") {
             $valor = ($det->valor);
             $valor_real = $det->valor;
             $valor = str_replace(" ", "_", $valor);
-            if ($_POST[$valor]) {
-//echo " $valor, $valor_real ".$_POST[$valor]."<br>";
+            if ($post[$valor]) {
+//echo " $valor, $valor_real ".$post[$valor]."<br>";
                 //aca inserto los valores
                 AUDIENCIA_InsertaCamposValores($id_audiencia, $id_empresa, $camp->campo, $valor_real);
             }
@@ -19850,18 +19848,18 @@ location.href='?sw=audiencias_creacion3&ia=" . Encodear3($id_audiencia) . "';
 }
 else if ($seccion == "audiencias_creacion2") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_audiencia = Decodear3($_GET["ia"]);
+    $id_audiencia = Decodear3($get["ia"]);
     $PRINCIPAL = ListarCamposPorAudienciaOEmpresa(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/audiencias/audiencias_creacion2.html")), $id_empresa, $id_audiencia);
     $PRINCIPAL = str_replace("{ID_EMPRESA}", $id_empresa, $PRINCIPAL);
     $PRINCIPAL = str_replace("{ID_AUDIENCIA_ENCODEADA}", Encodear3($id_audiencia), $PRINCIPAL);
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "finAudiencia") {
-    $id_audiencia = Decodear3($_GET["ia"]);
+    $id_audiencia = Decodear3($get["ia"]);
     $id_empresa = $_SESSION["id_empresa"];
 
-    $nombre = ($_POST["nombre"]);
-    $descripcion = ($_POST["descripcion"]);
+    $nombre = ($post["nombre"]);
+    $descripcion = ($post["descripcion"]);
 
     AUDIENCIA_ActualizaDatos($id_audiencia, $nombre, $descripcion);
 
@@ -19878,7 +19876,7 @@ location.href='?sw=audiencias_lista&ia=" . Encodear3($id_audiencia) . "';
 }
 else if ($seccion == "audiencias_creacion3") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_audiencia = Decodear3($_GET["ia"]);
+    $id_audiencia = Decodear3($get["ia"]);
 
     $PRINCIPAL = MuestraFormfinalAudiencia(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/audiencias/audiencias_creacion3.html")), $id_empresa, $id_audiencia);
     $PRINCIPAL = str_replace("{ID_EMPRESA}", $id_empresa, $PRINCIPAL);
@@ -19887,7 +19885,7 @@ else if ($seccion == "audiencias_creacion3") {
 }
 else if ($seccion == "duplicaAudiencia") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_audiencia = Decodear3($_GET["ia"]);
+    $id_audiencia = Decodear3($get["ia"]);
 //aca duplico la audiencia
     //Obtengo lso campos de la audiencia, y los inserto a la nueva audiencia
     $campos_por_audiencia = AUDIENCIA_CamposPorAudiencia($id_empresa, $id_audiencia);
@@ -19927,7 +19925,7 @@ else if ($seccion == "audiencias_lista") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "descargarTotalMasInscritosPorPrograma") {
-    $id_programa = $_GET["ip"];
+    $id_programa = $get["ip"];
     $id_empresa = $_SESSION["id_empresa"];
 
     $total_mallas_por_programa = TraeMallasDadoPrograma($id_empresa, $id_programa);
@@ -20051,7 +20049,7 @@ else if ($seccion == "descargarTotalMasInscritosPorPrograma") {
     exit;
 }
 else if ($seccion == "descargarInscritosPorPrograma") {
-    $id_programa = $_GET["ip"];
+    $id_programa = $get["ip"];
     $id_empresa = $_SESSION["id_empresa"];
 
     $total_mallas_por_programa = TraeMallasDadoPrograma($id_empresa, $id_programa);
@@ -20167,7 +20165,7 @@ else if ($seccion == "descargarInscritosPorPrograma") {
     exit;
 }
 else if ($seccion == "descargarInscritosPorProgramaI") {
-    $id_programa = $_GET["ip"];
+    $id_programa = $get["ip"];
     $id_empresa = $_SESSION["id_empresa"];
 
     $total_mallas_por_programa = TraeMallasDadoPrograma($id_empresa, $id_programa);
@@ -20289,7 +20287,7 @@ else if ($seccion == "descargarInscritosPorProgramaI") {
     exit;
 }
 else if ($seccion == "Download_Respuestas_EvalMedicion") {
-    $idMed = $_GET["idMed"];
+    $idMed = $get["idMed"];
     $DatosMed = DatosMedicionAdmin($idMed);
     $nombre_medicion = $DatosMed[0]->nombre;
     $tipo_individual = $DatosMed[0]->tipo_medicion;
@@ -20476,7 +20474,7 @@ else if ($seccion == "Download_Respuestas_EvalMedicion") {
     exit;
 }
 else if ($seccion == "descargarInscritosPorMedicion") {
-    $id_medicion = $_GET["id"];
+    $id_medicion = $get["id"];
     $id_empresa = $_SESSION["id_empresa"];
 
     $total_usuarios_por_medicion = totalUsuariosPorMedicion($id_empresa, $id_medicion);
@@ -20679,8 +20677,8 @@ else if ($seccion == "descargarTotUsuariosPorEmpresa") {
     exit;
 }
 else if ($seccion == "descargarInscritosPorSesion") {
-    $codigo_inscripcion = Decodear3($_GET["ci"]);
-    $id_sesion = Decodear3($_GET["i"]);
+    $codigo_inscripcion = Decodear3($get["ci"]);
+    $id_sesion = Decodear3($get["i"]);
 //echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
     $id_empresa = $_SESSION["id_empresa"];
 
@@ -20806,8 +20804,8 @@ else if ($seccion == "descargarInscritosPorSesion") {
 else if ($seccion == "GeneraExcelUsuarioPorInscripcionCurso") {
     require_once 'clases/PHPExcel.php';
 
-    $id_imparticion = Decodear3($_GET['im']);
-    $id_empresa = Decodear3($_GET['iem']);
+    $id_imparticion = Decodear3($get['im']);
+    $id_empresa = Decodear3($get['iem']);
     $datos_empresa = DatosEmpresa($id_empresa);
 // Crea un nuevo objeto PHPExcel
     $objPHPExcel = new PHPExcel();
@@ -20918,8 +20916,8 @@ else if ($seccion == "GeneraExcelUsuarioPorInscripcionCurso") {
 else if ($seccion == "GeneraExcelPostulantesPorInscripcionCurso") {
     require_once 'clases/PHPExcel.php';
 
-    $id_imparticion = Decodear3($_GET['im']);
-    $id_empresa = Decodear3($_GET['iem']);
+    $id_imparticion = Decodear3($get['im']);
+    $id_empresa = Decodear3($get['iem']);
     $datos_empresa = DatosEmpresa($id_empresa);
 // Crea un nuevo objeto PHPExcel
     $objPHPExcel = new PHPExcel();
@@ -21030,7 +21028,7 @@ else if ($seccion == "GeneraExcelPostulantesPorInscripcionCurso") {
 }
 else if ($seccion == "excAudie") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_audiencia = Decodear3($_GET["ia"]);
+    $id_audiencia = Decodear3($get["ia"]);
     $fechahoy = date("Y-m-d") . " " . date("H:i:s");
     header("Content-Type: application/vnd.ms-excel");
     header("Content-Disposition: attachment; filename=" . $fechahoy . ".xls");
@@ -21135,8 +21133,8 @@ foreach ($datos_finales as $usu) {
 }
 }
 else if ($seccion == "SaveMantenedorCampos") {
-    $tipo = $_POST["tipo"];
-    $tipo_objeto = $_POST["tipo_objeto"];
+    $tipo = $post["tipo"];
+    $tipo_objeto = $post["tipo_objeto"];
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los datos de este tipo
     $datos_tipo = MANTENEDOR_TraeTipoEmpresa($tipo, $id_empresa);
@@ -21163,11 +21161,11 @@ else if ($seccion == "SaveMantenedorCampos") {
 
             $valores .= "'" . ($nombre_archivo) . "', ";
         } else {
-            $valores .= "'" . ($_POST[$camp->campo]) . "', ";
+            $valores .= "'" . ($post[$camp->campo]) . "', ";
         }
     }
     if ($tipo_objeto) {
-        $id_curso = $_POST["id_curso"];
+        $id_curso = $post["id_curso"];
 //cuento el total de objetos por este curso, y por la empresa
         $total_objetos = TotalObjetosEvaluacionesDadoCursoYEmpresa($id_curso, $id_empresa);
         if ($tipo_objeto == 7 and $tipo == "objeto") {
@@ -21197,12 +21195,12 @@ else if ($seccion == "SaveMantenedorCampos") {
                 $nombre_archivo = $datos_subida_archivo[1];
             }
 
-            $duracion_video = $_POST["duracion_video"];
+            $duracion_video = $post["duracion_video"];
             $campos_tabla .= "tipo_objeto, extension_objeto, id, archivo, url, url_objeto, orden, duracion_video, ";
             $valores .= "'3', '7', '" . $id_curso . "_" . (count($total_objetos) + 1) . "', '$rutaarchivo_para_guardar/$nombre_archivo', '$rutaarchivo_para_guardar/$nombre_archivo', '$rutaarchivo_para_guardar/$nombre_archivo', '" . (count($total_objetos) + 1) . "', '$duracion_video', ";
         }
         if ($tipo_objeto == "trivia" and $tipo == "objeto") {
-            $id_evaluacion = $_POST["id_evaluacion"];
+            $id_evaluacion = $post["id_evaluacion"];
             $campos_tabla .= "tipo_objeto, id_evaluacion, id, orden, ";
             $valores .= "'5', '$id_evaluacion', '" . $id_curso . "_" . (count($total_objetos) + 1) . "', '" . (count($total_objetos) + 1) . "', ";
         }
@@ -21246,18 +21244,18 @@ location.href='?sw=ListadoMantenedor&tipo=" . $tipo . "';
 }
 else if ($seccion == "accionCrea") {
     $id_empresa = $_SESSION["id_empresa"];
-    $arreglo_post = $_POST;
-//if ($_GET["orden"]!=""){
-    //ordena_campo($_GET["orden_anterior"],$_GET["orden"],$_GET["tabla"],$_GET["campo"],$_SESSION["id_empresa"]);
+    $arreglo_post = $post;
+//if ($get["orden"]!=""){
+    //ordena_campo($get["orden_anterior"],$get["orden"],$get["tabla"],$get["campo"],$_SESSION["id_empresa"]);
 
 //}
 
     $PRINCIPAL = FuncionMantenedores(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/mantenedor/index.html")), $id_empresa, $arreglo_post);
     $PRINCIPAL = str_replace("{ID_EMPRESA}", $id_empresa, $PRINCIPAL);
-    $PRINCIPAL = str_replace("{VALUE_TIPO_OBJETO}", $_POST["tipo_objeto"], $PRINCIPAL);
-    if ($_POST["tipo_objeto"] && $_POST["tipo"] == "objeto") {
+    $PRINCIPAL = str_replace("{VALUE_TIPO_OBJETO}", $post["tipo_objeto"], $PRINCIPAL);
+    if ($post["tipo_objeto"] && $post["tipo"] == "objeto") {
         $PRINCIPAL = str_replace("{DISPLAY_TIPO_OBJETO}", "", $PRINCIPAL);
-        $PRINCIPAL = str_replace("{SELECTED" . $_POST["tipo_objeto"] . "}", "selected", $PRINCIPAL);
+        $PRINCIPAL = str_replace("{SELECTED" . $post["tipo_objeto"] . "}", "selected", $PRINCIPAL);
     } else {
         $PRINCIPAL = str_replace("{DISPLAY_TIPO_OBJETO}", 'style="display: none"', $PRINCIPAL);
     }
@@ -21265,20 +21263,20 @@ else if ($seccion == "accionCrea") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "LMS_DesactivaCurso") {
-    $id_curso = $_POST[id_curso];
-    $id_malla = $_POST[id_malla];
-    $id_clasificacion = $_POST[id_clasificacion];
-    $id_empresa = $_POST[id_empresa];
+    $id_curso = $post[id_curso];
+    $id_malla = $post[id_malla];
+    $id_clasificacion = $post[id_clasificacion];
+    $id_empresa = $post[id_empresa];
 
     LMS_DesactivaActivaCurso_relMalla($id_curso, $id_clasificacion, $id_malla, $id_empresa, "1");
 
     echo '<a   class="btn btn-danger btn-xs" onclick="LmsActivaCurso_' . $id_curso . '_' . $id_malla . '_' . $id_clasificacion . '();">Activar</a>';
 }
 else if ($seccion == "LMS_ActivaCurso") {
-    $id_curso = $_POST[id_curso];
-    $id_malla = $_POST[id_malla];
-    $id_clasificacion = $_POST[id_clasificacion];
-    $id_empresa = $_POST[id_empresa];
+    $id_curso = $post[id_curso];
+    $id_malla = $post[id_malla];
+    $id_clasificacion = $post[id_clasificacion];
+    $id_empresa = $post[id_empresa];
 
     LMS_DesactivaActivaCurso_relMalla($id_curso, $id_clasificacion, $id_malla, $id_empresa, "0");
     echo '<a class="btn btn-info btn-xs"     onclick="LmsDesactivaCurso_' . $id_curso . '_' . $id_malla . '_' . $id_clasificacion . '();">Desactivar</a>';
@@ -21295,12 +21293,12 @@ else if ($seccion == "ListadoClasificacionesComboBox") {
     echo ($html_select);
 }
 else if ($seccion == "ResetarEvaluacionObjeto") {
-//print_r($_POST);
+//print_r($post);
 
 //Array ( [id_objeto] => rf_c0_m2 [rut] => lafuerza1 )
 
-    $id_objeto = $_POST[id_objeto];
-    $rut = $_POST[rut];
+    $id_objeto = $post[id_objeto];
+    $rut = $post[rut];
 
 //echo "$id_objeto $rut";
     LmsReseteoEvaluacion($id_objeto, $rut);
@@ -21308,10 +21306,10 @@ else if ($seccion == "ResetarEvaluacionObjeto") {
 //exit();
 }
 else if ($seccion == "addRelMCC") {
-    $id_curso = $_POST["idc"];
-    $id_malla = $_POST["idm"];
-    $id_clasificacion = $_POST["idcl"];
-    $id_empresa = $_POST["id_empresa"];
+    $id_curso = $post["idc"];
+    $id_malla = $post["idm"];
+    $id_clasificacion = $post["idcl"];
+    $id_empresa = $post["id_empresa"];
     InsertaRelacionMallaClasificacionCursoAdmin($id_malla, $id_curso, $id_clasificacion, $id_empresa,'','');
 
     echo "
@@ -21321,8 +21319,8 @@ location.href='?sw=vista_mallas_clasificaciones_cursos_objetos';
 }
 else if ($seccion == "ListadoCursosComboBox") {
 //con el id de la clasificacion y el id de empresa, traigo los cursos y los muestro en comboboxc
-    $id_malla = $_POST["id_malla"];
-    $id_clasificacion = $_POST["id_clasificacion"];
+    $id_malla = $post["id_malla"];
+    $id_clasificacion = $post["id_clasificacion"];
     $id_empresa = $_SESSION["id_empresa"];
 //$cursos=CursosPorEmpresaV2($id_empresa);
     $cursos = CursosPorEmpresaV2SoloElearning($id_empresa);
@@ -21344,7 +21342,7 @@ else if ($seccion == "ListadoCursosComboBox") {
     echo ($html_select);
 }
 else if ($seccion == "accioncmalla") {
-    $id_malla = Decodear($_GET["i"]);
+    $id_malla = Decodear($get["i"]);
 
     if ($id_malla) {
         $PRINCIPAL = FormulariocMalla(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/malla/formulario_malla.html")), $id_malla);
@@ -21355,12 +21353,12 @@ else if ($seccion == "accioncmalla") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "adcmalllabk") {
-    $nombre_malla = (trim($_POST["nombre_malla"]));
-    $descripcion_malla = (trim($_POST["descripcion_malla"]));
-    $tipo_malla = trim($_POST["tipo_malla"]);
-    $certificable = trim($_POST["certificable"]);
-    $ponderacion = trim($_POST["ponderacion"]);
-    $tipo_fecha = trim($_POST["tipo_fecha"]);
+    $nombre_malla = (trim($post["nombre_malla"]));
+    $descripcion_malla = (trim($post["descripcion_malla"]));
+    $tipo_malla = trim($post["tipo_malla"]);
+    $certificable = trim($post["certificable"]);
+    $ponderacion = trim($post["ponderacion"]);
+    $tipo_fecha = trim($post["tipo_fecha"]);
 //Agrego la malla a la tabla tbl_malla
     InsertaMalla(($nombre_malla), ($descripcion_malla), $tipo_malla, $certificable, $ponderacion, $tipo_fecha);
     echo "
@@ -21370,8 +21368,8 @@ location.href='?sw=listcmallas';
 </script>";
 }
 else if ($seccion == "FinalizaObjetoDesdeAdmin") {
-    $rut = $_POST["rut"];
-    $id_objeto = $_POST["id_objeto"];
+    $rut = $post["rut"];
+    $id_objeto = $post["id_objeto"];
     $id_empresa = $_SESSION["id_empresa"];
     FinalizaObjetoFullDatos($rut, $id_objeto, $id_empresa);
     $objeto_finalizado = ObjetoFinalizadoDadoIdYRut($rut, $id_objeto);
@@ -21381,13 +21379,13 @@ else if ($seccion == "FinalizaObjetoDesdeAdmin") {
     echo $resultado;
 }
 else if ($seccion == "adcmallla") {
-    $nombre_malla = (trim($_POST["nombre_malla"]));
-    $descripcion_malla = (trim($_POST["descripcion_malla"]));
-    $tipo_malla = trim($_POST["tipo_malla"]);
-    $codigo_malla = ($_POST["codigo_malla"]);
-    $certificable = trim($_POST["certificable"]);
-    $ponderacion = trim($_POST["ponderacion"]);
-    $tipo_fecha = trim($_POST["tipo_fecha"]);
+    $nombre_malla = (trim($post["nombre_malla"]));
+    $descripcion_malla = (trim($post["descripcion_malla"]));
+    $tipo_malla = trim($post["tipo_malla"]);
+    $codigo_malla = ($post["codigo_malla"]);
+    $certificable = trim($post["certificable"]);
+    $ponderacion = trim($post["ponderacion"]);
+    $tipo_fecha = trim($post["tipo_fecha"]);
 //Agrego la malla a la tabla tbl_malla
     InsertaMalla2($codigo_malla, $nombre_malla, $descripcion_malla, $tipo_malla, $certificable, $ponderacion, $tipo_fecha, $_SESSION["id_empresa"]);
     echo "
@@ -21397,15 +21395,15 @@ location.href='?sw=listcmallas';
 </script>";
 }
 else if ($seccion == "edcmallla") {
-    print_r($_POST);
-    $nombre_malla = ($_POST["nombre_malla"]);
-    $descripcion_malla = ($_POST["descripcion_malla"]);
-    $tipo_malla = ($_POST["tipo_malla"]);
-    $codigo_malla = ($_POST["codigo_malla"]);
-    $certificable = ($_POST["certificable"]);
-    $ponderacion = ($_POST["ponderacion"]);
-    $tipo_fecha = ($_POST["tipo_fecha"]);
-    $id_malla = Decodear(Decodear($_POST["id"]));
+    print_r($post);
+    $nombre_malla = ($post["nombre_malla"]);
+    $descripcion_malla = ($post["descripcion_malla"]);
+    $tipo_malla = ($post["tipo_malla"]);
+    $codigo_malla = ($post["codigo_malla"]);
+    $certificable = ($post["certificable"]);
+    $ponderacion = ($post["ponderacion"]);
+    $tipo_fecha = ($post["tipo_fecha"]);
+    $id_malla = Decodear(Decodear($post["id"]));
 //Edita Malla
     ActualizaMalla2($codigo_malla, $nombre_malla, $descripcion_malla, $tipo_malla, $certificable, $ponderacion, $tipo_fecha, $id_malla, $_SESSION["id_empresa"]);
     echo "
@@ -21416,7 +21414,7 @@ location.href='?sw=listcmallas';
 }
 else if ($seccion == "relMallaCurso") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_curso = Decodear($_GET["i"]);
+    $id_curso = Decodear($get["i"]);
 
     if ($id_curso) {
     } else {
@@ -21433,19 +21431,19 @@ else if ($seccion == "relMallaCurso") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "relmallacurso_") {
-    $id_malla = Decodear($_GET["i"]);
+    $id_malla = Decodear($get["i"]);
 
 //$PRINCIPAL=ListadoRelacionesNivelCurso(FuncionesTransversalesAdmin(file_get_contents("views/nivel/formulario_rel_nivel_curso.html")), $id_nivel);
     $PRINCIPAL = ListadoRelacionesMallaCurso(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/malla/formulario_rel_malla_curso.html")), $id_malla, $_SESSION["id_empresa"]);
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "adrelmc") {
-    $id_malla = Decodear3($_POST["i"]);
-    if ($_POST["cursos"]) {
-        for ($i = 0; $i < count($_POST["cursos"]); $i++) {
+    $id_malla = Decodear3($post["i"]);
+    if ($post["cursos"]) {
+        for ($i = 0; $i < count($post["cursos"]); $i++) {
 //Inserto un registro en la tabla rel nivel curso
-            InsertaRelacionMallaCurso($id_malla, $_POST["cursos"][$i]);
-            InsertaInscripcionMallaCurso($id_malla, $_POST["cursos"][$i]);
+            InsertaRelacionMallaCurso($id_malla, $post["cursos"][$i]);
+            InsertaInscripcionMallaCurso($id_malla, $post["cursos"][$i]);
         }
 
         echo "
@@ -21457,17 +21455,17 @@ location.href='?sw=relmallacurso&i=" . Encodear($id_malla) . "';
     }
 }
 else if ($seccion == "listmallaclasificacion") {
-    if ($_GET["orden"] != "") {
-        if ($_GET["campo"] == "orden_curso") {
-            ordena_campo_curso($_GET["orden_anterior"], $_GET["orden"], $_GET["tabla"], $_GET["campo"], $_SESSION["id_empresa"], $_GET["id_malla"], $_GET["id_clasificacion"]);
+    if ($get["orden"] != "") {
+        if ($get["campo"] == "orden_curso") {
+            ordena_campo_curso($get["orden_anterior"], $get["orden"], $get["tabla"], $get["campo"], $_SESSION["id_empresa"], $get["id_malla"], $get["id_clasificacion"]);
         } else {
-            ordena_campo_clasificacion($_GET["orden_anterior"], $_GET["orden"], $_GET["tabla"], $_GET["campo"], $_SESSION["id_empresa"], $_GET["id_malla"], $_GET["id_clasificacion"]);
+            ordena_campo_clasificacion($get["orden_anterior"], $get["orden"], $get["tabla"], $get["campo"], $_SESSION["id_empresa"], $get["id_malla"], $get["id_clasificacion"]);
         }
     }
 
-    $PRINCIPAL = ListadoMallaClasificacion(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/malla/entorno_listado_malla_clasificacion.html")), $_GET["m"], $_SESSION["id_empresa"]);
+    $PRINCIPAL = ListadoMallaClasificacion(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/malla/entorno_listado_malla_clasificacion.html")), $get["m"], $_SESSION["id_empresa"]);
 
-    if ($_GET["vc"] == "1") {
+    if ($get["vc"] == "1") {
         $PRINCIPAL = str_replace("{BTNCURSO1}", "display:none;", $PRINCIPAL);
         $PRINCIPAL = str_replace("{BTNCURSO2}", "", $PRINCIPAL);
         $PRINCIPAL = str_replace("{TCURSOS}", "", $PRINCIPAL);
@@ -21485,7 +21483,7 @@ else if ($seccion == "listclasificacion") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "accionclasificacion") {
-    $id_categoria = $_GET["i"];
+    $id_categoria = $get["i"];
 
     if ($id_categoria) {
         $PRINCIPAL = FormularioClasificacion(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/clasificacion/formulario_clasificacion.html")), $id_categoria);
@@ -21496,10 +21494,10 @@ else if ($seccion == "accionclasificacion") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "adclasificacion") {
-    $id_clasificacion = (trim($_POST["id_clasificacion"]));
-    $clasificacion = (trim($_POST["clasificacion"]));
-    $color = trim($_POST["color"]);
-    $color2 = trim($_POST["color2"]);
+    $id_clasificacion = (trim($post["id_clasificacion"]));
+    $clasificacion = (trim($post["clasificacion"]));
+    $color = trim($post["color"]);
+    $color2 = trim($post["color2"]);
     $imagen = $_FILES["imagen"]['name'];
     VerificaExtensionFilesAdmin($_FILES["imagen"]);
     $imagen_back = $_FILES["imagen_back"]['name'];
@@ -21515,13 +21513,13 @@ location.href='?sw=listclasificacion';
 </script>";
 }
 else if ($seccion == "edclasificacion") {
-    $id = (trim($_POST["id"]));
-    $id_clasificacion = (trim($_POST["id_clasificacion"]));
-    $clasificacion = (trim($_POST["clasificacion"]));
-    $color = trim($_POST["color"]);
-    $color2 = trim($_POST["color2"]);
-    $imagen = trim($_POST["imagen"]);
-    $imagen_back = trim($_POST["imagen_back"]);
+    $id = (trim($post["id"]));
+    $id_clasificacion = (trim($post["id_clasificacion"]));
+    $clasificacion = (trim($post["clasificacion"]));
+    $color = trim($post["color"]);
+    $color2 = trim($post["color2"]);
+    $imagen = trim($post["imagen"]);
+    $imagen_back = trim($post["imagen_back"]);
     $imagen = $_FILES["imagen"]['name'];
     VerificaExtensionFilesAdmin($_FILES["imagen"]);
     $imagen_back = $_FILES["imagen_back"]['name'];
@@ -21540,7 +21538,7 @@ location.href='?sw=listclasificacion';
 </script>";
 }
 else if ($seccion == "accioncursoT") {
-    $id_curso = Decodear($_GET["i"]);
+    $id_curso = Decodear($get["i"]);
     if ($id_curso) {
         $PRINCIPAL = FormularioCursoT(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/cursoT/formulario_edita.html")), $id_curso, $_SESSION["id_empresa"]);
     } else {
@@ -21549,8 +21547,8 @@ else if ($seccion == "accioncursoT") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "accioncurso2Elearning") {
-    $id_curso = Decodear($_GET["i"]);
-//$id_curso2=Decodear3($_GET["i"]);
+    $id_curso = Decodear($get["i"]);
+//$id_curso2=Decodear3($get["i"]);
     //
 
     if ($id_curso) {
@@ -21564,10 +21562,10 @@ else if ($seccion == "accioncurso2Elearning") {
 else if ($seccion == "subeRelMallaPersonaPorMalla") {
     //print_r($_FILES);     //echo "aca<br>";
 
-    if ($_POST["multi"] == "on") {$multimalla = "si";} else {$multimalla = "no";}
+    if ($post["multi"] == "on") {$multimalla = "si";} else {$multimalla = "no";}
 
 
-    $id_programa = $_POST["ip"];
+    $id_programa = $post["ip"];
     $archivo = $_FILES['excel']['name'];VerificaExtensionFilesAdmin($_FILES["excel"]);
     $tipo = $_FILES['excel']['type'];
     $id_empresa = $_SESSION["id_empresa"];
@@ -21675,7 +21673,7 @@ else if ($seccion == "subeRelMallaPersonaPorMalla") {
     exit;
 }
 else if ($seccion == "subeUsuariosporMedicion") {
-    $id_medicion = $_POST["id"];
+    $id_medicion = $post["id"];
     $archivo = $_FILES['excel']['name'];VerificaExtensionFilesAdmin($_FILES["excel"]);
     $tipo = $_FILES['excel']['type'];
     $id_empresa = $_SESSION["id_empresa"];
@@ -21771,7 +21769,7 @@ location.href='?sw=lista_Mediciones_med';
     exit;
 }
 else if ($seccion == "accionSubeNotasPorImparticion") {
-    $id_imparticion = Decodear3($_POST["ci"]);
+    $id_imparticion = Decodear3($post["ci"]);
 
     $archivo = $_FILES['excel']['name'];VerificaExtensionFilesAdmin($_FILES["excel"]);
     $tipo = $_FILES['excel']['type'];
@@ -22007,7 +22005,7 @@ location.href='?sw=listusu';
 </script>";
 }
 else if ($seccion == "DescargaMallaImparticion") {
-    $id_imparticion = Decodear3($_GET["ci"]);
+    $id_imparticion = Decodear3($get["ci"]);
     $id_empresa = $_SESSION["id_empresa"];
     $datos_empresa = DatosEmpresa($id_empresa);
 //Traigo el listado de usuarios de la tabla inscripcion_usuarios
@@ -22049,8 +22047,8 @@ foreach ($total_usuarios as $usu) {
 <?php
 }
 else if ($seccion == "descargaPreInscritos") {
-    $id_imparticion = Decodear3($_GET["ci"]);
-    $id_curso = Decodear($_GET["idc"]);
+    $id_imparticion = Decodear3($get["ci"]);
+    $id_curso = Decodear($get["idc"]);
     $nombreCurso = BuscaCursoDadoImp($id_imparticion);
 //print_r($nombreCurso);exit;
 
@@ -22160,10 +22158,10 @@ else if ($seccion == "descargaPreInscritos") {
 <?php
 }
 else if ($seccion == "DescargaPresencialImparticion") {
-    $id_imparticion = Decodear3($_GET["ci"]);
-    $id_curso = Decodear($_GET["idc"]);
+    $id_imparticion = Decodear3($get["ci"]);
+    $id_curso = Decodear($get["idc"]);
     $nombreCurso = BuscaCursoDadoImp($id_imparticion);
-    $asistentes = ($_GET["asistentes"]);
+    $asistentes = ($get["asistentes"]);
     $id_empresa = $_SESSION["id_empresa"];
     $datos_empresa = DatosEmpresa($id_empresa);
 //Traigo el listado de usuarios de la tabla inscripcion_usuarios
@@ -22202,12 +22200,12 @@ foreach ($total_usuarios as $usu) {
 else if ($seccion == "adimpartiEl") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    $id_malla = $_POST["idmalla"];
-    $codigo_imparticion = ($_POST["cod_imparticion"]);
+    $id_malla = $post["idmalla"];
+    $codigo_imparticion = ($post["cod_imparticion"]);
 
     $datos_curso = VerificoCursoPorEmpresa($id_curso, $id_empresa);
 
-    $id_audiencia = $_POST["id_audiencia"];
+    $id_audiencia = $post["id_audiencia"];
 
     IMPARTICION_CreaImparticion($id_empresa, $codigo_imparticion, $id_curso, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_audiencia, $tipo_audiencia, $datos_post,'','','');
 
@@ -22251,10 +22249,10 @@ else if ($seccion == "cargabase") {
 else if ($seccion == "listcursos2Presenciales") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    $exportar_a_excel = $_POST["ex"];
-    $pagina = $_GET["p"];
+    $exportar_a_excel = $post["ex"];
+    $pagina = $get["p"];
     if ($exportar_a_excel == "1") {
-        $arreglo_post = $_POST;
+        $arreglo_post = $post;
         $fechahoy = date("Y-m-d") . " " . date("H:i:s");
         header("Content-Type: application/vnd.ms-excel");
         header("Content-Disposition: attachment; filename=" . $fechahoy . ".xls");
@@ -22264,14 +22262,14 @@ else if ($seccion == "listcursos2Presenciales") {
         $PRINCIPAL = ListadoCursosAdmin2(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/entorno_listado_excel.html")), $id_empresa);
         echo ($PRINCIPAL);
     } else {
-        $arreglo_post = $_POST;
+        $arreglo_post = $post;
         $PRINCIPAL = ListadoCursosAdmin2(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/entorno_listado.html")), $id_empresa);
         echo CleanHTMLWhiteList($PRINCIPAL);exit;
     }
 }
 else if ($seccion == "Duplicarcurso") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_curso = Decodear($_GET["i"]);
+    $id_curso = Decodear($get["i"]);
 
     $total_cursos = Audiencias_totalcursosPorEmpresa($id_empresa);
 //traigo los datos dado el id del curso
@@ -22317,7 +22315,7 @@ else if ($seccion == "Duplicarcurso") {
 }
 else if ($seccion == "Duplicarcurso") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_curso = Decodear($_GET["i"]);
+    $id_curso = Decodear($get["i"]);
 
     $total_cursos = Audiencias_totalcursosPorEmpresa($id_empresa);
 //traigo los datos dado el id del curso
@@ -22363,7 +22361,7 @@ else if ($seccion == "Duplicarcurso") {
 }
 else if ($seccion == "DuplicarcursoT") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_curso = Decodear($_GET["i"]);
+    $id_curso = Decodear($get["i"]);
 
     $total_cursos = Audiencias_totalcursosPorEmpresa($id_empresa);
 //traigo los datos dado el id del curso
@@ -22410,12 +22408,12 @@ else if ($seccion == "DuplicarcursoT") {
 else if ($seccion == "listcursosT") {
     //echo "hola";
     $id_empresa = $_SESSION["id_empresa"];
-    $exportar_a_excel = $_POST["ex"];
-    $pagina = $_GET["p"];
-    $excel = $_GET["excel"];
+    $exportar_a_excel = $post["ex"];
+    $pagina = $get["p"];
+    $excel = $get["excel"];
     //echo $excel; exit();
     if ($exportar_a_excel == "1" or $excel == "1") {
-        $arreglo_post = $_POST;
+        $arreglo_post = $post;
         $fechahoy = date("Y-m-d") . " " . date("H:i:s");
         header("Content-Type: application/vnd.ms-excel");
         header("Content-Disposition: attachment; filename=Cursos_T_" . $fechahoy . ".xls");
@@ -22425,7 +22423,7 @@ else if ($seccion == "listcursosT") {
         echo ($PRINCIPAL);
         exit;
     } else {
-        $arreglo_post = $_POST;
+        $arreglo_post = $post;
         $PRINCIPAL = ListadoCursosAdmin2T(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/cursoT/entorno_listado_cursos.html")), $id_empresa);
         echo CleanHTMLWhiteList($PRINCIPAL);exit;
     }
@@ -22433,13 +22431,13 @@ else if ($seccion == "listcursosT") {
 else if ($seccion == "listcursos2elearning") {
 //echo "hola";
     $id_empresa = $_SESSION["id_empresa"];
-    $exportar_a_excel = $_POST["ex"];
-    $pagina = $_GET["p"];
-    $excel = $_GET["excel"];
+    $exportar_a_excel = $post["ex"];
+    $pagina = $get["p"];
+    $excel = $get["excel"];
 
 //echo $excel; exit();
     if ($exportar_a_excel == "1" or $excel == "1") {
-        $arreglo_post = $_POST;
+        $arreglo_post = $post;
         $fechahoy = date("Y-m-d") . " " . date("H:i:s");
         header("Content-Type: application/vnd.ms-excel");
         header("Content-Disposition: attachment; filename=Cursos_" . $fechahoy . ".xls");
@@ -22450,16 +22448,16 @@ else if ($seccion == "listcursos2elearning") {
         echo ($PRINCIPAL);
         exit;
     } else {
-        $arreglo_post = $_POST;
+        $arreglo_post = $post;
         $PRINCIPAL = ListadoCursosAdmin2Elearning(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/cursoelearning/entorno_listado_cursos.html")), $id_empresa);
         echo CleanHTMLWhiteList($PRINCIPAL);exit;
     }
 }
 else if ($seccion == "LmsexportarImparticionesXLS") {
     $id_empresa = $_SESSION["id_empresa"];
-    $exportar_a_excel = $_POST["ex"];
-    $pagina = $_GET["p"];
-    $arreglo_post = $_POST;
+    $exportar_a_excel = $post["ex"];
+    $pagina = $get["p"];
+    $arreglo_post = $post;
     $fechahoy = date("Y-m-d") . " " . date("H:i:s");
     header("Content-Type: application/vnd.ms-excel");
     header("Content-Disposition: attachment; filename=Lista_Imparticiones_" . $fechahoy . ".xls");
@@ -22470,9 +22468,9 @@ else if ($seccion == "LmsexportarImparticionesXLS") {
 }
 else if ($seccion == "LmsexportarCursosXLS") {
     $id_empresa = $_SESSION["id_empresa"];
-    $exportar_a_excel = $_POST["ex"];
-    $pagina = $_GET["p"];
-    $arreglo_post = $_POST;
+    $exportar_a_excel = $post["ex"];
+    $pagina = $get["p"];
+    $arreglo_post = $post;
     $fechahoy = date("Y-m-d") . " " . date("H:i:s");
     header("Content-Type: application/vnd.ms-excel");
     header("Content-Disposition: attachment; filename=Cursos_" . $fechahoy . ".xls");
@@ -22483,14 +22481,14 @@ else if ($seccion == "LmsexportarCursosXLS") {
 }
 else if ($seccion == "MuestraBloqueDetalleCurso") {
 //echo date("H:i:s");
-    $id_curso = $_POST["id_curso"];
+    $id_curso = $post["id_curso"];
     $id_empresa = $_SESSION["id_empresa"];
 //echo "aca";
     $PRINCIPAL = ListadoCursosAdmin2(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/cursospresenciales/entorno_listado_imparticion.html")), $id_empresa, "", $id_curso);
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "MuestraBloqueMallaSeleccionado") {
-    $id_malla = $_POST["id_malla"];
+    $id_malla = $post["id_malla"];
     $id_empresa = $_SESSION["id_empresa"];
 
     $formulario = file_get_contents("views/capacitacion/imparticion/formulario_ingresa_elearning.html");
@@ -22503,7 +22501,7 @@ else if ($seccion == "MuestraBloqueMallaSeleccionado") {
     echo $formulario;
 }
 else if ($seccion == "MuestraBloqueCursoSeleccionado") {
-    $id_curso = $_POST["id_curso"];
+    $id_curso = $post["id_curso"];
     $id_empresa = $_SESSION["id_empresa"];
     $datos_curso = VerificoCursoPorEmpresa($id_curso, $id_empresa);
     echo $datos_curso[0]->modalidad;
@@ -22525,10 +22523,10 @@ else if ($seccion == "MuestraBloqueCursoSeleccionado") {
     echo $formulario;
 }
 else if ($seccion == "demo_post") {
-    print_r($_POST);
+    print_r($post);
 }
 else if ($seccion == "MuestraBloqueCursoSeleccionadot") {
-    $id_curso = $_POST["id_curso"];
+    $id_curso = $post["id_curso"];
     $id_empresa = $_SESSION["id_empresa"];
     $datos_curso = VerificoCursoPorEmpresa($id_curso, $id_empresa);
     echo $datos_curso[0]->modalidad;
@@ -22549,25 +22547,25 @@ else if ($seccion == "MuestraBloqueCursoSeleccionadot") {
     echo $formulario;
 }
 else if ($seccion == "demo_post") {
-    print_r($_POST);
+    print_r($post);
 }
 else if ($seccion == "MuestraBloqueAudienciaSeleccionada") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_audiencia = $_POST["id_audiencia"];
+    $id_audiencia = $post["id_audiencia"];
     $PRINCIPAL = ListadoAudiencias(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_listado_formulario_imparticion.html")), $id_empresa, $id_audiencia);
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "listmallaclasificacioncursos") {
-    $PRINCIPAL = ListadoMallaClasificacionCurso(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/malla/entorno_listado_malla_clasificacion_curso.html")), $_GET["m"]);
+    $PRINCIPAL = ListadoMallaClasificacionCurso(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/malla/entorno_listado_malla_clasificacion_curso.html")), $get["m"]);
 
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "addNuevaRelacionMasivo") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_proceso = $_GET["i"];
+    $id_proceso = $get["i"];
 
     CancelaProcesamientoPrevioRelaciones($_SESSION["id_empresa"]);
-    extract($_POST);
+    extract($post);
     $error_grave = "error";
 
     if ($action == "upload") {
@@ -22661,7 +22659,7 @@ $error_grave=InsertaRelacionTemporal($values,$registros,$id_empresa,Decodear3($i
         $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/sgd_relaciones/formulario_relaciones_masivo.html"));
 
         $PRINCIPAL = str_replace("{ID_EMPRESA}", $_SESSION["id_empresa"], $PRINCIPAL);
-        $PRINCIPAL = str_replace("{ID_PROCESO}", $_GET["i"], $PRINCIPAL);
+        $PRINCIPAL = str_replace("{ID_PROCESO}", $get["i"], $PRINCIPAL);
         $totalrelaciones = CuentaRelaciones($_SESSION["id_empresa"], Decodear3($id_proceso));
 
         $PRINCIPAL = str_replace("{TOTALU}", colocarPesos($totalrelaciones), $PRINCIPAL);
@@ -22718,7 +22716,7 @@ else if ($seccion == "addIncripcionesCierre") {
     $id_empresa = $_SESSION["id_empresa"];
 
     CancelaProcesamientoPrevioInscripcionCierre($_SESSION["id_empresa"]);
-    extract($_POST);
+    extract($post);
     $error_grave = "error";
 
     if ($action == "upload") {
@@ -22832,7 +22830,7 @@ else if ($seccion == "addIncripcionesCierre") {
 //$PRINCIPAL=FuncionesTransversalesAdmin(file_get_contents("views/sgd_relaciones/formulario_relaciones_masivo.html"));
         $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/inscripcion/cierre/formulario_inscripcion_cierre_masivo_previa.html"));
         $PRINCIPAL = str_replace("{ID_EMPRESA}", $_SESSION["id_empresa"], $PRINCIPAL);
-        $PRINCIPAL = str_replace("{ID_PROCESO}", $_GET["i"], $PRINCIPAL);
+        $PRINCIPAL = str_replace("{ID_PROCESO}", $get["i"], $PRINCIPAL);
         $totalrelaciones = CuentaRelaciones($_SESSION["id_empresa"], Decodear3($id_proceso));
 
         $PRINCIPAL = str_replace("{ID_EMPRESA}", $_SESSION["id_empresa"], $PRINCIPAL);
@@ -22886,7 +22884,7 @@ $PRINCIPAL = str_replace("{ENTORNO_PREVIA}","",$PRINCIPAL);
 }
 else if ($seccion == "aceprelaciones") {
     AceptaProcesamientoPrevioRelaciones($_SESSION["id_empresa"]);
-    $id_proceso = $_GET["i"];
+    $id_proceso = $get["i"];
     echo "
 <script>
 location.href='?sw=GestionRelacionesPorProceso&i=" . $id_proceso . "';
@@ -22898,7 +22896,7 @@ else if ($seccion == "licomentarios") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "sabanaRespuestasTrivias") {
-    $id_evaluacion = $_GET["idEval"];
+    $id_evaluacion = $get["idEval"];
 //echo "id evaluacion $id_evaluacion";
     //Traigo las respuestas de esta evaluacion
     $preguntas = ListadoDePreguntasDadaEvaluacionOrdenadas($id_evaluacion);
@@ -22940,13 +22938,13 @@ $respuestas = ListadoRespuestasTriviaVersion1($id_evaluacion);
 <?php
 }
 else if ($seccion == "viewEval") {
-    $idEval = $_GET["idEval"];
-    $programa = $_GET["programa"];
+    $idEval = $get["idEval"];
+    $programa = $get["programa"];
 
     if (!$idEval) {
         //Creo la evaluacion
-        $id_objeto = Decodear3($_GET["ido"]);
-        $id_curso = Decodear3($_GET["idc"]);
+        $id_objeto = Decodear3($get["ido"]);
+        $id_curso = Decodear3($get["idc"]);
         $id_empresa = $_SESSION["id_empresa"];
         InsertaEvaluacionDesdeAdmin("Trivia " . $id_objeto . " " . $id_curso, $id_empresa, $id_curso, $id_objeto);
     }
@@ -22959,13 +22957,13 @@ else if ($seccion == "viewEval") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "viewEvalMediciones") {
-    $idEval = $_GET["idEval"];
-    $programa = $_GET["programa"];
+    $idEval = $get["idEval"];
+    $programa = $get["programa"];
 
     if (!$idEval) {
         //Creo la evaluacion
-        $id_objeto = Decodear3($_GET["ido"]);
-        $id_curso = Decodear3($_GET["idc"]);
+        $id_objeto = Decodear3($get["ido"]);
+        $id_curso = Decodear3($get["idc"]);
         $id_empresa = $_SESSION["id_empresa"];
         InsertaEvaluacionDesdeAdmin("Trivia " . $id_objeto . " " . $id_curso, $id_empresa, $id_curso, $id_objeto);
     }
@@ -22975,8 +22973,8 @@ else if ($seccion == "viewEvalMediciones") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "viewEvalEncuestasLB") {
-    $idEval = $_GET["idEval"];
-    $programa = $_GET["programa"];
+    $idEval = $get["idEval"];
+    $programa = $get["programa"];
 
 
 
@@ -22985,9 +22983,9 @@ else if ($seccion == "viewEvalEncuestasLB") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "ActualizarNotasEval") {
-    $idEval = $_GET["idEval"];
-    $id_objeto = Decodear3($_GET["ido"]);
-    $id_curso = Decodear3($_GET["idc"]);
+    $idEval = $get["idEval"];
+    $id_objeto = Decodear3($get["ido"]);
+    $id_curso = Decodear3($get["idc"]);
     $datoscurso = Datos_curso($id_curso);
     $datosobjeto = Datos_objeto($id_objeto);
     $id_empresa = $_SESSION["id_empresa"];
@@ -22996,9 +22994,9 @@ else if ($seccion == "ActualizarNotasEval") {
     ActualizarnotasIdObjeto($id_objeto, $id_curso, $idEval, $id_empresa);
 }
 else if ($seccion == "Download_Respuestas_Eval") {
-    $idEval = $_GET["idEval"];
-    $id_objeto = Decodear3($_GET["ido"]);
-    $id_curso = Decodear3($_GET["idc"]);
+    $idEval = $get["idEval"];
+    $id_objeto = Decodear3($get["ido"]);
+    $id_curso = Decodear3($get["idc"]);
     $datoscurso = Datos_curso($id_curso);
     $datosobjeto = Datos_objeto($id_objeto);
 
@@ -23252,7 +23250,7 @@ else if ($seccion == "Download_Respuestas_Eval") {
     exit;
 }
 else if ($seccion == "Download_Respuestas_EvalMedicion_BK") {
-    $idMed = $_GET["idMed"];
+    $idMed = $get["idMed"];
     // echo "$idMed";
     $DatosMed = DatosMedicionAdmin($idMed);
     $nombre_medicion = $DatosMed[0]->nombre;
@@ -23420,7 +23418,7 @@ else if ($seccion == "Download_Respuestas_EvalMedicion_BK") {
     exit;
 }
 else if ($seccion == "dltPreg") {
-    $id_pregunta = $_GET["idPreg"];
+    $id_pregunta = $get["idPreg"];
     //echo "se borra id pregunta $id_pregunta";
     $datos_pregunta = EVALUACION_DatosPregunta($id_pregunta);
     //print_r($datos_pregunta);
@@ -23435,9 +23433,9 @@ else if ($seccion == "dltPreg") {
 }
 else if ($seccion == "clave_update_empresa_uno_a_uno") {
     $id_empresa = $_SESSION["id_empresa"];
-//print_r($_POST);sleep(3);
-    $rut = $_POST["rut"];
-    $clave = $_POST["clave"];
+//print_r($post);sleep(3);
+    $rut = $post["rut"];
+    $clave = $post["clave"];
 //echo "id_empresa $id_empresa";sleep(3);
 
     clave_update_empresa_uno_a_uno_data($rut, $clave, $id_empresa);
@@ -23445,8 +23443,8 @@ else if ($seccion == "clave_update_empresa_uno_a_uno") {
     echo "<script>        location.href='?sw=actualizacion_usuarios';        </script>";
 }
 else if ($seccion == "editPregMed") {
-    $idEval = $_GET["idEval"];
-    $idGrupoAlter = $_GET["idGrup"];
+    $idEval = $get["idEval"];
+    $idGrupoAlter = $get["idGrup"];
 
     $PRINCIPAL = EditarPreguntaAlternativas(FuncionesTransversalesAdmin(file_get_contents("views/mediciones/admin/addEditPreg.html")), $idEval, $idGrupoAlter);
 
@@ -23454,10 +23452,10 @@ else if ($seccion == "editPregMed") {
 }
 else if ($seccion == "veInformeBoletin") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_proceso = Decodear3($_GET["i"]);
+    $id_proceso = Decodear3($get["i"]);
 
-    $arreglo_post = $_POST;
-//$exportar_a_excel=$_GET["ex"];
+    $arreglo_post = $post;
+//$exportar_a_excel=$get["ex"];
 
     $PRINCIPAL = FiltrosReportesAvancesSgd
         (FuncionesTransversalesAdmin
@@ -23484,27 +23482,27 @@ else if (strpos($seccion, "editBibliObj|") !== false) {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "subirPreg") {
-    $idEval = $_GET["idEval"];
-    $programa = $_GET["programa"];
+    $idEval = $get["idEval"];
+    $programa = $get["programa"];
 //echo $programa;
     $PRINCIPAL = SubirPreguntasMasivo(FuncionesTransversalesAdmin(file_get_contents("views/evaluaciones/admin/subirPreg.html")), $idEval, $programa);
 
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "subirExcelPreg") {
-    $idEval = $_GET["idEval"];
-    $programa = $_GET["programa"];
+    $idEval = $get["idEval"];
+    $programa = $get["programa"];
 
     $idEvalPrograma = $idEval . "__" . $programa;
     $idEmpresa = $_SESSION["id_empresa"];
 
 //echo "<br><br>";
-    //print_r($_POST);
+    //print_r($post);
     //echo "<br><br>";
 
     EliminarDatosPreguntasAlternativasTmp();
 
-    extract($_POST);
+    extract($post);
 
     $error_grave = "error";
 
@@ -23735,8 +23733,8 @@ else if ($seccion == "subirExcelPreg") {
 }
 else if ($seccion == "acepPreviewExcelPreg") {
     $idEmpresa = $_SESSION["id_empresa"];
-    $idEval = $_GET["idEval"];
-    $programa = $_GET["programa"];
+    $idEval = $get["idEval"];
+    $programa = $get["programa"];
     CruzarPreguntasAlternativasTmpConOriginal($idEmpresa, $idEval);
 
     echo "    <script>
@@ -23747,7 +23745,7 @@ location.href='?sw=viewEval&idEval=$idEval&programa=$programa';
 else if ($seccion == "cancelSubirPreg") {
     EliminarDatosPreguntasAlternativasTmp();
 
-    $idEval = $_GET["idEval"];
+    $idEval = $get["idEval"];
 
     echo "    <script>
 location.href='?sw=viewEval&idEval=$idEval';
@@ -23918,7 +23916,7 @@ else if($seccion=="getFacturas"){
             "code"=>402,
             "proveedor"=>""
     );
-    $rut = $_POST['rut'];
+    $rut = $post['rut'];
     $proveedores = proveedores_finanzasData(78,'otec', $rut);
     if(count($proveedores)>0){
         $result['code']=200;
@@ -23931,7 +23929,7 @@ else if($seccion=="getColaborador"){
             "code"=>402,
             "proveedor"=>""
     );
-    $rut = $_POST['rut'];
+    $rut = $post['rut'];
     $colaboradores = colaboradores_finanzasData($rut);
     if(count($colaboradores)>0){
         $result['code']=200;
@@ -23947,7 +23945,7 @@ else if($seccion=="getColaborador"){
             "cuenta_nombre"=>"",
             "proyecto"=>""
     );
-    $ota = $_POST['ota'];
+    $ota = $post['ota'];
     $curso = lista_ota_vista_data(78, $ota);
     if(count($curso)>0){
         $result['code']=200;
@@ -23964,7 +23962,7 @@ else if($seccion=="getColaborador"){
             "proyecto"=>"",
             "cui"=>""
     );
-    $ota = $_POST['ota'];
+    $ota = $post['ota'];
     $curso = lista_cuenta_vista_data(78, $ota);
     if(count($curso)>0){
         $result['code']=200;
@@ -23975,54 +23973,54 @@ else if($seccion=="getColaborador"){
 }else if($seccion=="finanzas_delete_file"){
         $code = 200;
     $message ="Documento eliminado exitosamente";
-    $id = $_POST['key'];
+    $id = $post['key'];
     deleteDocumentFacturaData($id);
     echo json_encode(array("code"=>$code, "message"=>$message));
 }else if($seccion=="finanzas_delete_file_reemb"){
         $code = 200;
     $message ="Documento eliminado exitosamente";
-    $id = $_POST['key'];
+    $id = $post['key'];
     deleteDocumentReembolsoData($id);
     echo json_encode(array("code"=>$code, "message"=>$message));
 }else if($seccion=="finanzas_facturas_delete"){
     $code = 200;
     $message ="Factura eliminada exitosamente";
-    $id = $_POST['idFac'];
+    $id = $post['idFac'];
     deleteDatosGeneralesFacturaData($id);
     echo json_encode(array("code"=>$code, "message"=>$message));
 }else if($seccion=="finanzas_reembolso_delete"){
     $code = 200;
     $message ="Reembolso eliminado exitosamente";
-    $id = $_POST['idFac'];
+    $id = $post['idFac'];
     deleteDatosGeneralesReembolsoData($id);
     echo json_encode(array("code"=>$code, "message"=>$message));
 }else if($seccion=="finanzas_facturas_save"){
     $code = 400;
     $message ="Ha ocurrido un error al guardar la factura";
     $responsables = [];
-    $factur_numdoc = $_POST['numdoc'];
-    $factur_tipdocid = $_POST['tipoDoc'];
-    $factur_proveerut = $_POST['rutProvee'];
-    $factur_servid = $_POST['servOtor'];
-    $factur_servotro = $_POST['servOtorOtro'];
-    $factur_montoto = $_POST['montotot'];
-    $factur_montonet = $_POST['montoNet'];
-    $factur_impuest = $_POST['montoImp'];
-    $factur_fecemision = $_POST['fechaEmision'];
-    $factur_ota = $_POST['conOta'];
-    $factur_numota = $_POST['numOta'];
-    $factur_otanombre = $_POST['nombOta'];
-    $factur_cuenta = $_POST['cuenta'];
-    $factur_proyecto = $_POST['proyecto'];
-    $factur_curso = $_POST['proyecto'];
-    $factur_cui = $_POST['cui'];
-    $factur_respgast = $_POST['respGast'];
-    $factur_observacion = $_POST['observaciones'];
-    $factur_mes = $_POST['mesCon'];
-    $factur_anual = $_POST['anualCon'];
-    $factura_status = $_POST['estdoc'];
-    $factura_proveenom = $_POST['nombreProvee'];
-        $factur_cuenta_nombre = $_POST['cuentanom'];
+    $factur_numdoc = $post['numdoc'];
+    $factur_tipdocid = $post['tipoDoc'];
+    $factur_proveerut = $post['rutProvee'];
+    $factur_servid = $post['servOtor'];
+    $factur_servotro = $post['servOtorOtro'];
+    $factur_montoto = $post['montotot'];
+    $factur_montonet = $post['montoNet'];
+    $factur_impuest = $post['montoImp'];
+    $factur_fecemision = $post['fechaEmision'];
+    $factur_ota = $post['conOta'];
+    $factur_numota = $post['numOta'];
+    $factur_otanombre = $post['nombOta'];
+    $factur_cuenta = $post['cuenta'];
+    $factur_proyecto = $post['proyecto'];
+    $factur_curso = $post['proyecto'];
+    $factur_cui = $post['cui'];
+    $factur_respgast = $post['respGast'];
+    $factur_observacion = $post['observaciones'];
+    $factur_mes = $post['mesCon'];
+    $factur_anual = $post['anualCon'];
+    $factura_status = $post['estdoc'];
+    $factura_proveenom = $post['nombreProvee'];
+        $factur_cuenta_nombre = $post['cuentanom'];
     $rut_created = $_SESSION['user_'];
         $consulNumDocFac = facturaFinanzaByNumdoc($factur_numdoc);
         $countfiles = count($_FILES['multimediaFiles']['tmp_name']);
@@ -24068,54 +24066,54 @@ else if($seccion=="getColaborador"){
             $code = 200;
             $message ="Factura guardada exitosamente";
             //Se guardan los responsables de la factura
-$selrespsup = VerificaSQLInjectionLight($_POST['selrespsup']);
-$selrespejec = VerificaSQLInjectionLight($_POST['selrespejec']);
-$selrespcon = VerificaSQLInjectionLight($_POST['selrespcon']);
-$selrespjef = VerificaSQLInjectionLight($_POST['selrespjef']);
-$selrespjef1 = VerificaSQLInjectionLight($_POST['selrespjef1']);
-$selrespjef2 = VerificaSQLInjectionLight($_POST['selrespjef2']);
+$selrespsup = VerificaSQLInjectionLight($post['selrespsup']);
+$selrespejec = VerificaSQLInjectionLight($post['selrespejec']);
+$selrespcon = VerificaSQLInjectionLight($post['selrespcon']);
+$selrespjef = VerificaSQLInjectionLight($post['selrespjef']);
+$selrespjef1 = VerificaSQLInjectionLight($post['selrespjef1']);
+$selrespjef2 = VerificaSQLInjectionLight($post['selrespjef2']);
 
 // Validar cada entrada y construir el array de responsables
-$_POST['aplicaSup'] == "on" ? $responsables['sup'] = array(
+$post['aplicaSup'] == "on" ? $responsables['sup'] = array(
     "tipo" => "1",
     "resprut" => Decodear3($selrespsup),
-    "recep" => $_POST['dateRecepsup'],
-    "envio" => $_POST['dateEnviosup']
+    "recep" => $post['dateRecepsup'],
+    "envio" => $post['dateEnviosup']
 ) : "";
 
-$_POST['aplicaEje'] == "on" ? $responsables['eje'] = array(
+$post['aplicaEje'] == "on" ? $responsables['eje'] = array(
     "tipo" => "2",
     "resprut" => Decodear3($selrespejec),
-    "recep" => $_POST['dateRecepeje'],
-    "envio" => $_POST['dateEnvioEje']
+    "recep" => $post['dateRecepeje'],
+    "envio" => $post['dateEnvioEje']
 ) : "";
 
-$_POST['aplicaCon'] == "on" ? $responsables['con'] = array(
+$post['aplicaCon'] == "on" ? $responsables['con'] = array(
     "tipo" => "3",
     "resprut" => Decodear3($selrespcon),
-    "recep" => $_POST['dateRecepcon'],
-    "envio" => $_POST['dateEnviocon']
+    "recep" => $post['dateRecepcon'],
+    "envio" => $post['dateEnviocon']
 ) : "";
 
-$_POST['aplicaJef'] == "on" ? $responsables['jef'] = array(
+$post['aplicaJef'] == "on" ? $responsables['jef'] = array(
     "tipo" => "4",
     "resprut" => Decodear3($selrespjef),
-    "recep" => $_POST['dateRecepjef'],
-    "envio" => $_POST['dateEnviojef']
+    "recep" => $post['dateRecepjef'],
+    "envio" => $post['dateEnviojef']
 ) : "";
 
-$_POST['aplicaJef1'] == "on" ? $responsables['jef1'] = array(
+$post['aplicaJef1'] == "on" ? $responsables['jef1'] = array(
     "tipo" => "5",
     "resprut" => Decodear3($selrespjef1),
-    "recep" => $_POST['dateRecepjef1'],
-    "envio" => $_POST['dateEnviojef1']
+    "recep" => $post['dateRecepjef1'],
+    "envio" => $post['dateEnviojef1']
 ) : "";
 
-$_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
+$post['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
     "tipo" => "6",
     "resprut" => Decodear3($selrespjef2),
-    "recep" => $_POST['dateRecepjef2'],
-    "envio" => $_POST['dateEnviojef2']
+    "recep" => $post['dateRecepjef2'],
+    "envio" => $post['dateEnviojef2']
 ) : "";
             saveResponsablesFacturaData($responsables, $idInsert);
 
@@ -24141,27 +24139,27 @@ $_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
     $message ="Ha ocurrido un error al guardar el reembolso";
     $responsables = [];
     $reembo_numdoc = "";
-    $reembo_tipdocid = $_POST['tipoDoc'];
-    $reembo_tipdocOtro = $_POST['tipDocOtro'];
-    $reembo_proveerut = $_POST['rutColabora'];
-    $reembo_servid = $_POST['servOtor'];
-    $reembo_servotro = $_POST['servOtorOtro'];
-    $reembo_montoto = $_POST['montotot'];
-    $reembo_fecemision = $_POST['fechaEmision'];
-    $reembo_ota = $_POST['conOta'];
-    $reembo_numota = $_POST['numOta'];
-    $reembo_otanombre = $_POST['nombOta'];
-    $reembo_cuenta = $_POST['cuenta'];
-    $reembo_proyecto = $_POST['proyecto'];
-    $reembo_curso = $_POST['proyecto'];
-    $reembo_cui = $_POST['cui'];
-    $reembo_respgast = $_POST['respGast'];
-    $reembo_observacion = $_POST['observaciones'];
-    $reembo_mes = $_POST['mesCon'];
-    $reembo_anual = $_POST['anualCon'];
-    $reemboa_status = $_POST['estdoc'];
-    $reemboa_proveenom = ($_POST['nombreColabora']);
-    $reembo_cuenta_nombre = $_POST['cuentanom'];
+    $reembo_tipdocid = $post['tipoDoc'];
+    $reembo_tipdocOtro = $post['tipDocOtro'];
+    $reembo_proveerut = $post['rutColabora'];
+    $reembo_servid = $post['servOtor'];
+    $reembo_servotro = $post['servOtorOtro'];
+    $reembo_montoto = $post['montotot'];
+    $reembo_fecemision = $post['fechaEmision'];
+    $reembo_ota = $post['conOta'];
+    $reembo_numota = $post['numOta'];
+    $reembo_otanombre = $post['nombOta'];
+    $reembo_cuenta = $post['cuenta'];
+    $reembo_proyecto = $post['proyecto'];
+    $reembo_curso = $post['proyecto'];
+    $reembo_cui = $post['cui'];
+    $reembo_respgast = $post['respGast'];
+    $reembo_observacion = $post['observaciones'];
+    $reembo_mes = $post['mesCon'];
+    $reembo_anual = $post['anualCon'];
+    $reemboa_status = $post['estdoc'];
+    $reemboa_proveenom = ($post['nombreColabora']);
+    $reembo_cuenta_nombre = $post['cuentanom'];
     $rut_created = $_SESSION['user_'];
     $consulNumDocReemb = reembolsoFinanzaByNumdoc($reembo_numdoc);
     if(count($consulNumDocReemb)==0){
@@ -24177,54 +24175,54 @@ $_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
             $code = 200;
             $message ="Reembolso guardado exitosamente";
             //Se guardan los responsables de la factura
-$selrespsup = VerificaSQLInjectionLight($_POST['selrespsup']);
-$selrespejec = VerificaSQLInjectionLight($_POST['selrespejec']);
-$selrespcon = VerificaSQLInjectionLight($_POST['selrespcon']);
-$selrespjef = VerificaSQLInjectionLight($_POST['selrespjef']);
-$selrespjef1 = VerificaSQLInjectionLight($_POST['selrespjef1']);
-$selrespjef2 = VerificaSQLInjectionLight($_POST['selrespjef2']);
+$selrespsup = VerificaSQLInjectionLight($post['selrespsup']);
+$selrespejec = VerificaSQLInjectionLight($post['selrespejec']);
+$selrespcon = VerificaSQLInjectionLight($post['selrespcon']);
+$selrespjef = VerificaSQLInjectionLight($post['selrespjef']);
+$selrespjef1 = VerificaSQLInjectionLight($post['selrespjef1']);
+$selrespjef2 = VerificaSQLInjectionLight($post['selrespjef2']);
 
 // Validar cada entrada y construir el array de responsables
-$_POST['aplicaSup'] == "on" ? $responsables['sup'] = array(
+$post['aplicaSup'] == "on" ? $responsables['sup'] = array(
     "tipo" => "1",
     "resprut" => Decodear3($selrespsup),
-    "recep" => $_POST['dateRecepsup'],
-    "envio" => $_POST['dateEnviosup']
+    "recep" => $post['dateRecepsup'],
+    "envio" => $post['dateEnviosup']
 ) : "";
 
-$_POST['aplicaEje'] == "on" ? $responsables['eje'] = array(
+$post['aplicaEje'] == "on" ? $responsables['eje'] = array(
     "tipo" => "2",
     "resprut" => Decodear3($selrespejec),
-    "recep" => $_POST['dateRecepeje'],
-    "envio" => $_POST['dateEnvioEje']
+    "recep" => $post['dateRecepeje'],
+    "envio" => $post['dateEnvioEje']
 ) : "";
 
-$_POST['aplicaCon'] == "on" ? $responsables['con'] = array(
+$post['aplicaCon'] == "on" ? $responsables['con'] = array(
     "tipo" => "3",
     "resprut" => Decodear3($selrespcon),
-    "recep" => $_POST['dateRecepcon'],
-    "envio" => $_POST['dateEnviocon']
+    "recep" => $post['dateRecepcon'],
+    "envio" => $post['dateEnviocon']
 ) : "";
 
-$_POST['aplicaJef'] == "on" ? $responsables['jef'] = array(
+$post['aplicaJef'] == "on" ? $responsables['jef'] = array(
     "tipo" => "4",
     "resprut" => Decodear3($selrespjef),
-    "recep" => $_POST['dateRecepjef'],
-    "envio" => $_POST['dateEnviojef']
+    "recep" => $post['dateRecepjef'],
+    "envio" => $post['dateEnviojef']
 ) : "";
 
-$_POST['aplicaJef1'] == "on" ? $responsables['jef1'] = array(
+$post['aplicaJef1'] == "on" ? $responsables['jef1'] = array(
     "tipo" => "5",
     "resprut" => Decodear3($selrespjef1),
-    "recep" => $_POST['dateRecepjef1'],
-    "envio" => $_POST['dateEnviojef1']
+    "recep" => $post['dateRecepjef1'],
+    "envio" => $post['dateEnviojef1']
 ) : "";
 
-$_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
+$post['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
     "tipo" => "6",
     "resprut" => Decodear3($selrespjef2),
-    "recep" => $_POST['dateRecepjef2'],
-    "envio" => $_POST['dateEnviojef2']
+    "recep" => $post['dateRecepjef2'],
+    "envio" => $post['dateEnviojef2']
 ) : "";
             saveResponsablesReembolsoData($responsables, $idInsert);
 
@@ -24249,31 +24247,31 @@ $_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
     $code = 200;
     $message ="Factura modificada exitosamente";
     $responsables = [];
-	$_POST = VerificaArregloSQLInjectionLight($_POST);
-    $id = $_POST['idFact'];
-    $factur_numdoc = $_POST['numdoc'];
-    $factur_tipdocid = $_POST['tipoDoc'];
-    $factur_proveerut = $_POST['rutProvee'];
-    $factur_servid = $_POST['servOtor'];
-    $factur_servotro = $_POST['servOtorOtro'];
-    $factur_montoto = $_POST['montotot'];
-    $factur_montonet = $_POST['montoNet'];
-    $factur_impuest = $_POST['montoImp'];
-    $factur_fecemision = $_POST['fechaEmision'];
-    $factur_ota = $_POST['conOta'];
-    $factur_numota = $_POST['numOta'];
-    $factur_otanombre = $_POST['nombOta'];
-    $factur_cuenta = $_POST['cuenta'];
-    $factur_proyecto = $_POST['proyecto'];
-    $factur_curso = $_POST['curso'];
-    $factur_cui = $_POST['cui'];
-    $factur_respgast = $_POST['respGast'];
-    $factur_observacion = $_POST['observaciones'];
-    $factur_mes = $_POST['mesCon'];
-    $factur_anual = $_POST['anualCon'];
-    $factura_status = $_POST['estdoc'];
-    $factura_proveenom = $_POST['nombreProvee'];
-    $factur_cuenta_nombre = $_POST['cuentanom'];
+	$post = VerificaArregloSQLInjectionLight($post);
+    $id = $post['idFact'];
+    $factur_numdoc = $post['numdoc'];
+    $factur_tipdocid = $post['tipoDoc'];
+    $factur_proveerut = $post['rutProvee'];
+    $factur_servid = $post['servOtor'];
+    $factur_servotro = $post['servOtorOtro'];
+    $factur_montoto = $post['montotot'];
+    $factur_montonet = $post['montoNet'];
+    $factur_impuest = $post['montoImp'];
+    $factur_fecemision = $post['fechaEmision'];
+    $factur_ota = $post['conOta'];
+    $factur_numota = $post['numOta'];
+    $factur_otanombre = $post['nombOta'];
+    $factur_cuenta = $post['cuenta'];
+    $factur_proyecto = $post['proyecto'];
+    $factur_curso = $post['curso'];
+    $factur_cui = $post['cui'];
+    $factur_respgast = $post['respGast'];
+    $factur_observacion = $post['observaciones'];
+    $factur_mes = $post['mesCon'];
+    $factur_anual = $post['anualCon'];
+    $factura_status = $post['estdoc'];
+    $factura_proveenom = $post['nombreProvee'];
+    $factur_cuenta_nombre = $post['cuentanom'];
     if(isset($id) || $id!=""){
         updateDatosGeneralesFactura($id,$factur_numdoc, $factur_tipdocid, $factur_proveerut,
                                       $factur_servid, ($factur_servotro), $factur_montoto, $factur_montonet, $factur_impuest,
@@ -24281,54 +24279,54 @@ $_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
                                       ($factur_proyecto), ($factur_curso), ($factur_otanombre), $factur_cui,
                                       $factur_respgast, ($factur_observacion), $factur_mes, $factur_anual,$factura_status,$factura_proveenom,($factur_cuenta_nombre));
         //Se guardan los responsables de la factura
-            $selrespsup = VerificaSQLInjectionLight($_POST['selrespsup']);
-$selrespejec = VerificaSQLInjectionLight($_POST['selrespejec']);
-$selrespcon = VerificaSQLInjectionLight($_POST['selrespcon']);
-$selrespjef = VerificaSQLInjectionLight($_POST['selrespjef']);
-$selrespjef1 = VerificaSQLInjectionLight($_POST['selrespjef1']);
-$selrespjef2 = VerificaSQLInjectionLight($_POST['selrespjef2']);
+            $selrespsup = VerificaSQLInjectionLight($post['selrespsup']);
+$selrespejec = VerificaSQLInjectionLight($post['selrespejec']);
+$selrespcon = VerificaSQLInjectionLight($post['selrespcon']);
+$selrespjef = VerificaSQLInjectionLight($post['selrespjef']);
+$selrespjef1 = VerificaSQLInjectionLight($post['selrespjef1']);
+$selrespjef2 = VerificaSQLInjectionLight($post['selrespjef2']);
 
 // Validar cada entrada y construir el array de responsables
-$_POST['aplicaSup'] == "on" ? $responsables['sup'] = array(
+$post['aplicaSup'] == "on" ? $responsables['sup'] = array(
     "tipo" => "1",
     "resprut" => Decodear3($selrespsup),
-    "recep" => $_POST['dateRecepsup'],
-    "envio" => $_POST['dateEnviosup']
+    "recep" => $post['dateRecepsup'],
+    "envio" => $post['dateEnviosup']
 ) : "";
 
-$_POST['aplicaEje'] == "on" ? $responsables['eje'] = array(
+$post['aplicaEje'] == "on" ? $responsables['eje'] = array(
     "tipo" => "2",
     "resprut" => Decodear3($selrespejec),
-    "recep" => $_POST['dateRecepeje'],
-    "envio" => $_POST['dateEnvioEje']
+    "recep" => $post['dateRecepeje'],
+    "envio" => $post['dateEnvioEje']
 ) : "";
 
-$_POST['aplicaCon'] == "on" ? $responsables['con'] = array(
+$post['aplicaCon'] == "on" ? $responsables['con'] = array(
     "tipo" => "3",
     "resprut" => Decodear3($selrespcon),
-    "recep" => $_POST['dateRecepcon'],
-    "envio" => $_POST['dateEnviocon']
+    "recep" => $post['dateRecepcon'],
+    "envio" => $post['dateEnviocon']
 ) : "";
 
-$_POST['aplicaJef'] == "on" ? $responsables['jef'] = array(
+$post['aplicaJef'] == "on" ? $responsables['jef'] = array(
     "tipo" => "4",
     "resprut" => Decodear3($selrespjef),
-    "recep" => $_POST['dateRecepjef'],
-    "envio" => $_POST['dateEnviojef']
+    "recep" => $post['dateRecepjef'],
+    "envio" => $post['dateEnviojef']
 ) : "";
 
-$_POST['aplicaJef1'] == "on" ? $responsables['jef1'] = array(
+$post['aplicaJef1'] == "on" ? $responsables['jef1'] = array(
     "tipo" => "5",
     "resprut" => Decodear3($selrespjef1),
-    "recep" => $_POST['dateRecepjef1'],
-    "envio" => $_POST['dateEnviojef1']
+    "recep" => $post['dateRecepjef1'],
+    "envio" => $post['dateEnviojef1']
 ) : "";
 
-$_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
+$post['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
     "tipo" => "6",
     "resprut" => Decodear3($selrespjef2),
-    "recep" => $_POST['dateRecepjef2'],
-    "envio" => $_POST['dateEnviojef2']
+    "recep" => $post['dateRecepjef2'],
+    "envio" => $post['dateEnviojef2']
 ) : "";
             saveResponsablesFacturaData($responsables, $id);
 
@@ -24352,32 +24350,32 @@ $_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
     $code = 200;
     $message ="Reembolso modificado exitosamente";
     $responsables = [];
-	$_POST = VerificaArregloSQLInjectionLight($_POST);
-    $id = $_POST['idReembo'];
-    $reembo_numdoc = $_POST['numdoc'];
-    $reembo_tipdocid = $_POST['tipoDoc'];
-    $reembo_tipdocOtro = $_POST['tipDocOtro'];
-    $reembo_proveerut = $_POST['rutColabora'];
-    $reembo_servid = $_POST['servOtor'];
-    $reembo_servotro = $_POST['servOtorOtro'];
-    $reembo_montoto = $_POST['montotot'];
-    $reembo_montonet = $_POST['montoNet'];
-    $reembo_impuest = $_POST['montoImp'];
-    $reembo_fecemision = $_POST['fechaEmision'];
-    $reembo_ota = $_POST['conOta'];
-    $reembo_numota = $_POST['numOta'];
-    $reembo_otanombre = $_POST['nombOta'];
-    $reembo_cuenta = $_POST['cuenta'];
-    $reembo_proyecto = $_POST['proyecto'];
-    $reembo_curso = $_POST['curso'];
-    $reembo_cui = $_POST['cui'];
-    $reembo_respgast = $_POST['respGast'];
-    $reembo_observacion = $_POST['observaciones'];
-    $reembo_mes = $_POST['mesCon'];
-    $reembo_anual = $_POST['anualCon'];
-    $reemboa_status = $_POST['estdoc'];
-    $reemboa_proveenom = ($_POST['nombreColabora']);
-    $reembo_cuenta_nombre = $_POST['cuentanom'];
+	$post = VerificaArregloSQLInjectionLight($post);
+    $id = $post['idReembo'];
+    $reembo_numdoc = $post['numdoc'];
+    $reembo_tipdocid = $post['tipoDoc'];
+    $reembo_tipdocOtro = $post['tipDocOtro'];
+    $reembo_proveerut = $post['rutColabora'];
+    $reembo_servid = $post['servOtor'];
+    $reembo_servotro = $post['servOtorOtro'];
+    $reembo_montoto = $post['montotot'];
+    $reembo_montonet = $post['montoNet'];
+    $reembo_impuest = $post['montoImp'];
+    $reembo_fecemision = $post['fechaEmision'];
+    $reembo_ota = $post['conOta'];
+    $reembo_numota = $post['numOta'];
+    $reembo_otanombre = $post['nombOta'];
+    $reembo_cuenta = $post['cuenta'];
+    $reembo_proyecto = $post['proyecto'];
+    $reembo_curso = $post['curso'];
+    $reembo_cui = $post['cui'];
+    $reembo_respgast = $post['respGast'];
+    $reembo_observacion = $post['observaciones'];
+    $reembo_mes = $post['mesCon'];
+    $reembo_anual = $post['anualCon'];
+    $reemboa_status = $post['estdoc'];
+    $reemboa_proveenom = ($post['nombreColabora']);
+    $reembo_cuenta_nombre = $post['cuentanom'];
     if(isset($id) || $id!=""){
         updateDatosGeneralesReembolso($id,$reembo_numdoc, $reembo_tipdocid,$reembo_tipdocOtro, $reembo_proveerut,
                                       $reembo_servid, ($reembo_servotro), $reembo_montoto, $reembo_montonet, $reembo_impuest,
@@ -24386,54 +24384,54 @@ $_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
                                       $reembo_respgast, ($reembo_observacion), $reembo_mes, $reembo_anual,$reemboa_status,$reemboa_proveenom,($reembo_cuenta_nombre));
         //Se guardan los responsables de la factura
 
-$selrespsup = VerificaSQLInjectionLight($_POST['selrespsup']);
-$selrespejec = VerificaSQLInjectionLight($_POST['selrespejec']);
-$selrespcon = VerificaSQLInjectionLight($_POST['selrespcon']);
-$selrespjef = VerificaSQLInjectionLight($_POST['selrespjef']);
-$selrespjef1 = VerificaSQLInjectionLight($_POST['selrespjef1']);
-$selrespjef2 = VerificaSQLInjectionLight($_POST['selrespjef2']);
+$selrespsup = VerificaSQLInjectionLight($post['selrespsup']);
+$selrespejec = VerificaSQLInjectionLight($post['selrespejec']);
+$selrespcon = VerificaSQLInjectionLight($post['selrespcon']);
+$selrespjef = VerificaSQLInjectionLight($post['selrespjef']);
+$selrespjef1 = VerificaSQLInjectionLight($post['selrespjef1']);
+$selrespjef2 = VerificaSQLInjectionLight($post['selrespjef2']);
 
 // Validar cada entrada y construir el array de responsables
-$_POST['aplicaSup'] == "on" ? $responsables['sup'] = array(
+$post['aplicaSup'] == "on" ? $responsables['sup'] = array(
     "tipo" => "1",
     "resprut" => Decodear3($selrespsup),
-    "recep" => $_POST['dateRecepsup'],
-    "envio" => $_POST['dateEnviosup']
+    "recep" => $post['dateRecepsup'],
+    "envio" => $post['dateEnviosup']
 ) : "";
 
-$_POST['aplicaEje'] == "on" ? $responsables['eje'] = array(
+$post['aplicaEje'] == "on" ? $responsables['eje'] = array(
     "tipo" => "2",
     "resprut" => Decodear3($selrespejec),
-    "recep" => $_POST['dateRecepeje'],
-    "envio" => $_POST['dateEnvioEje']
+    "recep" => $post['dateRecepeje'],
+    "envio" => $post['dateEnvioEje']
 ) : "";
 
-$_POST['aplicaCon'] == "on" ? $responsables['con'] = array(
+$post['aplicaCon'] == "on" ? $responsables['con'] = array(
     "tipo" => "3",
     "resprut" => Decodear3($selrespcon),
-    "recep" => $_POST['dateRecepcon'],
-    "envio" => $_POST['dateEnviocon']
+    "recep" => $post['dateRecepcon'],
+    "envio" => $post['dateEnviocon']
 ) : "";
 
-$_POST['aplicaJef'] == "on" ? $responsables['jef'] = array(
+$post['aplicaJef'] == "on" ? $responsables['jef'] = array(
     "tipo" => "4",
     "resprut" => Decodear3($selrespjef),
-    "recep" => $_POST['dateRecepjef'],
-    "envio" => $_POST['dateEnviojef']
+    "recep" => $post['dateRecepjef'],
+    "envio" => $post['dateEnviojef']
 ) : "";
 
-$_POST['aplicaJef1'] == "on" ? $responsables['jef1'] = array(
+$post['aplicaJef1'] == "on" ? $responsables['jef1'] = array(
     "tipo" => "5",
     "resprut" => Decodear3($selrespjef1),
-    "recep" => $_POST['dateRecepjef1'],
-    "envio" => $_POST['dateEnviojef1']
+    "recep" => $post['dateRecepjef1'],
+    "envio" => $post['dateEnviojef1']
 ) : "";
 
-$_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
+$post['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
     "tipo" => "6",
     "resprut" => Decodear3($selrespjef2),
-    "recep" => $_POST['dateRecepjef2'],
-    "envio" => $_POST['dateEnviojef2']
+    "recep" => $post['dateRecepjef2'],
+    "envio" => $post['dateEnviojef2']
 ) : "";
             saveResponsablesReembolsoData($responsables, $id);
 
@@ -24454,19 +24452,19 @@ $_POST['aplicaJef2'] == "on" ? $responsables['jef2'] = array(
     }
     echo json_encode(array("code"=>$code, "message"=>$message));
 } else if($seccion == "getResponsableByIdFac"){
-    $idFac = $_POST['idFac'];
+    $idFac = $post['idFac'];
     $consulResp = getRespById($idFac);
     echo json_encode($consulResp);
 } else if($seccion == "getResponsableByIdReembo"){
-    $idReemb = $_POST['idReemb'];
+    $idReemb = $post['idReemb'];
     $consulResp = getRespReemboById($idReemb);
     echo json_encode($consulResp);
 } else if($seccion == "getDocumentoByIdFac"){
-    $idFac = $_POST['idFac'];
+    $idFac = $post['idFac'];
     $consulDocumento = getDocumentoById($idFac);
     echo json_encode($consulDocumento);
 } else if($seccion == "getDocumentoByIdReembo"){
-    $idRem = $_POST['idRem'];
+    $idRem = $post['idRem'];
     $consulDocumento = getDocumentoReemboById($idRem);
     echo json_encode($consulDocumento);
 } else if($seccion == "reportExcelFacturas"){
