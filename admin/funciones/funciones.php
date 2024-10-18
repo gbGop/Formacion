@@ -537,7 +537,7 @@ function ReporteFullSincronico_2023($PRINCIPAL, $id_curso, $id_empresa)
     if ($datos_curso) {
         $id_curso = $datos_curso[0]->id;
     } else {
-        $idNuevo = ListasPresenciales_CodigoIdCurso($id_empresa);
+        $idNuevo = ListasPresenciales_CodigoIdCurso();
         $id_curso = $idNuevo;
     }
 
@@ -2941,7 +2941,7 @@ function FuncionesTransversalesAdmin($html){
 }
 function VerificaFotoPersonalDesdeAdmin($rut)
 {
-	$datos_usuario = UsuarioEnBasePersonas($rut, $rut);
+	$datos_usuario = UsuarioEnBasePersonas($rut);
 	$rut_completo = $datos_usuario[0]->rut_completo;
 	$ruta_admin = "img/personas/" . $rut;
 	$ruta = "../sgd/front/img/personas/" . $rut;
@@ -3962,7 +3962,7 @@ function FormularioCurso1($PRINCIPAL, $id_curso, $id_empresa)
     if ($datos_curso) {
         $id_curso = $datos_curso[0]->id;
     } else {
-        $idNuevo = ListasPresenciales_CodigoIdCurso($id_empresa);
+        $idNuevo = ListasPresenciales_CodigoIdCurso();
         $id_curso = $idNuevo;
     }
 
@@ -4084,7 +4084,7 @@ function FormularioCurso2($PRINCIPAL, $id_curso, $id_empresa)
     if ($datos_curso) {
         $id_curso = $datos_curso[0]->id;
     } else {
-        $idNuevo = ListasPresenciales_CodigoIdCurso($id_empresa);
+        $idNuevo = ListasPresenciales_CodigoIdCurso();
         $id_curso = $idNuevo;
     }
 
@@ -4392,7 +4392,7 @@ function updateDatosGeneralesFactura($id,$factur_numdoc, $factur_tipdocid, $fact
     $factur_servid = Decodear3($factur_servid);
     $factur_cui = Decodear3($factur_cui);
     $factur_respgast = Decodear3($factur_respgast);
-    return updateDatosGeneralesFacturaData($id,$factur_numdoc, $factur_tipdocid, $factur_proveeid, $factur_proveerut,
+    updateDatosGeneralesFacturaData($id,$factur_numdoc, $factur_tipdocid, $factur_proveeid, $factur_proveerut,
                                   $factur_servid, $factur_servotro, $factur_montoto, $factur_montonet, $factur_impuest,
                                   $factur_fecemision, $factur_ota, $factur_numota, $factur_cuentaid, $factur_cuenta,
                                   $factur_proyectid, $factur_proyecto, $factur_curso, $factur_otanombre, $factur_cui,
@@ -4422,7 +4422,7 @@ function updateDatosGeneralesReembolso($id,$reembo_numdoc, $reembo_tipdocid,$ree
     $reembo_servid = Decodear3($reembo_servid);
     $reembo_cui = Decodear3($reembo_cui);
     $reembo_respgast= Decodear3($reembo_respgast);
-    return updateDatosGeneralesReembolsoData($id,$reembo_numdoc, $reembo_tipdocid,$reembo_tipdocOtro, $reembo_proveeid, $reembo_proveerut,
+    updateDatosGeneralesReembolsoData($id,$reembo_numdoc, $reembo_tipdocid,$reembo_tipdocOtro, $reembo_proveeid, $reembo_proveerut,
                                   $reembo_servid, $reembo_servotro, $reembo_montoto, $reembo_montonet, $reembo_impuest,
                                   $reembo_fecemision, $reembo_ota, $reembo_numota, $reembo_cuentaid, $reembo_cuenta,
                                   $reembo_proyectid, $reembo_proyecto, $reembo_curso, $reembo_otanombre, $reembo_cui,

@@ -4374,7 +4374,7 @@ else if ($seccion == "descargarUsuariosExternos_2022") {
             $nombre = ($nombre);
             $apellido = ($apellido);
             //echo "--$rut, $nombre, $apellido, $email, $empresa";exit();
-            proveedores_ejecutivos_save_insert_update($id_empresa, "usuarios_manuales", "", $rut, $nombre, $apellido, $email, $empresa, $rut_completo);
+            proveedores_ejecutivos_save_insert_update($id_empresa, "usuarios_manuales", "", $rut, $nombre, $apellido, $email, $empresa, $rut_completo,'');
             resetea_clave_2021_cambiado1($rut, $id_empresa);
             $cuenta_loop++;
             echo "<center><span style='position: absolute;z-index:$current;background:#36C6D3; padding:10px; color:#FFF'>Actualizando $cuenta_loop de $count_total_loop Registros</span></center>";
@@ -11669,7 +11669,7 @@ else if ($seccion == "agreotec") {
     $telefono_otec = ($_POST["telefono_otec"]);
     $email_otec = ($_POST["email_otec"]);
     $contacto_otec = ($_POST["contacto_otec"]);
-    InsertaOtec($rut, $nombre_otec, $direccion_otec, $telefono_otec, $email_otec, $contacto_otec, $_SESSION["id_empresa"]);
+    InsertaOtec($rut, $nombre_otec, $direccion_otec, $telefono_otec, $email_otec, $contacto_otec);
 
     echo "
 <script>
@@ -11707,7 +11707,7 @@ location.href='?sw=ProcAnual';
     $telefono_otec = ($_POST["telefono_otec"]);
     $email_otec = ($_POST["email_otec"]);
     $contacto_otec = ($_POST["contacto_otec"]);
-    ActualizaDatosOtec($rut, $nombre_otec, $direccion_otec, $telefono_otec, $email_otec, $contacto_otec, $id);
+    ActualizaDatosOtec($rut, $nombre_otec, $direccion_otec, $telefono_otec, $email_otec, $contacto_otec);
 
     echo "
 <script>
@@ -12347,7 +12347,7 @@ else if ($seccion == "GR") {
         $PRINCIPAL = str_replace("{NOMBRE_EMPRESA}", ($html_empresas), $PRINCIPAL);
 
 //Centros de costos
-        $centros_costos = DistincCentroCostoInscripcion($id_inscripcion, $rut_empresa_holding);
+        $centros_costos = DistincCentroCostoInscripcion($id_inscripcion);
         foreach ($centros_costos as $cc) {
             $html_cc .= "" . $cc->centro_costo . "<br>";
         }
@@ -12437,7 +12437,7 @@ else if ($seccion == "GR") {
 
 //Bloque de Inasistencias
         //veo si hay inasistentes en la tabla de Incripcion cierre
-        $casos_especiales = TotalUsuariosPorInscripcionCerrados2SoloCasosEspeciales($id_inscripcion, $rut_empresa_holding);
+        $casos_especiales = TotalUsuariosPorInscripcionCerrados2SoloCasosEspeciales($id_inscripcion);
         $PRINCIPAL = str_replace("{BLOQUE_INASISTENCIAS_CASOS_ESPECIALES}", file_get_contents("views/reporte/bloque_inasistencias_caso_especial.html"), $PRINCIPAL);
         $PRINCIPAL = str_replace("{TITULO}", "Inasistencias o Casos Especiales", $PRINCIPAL);
 
@@ -18713,7 +18713,7 @@ else if ($seccion == "procesa_excel") {
 else if ($seccion == "procesa_excel_u") {
     $idEmpresa = $_SESSION["id_empresa"];
 
-    CancelaProcesamientoPrevioUsuarios($idEmpresa);
+    CancelaProcesamientoPrevioUsuarios();
 
     extract($_POST);
 
@@ -18909,7 +18909,7 @@ else if ($seccion == "procesa_excel_u") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "procesa_excel_uBK") {
-    CancelaProcesamientoPrevioUsuarios($_SESSION["id_empresa"]);
+    CancelaProcesamientoPrevioUsuarios();
     extract($_POST);
     $id_empresa = $_SESSION["id_empresa"];
     $error_grave = "error";
@@ -19211,7 +19211,7 @@ location.href='?sw=listcursos2Presenciales';
     exit;
 }
 else if ($seccion == "canceprousu") {
-    CancelaProcesamientoPrevioUsuarios($_SESSION["id_empresa"]);
+    CancelaProcesamientoPrevioUsuarios();
     echo "
 <script>
 location.href='?sw=procesa_excel_a';
@@ -21190,7 +21190,7 @@ else if ($seccion == "addRelMCC") {
     $id_malla = $_POST["idm"];
     $id_clasificacion = $_POST["idcl"];
     $id_empresa = $_POST["id_empresa"];
-    InsertaRelacionMallaClasificacionCursoAdmin($id_malla, $id_curso, $id_clasificacion, $id_empresa);
+    InsertaRelacionMallaClasificacionCursoAdmin($id_malla, $id_curso, $id_clasificacion, $id_empresa,'','');
 
     echo "
 <script>
@@ -22087,7 +22087,7 @@ else if ($seccion == "adimpartiEl") {
 
     $id_audiencia = $_POST["id_audiencia"];
 
-    IMPARTICION_CreaImparticion($id_empresa, $codigo_imparticion, $id_curso, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_audiencia, $tipo_audiencia, $datos_post);
+    IMPARTICION_CreaImparticion($id_empresa, $codigo_imparticion, $id_curso, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_audiencia, $tipo_audiencia, $datos_post,'','','');
 
 //Ahora, por cada usuario de la Audiencia, inserto en tabla rel_malla_persona
     $datos_audiencia = ArmaQueryaudiencias($id_audiencia, $id_empresa);
@@ -22111,7 +22111,7 @@ else if ($seccion == "cargabase") {
     $i = 0;
     foreach ($Malla as $m) {
 //trae cursos de malla
-        $Curso = TraeCursos($m->id_malla, $empresa);
+        $Curso = TraeCursos($m->id_malla, $empresa,'');
 
         foreach ($Curso as $c) {
             $i++;
