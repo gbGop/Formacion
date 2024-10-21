@@ -2,7 +2,6 @@
 	session_start();
 	error_reporting(0);
 	ini_set('max_execution_time', 400);
-	//ini_set('display_errors', 0);ini_set('display_startup_errors', 0);
 	ini_set('display_errors', 1);
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
@@ -35,13 +34,11 @@
 	}
 	
 	require_once "includes/include.php";
-	//echo Decodear3("enpGRVJPeTMvUGd3eWJkQ2ZldW9YZz09");exit;
 	$arreglo_post = $_POST;
 	$arreglo_get = $_GET;
 	$arreglo_request = $_REQUEST;
 	
 	if ($seccion <> "lista_audiencias") {
-		//echo "<br>filtro";
 		$post = VerificaArregloSQLInjectionV2($arreglo_post);
 		$get = VerificaArregloSQLInjectionV2($arreglo_get);
 		$request = VerificaArregloSQLInjectionV2($arreglo_request);
@@ -52,7 +49,7 @@
 		$request = $arreglo_request;
 	}
 	insertLogAdmin_2022($_SESSION["admin_"], $get["sw"], $post, $get, $request);
-	//print_r($_SESSION);
+	
 	$_SESSION['LAST_ACTIVITY'] = time();
 	if (!$seccion) {
 		session_start();
@@ -95,8 +92,7 @@
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/home_landing/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_dimension = $get["id_dimension"];
-		//print_r($_SESSION);
-		//echo "<br><br>Rut ".$_SESSION["user_"]."<br>";
+		
 		$Adm = DatosUsuarioAdmin($_SESSION["user_"]);
 		
 		$PRINCIPAL = str_replace("{NOMBRE_ADMIN}", ($Adm[0]->nombre_completo), $PRINCIPAL);
@@ -138,8 +134,7 @@
 		exit();
 	}
 	elseif ($seccion == "entradaCap") {
-		//exit();
-		$valor = $post["captcha"];
+				$valor = $post["captcha"];
 		
 		//GOOGLE CAPTCHA
 		class ReCaptchaResponse
@@ -233,7 +228,7 @@
 			}
 		}
 		
-		//print_r($post);
+		
 		
 		// Get a key from https://www.google.com/recaptcha/admin/create
 		if ($post["g-recaptcha-response"]) {
@@ -245,37 +240,30 @@
 			$response = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $post["g-recaptcha-response"]);
 			if ($response != null && $response->success) {
 				// Si el c&oacute;digo es correcto, seguimos procesando el formulario como siempre
-				//exit("si");
+				
 				$rut = Decodear3($_SESSION["toku"]);
 				$clave = Decodear3($_SESSION["tokc"]);
 				
 				
 				$existe_base = UsuarioAdminRutEmpresa($rut);
-				//print_r($existe_base);
-				if ($existe_base) {
-					//$rut = $existe_base[0]->rut;
+								if ($existe_base) {
 					
 					$total_intentos = 3;
 					$verifica_clave = VerificaClaveAccesoAdmin($rut, $clave);
 					
-					//print_r($verifica_clave);
+					
 					if ($verifica_clave) {
 						session_start();
 						// INGRESO CORRECTO
 						
-						//echo "hola";
 						$_SESSION["user_"] = $rut;
 						$_SESSION["admin_"] = $rut;
 						$home_admin = $arrayEmpresa[0]->home_admin;
 						
-						//InsertTblAnalitica($rut, $existe_base[0]->id_empresa, "LOGIN", "LoginRut");
-						//echo "hola OK";
 						
 						$_SESSION["id_empresa"] = $existe_base[0]->id_empresa;
 						$arrayEmpresa = BuscaEmpresaUserRut($rut);
 						$home_admin = $arrayEmpresa[0]->home_admin;
-						//echo "$home_admin rut $rut";exit();
-						//print_r($_SESSION);
 						echo "
 						                            <script>
 						                                location.href='?sw=" . $home_admin . "';
@@ -327,9 +315,9 @@
 		exit();
 	}
 	elseif ($seccion == "FB_2024_ajax_otec") {
-		//$id_programa = $get["selected_value"];
+		
 		$OtecS = Trae_otec_Search_Data($post['query']);
-		//print_r($OtecS);
+		
 		$options_search_otec = "";
 		foreach ($OtecS as $o) {
 			$options_search_otec .= "<a href='#'>" . $o->nombre . " - " . LimpiaRut($o->rut) . " </a><br>";
@@ -338,10 +326,9 @@
 		exit();
 	}
 	elseif ($seccion == "accioncurso1") {
-		//print_r($_SESSION);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_curso = Decodear3($get["i"]);
-		//echo "id curso $id_curso";
 		if ($id_curso) {
 			$PRINCIPAL = FormularioCurso1(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/formulario_edita1.html")), $id_curso, $_SESSION["id_empresa"]);
 		}
@@ -377,7 +364,6 @@
 		}
 		else {
 			$arreglo_post = $post;
-			//echo "HOLA";
 			$PRINCIPAL = ListadoMallasAdmin1(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/entorno_listado_cursos1_mallas.html")), $id_empresa, "", "", "");
 			global $Texto_Pilar, $Texto_Programa;
 			$PRINCIPAL = str_replace("{Texto_Pilar}", ($Texto_Pilar), $PRINCIPAL);
@@ -403,16 +389,10 @@
 			
 			echo "CODIGO_CURSO;NOMBRE_CURSO;EJE;PROYECTO;CUENTA;CUENTA_GLOSA;CUI;DIVISION;RUT_PROVEEDOR;HORAS_CURSO\r\n";
 			$ListaDownload = Downloadlistcursos1_2024();
-			//print_r($ListaDownload);
+			
 			foreach ($ListaDownload as $d) {
 				echo $d->CODIGO_CURSO . ";" . $d->NOMBRE_CURSO . ";" . $d->EJE . ";" . $d->PROYECTO . ";" . $d->CUENTA . ";" . $d->CUENTA_GLOSA . ";" . $d->CUI . ";" . $d->DIVISION . ";" . $d->RUT_PROVEEDOR . ";" . $d->HORAS_CURSO . "\r\n";
 			}
-			//$PRINCIPAL = ListadoCursosAdmin1(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/entorno_listado_excel.html")), $id_empresa, $excel,"","");
-			//global $Texto_Pilar, $Texto_Programa;
-			//$PRINCIPAL = str_replace("{Texto_Pilar}", ($Texto_Pilar), $PRINCIPAL);
-			//$PRINCIPAL = str_replace("{Texto_Programa}", ($Texto_Programa), $PRINCIPAL);
-			
-			//echo($PRINCIPAL);
 			exit;
 		}
 		else {
@@ -427,7 +407,7 @@
 		}
 	}
 	elseif ($seccion == "adcurso1") {
-		//print_r($post);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$codigo_curso = (trim($post["codigo_curso"]));
 		$nombre_curso = (trim($post["nombre_curso"]));
@@ -502,7 +482,7 @@
 		exit;
 	}
 	elseif ($seccion == "edcurso1") {
-		//print_r($post);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		$id_curso = Decodear3($post["id"]);
@@ -568,7 +548,7 @@
 		exit;
 	}
 	elseif ($seccion == "edcurso2") {
-		//print_r($post);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		$id_curso = (Decodear3($post["id"]));
@@ -659,8 +639,6 @@
 		$id_curso = Decodear3($i);
 		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "hola i $i ".Decodear3($i);
-		//exit();
 		if ($excel == 1) {
 			$fechahoy = date("Y-m-d");
 			header("Content-Type: application/vnd.ms-excel");
@@ -688,8 +666,6 @@
 		$id_malla = Decodear3($i);
 		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "hola i $i $id_malla";
-		//exit();
 		if ($excel == 1) {
 			$fechahoy = date("Y-m-d");
 			header("Content-Type: application/vnd.ms-excel");
@@ -715,10 +691,9 @@
 	
 	
 	elseif ($seccion == "accioncurso2") {
-		//print_r($_SESSION);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_curso = Decodear3($get["i"]);
-		//echo "id curso $id_curso";
 		if ($id_curso) {
 			$PRINCIPAL = FormularioCurso2(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/formulario_edita.html")), $id_curso, $_SESSION["id_empresa"]);
 			
@@ -776,8 +751,7 @@
 			
 			if ($fecha_inicio <> "" and $fecha_termino <> "") {
 				$reporte_full_cod = reporte_full_sincronico_full_data($fecha_inicio, $fecha_termino, $excel);
-				//echo "<br>Cuenta lineas ".count($reporte_full_cod);
-				foreach ($reporte_full_cod as $u) {
+								foreach ($reporte_full_cod as $u) {
 					echo "" . $u->rut . ";" . ($u->cargo) . ";" . $u->id_cargo . ";" . $u->id_unidad . ";" . $u->modalidad . ";" . ($u->tipo_modalidad) . ";" . $u->id_curso . ";" . ($u->curso) . ";" . $u->id_inscripcion . ";" . $u->fecha_inicio_inscripcion . ";" . $u->fecha_termino_inscripcion . ";" . ($u->observacion_colaborador) . ";" . $u->tipo_curso . ";" . ($u->lugar_imparticion) . ";" . $u->hora_inicio . ";" . $u->hora_termino . ";" . $u->numero_horas . ";" . $u->asistencia . ";" . $u->nota_evaluacion_pre . ";" . $u->nota_evaluacion_post . ";" . $u->estado . ";" . $u->evaluacion_satisfaccion . ";" . $u->recomendacion_curso . "\r\n";
 				}
 			}
@@ -792,11 +766,10 @@
 			header("Content-Disposition: attachment; filename=ReporteFullSincronico_Eventos_" . $fechahoy . ".csv");
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			echo "RUT_CONSULTOR_CAPACITACION;RUT_EJECUTIVO_EXTERNO;EJECUTIVO_EXTERNO;SENCE;NOMBRE_OTIC;EJE;PROYECTO;CODIGO_DIVISION_CREACION_CURSO;DIVISION_CREACION_CURSO;MODALIDAD;TIPO_MODALIDAD;ID_CURSO;CURSO;ID_IMPARTICION;IMPARTICION;FECHA_INICIO_IMPARTICION;FECHA_TERMINO_IMPARTICION;ESTADO_IMPARTICION;OBSERVACION_IMPARTICION;TIPO_CURSO;LUGAR_IMPARTICION;HORA_INICIO;HORA_TERMINO;HORAS;CRITERIO_APROBACION;ASISTENCIA_MINIMA;NOTA_MINIMA;NOTA_EVALUACION_PROMEDIO_POST;RUT_RELATOR;EVALUACION_SATISFACCION_PROMEDIO;PORCENTAJE_RECOMENDACION_PROMEDIO\r\n";
-			//echo "fecha inicio $fecha_inicio $fecha_termino";
-			if ($fecha_inicio <> "" and $fecha_termino <> "") {
-				//echo "b";
+						if ($fecha_inicio <> "" and $fecha_termino <> "") {
+				
 				$reporte_full_cod = reporte_full_sincronico_full_data($fecha_inicio, $fecha_termino, $excel);
-				//echo "<br>Cuenta lineas ".count($reporte_full_cod);
+				
 				foreach ($reporte_full_cod as $u) {
 					$u->OBSERVACION_IMPARTICION = LimpiarCaracteres($u->OBSERVACION_IMPARTICION);
 					//$u->OBSERVACION_IMPARTICION == str_replace("", ($Texto_Programa), $PRINCIPAL);
@@ -809,14 +782,14 @@
 			$id_encuesta = '90';
 			$Header_Preguntas = Reportes_detalle_headers_Preguntas_respuestas($id_encuesta);
 			
-			//print_r($Header_Preguntas);
+			
 			foreach ($Header_Preguntas as $h) {
 				$row_header_preguntas .= $h->pregunta . ";";
 				if ($h->tipo == "PREGUNTAS_RELATORES") {
 					$row_header_preguntas .= "Relator1;Respuesta;Relator2;Respuesta;Relator3;Respuesta;Relator4;Respuesta;Relator5;Respuesta;Relator6;Respuesta;";
 				}
 			}
-			//echo "<br>->".$row_header_preguntas;exit();
+			
 			
 			$row_header_preguntas = ($row_header_preguntas);
 			header('Content-Description: File Transfer');
@@ -826,14 +799,14 @@
 			echo "rut;nombre;cargo;fecha_ingreso;division;area;departamento;zona;seccion;unidad;region;empresa;rut_jefe;nombre_jefe;id_imparticion;nombre_imparticion;" . $row_header_preguntas . "fecha\r\n";
 			
 			$UsuariosRespuestas_ = QR_Detalle_Download_Usuarios_por_Imparticion_Data($id_encuesta, $id_imparticion);
-			//print_r($UsuariosRespuestas_); //exit();
+			
 			foreach ($UsuariosRespuestas_ as $u) {
-				//echo "<br>A ".$u->rut;
+				
 				$row_respuestas_only = "";
 				$resp_detalle = QR_Detalle_Download_Usuarios_por_Detalle_Imparticion_Data($id_encuesta, $u->OTA, $u->rut);
-				//print_r($resp_detalle);
+				
 				foreach ($resp_detalle as $resp) {
-					//echo "<br>";print_r($resp);
+					
 					if ($resp->tipo == "PREGUNTAS_RELATORES") {
 						$Rel_headers = QR_IdInscripcion_Relatores_List($u->OTA);
 						$num_relator = 0;
@@ -851,7 +824,7 @@
 						$rel_6 = "";
 						$rel_R6 = "";
 						$respRelatores = explode(";", $resp->respuesta);
-						//print_r($respRelatores); exit();
+						
 						foreach ($Rel_headers as $r) {
 							if ($r->relator <> "") {
 								$num_relator++;
@@ -888,7 +861,6 @@
 						$row_respuestas_only .= $resp->respuesta . ";";
 					}
 				}
-				// echo "row_respuestas_only $row_respuestas_only"; exit();
 				$row_respuestas_preguntas = $u->rut . ";" . $u->nombre_completo . ";" . $u->cargo . ";" . $u->fecha_ingreso . ";" . $u->division . ";" . $u->area . ";" . $u->departamento . ";" . $u->zona . ";" . $u->seccion . ";" . $u->unidad . ";" . $u->region . ";" . $u->empresa . ";" . $u->rut_jefe . ";" . $u->nombre_jefe . ";" . $u->OTA . ";" . $u->nombre_imparticion . ";" . $row_respuestas_only . "" . $u->fecha . "\r\n";
 				//$u->respuesta = str_replace(";", ",", $u->respuesta);
 				echo "" . ($row_respuestas_preguntas);
@@ -898,14 +870,14 @@
 		elseif ($exportar_a_excel == "4" or $excel == "4") {
 			$id_encuesta = '90';
 			$Header_Preguntas = Reportes_detalle_headers_Preguntas_respuestas($id_encuesta);
-			//print_r($Header_Preguntas);
+			
 			foreach ($Header_Preguntas as $h) {
 				$row_header_preguntas .= $h->pregunta . ";";
 				if ($h->tipo == "PREGUNTAS_RELATORES") {
 					// $row_header_preguntas.="Relator1;Respuesta;Relator2;Respuesta;Relator3;Respuesta;Relator4;Respuesta;Relator5;Respuesta;Relator6;Respuesta;";
 				}
 			}
-			//echo "<br>->".$row_header_preguntas;exit();
+			
 			
 			$row_header_preguntas = ($row_header_preguntas);
 			header('Content-Description: File Transfer');
@@ -915,7 +887,7 @@
 			echo "OTA;Nombre_Evento;Nombre_Actividad;Lugar_Ejecucion;Fecha_Ejecucion;Relator_1;Relator_1_Promedio;Relator_2;Relator_2_Promedio;Relator_3;Relator_3_Promedio;Relator_4;Relator_4_Promedio;Relator_5;Relator_5_Promedio;Relator_6;Relator_6_Promedio;Relatores_Promedio;Curso_Cumplio_Expectivas_Promedio;Curso_contribuira_mejorar_desemp_laboral_Promedio;Nota_Curso_Promedio;PromedioTotalCurso;Recomendacion_Porcentaje;Promedio_Final;\r\n";
 			
 			$EventosRespuestas_ = QR_Detalle_Download_Eventos_por_Imparticion_Data($id_encuesta, $id_imparticion);
-			//print_r($UsuariosRespuestas_);
+			
 			foreach ($EventosRespuestas_ as $u) {
 				$rel_1 = $rel_R1 = "";
 				$rel_2 = $rel_R2 = "";
@@ -948,17 +920,16 @@
 						$sumRDR = array_sum($RRelFinal[$ird]);
 						$countRDR = count($RRelFinal[$ird]);
 						$averageRDR = $sumRDR / $countRDR;
-						//echo "$ird average " . $averageRDR;
+						
 					}
 					else {
 						// Handle the case where $RRelFinal[$ird] is null or not an array
-						// echo "$ird is null or not an array";
 					}
 					
 					if ($ird == 1) {
 						$rel_R1 = $averageRDR;
 						if ($averageRDR > 0) {
-							//echo "<br>1 $suma_averageRDR -> $averageRDR.";
+							
 							$suma_averageRDR = $suma_averageRDR + $averageRDR;
 							$cuenta_averageRDR++;
 						}
@@ -966,7 +937,7 @@
 					if ($ird == 2) {
 						$rel_R2 = $averageRDR;
 						if ($averageRDR > 0) {
-							//echo "<br>2 $suma_averageRDR -> $averageRDR.";
+							
 							$suma_averageRDR = $suma_averageRDR + $averageRDR;
 							$cuenta_averageRDR++;
 						}
@@ -974,7 +945,7 @@
 					if ($ird == 3) {
 						$rel_R3 = $averageRDR;
 						if ($averageRDR > 0) {
-							//echo "<br>3 $suma_averageRDR -> $averageRDR.";
+							
 							$suma_averageRDR = $suma_averageRDR + $averageRDR;
 							$cuenta_averageRDR++;
 						}
@@ -982,7 +953,7 @@
 					if ($ird == 4) {
 						$rel_R4 = $averageRDR;
 						if ($averageRDR > 0) {
-							//echo "<br>4 $suma_averageRDR -> $averageRDR.";
+							
 							$suma_averageRDR = $suma_averageRDR + $averageRDR;
 							$cuenta_averageRDR++;
 						}
@@ -990,7 +961,7 @@
 					if ($ird == 5) {
 						$rel_R5 = $averageRDR;
 						if ($averageRDR > 0) {
-							//echo "<br>5 $suma_averageRDR -> $averageRDR.";
+							
 							$suma_averageRDR = $suma_averageRDR + $averageRDR;
 							$cuenta_averageRDR++;
 						}
@@ -998,19 +969,18 @@
 					if ($ird == 6) {
 						$rel_R6 = $averageRDR;
 						if ($averageRDR > 0) {
-							//echo "<br>6 $suma_averageRDR -> $averageRDR.";
+							
 							$suma_averageRDR = $suma_averageRDR + $averageRDR;
 							$cuenta_averageRDR++;
 						}
 					}
 				}
 				
-				// echo "<br>F $suma_averageRDR -> $averageRDR. / cuenta $cuenta_averageRDR.";
 				
 				$Rel_headers = QR_IdInscripcion_Relatores_List($u->OTA);
 				$num_relator = 0;
 				$respRelatores = explode(";", $resp->respuesta);
-				//print_r($respRelatores); exit();
+				
 				foreach ($Rel_headers as $r) {
 					if ($r->relator <> "") {
 						$num_relator++;
@@ -1087,7 +1057,7 @@
 		}
 	}
 	elseif ($seccion == "adcurso2") {
-		//print_r($post);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$codigo_curso = (trim($post["codigo_curso"]));
 		$nombre_curso = (trim($post["nombre_curso"]));
@@ -1176,8 +1146,7 @@
 		$id_curso = Decodear3($i);
 		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "hola i $i ".Decodear3($i);
-		//exit();
+		
 		
 		if ($get["cOTA"] <> "") {
 			$c_ota = Decodear3($get["cOTA"]);
@@ -1200,8 +1169,7 @@
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			
 			echo "id_curso;curso;modalidad;id_imparticion;estado_ejecucion;fecha_inicio;fecha_termino;ejecutivo;proveedor;datos;asistentes;inscritos\r\n";
-			//$encabezado = file_get_contents("views/capacitacion/imparticion/entorno_listado_excel2.html");
-			//echo $encabezado;
+			
 			ListaImparticiones(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_listado.html")), $id_curso, $_SESSION["id_empresa"], $excel, "2");
 			exit;
 		}
@@ -1214,10 +1182,10 @@
 		exit;
 	}
 	elseif ($seccion == "accioncurso3") {
-		//print_r($_SESSION);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_curso = Decodear3($get["i"]);
-		//echo "id curso $id_curso";
+		
 		if ($id_curso) {
 			$PRINCIPAL = FormularioCurso3(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/curso/formulario_edita3.html")), $id_curso, $_SESSION["id_empresa"]);
 		}
@@ -1260,7 +1228,7 @@
 		}
 	}
 	elseif ($seccion == "adcurso3") {
-		//print_r($post);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$codigo_curso = (trim($post["codigo_curso"]));
 		$nombre_curso = (trim($post["nombre_curso"]));
@@ -1335,7 +1303,7 @@
 		exit;
 	}
 	elseif ($seccion == "edcurso3") {
-		//print_r($post);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		$id_curso = Decodear3($post["id"]);
@@ -1419,8 +1387,7 @@
 		$id_curso = Decodear3($i);
 		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "hola i $i ".Decodear3($i);
-		//exit();
+		
 		if ($excel == 1) {
 			$fechahoy = date("Y-m-d");
 			header("Content-Type: application/vnd.ms-excel");
@@ -1442,19 +1409,19 @@
 		exit;
 	}
 	elseif ($seccion == "listAgrupaciones") {
-		//print_r($post);//exit();
+		
 		$idAgrup = Decodear3($get["idAgrup"]);
-		//echo "<br>idAgrup $idAgrup<br>";
+		
 		if ($post["agrupacion_nueva"] == "1") {
-			//print_r($post);
+			
 			$id_agrupacion = reportes_online_maxAgrupacion();
 			foreach ($post as $key => $value) {
-				//echo "<br>line<br>";			print_r($value);				echo "<br>key<br>";				print_r($key);
+				
 				if ($key == "nombre_agrupacion" or $key == "agrupacion_nueva") {
 					continue;
 				}
 				$nombre_agrupacion = $post["nombre_agrupacion"];
-				//echo "<br>id_agrupacion $id_agrupacion nombre_agrupacion $nombre_agrupacion, id_curso ".$key;
+				
 				reportes_online_Insert_agrupacion_data($id_agrupacion, $nombre_agrupacion, $key);
 			}
 		}
@@ -1469,8 +1436,7 @@
 		$foco = $post["foco"];
 		$arreglo_post = $post;
 		$id_empresa = $_SESSION["id_empresa"];
-		// echo "<br>foco $foco<br>";
-		// Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
+				// Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
 		
 		$programas = ListasPresenciales_ProgramasDadoFocoDeTablaPrograma($id_empresa, $foco);
 		$options = '<script src="js/bootstrap-select.js"></script>';
@@ -1489,10 +1455,8 @@
 	
 	
 	elseif ($seccion == "MuestraBloqueCursoSeleccionadoDesdeCurso") {
-		//ini_set('display_errors', 1);ini_set('display_startup_errors', 1);error_reporting(E_ALL);
-		/*echo "<br>";		print_r($post);	echo "<br>";print_r($get);		echo "<br>";*/
 		$id_curso = Decodear3($get["i"]);
-		//echo "<br>id_curso $id_curso<br>";
+		
 		if ($get["del"] <> "") {
 			$id_linea = Decodear3($get["del"]);
 			DeleteSesionImparticion2021($id_linea);
@@ -1501,7 +1465,7 @@
 		$id_programa = Decodear3($get["idpbbdd"]);
 		$id_inscripcion = Decodear3($get["i"]);
 		$id_imparticion = Decodear3($get["id_imparticion"]);
-		//echo "<br>----------------------------------------->id_curso $id_curso id_programa $id_programa id_inscripcion $id_inscripcion id_imparticion $id_imparticion<br>";
+		
 		
 		if ($id_imparticion <> "") {
 			//$id_imparticion
@@ -1542,7 +1506,7 @@
 		
 		// malla_bch / categoria_bch
 		$malla_bch = ListMallaBch();
-		//print_r($malla_bch);
+		
 		foreach ($malla_bch as $unicomalla) {
 			$option_malla_bch .= "<option value='" . $unicomalla->nombre . "'>" . ($unicomalla->nombre) . "</option>;";
 		}
@@ -1559,7 +1523,7 @@
 		$Imp = BuscaIdImparticionFull_2021($id_imparticion);
 		$alerta_horas = DatosImparticiones_SumaHoras($id_curso, $id_imparticion, $Imp[0]->tipo_audiencia, $Imp[0]->fecha_inicio, $Imp[0]->fecha_termino, $Imp[0]->hora_inicio, $Imp[0]->hora_termino, $datos_curso[0]->modalidad, $datos_curso[0]->numero_horas);
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/formulario_ingresa_desde_curso.html"));
-		//echo $option_malla_bch;
+		
 		$alerta_sinasistencia_sin_horas = DatosImparticiones_SinASistenciaSinHoras($id_curso, $id_imparticion, $Imp[0]->tipo_audiencia, $Imp[0]->fecha_inicio, $Imp[0]->fecha_termino, $Imp[0]->hora_inicio, $Imp[0]->hora_termino, $datos_curso[0]->modalidad, $datos_curso[0]->numero_horas);
 		
 		$PRINCIPAL = str_replace("{alert_de_imparticion_sin_asistencia_nota_aprobacion}", $alerta_sinasistencia_sin_horas, $PRINCIPAL);
@@ -1574,8 +1538,8 @@
 		$PRINCIPAL = str_replace("{BACK_TO_LIST_CURSOS}", $back_to_list_cursos, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{BLOQUE_CURSO_SELECCIONADO}", $formulario, $PRINCIPAL);
 		
-		//echo "<H1>$id_programa - id curso $id_curso</H1>";
-		//print_r($Imp);
+		
+		
 		if (Decodear3($get["id_imparticion"]) <> "") {
 			$PRINCIPAL = str_replace("{EDITAR}", "1", $PRINCIPAL);
 		}
@@ -1669,10 +1633,9 @@
 	}
 	
 	elseif ($seccion == "MuestraBloqueCursoSeleccionadoDesdeMalla") {
-		//ini_set('display_errors', 1);ini_set('display_startup_errors', 1);error_reporting(E_ALL);
-		//echo "<br>";		print_r($post);	echo "<br>";print_r($get);		echo "<br>";
+		
 		$id_malla = Decodear3($get["i"]);
-		// echo "<br>id_malla $id_malla<br>";
+		
 		if ($get["del"] <> "") {
 			$id_linea = Decodear3($get["del"]);
 			DeleteSesionImparticion2021($id_linea);
@@ -1682,22 +1645,16 @@
 		$id_imparticion = Decodear3($get["id_imparticion"]);
 		$id_foco = BuscaIdFoco_DadoIdMalla_IdPrograma_2022($id_malla, $id_programa);
 		$id_malla_enc = Decodear3($get["id_malla_enc"]);
-		//echo $id_foco;
+		
 		if ($id_malla_enc <> "") {
 			$id_malla = $id_malla_enc;
 			$_SESSION["id_inscripcion_id_malla"] = BuscaIdInscripcionMalla_2022($id_malla, $id_inscripcion);
 		}
-		//echo "<br>----------------------------------------->id_malla $id_malla, id_malla_enc $id_malla_enc, id_programa $id_programa id_inscripcion $id_inscripcion id_imparticion $id_imparticion<br>";
-		//exit();
-		if ($id_imparticion <> "") {
-			//$id_imparticion
-		}
+		
 		
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_malla = BuscoCursoDadaMallayPrograma_2024($id_malla, $id_programa, $_SESSION["id_inscripcion_id_malla"]);
 		$datos_malla_first = BuscoCursoDadaMallayPrograma_2024_First($id_malla, $id_programa);
-		//print_r($datos_malla);
-		//print_r($get);
 		if ($get["first"] == "1") {
 			$_SESSION["id_inscripcion_id_malla"] = "";
 			$proximo_id_inscripcion = BuscaCorrelativoMalla_IdMalla_IdInscripcion2022();
@@ -1705,11 +1662,6 @@
 		}
 		
 		foreach ($datos_malla_first as $unico) {
-			//echo "id_malla $id_malla id curso ".$unico->id_curso;
-			//$formulario_mallas.= file_get_contents("views/capacitacion/imparticion/formulario_ingresa_elearning_mallas.html");
-			//$formulario_mallas = FormularioImparticionMallas(FuncionesTransversalesAdmin($formulario_mallas), $id_empresa, $id_imparticion, $unico->id_curso);
-			//$formulario_mallas = DatosImparticiones_Sesiones_2021($formulario_mallas, $id_imparticion, $unico->id_curso);
-			//$Imp = BuscaIdImparticionFull_2021($id_imparticion);
 			if ($get["first"] == "1") {
 				insert_IdMalla_IdInscripcion2022($id_malla, $unico->id_curso, $proximo_id_inscripcion);
 			}
@@ -1719,15 +1671,14 @@
 			$_SESSION["id_inscripcion_id_malla"] = $proximo_id_inscripcion;
 		}
 		
-		//echo "<br>form ".$formulario_mallas;
+		
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/formulario_ingresa_desde_malla.html"));
 		
 		// Recorre Tabla Inscripcion Id malla
 		$Id_cursos_id_Inscripcion_por_id_inscripcion_idMalla = Id_cursos_id_Inscripcion_por_id_inscripcion_idMalla_2022($_SESSION["id_inscripcion_id_malla"]);
-		//print_r($Id_cursos_id_Inscripcion_por_id_inscripcion_idMalla);
 		
 		foreach ($Id_cursos_id_Inscripcion_por_id_inscripcion_idMalla as $u) {
-			//echo "<br>-> ".$u->id_curso." ".$u->nombre." ".$u->id_inscripcion;
+			
 			$row_id_curso .= file_get_contents("views/capacitacion/imparticion/row_id_curso_por_malla.html");
 			$row_id_curso = str_replace("{ID_CURSO}", $u->id_curso, $row_id_curso);
 			$row_id_curso = str_replace("{NOMBRE_CURSO}", ($u->nombre), $row_id_curso);
@@ -1755,7 +1706,7 @@
 		$hoy = date("Y-m-d");
 		$alerta_delete = "";
 		if ($get["del"] == "1") {
-			//echo "<br> hoy $hoy, ".$u->fecha_inicio;
+			
 			if ($u->fecha_inicio <= $hoy) {
 				$alerta_delete = "<div class='alert alert-danger'>Las imparticiones ya están en curso. Ya no puedes eliminar estas imparticiones</div>";
 			}
@@ -1768,7 +1719,7 @@
 			}
 		}
 		if ($get["edit"] == "1") {
-			//echo "<br> hoy $hoy, ".$u->fecha_inicio;
+			
 			if ($u->fecha_inicio <= $hoy) {
 				$alerta_delete = "<div class='alert alert-info'>Las imparticiones ya están en curso. Ya no las puedes editar</div>";
 				$boton_editar = "";
@@ -1825,7 +1776,7 @@
 		
 		
 		$alerta_horas = DatosImparticiones_SumaHoras($id_curso, $id_imparticion, $Imp[0]->tipo_audiencia, $Imp[0]->fecha_inicio, $Imp[0]->fecha_termino, $Imp[0]->hora_inicio, $Imp[0]->hora_termino, $datos_curso[0]->modalidad, $datos_curso[0]->numero_horas);
-		// echo "<h4>alerta_horas $alerta_horas </h4>";
+		
 		
 		$alerta_sinasistencia_sin_horas = DatosImparticiones_SinASistenciaSinHoras($id_curso, $id_imparticion, $Imp[0]->tipo_audiencia, $Imp[0]->fecha_inicio, $Imp[0]->fecha_termino, $Imp[0]->hora_inicio, $Imp[0]->hora_termino, $datos_curso[0]->modalidad, $datos_curso[0]->numero_horas);
 		$PRINCIPAL = str_replace("{alert_de_imparticion_sin_asistencia_nota_aprobacion}", $alerta_sinasistencia_sin_horas, $PRINCIPAL);
@@ -1845,7 +1796,7 @@
 		$PRINCIPAL = str_replace("{ID_EMPRESA}", $_SESSION["id_empresa"], $PRINCIPAL);
 		$PRINCIPAL = str_replace("{BACK_TO_LIST_CURSOS}", $back_to_list_cursos, $PRINCIPAL);
 		
-		//print_r($Imp);
+		
 		$PRINCIPAL = str_replace("{VALUE_COD_IMPARTICION_FECHA_DESDE_NEW2}", $Imp[0]->fecha_inicio, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{VALUE_COD_IMPARTICION_FECHA_HASTA_NEW2}", $Imp[0]->fecha_termino, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{VALUE_COD_IMPARTICION_HORA_DESDE_NEW2}", $Imp[0]->hora_inicio, $PRINCIPAL);
@@ -1913,7 +1864,7 @@
 		
 		// malla_bch / categoria_bch
 		$malla_bch = ListMallaBch();
-		//print_r($malla_bch);
+		
 		foreach ($malla_bch as $unicomalla) {
 			$option_malla_bch .= "<option value='" . $unicomalla->nombre . "'>" . ($unicomalla->nombre) . "</option>;";
 		}
@@ -1961,7 +1912,7 @@
 	
 	
 	elseif ($seccion == "adimparti_malla") {
-		//print_r($post);    print_r($_SESSION); exit();
+		
 		$id_inscripcion_id_malla = $_SESSION["id_inscripcion_id_malla"];
 		$id_empresa = $_SESSION["id_empresa"];
 		$fecha_desde = $post["fecha_desde"];
@@ -1981,9 +1932,9 @@
 		$ejecutivo = $post["ejecutivo"];
 		$nombre_inscripcion = $post["nombre_imparticion"];
 		$activa_cero = 0;
-		$Lista_Cursos_para_CrearInscripcion = Id_cursos_id_Inscripcion_por_id_inscripcion_idMalla_2022($id_inscripcion_id_malla);//print_r($Lista_Cursos_para_CrearInscripcion);exit();
+		$Lista_Cursos_para_CrearInscripcion = Id_cursos_id_Inscripcion_por_id_inscripcion_idMalla_2022($id_inscripcion_id_malla);
 		foreach ($Lista_Cursos_para_CrearInscripcion as $u) {
-			//echo "<br>-> ".$u->id_curso." ".$fecha_desde." ".$fecha_hasta." ".$opcional." ".$id_inscripcion_id_malla."";
+			
 			if (empty($u->id_inscripcion)) {
 				$trae_imparticiones_ultima = IMPARTICIONES_traeImparticionesCreadasUltima_2021($id_empresa);
 				$siguiente_codigo_p = NuevoCodigoImparticion_2021($trae_imparticiones_ultima);
@@ -1993,8 +1944,7 @@
 				$siguiente_codigo = $u->id_inscripcion;
 			}
 			
-			//echo "<br>->trae_imparticiones_ultima ".$trae_imparticiones_ultima;
-			// echo "<br>->siguiente_codigo ".$siguiente_codigo;
+
 			InsertUpdatetbl_rel_lms_id_curso_id_inscripcion($u->id_curso, $siguiente_codigo, "", $fecha_desde, $fecha_hasta, $id_empresa, $opcional, $ejecutivo, $rut_ejecutivo_externo, $sence, $cod_sence, $nombre_curso_sence, $nombre_otic, "", "");
 			Update_Id_cursos_id_Inscripcion_por_id_inscripcion_idMalla_2022($id_inscripcion_id_malla, $u->id_curso, $siguiente_codigo, $fecha_desde, $fecha_hasta, $opcional, $nombre_inscripcion, $ejecutivo, $categoria_bch, $malla_bch, $proyectoM, $ejeM);
 			UpdateIdMallaProgramaFocoParaIdInscripcion($nombre_inscripcion, $activa_cero, $siguiente_codigo, $id_malla, $id_programa, $id_foco);
@@ -2006,7 +1956,7 @@
 	}
 	
 	elseif ($seccion == "adimparti") {
-		//echo "<br>Post<br>";echo "<pre>";print_r($post);echo "</pre>";
+		
 		if ($post["ed"] == "1") {
 			$id_imparticion_decod = ($post["cod_imparticion"]);
 		}
@@ -2016,38 +1966,37 @@
 		}
 		
 		if ($post["imparticion_elearning"] == "1") {
-			//echo "ES ELEARNING";
+			
 			if ($post["opcional"] == "on") {
 				$opcional = "1";
 			}
 			else {
 				$opcional = "0";
 			}
-			//echo "creo imparticion tipo elearning id_imparticion_decod $id_imparticion_decod";
+			
 			InsertUpdatetbl_rel_lms_id_curso_id_inscripcion($post["curso"], $id_imparticion_decod, $post["nombre"], $post["fecha_desde_new_2"], $post["fecha_hasta_new_2"], $_SESSION["id_empresa"], $opcional, $post["ejecutivo"], $post["ejecutivo_externo"], $post["sence"], $post["cod_sence"], $post["nombre_curso_sence"], $post["nombre_otic"], $post["tipo_modalidad"], $post["costos_asociados"]);
-			//echo "<script>location.href='?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i=".$post["id_curso_enc"]."&id_imparticion=".$id_imparticion_encoded."';</script>";exit;
+			
 		}
 		else {
-			//echo "NO ES ELEARNING";
+			
 			
 			$existe_otra_imparticion_2023 = InscripcionCheckImparticionrepetido_2023($post["curso"], $id_imparticion_decod);
-			//echo $existe_otra_imparticion_2023;
+			
 			
 			if ($existe_otra_imparticion_2023 > 0) {
 				$nuevo_cod1 = NuevoCodigoImparticion_2021($id_imparticion_decod);
 				$existe_otra_imparticion_2023_1 = InscripcionCheckImparticionrepetido_2023($post["curso"], $nuevo_cod1);
-				//echo "<br>existe_otra_imparticion_2023_1 $existe_otra_imparticion_2023_1";
+				
 				if ($existe_otra_imparticion_2023_1 > 0) {
 					$nuevo_cod1 = NuevoCodigoImparticion_2021($nuevo_cod1);
 					$existe_otra_imparticion_2023_1 = InscripcionCheckImparticionrepetido_2023($post["curso"], $nuevo_cod1);
-					//echo "<br>existe_otra_imparticion_2023_2 $existe_otra_imparticion_2023_1";
+					
 				}
-				//echo "nuevo post $nuevo_cod1";
+				
 				$post["cod_imparticion"] = $nuevo_cod1;
 				$id_imparticion_decod = $post["cod_imparticion"];
 			}
-			//exit();
-			//$post["cod_imparticion"]
+			
 			if ($post["opcional"] == "1") {
 				$opcional = "1";
 			}
@@ -2056,9 +2005,9 @@
 			}
 			
 			InsertUpdatetbl_rel_lms_id_curso_id_inscripcion($post["curso"], $id_imparticion_decod, $post["nombre"], $post["fecha_desde_new_2"], $post["fecha_hasta_new_2"], $_SESSION["id_empresa"], $opcional, $post["ejecutivo"], $post["ejecutivo_externo"], $post["sence"], $post["cod_sence"], $post["nombre_curso_sence"], $post["nombre_otic"], $post["tipo_modalidad"], $post["costos_asociados"]);
-			//echo "opcional es $opcional";
+			
 		}
-		//exit();
+		
 		
 		$id_imparticion_decod = Decodear3($post["id_imparticion_enc"]);
 		if ($id_imparticion_decod <> "") {
@@ -2129,15 +2078,14 @@
 			}
 			
 			$Fechas_MaxMin = Sesiones_2021_MaxMinFecha($id_imparticion_decod);
-			//print_r($Fechas_MaxMin);
-			//exit();
+
 			$fecha_inicio = $Fechas_MaxMin[1];
 			$fecha_termino = $Fechas_MaxMin[0];
 			$hora_desde = "";
 			$hora_hasta = "";
 		}
 		else {
-			//echo "Fechas Inicio Termino ";
+			
 			$fecha_inicio = $post["fecha_desde_new_2"];
 			$fecha_termino = $post["fecha_hasta_new_2"];
 			$hora_desde = $post["hora_desde_new_2"];
@@ -2145,7 +2093,7 @@
 			$relator = Decodear3($post["relator"]);
 		}
 		
-		//echo "<br>$id_imparticion_decod Fechas $fecha_inicio - $fecha_termino, $hora_desde- $hora_hasta - relator $relator<br>";
+		
 		
 		
 		$id_empresa = $_SESSION["id_empresa"];
@@ -2154,23 +2102,9 @@
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_curso = $post["curso"];
 		$codigo_imparticion = ($post["cod_imparticion"]);
-		/*	$fecha_inicio		=	$post["fecha"];
-			if($post["fecha_hasta"]=="")	{
-					$fecha_termino		=	$post["fecha"];
-				} else {
-					$fecha_termino		=	$post["fecha_hasta"];
-				}
-			$hora_desde			=	$post["hora_desde"];
-			if($post["hora_hasta"]==""){
-				$hora_hasta			=	"23:59:59";
-				} else {
-				$hora_hasta			=	$post["hora_hasta"];
-			}
-			$observacion		=	$post["observacion"];
-			*/
 		$existe_inscripcion = DatosInscripcionConCodigo($codigo_imparticion);
 		if ($existe_inscripcion) {
-			//echo "<script>alert('Código de Imparticion ya existe');window.history.back();</script>"; exit;
+		
 		}
 		
 		$direccion = ($post["direccion"]);
@@ -2209,84 +2143,16 @@
 		$datos_curso = VerificoCursoPorEmpresa($id_curso, $id_empresa);
 		$id_audiencia = $post["id_audiencia"];
 		$tipo_audiencia = $post["tipo_audiencia"];
-		/*$tiene_Sesiones = FechaInicioTerminoImparticionPorEmpresa($codigo_imparticion, $id_empresa);
-    if ($tiene_Sesiones) {
-        foreach ($tiene_Sesiones as $sesion) {
-            // Aca lo que hago, es por cada sesion, actualizo los datos.
-            $fecha = $post["fecha" . $sesion->id];
-            $desde_am = $post["desde_am" . $sesion->id];
-            $hasta_am = $post["hasta_am" . $sesion->id];
-            $desde_pm = $post["desde_pm" . $sesion->id];
-            $hasta_pm = $post["hasta_pm" . $sesion->id];
-            // echo "<br />desde am $desde_am hasta am $hasta_am<br />";
-            // echo "desde pm $desde_pm hasta pm $hasta_pm<br />";
-            // exit;
-            $rango_am = calcular_tiempo_trasnc($hasta_am, $desde_am);
-            $rango_pm = calcular_tiempo_trasnc($hasta_pm, $desde_pm);
-            if ($desde_am == "00:00:00" or $hasta_am == "00:00:00") {
-                // echo "no tiene horas am";
-                $suma_horas = $rango_pm . ":00";
-            } else if ($desde_pm == "00:00:00" or $hasta_pm == "00:00:00") {
-                $suma_horas = $rango_am . ":00";
-                // echo "tiene horas am";
-            } else {
-                // echo "tiene las dos ";
-                $suma_horas = sumar2Horas($rango_am . ":00", $rango_pm . ":00");
-            }
-            // echo $suma_horas;exit;
-            $rut_relator = $post["rut_relator" . $sesion->id];
-            $id_sesion = $sesion->id;
-            ActualizarDatosSesionDeImparticion($fecha, $desde_am, $hasta_am, $desde_pm, $hasta_pm, $suma_horas, $rut_relator, $codigo_imparticion, $id_empresa, $sesion->id);
-        }
-    }
-    for ($cantidad_sesiones = 1; $cantidad_sesiones <= 20; $cantidad_sesiones++) {
-        if ($post["fecha" . $cantidad_sesiones]) {
-            InsertaSesionPorImparticion($codigo_imparticion, $id_empresa, $post["fecha" . $cantidad_sesiones], $post["desde_am" . $cantidad_sesiones], $post["hasta_am" . $cantidad_sesiones], $post["desde_pm" . $cantidad_sesiones], $post["hasta_pm" . $cantidad_sesiones], $post["nume_horas" . $cantidad_sesiones], $post["rut_relator" . $cantidad_sesiones]);
-        }
-    }*/
 		
 		if ($datos_curso[0]->modalidad == 2 or $datos_curso[0]->modalidad == 3 or $datos_curso[0]->modalidad == 4) {
-			/*
-        // Si es presencial
-        // $query_audiencia=ArmaQueryaudiencias($id_audiencia, $id_empresa);
-        // Para el tema de las sesiones
-        // Veo si esta imparticion tiene sesiones
-        */
-			$datos_post = $post;
-			/* // ColocaObjetosPorCursoSiNotiene($id_empresa, $id_curso, $codigo_imparticion);
-        // IMPARTICION_CreaImparticion($id_empresa, $codigo_imparticion, $id_curso, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_audiencia, $tipo_audiencia, $datos_post, $sesiones, $ejecutivo);
-        // echo "<br />edimparti $id_empresa, $codigo_imparticion, $id_curso, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_audiencia, $tipo_audiencia, $datos_post, $sesiones, $ejecutivo, $comentarios, $nuevo_codigo_imparticion);";
-        //$fechas_Imparticion = FechaInicioTerminoImparticion($codigo_imparticion);
-        // $fechas_Imparticion[0]->inicio, $fechas_Imparticion[0]->termino,
-        // IMPARTICION_ActualizaImparticion($id_empresa, $codigo_imparticion, $id_curso, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_audiencia, $tipo_audiencia, $datos_post, $sesiones, $ejecutivo, $comentarios, $nuevo_codigo_imparticion);
-        */
+			
 			IMPARTICION_ActualizaImparticion($id_empresa, $codigo_imparticion, $id_curso, $post["fecha"], $post["fecha"], $post["direccion"], $post["ciudad"], $post["cupos"], $id_audiencia, $tipo_audiencia, $datos_post, $sesiones, $ejecutivo, $comentarios, $nuevo_codigo_imparticion, $post["hora_desde"], $post["hora_hasta"], $post["observacion"]);
-			/*
-       	// if ($fechaT1 != '' and $fechaT2 != '' and $horaH1 != '' and $horaH2 != '') {
-        //    UpdateRelObjetoImpT($fechaT1, $fechaT2, $horaH1, $horaH2, $codigo_imparticion, $id_empresa);
-        //}
-        // Debo por el id de la audiencia, ingresar a cada usuario en la tabla inscripcion_usuarios
-        // Traigo los rut por Audiencia dado el id de audiencia de la tabla
-        $rut_por_audiencia = Audiencias_RutPorAudienciaEmpresa($id_audiencia, $id_empresa);
-        foreach ($rut_por_audiencia as $rut_aud) {
-            if ($tipo_audiencia == 1) {
-                $estado_inscripcion = "INSCRITO";
-                $inscrito = 1;
-            } else if ($tipo_audiencia == 2) {
-                $estado_inscripcion = "AUTOSIN";
-                $inscrito = "";
-            } else if ($tipo_audiencia == 3) {
-                $estado_inscripcion = "AUTO";
-                $inscrito = "";
-            }
-            IMPARTICION_InsertaInscripcionUsuarios($codigo_imparticion, $rut_aud->rut, $id_curso, $id_empresa, $estado_inscripcion, $inscrito);
-        }*/
+			
 			
 			if ($_FILES['excel']['name'] <> "") {
 				$archivo = $_FILES['excel']['name'];
 				VerificaExtensionFilesAdmin($_FILES["excel"]);
 				if ($archivo) {
-					// echo "estoy en Excel "; sleep(2);
 					$tipo = $_FILES['excel']['type'];
 					$destino = "tmp_ev_" . $archivo;
 					if (copy($_FILES['excel']['tmp_name'], $destino)) {
@@ -2296,7 +2162,6 @@
 					}
 					if (file_exists("tmp_ev_" . $archivo)) {
 						// Elimina Usuario en la tabla tbl
-						// echo "Elimina Usuario en la tabla tbl"; exit();
 						IMPARTICION_EliminaUsuariosInscripcionUsuarioT($codigo_imparticion, $id_empresa);
 						require_once 'clases/PHPExcel.php';
 						
@@ -2473,7 +2338,7 @@
 		$id_imparticion = Decodear3($get["i"]);
 		
 		if (Decodear3($get["sesdel"])) {
-			//echo "borra ".Decodear3($get["sesdel"]);
+			
 			$id_seborra = Decodear3($get["sesdel"]);
 			DelSesImpEn($id_seborra, $id_empresa);
 		}
@@ -2483,7 +2348,7 @@
 		$arreglo_rut_inexistentes = explode(";", $cadena_ruts);
 		$arreglo_rut_inexistentes_postulantes = explode(";", $cadena_ruts_postulantes);
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
-		//print_r($datos_imparticion);
+		
 		
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/formulario_edita.html"));
 		
@@ -2605,17 +2470,12 @@
 				$dsatz[$i] = explode(";", $line[$i], ($num + 1));
 				$i++;
 			}
-			//echo "<table>";						        //echo "<tr>";
+			
 			$cuentaK = 0;
 			for ($k = 0; $k != ($num + 1); $k++) {
-				//echo "<td>AA " . $fields[$k] . "</td>";
+				
 				$cuentaK++;
 			}
-			//ini_set('output_buffering', 0);
-			//ini_set('zlib.output_compression', 0);
-			
-			//if( !ob_get_level() ){ ob_start(); }
-			//else { ob_end_clean(); ob_start(); }
 			$count_total_loop = count($dsatz);
 			
 			if ($count_total_loop > 0) {
@@ -2623,11 +2483,9 @@
 			}
 			
 			$estado_txt = "";
-			// echo "</tr>";
 			
 			
 			foreach ($dsatz as $key => $number) {
-				// echo "<tr>";
 				$row_csv = "";
 				$cuenta = 0;
 				foreach ($number as $k => $content) {
@@ -2640,10 +2498,6 @@
 					}
 				}
 				
-				
-				/*echo "rut, id_curso, id_inscripcion, nombre_inscripcion, fecha_inicio_inscripcion,
-					fecha_termino_inscripcion, id_empresa, opcional, activa, rut_ejecutivo";
-					echo "<br>";*/
 				
 				
 				$id_curso = $datos_rel_inscripcion[0]->id_curso;
@@ -2659,11 +2513,10 @@
 				InsertRutPorIdMallaPorMalla2022($id_imparticion, $rut);
 				
 				echo "<center><span style='position: absolute;z-index:$current;background:#36C6D3; padding:10px; color:#FFF'>Actualizando $cuenta_loop de $count_total_loop Registros</span></center>";
-				// flush();
-				//ob_flush();
+
 				
 			}
-			// echo "</table>";
+
 		}
 		
 		CopiaParticipantes_InscripcionPotencial_($id_imparticion);
@@ -2716,17 +2569,13 @@
 				$dsatz[$i] = explode(";", $line[$i], ($num + 1));
 				$i++;
 			}
-			//echo "<table>";						        //echo "<tr>";
+			
 			$cuentaK = 0;
 			for ($k = 0; $k != ($num + 1); $k++) {
-				//echo "<td>AA " . $fields[$k] . "</td>";
+				
 				$cuentaK++;
 			}
-			//ini_set('output_buffering', 0);
-			//ini_set('zlib.output_compression', 0);
-			
-			//if( !ob_get_level() ){ ob_start(); }
-			//else { ob_end_clean(); ob_start(); }
+
 			$count_total_loop = count($dsatz);
 			
 			if ($count_total_loop > 0) {
@@ -2734,11 +2583,10 @@
 			}
 			
 			$estado_txt = "";
-			// echo "</tr>";
+
 			
 			
 			foreach ($dsatz as $key => $number) {
-				// echo "<tr>";
 				$row_csv = "";
 				$cuenta = 0;
 				foreach ($number as $k => $content) {
@@ -2751,10 +2599,6 @@
 					}
 				}
 				
-				
-				/*echo "rut, id_curso, id_inscripcion, nombre_inscripcion, fecha_inicio_inscripcion,
-					fecha_termino_inscripcion, id_empresa, opcional, activa, rut_ejecutivo";
-					echo "<br>";*/
 				
 				
 				$id_curso = $datos_rel_inscripcion[0]->id_curso;
@@ -2771,11 +2615,10 @@
 				
 				
 				echo "<center><span style='position: absolute;z-index:$current;background:#36C6D3; padding:10px; color:#FFF'>Actualizando $cuenta_loop de $count_total_loop Registros</span></center>";
-				// flush();
-				//ob_flush();
+
 				
 			}
-			// echo "</table>";
+
 		}
 		
 		echo "<script>alert('Actualizado los datos. Insertados: " . $insertados . " - Actualizados: " . $actualizados . "');
@@ -2791,14 +2634,14 @@
 			$Header_Preguntas = Reportes_detalle_headers_Preguntas_respuestas($id_encuesta);
 			
 			
-			//print_r($Header_Preguntas);
+			
 			foreach ($Header_Preguntas as $h) {
 				$row_header_preguntas .= $h->pregunta . ";";
 				if ($h->tipo == "PREGUNTAS_RELATORES") {
 					$row_header_preguntas .= "Relator1;Respuesta;Relator2;Respuesta;Relator3;Respuesta;Relator4;Respuesta;Relator5;Respuesta;Relator6;Respuesta;";
 				}
 			}
-			//echo "<br>->".$row_header_preguntas;exit();
+			
 			
 			$row_header_preguntas = ($row_header_preguntas);
 			header('Content-Description: File Transfer');
@@ -2808,14 +2651,14 @@
 			echo "rut;nombre;cargo;fecha_ingreso;division;area;departamento;zona;seccion;unidad;region;empresa;rut_jefe;nombre_jefe;id_imparticion;nombre_imparticion;" . $row_header_preguntas . "fecha\r\n";
 			
 			$UsuariosRespuestas_ = QR_Detalle_Download_Usuarios_por_Imparticion_Data($id_encuesta, $id_imparticion);
-			//print_r($UsuariosRespuestas_); //exit();
+			
 			foreach ($UsuariosRespuestas_ as $u) {
-				//echo "<br>A ".$u->rut;
+				
 				$row_respuestas_only = "";
 				$resp_detalle = QR_Detalle_Download_Usuarios_por_Detalle_Imparticion_Data($id_encuesta, $id_imparticion, $u->rut);
-				//print_r($resp_detalle);
+				
 				foreach ($resp_detalle as $resp) {
-					//echo "<br>";print_r($resp);
+					
 					if ($resp->tipo == "PREGUNTAS_RELATORES") {
 						$Rel_headers = QR_IdInscripcion_Relatores_List($id_imparticion);
 						$num_relator = 0;
@@ -2833,7 +2676,7 @@
 						$rel_6 = "";
 						$rel_R6 = "";
 						$respRelatores = explode(";", $resp->respuesta);
-						//print_r($respRelatores); exit();
+						
 						foreach ($Rel_headers as $r) {
 							if ($r->relator <> "") {
 								$num_relator++;
@@ -2870,27 +2713,22 @@
 						$row_respuestas_only .= $resp->respuesta . ";";
 					}
 				}
-				// echo "row_respuestas_only $row_respuestas_only"; exit();
 				$row_respuestas_preguntas = $u->rut . ";" . $u->nombre_completo . ";" . $u->cargo . ";" . $u->fecha_ingreso . ";" . $u->division . ";" . $u->area . ";" . $u->departamento . ";" . $u->zona . ";" . $u->seccion . ";" . $u->unidad . ";" . $u->region . ";" . $u->empresa . ";" . $u->rut_jefe . ";" . $u->nombre_jefe . ";" . $u->OTA . ";" . $u->nombre_imparticion . ";" . $row_respuestas_only . "" . $u->fecha . "\r\n";
-				//$u->respuesta = str_replace(";", ",", $u->respuesta);
+
 				echo "" . ($row_respuestas_preguntas);
 			}
 			exit();
 		}
-		//;".
-		//                ($u->pregunta).";".
-		//                $u->respuesta.";".
-		//                $u->fecha.";".
-		//                $u->nombre_relatores."
+
 		if (Decodear3($get["ididel"]) <> "") {
-			//echo "A";
+			
 			EncuestaDeleteEncSat(Decodear3($get["ididel"]));
-			//exit();
+			
 		}
 		
 		if ($post["crear_enc_satisf"] == "1") {
 			QR_InsertRelatorIdImparticion($id_imparticion, "creada");
-			//print_r($post);
+			
 			foreach ($post as $key => $value) {
 				// $arr[3] will be updated with each value from $arr...
 				if ($key <> "crear_enc_satisf") {
@@ -2904,7 +2742,7 @@
 		$QR_relatores_full = QR_IdInscripcion_Relatores_Full($id_imparticion);
 		
 		$SesRelatores_seleccionados = QR_IdInscripcion_Sesiones_Relatores($id_imparticion);
-		//echo "<pre>";print_r($SesRelatores);echo "</pre>";
+		
 		foreach ($SesRelatores_seleccionados as $Srs) {
 			if ($Srs->relator_seleccionado <> "") {
 				$checkbox = "<input type='checkbox' name='" . $Sr->rut_relator . "' value='" . $Sr->rut_relator . "' checked >";
@@ -2940,7 +2778,7 @@
 		$PRINCIPAL = str_replace("{ELIMINAR_ENCUESTA}", ($boton_eliminar), $PRINCIPAL);
 		
 		$SesRelatores = QR_IdInscripcion_Sesiones_Relatores($id_imparticion);
-		//echo "<pre>";print_r($SesRelatores);echo "</pre>";
+		
 		foreach ($SesRelatores as $Sr) {
 			if ($Sr->nombre_relator <> "") {
 				$checkbox = "<input type='checkbox' name='" . $Sr->rut_relator . "' value='" . $Sr->rut_relator . "' >";
@@ -2971,7 +2809,7 @@
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
 		global $url_front_token_redirect;
-		//echo "<br><h2>".$u->nombre."</h2>";
+		
 		$link = "&tipo=enc_sat&idi=" . $get["i"] . "";
 		//$link_enc=Encodear3($link);
 		$url_qr = $url_front_token_redirect . $link;
@@ -3010,11 +2848,11 @@
 	}
 	elseif ($seccion == "VeProveedoresXImp2021") {
 		$id_imparticion = Decodear3($get["i"]);
-		//echo "<br>->VeProveedoresXImp2021 -> id_imparticion $id_imparticion";
+		
 		if (Decodear3($get["dl"]) <> "") {
 			Updatetbl_id_inscripcion_proveedores(Decodear3($get["dl"]));
 		}
-		//print_r($post);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
 		$PRINCIPAL = ListaProveedoresPorImparticiones_2021(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_listado_proveedores.html")), $id_imparticion, $_SESSION["id_empresa"]);
@@ -3074,11 +2912,11 @@
 	}
 	elseif ($seccion == "VeNotificarCuadroContable") {
 		$id_imparticion = Decodear3($get["i"]);
-		//echo "<br>->VeNotificarCuadroContable -> id_imparticion $id_imparticion";
+		
 		if (Decodear3($get["dl"]) <> "") {
 			Updatetbl_id_inscripcion_proveedores(Decodear3($get["dl"]));
 		}
-		//print_r($post);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
 		$PRINCIPAL = ListaCuadroContablePorImparticiones_2021(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_listado_notificacion.html")), $id_imparticion, $_SESSION["id_empresa"]);
@@ -3148,7 +2986,7 @@ Cuadro Contable<br>
 		exit();
 	}
 	elseif ($seccion == "accionSubeProveedorPorImparticion_2021") {
-		//print_r($post);echo Decodear3($get["i"]);
+		
 		if ($post["servicio_otorgado"] == 8) {
 		}
 		else {
@@ -3161,11 +2999,11 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "VeDocsXImp2021") {
 		$id_imparticion = Decodear3($get["i"]);
-		//echo "<br>->id_imparticion $id_imparticion";$id_curso = Decodear3($i);
+		
 		if (Decodear3($get["dl"]) <> "") {
 			Updatetbl_id_inscripcion_documentos(Decodear3($get["dl"]), "0");
 		}
-		//print_r($post);
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
 		$PRINCIPAL = ListaDocsPorImparticiones_2021(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_listado_documentos.html")), $id_imparticion, $_SESSION["id_empresa"]);
@@ -3206,25 +3044,23 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "VeColaboradoresXImp2021") {
 		$id_imparticion = Decodear3($get["i"]);
-		//$id_curso = Decodear3($i);   //print_r($post);
+		
 		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "hola id_imparticion $id_imparticion";exit();print_r($get);
+		
 		if (Decodear3($get["del_rut_enc"]) <> "") {
-			//echo "$id_imparticion ".Decodear3($get["del_rut_enc"]);
-			DeleteInscripcionUsuarios_2022($id_imparticion, Decodear3($get["del_rut_enc"]));
+						DeleteInscripcionUsuarios_2022($id_imparticion, Decodear3($get["del_rut_enc"]));
 			echo "<script>alert('Participante " . Decodear3($get["del_rut_enc"]) . " eliminado de la imparticion');</script>";
 		}
-		//exit();
 		UpdateMinimo_asistenciaMinimo_nota_aprobacion_2021($id_imparticion);
 		if ($get["dl"] <> "") {
-			//echo "<br>Borrar ".$get["dl"];
+			
 			actualizaArchivoImparticionRut_Id_2021($get["dl"]);
 		}
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
 		if ($post["rut_col"] <> "") {
 			$hoy = date("Y-m-d");
-			//echo "<br>id_imparticion $id_imparticion";
+			
 			$Usu = TraeDatosUsuario($post["rut_col"]);
 			if ($Usu[0]->rut <> "") {
 				InsertNewInscripcionUsuarios_2022($datos_imparticion[0]->codigo_inscripcion, $post["rut_col"], $datos_imparticion[0]->id_curso, $datos_imparticion[0]->id_empresa, $hoy, "presencial");
@@ -3232,7 +3068,7 @@ Cuadro Contable<br>
 			else {
 				echo "<script>alert('Rut no fue encontrado en la Base de Datos'); </script>";
 			}
-			//exit();
+			
 		}
 		if ($datos_imparticion[0]->id_modalidad == "1") {
 			Update_rel_lms_id_curso_id_inscripcion_IdMalla_Programa_foco_2022($datos_imparticion[0]->codigo_inscripcion, $datos_imparticion[0]->id_curso);
@@ -3278,11 +3114,11 @@ Cuadro Contable<br>
 		$PRINCIPAL = str_replace("{ID_CURSO}", ($datos_imparticion[0]->id_curso), $PRINCIPAL);
 		$PRINCIPAL = str_replace("{NOMBRE_CURSO}", ($datos_imparticion[0]->nombre_curso), $PRINCIPAL);
 		if ($datos_imparticion[0]->minimo_asistencia <> "") {
-			//echo "Minimo Asistencia A";
+			
 			$minimo_asistencia = "<br><span class='label label-sm label-info' style='    margin-bottom: 1px;'> Asistencia M&iacute;nima </span> " . $datos_imparticion[0]->minimo_asistencia . "%";
 		}
 		else {
-			//echo "Minimo Asistencia B";
+			
 			$minimo_asistencia = "";
 		}
 		if ($datos_imparticion[0]->minimo_nota_aprobacion <> "") {
@@ -3301,7 +3137,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "LibroClasesXImp2021") {
 		$id_imparticion = Decodear3($get["i"]);
-		//$id_curso = Decodear3($i);   //print_r($post);
+		
 		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
 		$PRINCIPAL = ListaColaboradoresPorImparticiones_LibroClases_2024(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_libro_clases.html")), $id_imparticion, $_SESSION["id_empresa"], "");
@@ -3314,9 +3150,9 @@ Cuadro Contable<br>
 		$enc_sat = ($get["EncSat"]);
 		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "hola id_imparticion $id_imparticion";exit();
+		
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
-		//print_r($datos_imparticion);
+		
 		$Imp = DatosCompletosImparticion_2021($id_imparticion);
 		$PRINCIPAL = VeReportesXImp2021_fn(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/reportes/entorno.html")), $id_imparticion, $datos_imparticion[0]->id_curso, $rut, $id_empresa, $enc_sat);
 		$PRINCIPAL = str_replace("{ID_MODALIDAD_BACK}", $Imp[0]->id_modalidad, $PRINCIPAL);
@@ -3340,8 +3176,6 @@ Cuadro Contable<br>
 		$id_curso = Decodear3($i);
 		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "hola $i $id_curso";
-		//exit();
 		
 		if ($excel == 1) {
 			header("Content-Type: application/vnd.ms-excel");
@@ -3369,12 +3203,11 @@ Cuadro Contable<br>
 	elseif ($seccion == "descargarInscritosPorImpart_2021") {
 		$codigo_inscripcion = Decodear3($get["ci"]);
 		$sp = $get["sp"];
-		//echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_curso = DAtosCursoDadoIdInscripcion($codigo_inscripcion, $id_empresa);
 		
-		//$total_mallas_por_programa=TraeMallasDadoPrograma($id_empresa, $id_programa);//$total_usuarios_por_programa=totalUsuariosPorProgramaConMallas($id_empresa, $total_mallas_por_programa);    //echo "hola";
-		header('Content-Description: File Transfer');
+				header('Content-Description: File Transfer');
 		header('Content-Type: application/csv');
 		
 		if ($sp == "1") {
@@ -3388,7 +3221,7 @@ Cuadro Contable<br>
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 		
 		$Num_sesiones = ImparticionesNumSesiones_2021($codigo_inscripcion);
-		//echo "num sesiones $Num_sesiones";exit();
+		
 		if ($sp == "1") {
 			echo "rut\r\n";
 		}
@@ -3518,7 +3351,7 @@ Cuadro Contable<br>
 			}
 		}
 		$total_usuarios_ = TraigoRegistrosPorSesionDeCheckinPorImparticion_2021($codigo_inscripcion, $id_empresa);
-		//print_r($total_usuarios_);
+		
 		foreach ($total_usuarios_ as $unico) {
 			$row_csv_sesiones = "";
 			$check_s1 = "";
@@ -3533,7 +3366,7 @@ Cuadro Contable<br>
 			$check_s10 = "";
 			$check_s11 = "";
 			$check_s12 = "";
-			//echo "<br>D1->".$unico->nota_diagnostico."<br>";
+			
 			if ($Num_sesiones > 0) {
 				$check_s1 = Asistencia2021_Avance_Sesiones($unico->rut, $codigo_inscripcion, "1");
 				if ($check_s1 == "checked") {
@@ -3642,7 +3475,7 @@ Cuadro Contable<br>
 					$row_csv_sesiones .= "NO;";
 				}
 			}
-			//echo "<br>D2->".$unico->nota_diagnostico."<br>";
+			
 			if ($sp == "1") {
 				echo "" . $unico->rut . "\r\n";
 			}
@@ -3661,12 +3494,11 @@ Cuadro Contable<br>
 	elseif ($seccion == "descargarReportesPorImpart_2023") {
 		$codigo_inscripcion = Decodear3($get["ci"]);
 		$sp = $get["sp"];
-		//echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_curso = DAtosCursoDadoIdInscripcion($codigo_inscripcion, $id_empresa);
 		
-		//$total_mallas_por_programa=TraeMallasDadoPrograma($id_empresa, $id_programa);//$total_usuarios_por_programa=totalUsuariosPorProgramaConMallas($id_empresa, $total_mallas_por_programa);    //echo "hola";
-		header('Content-Description: File Transfer');
+				header('Content-Description: File Transfer');
 		header('Content-Type: application/csv');
 		
 		if ($sp == "1") {
@@ -3680,7 +3512,7 @@ Cuadro Contable<br>
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 		
 		$Num_sesiones = ImparticionesNumSesiones_2021($codigo_inscripcion);
-		//echo "num sesiones $Num_sesiones";exit();
+		
 		if ($sp == "1") {
 			echo "rut\r\n";
 		}
@@ -3814,7 +3646,7 @@ Cuadro Contable<br>
 		
 		
 		$total_usuarios_ = TraigoRegistrosPorSesionDeCheckinPorImparticion_2021($codigo_inscripcion, $id_empresa);
-		//print_r($total_usuarios_);
+		
 		foreach ($total_usuarios_ as $unico) {
 			$Usu = reportes_online_usuario_rut($unico->rut);
 			
@@ -3964,14 +3796,14 @@ Cuadro Contable<br>
 		$id_curso = Decodear3($get["i"]);
 		
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "id curso $id_curso id empresa $id_empresa";
+		
 		$Imp = BuscaIMparticionesDadoIdCurso_2022($id_curso, $id_empresa);
 		
 		foreach ($Imp as $imparticiones) {
 			EliminiInscripcionUsuarioYInscripcionCurso_2022($imparticiones->codigo_inscripcion);
 		}
 		$Curso = Datos_curso($id_curso);
-		//echo "id curso $id_curso id empresa $id_empresa";
+		
 		ActualizaActivoInactivoCurso_2022($id_curso);
 		
 		
@@ -3986,8 +3818,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "dltImpart") {
 		$id_imparticion = Decodear3($get["i"]);
-		//echo "id imparticion $id_imparticion";
-		//elimino de inscripcion_curso e inscripcion_usuarios
+		
 		
 		$Imp = BuscaIdImparticionFull_2021($id_imparticion);
 		$Curso = Datos_curso($Imp[0]->id_curso);
@@ -4006,20 +3837,18 @@ Cuadro Contable<br>
 		$id_malla = Decodear3($get["id_malla_enc"]);
 		$id_programa = Decodear3($get["idpbbdd"]);
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "borrar id imparticion $id_imparticion, $id_malla";
+		
 		
 		$id_imparticion_ = BuscaIdInscripcionMalla_2022($id_malla, $id_imparticion);
-		//print_r($Arreglo);
+		
 		
 		$Imparticiones = Id_cursos_id_Inscripcion_por_id_inscripcion_idMalla_2022($id_imparticion_);
-		//print_r($Imparticiones);
+		
 		foreach ($Imparticiones as $u) {
-			//echo "<br> u ".$u->id_inscripcion;
+			
 			EliminiInscripcionUsuarioYInscripcionCurso_ImparticionMalla_2022($u->id_inscripcion, $id_imparticion_);
 		}
 		
-		//exit();
-		//elimino de inscripcion_curso e inscripcion_usuarios
 		
 		
 		echo "<script>alert('Imparticion  y participantes eliminados');location.href='?sw=listmallas1';</script>";
@@ -4028,13 +3857,10 @@ Cuadro Contable<br>
 	
 	elseif ($seccion == "descargarInscritosPorImpart_Elearning_2022") {
 		$codigo_inscripcion = Decodear3($get["ci"]);
-		//echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_curso = DAtosCursoDadoIdInscripcion($codigo_inscripcion, $id_empresa);
 		
-		//$total_mallas_por_programa=TraeMallasDadoPrograma($id_empresa, $id_programa);
-		//$total_usuarios_por_programa=totalUsuariosPorProgramaConMallas($id_empresa, $total_mallas_por_programa);
-		//echo "hola";
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/csv');
 		header("Content-Disposition: attachment; filename=Participantes_ID_Imparticion_" . $codigo_inscripcion . ".csv");
@@ -4043,7 +3869,7 @@ Cuadro Contable<br>
 		echo "rut\r\n";
 		
 		$total_usuarios_ = TraigoRegistrosPorSesionDeCheckinElearning_Rel_Rut_idInscripcion_PreInscritos_PorImparticion_2022($codigo_inscripcion, $id_empresa);
-		//print_r($total_usuarios_);
+		
 		foreach ($total_usuarios_ as $unico) {
 			echo "" . $unico->rut . "\r\n";
 		}
@@ -4086,14 +3912,11 @@ Cuadro Contable<br>
 	
 	elseif ($seccion == "descargarUsuariosExternos_2022") {
 		$codigo_inscripcion = Decodear3($get["ci"]);
-		//echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_curso = DAtosCursoDadoIdInscripcion($codigo_inscripcion, $id_empresa);
 		
-		//$total_mallas_por_programa=TraeMallasDadoPrograma($id_empresa, $id_programa);
-		//$total_usuarios_por_programa=totalUsuariosPorProgramaConMallas($id_empresa, $total_mallas_por_programa);
-		//echo "hola";
-		header('Content-Description: File Transfer');
+				header('Content-Description: File Transfer');
 		header('Content-Type: application/csv');
 		header("Content-Disposition: attachment; filename=UsuariosExternos" . $codigo_inscripcion . ".csv");
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -4174,7 +3997,7 @@ Cuadro Contable<br>
 				$empresa = ($empresa);
 				$nombre = ($nombre);
 				$apellido = ($apellido);
-				//echo "--$rut, $nombre, $apellido, $email, $empresa";exit();
+				
 				proveedores_ejecutivos_save_insert_update($id_empresa, "usuarios_externos", "", $rut, $nombre, $apellido, $email, $empresa, $rut_completo, $materno);
 				resetea_clave_2021_cambiado1($rut, $id_empresa);
 				$cuenta_loop++;
@@ -4187,14 +4010,11 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "descargarUsuariosManuales_2022") {
 		$codigo_inscripcion = Decodear3($get["ci"]);
-		//echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$datos_curso = DAtosCursoDadoIdInscripcion($codigo_inscripcion, $id_empresa);
 		
-		//$total_mallas_por_programa=TraeMallasDadoPrograma($id_empresa, $id_programa);
-		//$total_usuarios_por_programa=totalUsuariosPorProgramaConMallas($id_empresa, $total_mallas_por_programa);
-		//echo "hola";
-		header('Content-Description: File Transfer');
+				header('Content-Description: File Transfer');
 		header('Content-Type: application/csv');
 		header("Content-Disposition: attachment; filename=UsuariosManuales" . $codigo_inscripcion . ".csv");
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -4272,7 +4092,7 @@ Cuadro Contable<br>
 				$empresa = ($empresa);
 				$nombre = ($nombre);
 				$apellido = ($apellido);
-				//echo "--$rut, $nombre, $apellido, $email, $empresa";exit();
+				
 				proveedores_ejecutivos_save_insert_update($id_empresa, "usuarios_manuales", "", $rut, $nombre, $apellido, $email, $empresa, $rut_completo, '');
 				resetea_clave_2021_cambiado1($rut, $id_empresa);
 				$cuenta_loop++;
@@ -4323,7 +4143,7 @@ Cuadro Contable<br>
 		$insertados = 0;
 		$actualizados = 0;
 		$sp = $get["sp"];
-		//echo "<br>accionSubeNotasPorImparticion_2021 ".$id_imparticion_GET;
+		
 		$Imp = DatosCompletosImparticion_2021($id_imparticion_GET);
 		
 		$Tipo_Imparticion = $Imp[0]->tipo_audiencia;
@@ -4368,29 +4188,23 @@ Cuadro Contable<br>
 				$dsatz[$i] = explode(";", $line[$i], ($num + 1));
 				$i++;
 			}
-			//echo "<table>";						        //echo "<tr>";
+			
 			$cuentaK = 0;
 			for ($k = 0; $k != ($num + 1); $k++) {
-				//echo "<td>AA " . $fields[$k] . "</td>";
+				
 				$cuentaK++;
 			}
-			//ini_set('output_buffering', 0);
-			//ini_set('zlib.output_compression', 0);
-			
-			//if( !ob_get_level() ){ ob_start(); }
-			//else { ob_end_clean(); ob_start(); }
+
 			$count_total_loop = count($dsatz);
 			
 			if ($count_total_loop > 0 and $sp == "1") {
 				BorraUsuariosParaVolveraCrearlosTblInscripcionUsuarios($id_imparticion_GET);
-				//echo "borramos";exit();
+				
 			}
 			
 			$estado_txt = "";
-			// echo "</tr>";
 			
 			foreach ($dsatz as $key => $number) {
-				// echo "<tr>";
 				$row_csv = "";
 				$cuenta = 0;
 				foreach ($number as $k => $content) {
@@ -4398,7 +4212,7 @@ Cuadro Contable<br>
 					$content = str_replace('=', '', $content);
 					$content = str_replace(';', '.', $content);
 					$content = addcslashes($content, "'=\\");
-					//echo "-> k $k = ".$content;
+					
 					if ($Tipo_Imparticion == "fecha_inicio_termino") {
 						if ($k == "0") {
 							$rut = $content;
@@ -4501,7 +4315,7 @@ Cuadro Contable<br>
 					}
 				}
 				
-				//echo "<br>-> rut $rut asistencia $asistencia nota $nota estado $estado<br>	        			<br>->	S1 $S1,S2 $S2,S3 $S3,S4 $S4";
+				
 				
 				
 				$rut = trim($rut);
@@ -4512,7 +4326,7 @@ Cuadro Contable<br>
 					InsertaRelacionInscripcionUsuarioFull2021($rut, $datos_curso[0]->id_programa, $id_imparticion_GET, $datos_curso[0]->id_curso, $Imp, $id_empresa);
 				}
 				
-				//echo "<br>-> rut $rut asistencia $asistencia nota $nota estado $estado";
+				
 				
 				
 				$Num_sesiones = ImparticionesNumSesiones_2021($id_imparticion_GET);
@@ -4529,7 +4343,7 @@ Cuadro Contable<br>
 					$S10 = trim($S10);
 					$S11 = trim($S11);
 					$S12 = trim($S12);
-					//echo "<br>S1 .$S1., S2 .$S2.";
+					
 					$ses_1 = "";
 					$ses_2 = "";
 					$ses_3 = "";
@@ -4581,7 +4395,7 @@ Cuadro Contable<br>
 					if ($S12 == "SI" or $S12 == "Si" or $S12 == "si" or $S12 == "1" or $S12 == "x") {
 						$ses_12 = "on";
 					}
-					//echo "<br>ses_1 $ses_1, ses_2 $ses_2";
+					
 					ImparticionSesionesAsistenciaPorSesion_2021($id_imparticion_GET, $rut, $ses_1, $ses_2, $ses_3, $ses_4, $ses_5, $ses_6, $ses_7, $ses_8, $ses_9, $ses_10, $ses_11, $ses_12);
 				}
 				
@@ -4596,7 +4410,7 @@ Cuadro Contable<br>
 						$actualizados++;
 					}
 					else {
-						//echo "b $rut $asistencia $nota $estado"; exit();
+						
 						LMS_InsertaRegistroCierreCursoImparticion_2022($rut, $id_curso, $id_empresa, $nota, $estado, $asistencia, $id_imparticion_GET, $asistencia, $nota_d);
 						$insertados++;
 					}
@@ -4604,13 +4418,12 @@ Cuadro Contable<br>
 				
 				
 				$cuenta_loop++;
-				//exit();
+
 				echo "<center><span style='position: absolute;z-index:$current;background:#36C6D3; padding:10px; color:#FFF'>Actualizando $cuenta_loop de $count_total_loop Registros</span></center>";
-				// flush();
-				//ob_flush();
+
 				
 			}
-			// echo "</table>";
+
 		}
 		
 		
@@ -4683,7 +4496,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "comunas_dado_regiones") {
 		$region = $post["region"];
-		//echo "region $region";
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$comunas = Comunas_dado_id_regiones_2022($region);
 		
@@ -4696,7 +4509,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "proveedores_ejecutivos_save") {
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($post);    exit();
+		
 		
 		if ($post["tipo"] == "otec") {
 			$post["nombre"] = str_replace("Ñ", "N", $post["nombre"]);
@@ -4710,7 +4523,7 @@ Cuadro Contable<br>
 			proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["descripcion"], $post["direccion"], $post["telefono"], $post["email"], $post["contacto"]);
 		}
 		elseif ($post["tipo"] == "relatores") {
-			//print_r($post); //exit();
+			
 			if ($post["tipo_relator"] == "Interno") {
 				$post["rut"] = LimpiaRut($post["rut"]);
 				$Usu = TraeDatosUsuario($post["rut"]);
@@ -4719,31 +4532,23 @@ Cuadro Contable<br>
 					exit();
 				}
 				else {
-					//print_r($Usu);
-					//$rut, $nombre, $descripcion, $direccion, $telefono, $email, $contacto
-					//rut, nombre, cargo, tipo, email, empresa,
 					proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $Usu[0]->nombre_completo, "", $Usu[0]->cargo, $post["tipo_relator"], $Usu[0]->email, $Usu[0]->nombre_empresa_holding);
 				}
 			}
 			elseif ($post["tipo_relator"] == "Externo") {
 				$post["rut"] = ($post["rut"]);
-				//print_r($post);
-				//exit();
+
 				if ($post["nombre"] == "") {
 					echo "<script>alert('Debes ingresar el nombre');location.href='?sw=lista_proveedores_otec&tipo=relatores';    </script>";
 					exit();
 				}
 				else {
-					//print_r($Usu);
-					//$rut, $nombre, $descripcion, $direccion, $telefono, $email, $contacto
-					//rut, nombre, cargo, tipo, email, empresa,
 					proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], "", $post["cargo"], $post["tipo_relator"], $post["email"], $post["empresa"]);
 				}
 			}
 			elseif ($post["tipo_relator"] == "Extranjero") {
 				$post["rut"] = ($post["rut"]);
-				//print_r($post);
-				//exit();
+
 				if ($post["nombre"] == "") {
 					echo "<script>alert('Debes ingresar el nombre');location.href='?sw=lista_proveedores_otec&tipo=relatores';    </script>";
 					exit();
@@ -4752,10 +4557,6 @@ Cuadro Contable<br>
 					$MaxId = MaxIdRelatores();
 					$RutExtranjero = $MaxId + 1;
 					
-					
-					//print_r($Usu);
-					//$rut, $nombre, $descripcion, $direccion, $telefono, $email, $contacto
-					//rut, nombre, cargo, tipo, email, empresa,
 					proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $RutExtranjero, $post["nombre"], "", $post["cargo"], $post["tipo_relator"], $post["email"], $post["empresa"]);
 				}
 			}
@@ -4772,9 +4573,7 @@ Cuadro Contable<br>
 				exit();
 			}
 			else {
-				//print_r($Usu);
-				//$rut, $nombre, $descripcion, $direccion, $telefono, $email, $contacto
-				//rut, nombre, cargo, tipo, email, empresa,
+
 				proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["apellido"], $post["email"], $post["empresa"], $rut_completo, "");
 				
 				resetea_clave_2021_cambiado1($post["rut"], $id_empresa);
@@ -4789,9 +4588,7 @@ Cuadro Contable<br>
 				exit();
 			}
 			else {
-				//print_r($Usu);
-				//$rut, $nombre, $descripcion, $direccion, $telefono, $email, $contacto
-				//rut, nombre, cargo, tipo, email, empresa,
+
 				proveedores_ejecutivos_save_insert_update($id_empresa, $post["tipo"], $post["id"], $post["rut"], $post["nombre"], $post["apellido"], $post["email"], $post["empresa"], $rut_completo, $post["apellido_materno"]);
 				
 				resetea_clave_2021_cambiado1($post["rut"], $id_empresa);
@@ -4828,7 +4625,7 @@ Cuadro Contable<br>
 		header("Pragma: no-cache");
 		header("Expires: 0");
 		
-		//print_r($json_clientes);exit;
+
 		foreach ($json_clientes as $clave => $valor) {
 			// $array[3] se actualizará con cada valor de $array...
 			?>
@@ -4931,10 +4728,10 @@ Cuadro Contable<br>
 		session_destroy();
 		echo "    <script>location.href='?sw=login';    </script>";
 		exit;
-	} //**Rel idInscripcion rut Curso
+	} 
 	elseif ($seccion == "rel_id_inscripcion_rut_curso") {
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($post);
+		
 		
 		if ($post["create_filter"] == "1") {
 			$Arrayc1c2c3c4 = reportes_online_trae_c1c2c3c4($id_empresa);
@@ -4990,7 +4787,7 @@ Cuadro Contable<br>
 				$_SESSION["rut_colaborador_text"] = "";
 			}
 		}
-		//echo "<br>cuenta_filter $cuenta_filter<br>";
+		
 		
 		if ($cuenta_filter > 0) {
 			$_SESSION["cuenta_filter"] = "1";
@@ -5030,7 +4827,7 @@ Cuadro Contable<br>
 		$programa_malla = explode(";", $post["programa_malla"]);
 		
 		data_rel_id_inscripcion_curso_Insert($post["id_inscripcion"], ($post["nombre_inscripcion"]), $post["fecha_inicio"], $post["fecha_termino"], $id_empresa, $post["rut_ejecutivo"], $post["id_curso"], $post["opcional"], $programa_malla[0], $programa_malla[1]);
-		//exit();
+		
 		
 		
 		VerificaExtensionFilesAdmin($_FILES["file"]);
@@ -5040,8 +4837,7 @@ Cuadro Contable<br>
 					echo "Return Code: " . $_FILES["file"]["error"] . "<br />";
 				}
 				else {
-					//echo "Upload: " . $_FILES["file"]["name"] . "<br />";			             echo "Type: " . $_FILES["file"]["type"] . "<br />";
-					//echo "Size: " . ($_FILES["file"]["size"] / 1024) . " Kb<br />";			             echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br />";
+					
 					if (file_exists("upload/" . $_FILES["file"]["name"])) {
 						//	echo $_FILES["file"]["name"] . " already exists. ";
 					}
@@ -5049,7 +4845,7 @@ Cuadro Contable<br>
 						//Store file in directory "upload" with the name of "uploaded_file.txt"
 						$storagename = "uploaded_file.txt";
 						move_uploaded_file($_FILES["file"]["tmp_name"], "upload/" . $storagename);
-						//echo "Stored in: " . "upload/" . $_FILES["file"]["name"] . "<br />";
+						
 					}
 				}
 			}
@@ -5058,9 +4854,8 @@ Cuadro Contable<br>
 			}
 			
 			if (isset($storagename) && $file = fopen("upload/" . $storagename, "r")) {
-				//DeleteFulltbl_mc_carrera_interna();
 				
-				//echo "File opened.<br />";
+				
 				$firstline = fgets($file, 10096);
 				//Gets the number of fields, in CSV-files the names of the fields are mostly given in the first line
 				$num = strlen($firstline) - strlen(str_replace(";", "", $firstline));
@@ -5075,10 +4870,10 @@ Cuadro Contable<br>
 					$dsatz[$i] = explode(";", $line[$i], ($num + 1));
 					$i++;
 				}
-				//echo "<table>";						        //echo "<tr>";
+				
 				$cuentaK = 0;
 				for ($k = 0; $k != ($num + 1); $k++) {
-					//echo "<td>AA " . $fields[$k] . "</td>";
+					
 					$cuentaK++;
 				}
 				ini_set('output_buffering', 0);
@@ -5094,9 +4889,7 @@ Cuadro Contable<br>
 				$count_total_loop = count($dsatz);
 				
 				
-				// echo "</tr>";
 				foreach ($dsatz as $key => $number) {
-					// echo "<tr>";
 					$row_csv = "";
 					$cuenta = 0;
 					foreach ($number as $k => $content) {
@@ -5108,17 +4901,14 @@ Cuadro Contable<br>
 						$content = str_replace(';', '.', $content);
 						$content = addcslashes($content, "'=\\");
 						$row_csv .= "'" . trim(strip_tags($content)) . "'";
-						//echo "<br>-> Cuenta ".$cuenta." - Content " .$content;
+						
 						
 						
 					}
 					
 					
 					$row_csv .= ", '" . $post["id_curso"] . "', '" . $post["id_inscripcion"] . "','" . $post["fecha_inicio"] . "','" . $post["fecha_termino"] . "','" . $post["rut_ejecutivo"] . "'";
-					
-					
-					//echo "<br>row_csv<br>$row_csv<br>";
-					// exit();
+
 					data_rel_id_inscripcion_rut_curso_Insert($row_csv);
 					
 					
@@ -5128,7 +4918,6 @@ Cuadro Contable<br>
 					flush();
 					ob_flush();
 				}
-				// echo "</table>";
 			}
 		}
 		$id_curso = isset($post["id_curso"]) ? htmlspecialchars($post["id_curso"], ENT_QUOTES) : ''; // Sanitizar
@@ -5138,7 +4927,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "usuarios_update_tbl_rel_id_inscripcion_rut_curso") {
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($get);
+		
 		
 		if ($post["accion_id_inscripcion"] == "1") {
 			VerificaExtensionFilesAdmin($_FILES["file"]);
@@ -5148,16 +4937,14 @@ Cuadro Contable<br>
 					echo "Return Code: " . $_FILES["file"]["error"] . "<br />";
 				}
 				else {
-					//echo "Upload: " . $_FILES["file"]["name"] . "<br />";			             echo "Type: " . $_FILES["file"]["type"] . "<br />";
-					//echo "Size: " . ($_FILES["file"]["size"] / 1024) . " Kb<br />";			             echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br />";
 					if (file_exists("upload/" . $_FILES["file"]["name"])) {
-						//	echo $_FILES["file"]["name"] . " already exists. ";
+					
 					}
 					else {
 						//Store file in directory "upload" with the name of "uploaded_file.txt"
 						$storagename = "uploaded_file.txt";
 						move_uploaded_file($_FILES["file"]["tmp_name"], "upload/" . $storagename);
-						//echo "Stored in: " . "upload/" . $_FILES["file"]["name"] . "<br />";
+						
 					}
 				}
 			}
@@ -5166,8 +4953,7 @@ Cuadro Contable<br>
 			}
 			
 			if (isset($storagename) && $file = fopen("upload/" . $storagename, "r")) {
-				//DeleteFulltbl_mc_carrera_interna();
-				//echo "File opened.<br />";
+				
 				$firstline = fgets($file, 10096);
 				//Gets the number of fields, in CSV-files the names of the fields are mostly given in the first line
 				$num = strlen($firstline) - strlen(str_replace(";", "", $firstline));
@@ -5182,10 +4968,10 @@ Cuadro Contable<br>
 					$dsatz[$i] = explode(";", $line[$i], ($num + 1));
 					$i++;
 				}
-				//echo "<table>";						        //echo "<tr>";
+				
 				$cuentaK = 0;
 				for ($k = 0; $k != ($num + 1); $k++) {
-					//echo "<td>AA " . $fields[$k] . "</td>";
+					
 					$cuentaK++;
 				}
 				ini_set('output_buffering', 0);
@@ -5199,9 +4985,7 @@ Cuadro Contable<br>
 				}
 				$count_total_loop = count($dsatz);
 				
-				// echo "</tr>";
 				foreach ($dsatz as $key => $number) {
-					// echo "<tr>";
 					$row_csv = "";
 					$cuenta = 0;
 					foreach ($number as $k => $content) {
@@ -5213,10 +4997,10 @@ Cuadro Contable<br>
 						$content = str_replace(';', '.', $content);
 						$content = addcslashes($content, "'=\\");
 						$rut_col = "" . trim(strip_tags($content)) . "";
-						//echo "<br>-> Cuenta ".$cuenta." - Content " .$content;
+						
 					}
 					
-					//echo "<br>rut_col<br>$rut_col<br>id_inscripcion<br>".$post["id_inscripcion"]."<br>";exit();
+					
 					
 					if ($post["tipo_accion"] == "Eliminar") {
 						data_rel_id_inscripcion_rut_curso_Delete($post["id_inscripcion"], $rut_col);
@@ -5242,7 +5026,6 @@ Cuadro Contable<br>
 					flush();
 					ob_flush();
 				}
-				// echo "</table>";
 			}
 			
 			
@@ -5265,22 +5048,16 @@ Cuadro Contable<br>
 			exit;
 		}
 	}
-	//**Rel idInscripcion rut Curso Fin
-	//**reportes_online**
+
 	elseif ($seccion == "reportes_online") {
-		//echo "<br>Cron";
+		
 		//Check2020_Reportes_IdProgramaNull_data($_SESSION["id_empresa"]);
 		reportes_online_cron_data($_SESSION["id_empresa"]);
 		echo "<script>location.href='?sw=reportes_online_updated';</script>";
 	}
 	elseif ($seccion == "reportes_online_updated") {
 		$id_empresa = $_SESSION["id_empresa"];
-		/*echo "<br><br>";
 
-		print_r($post);
-		echo "<br>Sesion<br>";
-		print_r($_SESSION);
-		echo "<br><br>";*/
 		
 		if ($get["clean"] == "1") {
 			$_SESSION["c1text"] = "";
@@ -5309,7 +5086,7 @@ Cuadro Contable<br>
 			foreach ($post as $key => $value) {
 				$cuenta_c1_check++;
 				if (strpos($key, "Gerencia") !== false) {
-					//echo "<br>->".$key." = ".$value."";
+					
 					$NombresC1CheckBoxs .= $value . ". ";
 					$QueryC1Checxbox .= " (select c1 from tbl_reportes_online_usuario where rut=h.rut)='" . $value . "' or ";
 					$dato_final = $value;
@@ -5362,7 +5139,7 @@ Cuadro Contable<br>
 				$_SESSION["rut_colaborador_text"] = "";
 			}
 		}
-		//echo "<br>cuenta_filter $cuenta_filter<br>";
+		
 		
 		if ($cuenta_filter > 0) {
 			$_SESSION["cuenta_filter"] = "1";
@@ -5372,20 +5149,20 @@ Cuadro Contable<br>
 			$_SESSION["cuenta_filter"] = "";
 		}
 		
-		//echo " texto_filtro ".$_SESSION["dato_final_filtro"];
+		
 		
 		
 		if ($post["agrupacion_nueva"] == "1") {
-			//print_r($post);
+			
 			$id_agrupacion = reportes_online_maxAgrupacion();
 			foreach ($post as $key => $value) {
-				//echo "<br>line<br>";			print_r($value);				echo "<br>key<br>";				print_r($key);
+				
 				
 				if ($key == "nombre_agrupacion" or $key == "agrupacion_nueva") {
 					continue;
 				}
 				$nombre_agrupacion = $post["nombre_agrupacion"];
-				//echo "<br>id_agrupacion $id_agrupacion nombre_agrupacion $nombre_agrupacion, id_curso ".$key;
+				
 				reportes_online_Insert_agrupacion_data($id_agrupacion, $nombre_agrupacion, $key);
 			}
 		}
@@ -5397,10 +5174,10 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "reportes_online_descarga") {
-		//print_r($get);
+		
 		global $Desaparece_IDSap_ListaParticipantes;
 		if ($post["download_reportes_completos"] == "1") {
-			//print_r($post);
+			
 			if ($post["rc_anos"] <> "") {
 				$_SESSION["op_rc_anos"] = $post["rc_anos"];
 			}
@@ -5425,10 +5202,10 @@ Cuadro Contable<br>
 			else {
 				$_SESSION["op_rc_colaboradores"] = "";
 			}
-			//echo "<br>sesion<br>";print_r($_SESSION);exit();
+			
 			$get["tipo"] = $post["rc_tipo"];
 		}
-		//echo "<br>sesion<br>";print_r($_SESSION);exit();
+		
 		$cuenta_usuarios_inscritos = 0;
 		$estado_finalizado = 0;
 		$estado_en_proceso = 0;
@@ -5446,13 +5223,13 @@ Cuadro Contable<br>
 				$PRINCIPAL = str_replace("{NOMBRE-CURSO}", ($Cur[0]->nombre), $PRINCIPAL);
 				
 				if ($get["enc_sat"] == "1") {
-					//echo "muestra Enc Sat";
+					
 					
 					$row_excel_enc_sat .= "id_curso;curso;id_imparticion;fecha_inicio;fecha_termino\r\n";
 					$row_excel_enc_sat .= "" . $datos_imparticion_V2[0]->id_curso . ";" . $datos_imparticion_V2[0]->nombre_curso . ";" . $datos_imparticion_V2[0]->codigo_inscripcion . ";" . $datos_imparticion_V2[0]->fecha_inicio . ";" . $datos_imparticion_V2[0]->fecha_termino . "\r\n";
 					
 					$EncSat = EncuestaSatisfaccion_IdImparticionIdCurso_data("", $get["id"]);
-					//print_r($EncSat);
+					
 					$cuenta = count($EncSat);
 					
 					$row_excel_enc_sat .= "\r\n";
@@ -5471,7 +5248,7 @@ Cuadro Contable<br>
 				  <div class='card-body    mg_20topbottom' style='padding-left: 20px;'>Encuestas Respondidas: $cuenta</div>
 				  ";
 					
-					//echo "<br>encuestas_contestadas ".$cuenta;
+					
 					$Preg = EncuestaSatisfaccion_BuscaPreguntas($EncSat[0]->id_encuesta);
 					$row_encuesta_satisfaccion_pregunta .= "
 							<div class='row'>
@@ -5640,7 +5417,7 @@ Cuadro Contable<br>
 			}
 			
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
-			//print_r($Campos);exit();
+			
 			
 			$array_lms_reportes_dado_id_curso = reportes_online_lms_reportes_dado_id_curso($get["id"]);
 			$handle = fopen('php://output', 'w');
@@ -5692,13 +5469,9 @@ Cuadro Contable<br>
 					$resultado = round($suma_resultados / $cuenta_resultados);
 					$Fecha_inicio = $Fechas_inicio;
 					$Fecha_termino = $Fechas_termino;
-					//$estado="FINALIZADO";
-					//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+					
 				}
 				elseif ($unico->avance > 0 and $unico->avance < 100) {
-					// Chequea Resultado
-					//$resultado=round($suma_resultados/$cuenta_resultados);
-					//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
 					$resultado = "-";
 					$estado_en_proceso++;
 					$cuenta_usuarios_inscritos++;
@@ -5712,13 +5485,10 @@ Cuadro Contable<br>
 					$resultado = "-";
 					$Fecha_inicio = "-";
 					$Fecha_termino = "-";
-					//$estado="NO_INICIADO";
-					//$resultado=round($suma_resultados/$cuenta_resultados);
-					//echo "<h3>Resultado No lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
 				}
 				
 				if ($get["vista"] == "graph") {
-					//echo $Desaparece_IDSap_ListaParticipantes;
+					
 					$muestra_id_sap = "";
 					if ($Desaparece_IDSap_ListaParticipantes == "SI_MUESTRA") {
 						$IdSap = reportes_online_usuario_rut_traeIdSapC3($unico->rut);
@@ -5741,10 +5511,10 @@ Cuadro Contable<br>
 				else {
 					$cur = reportes_online_curso_dado_idcurso($get["id"]);
 					$id_inscripcion = reportes_online_inscripcion_dado_idcurso_rut($unico->rut, $get["id"]);
-					//print_r($id_inscripcion);	Fecha_inicio													exit();
+					
 					$Fechas_inicio = reportes_online_lms_reportes_consolidado_fechas_dado_id_programa("fecha_inicio", "min", $get["id"], $unico->rut, "id_curso");
 					
-					//print_r($Fechas_inicio);
+					
 					$Fechas_termino = reportes_online_lms_reportes_consolidado_fechas_dado_id_programa("fecha_termino", "max", $get["id"], $unico->rut, "id_curso");
 					
 					
@@ -5762,12 +5532,12 @@ Cuadro Contable<br>
 			
 			
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
-			//print_r($Campos);
 			
 			
-			//echo "Programa";
+			
+			
 			$array_lms_reportes_dado_id_programa = reportes_online_lms_reportes_dado_id_programa($get["id"]);
-			//echo "<pre>";
+			
 			
 			
 			$handle = fopen('php://output', 'w');
@@ -5776,7 +5546,7 @@ Cuadro Contable<br>
 			
 			
 			foreach ($array_lms_reportes_dado_id_programa as $unico) {
-				//echo "<br>";                          	print_r($unico2);
+				
 				
 				
 				if ($unico->avance == "100") {
@@ -5806,13 +5576,9 @@ Cuadro Contable<br>
 						$resultado = round($suma_resultados / $cuenta_resultados);
 						$Fecha_inicio = $Fechas_inicio;
 						$Fecha_termino = $Fechas_termino;
-						//$estado="FINALIZADO";
-						//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+						
 					}
 					elseif ($unico->avance > 0 and $unico->avance < 100) {
-						// Chequea Resultado
-						//$resultado=round($suma_resultados/$cuenta_resultados);
-						//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
 						$resultado = "-";
 						$estado_en_proceso++;
 						$cuenta_usuarios_inscritos++;
@@ -5826,9 +5592,7 @@ Cuadro Contable<br>
 						$resultado = "-";
 						$Fecha_inicio = "-";
 						$Fecha_termino = "-";
-						//$estado="NO_INICIADO";
-						//$resultado=round($suma_resultados/$cuenta_resultados);
-						//echo "<h3>Resultado No lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+
 					}
 					
 					
@@ -5866,12 +5630,12 @@ Cuadro Contable<br>
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
-			//print_r($Campos);
 			
 			
-			//echo "Programa";
+			
+			
 			$array_lms_reportes_dado_id_programa = reportes_online_lms_reportes_dado_id_programa($get["id"]);
-			//echo "<pre>";
+			
 			
 			
 			$handle = fopen('php://output', 'w');
@@ -5880,7 +5644,7 @@ Cuadro Contable<br>
 			
 			
 			foreach ($array_lms_reportes_dado_id_programa as $unico) {
-				//echo "<br>";                          	print_r($unico2);
+				
 				
 				
 				if ($unico->avance == "100") {
@@ -5913,13 +5677,10 @@ Cuadro Contable<br>
 						$resultado = round($suma_resultados / $cuenta_resultados);
 						$Fecha_inicio = $Fechas_inicio;
 						$Fecha_termino = $Fechas_termino;
-						//$estado="FINALIZADO";
-						//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+						
 					}
 					elseif ($unico->avance > 0 and $unico->avance < 100) {
-						// Chequea Resultado
-						//$resultado=round($suma_resultados/$cuenta_resultados);
-						//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+						
 						$resultado = "-";
 						$estado_en_proceso++;
 						$cuenta_usuarios_inscritos++;
@@ -5933,9 +5694,7 @@ Cuadro Contable<br>
 						$resultado = "-";
 						$Fecha_inicio = "-";
 						$Fecha_termino = "-";
-						//$estado="NO_INICIADO";
-						//$resultado=round($suma_resultados/$cuenta_resultados);
-						//echo "<h3>Resultado No lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+						
 					}
 					
 					
@@ -5970,8 +5729,7 @@ Cuadro Contable<br>
 			if ($get["vista"] == "graph") {
 				$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
 				$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf_agrup.html")), $PRINCIPAL);
-				//echo "vista Graph";
-				//exit();
+				
 			}
 			else {
 				header('Content-Description: File Transfer');
@@ -5981,16 +5739,10 @@ Cuadro Contable<br>
 			}
 			
 			$Campos = reportes_online_c1_c2_c3_c4($_SESSION["id_empresa"]);
-			//print_r($Campos);
 			
-			//echo "Programa";
+			
+			
 			$array_lms_reportes_dado_id_programa_consolidado = reportes_online_lms_reportes_consolidado_dado_id_programa($get["id"]);
-			//echo "<pre>";							//print_r($array_lms_reportes_dado_id_programa);//exit;							//$cuenta_arreglo=count($array_lms_reportes_dado_id_programa);
-			//$items_mas=$cuenta_arreglo+1;							//echo "cuenta arreglo $cuenta_arreglo";							//$array_lms_reportes_dado_id_programa["$items_mas"]["rut"]="00000";
-			//$array_lms_reportes_dado_id_programa["$items_mas"]["id_curso"]=0;							//$array_lms_reportes_dado_id_programa["$items_mas"]["avance"]=0;
-			//$array_lms_reportes_dado_id_programa["$items_mas"]["resultado"]=0;							//$array_lms_reportes_dado_id_programa["$items_mas"]["inactivo"]=0;
-			//$cuenta_arreglo2=count($array_lms_reportes_dado_id_programa);							//echo "cuenta arreglo 2 $cuenta_arreglo2";
-			//echo "<pre>";							//print_r($array_lms_reportes_dado_id_programa);//exit();
 			
 			if ($get["vista"] == "graph") {
 				$Prog = ObtieneDatosProgramasPorEmpresa($get["id"], $_SESSION["id_empresa"]);
@@ -6010,7 +5762,7 @@ Cuadro Contable<br>
 			$rut_antiguo = "";
 			
 			foreach ($array_lms_reportes_dado_id_programa_consolidado as $unico2) {
-				//echo "<br>";                          	print_r($unico2);
+				
 				
 				
 				$usu = reportes_online_usuario_rut($unico2->rut);
@@ -6028,9 +5780,6 @@ Cuadro Contable<br>
 				}
 				
 				$Reporte = reportes_online_lms_reportes_busca_avance_resultado_dado_rut_id_curso($unico2->rut, $unico2->id_curso);
-				//echo "<br>-->".print_r($Reporte);
-				//exit();
-				//echo "<br>--> Rut Antiguo ".$rut_antiguo." CuentaCursos ".$CuentaCursos."<br>";
 				
 				if ($rut_antiguo == "" or $rut_antiguo <> $unico2->rut) {
 					//reset
@@ -6041,17 +5790,14 @@ Cuadro Contable<br>
 					$suma_avance = 0;
 					$Estado_Resultado = "";
 					$Estado_Avance = "";
-					//fin reset
-					//echo "<h2>-Comienza rut ".$unico2->rut."</h2>";
-					//echo "<h3>-Comienza Procesa rut ".$unico2->rut." id curso ".$unico2->id_curso."</h2>";
+
 					$cuenta_avance++;
 					$suma_avance = $suma_avance + $Reporte[0]->avance;
 					if ($Reporte[0]->resultado <> "-") {
 						$suma_resultado = $suma_resultado + $Reporte[0]->resultado;
 						$cuenta_resultado++;
 					}
-					//echo "<h4>------- Cuenta Avance ".$cuenta_avance." Suma Avance ".$suma_avance;
-					//echo "<h4>------- Cuenta Resultado ".$cuenta_resultado." Suma Resultado ".$suma_resultado;
+					
 					$rut_antiguo = $unico2->rut;
 				}
 				elseif ($rut_antiguo == $unico2->rut) {
@@ -6061,13 +5807,8 @@ Cuadro Contable<br>
 						$suma_resultado = $suma_resultado + $Reporte[0]->resultado;
 						$cuenta_resultado++;
 					}
-					//echo "<h3>-Acumular rut ".$unico2->rut." id curso ".$unico2->id_curso."</h3>";
-					//echo "<h4>------- Cuenta Avance ".$cuenta_avance." Suma Avance ".$suma_avance;
-					//echo "<h4>------- Cuenta Resultado ".$cuenta_resultado." Suma Resultado ".$suma_resultado;
 				}
-				else {
-					//echo "---Else---";
-				}
+				
 				
 				
 				if ($cuenta_avance > 0) {
@@ -6084,7 +5825,7 @@ Cuadro Contable<br>
 				else {
 					$Estado_Resultado = "";
 				}
-				//echo "<br><h1>-> Fin Rut Antiguo ".$rut_antiguo." -> avance ".$Estado_Avance."% ->resultado ".$Estado_Resultado."%</h1>";
+				
 				
 				
 				if ($Estado_Avance >= 100) {
@@ -6095,13 +5836,10 @@ Cuadro Contable<br>
 					$estado = "FINALIZADO";
 					$Fecha_inicio = $Fechas_inicio;
 					$Fecha_termino = $Fechas_termino;
-					//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+					
 				}
 				elseif ($Estado_Avance > 0 and $Estado_Avance < 100) {
-					// Chequea Resultado
-					//$resultado=round($suma_resultados/$cuenta_resultados);
-					//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
-					$Estado_Resultado = "-";
+										$Estado_Resultado = "-";
 					$estado_en_proceso++;
 					$cuenta_usuarios_inscritos++;
 					$estado = "EN_PROCESO";
@@ -6115,8 +5853,7 @@ Cuadro Contable<br>
 					$estado = "NO_INICIADO";
 					$Fecha_inicio = "-";
 					$Fecha_termino = "-";
-					//$resultado=round($suma_resultados/$cuenta_resultados);
-					//echo "<h3>Resultado No lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+					
 				}
 				
 				
@@ -6149,12 +5886,7 @@ Cuadro Contable<br>
 					}
 				}
 			}
-			
-			//echo "<h3>No Iniciados $estado_no_iniciado</h3>";
-			//echo "<h3>En Proceso $estado_en_proceso</h3>";
-			///echo "<h3>Finalizados $estado_finalizado</h3>";
-			//echo "<h3>Cuenta_usuarios_inscritos $cuenta_usuarios_inscritos</h3>";
-			
+	
 			
 			if ($get["vista"] == "graph") {
 			}
@@ -6179,8 +5911,7 @@ Cuadro Contable<br>
 			}
 			
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
-			//print_r($Campos);
-			//exit();
+
 			$array_lms_reportes_dado_rut = reportes_online_lms_reportes_dado_rut($_SESSION["op_rc_colaboradores"]);
 			$handle = fopen('php://output', 'w');
 			
@@ -6225,13 +5956,10 @@ Cuadro Contable<br>
 						$resultado = round($suma_resultados / $cuenta_resultados);
 						$Fecha_inicio = $Fechas_inicio;
 						$Fecha_termino = $Fechas_termino;
-						//$estado="FINALIZADO";
-						//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+						
 					}
 					elseif ($unico->avance > 0 and $unico->avance < 100) {
 						// Chequea Resultado
-						//$resultado=round($suma_resultados/$cuenta_resultados);
-						//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
 						$resultado = "-";
 						$estado_en_proceso++;
 						$cuenta_usuarios_inscritos++;
@@ -6245,9 +5973,7 @@ Cuadro Contable<br>
 						$resultado = "-";
 						$Fecha_inicio = "-";
 						$Fecha_termino = "-";
-						//$estado="NO_INICIADO";
-						//$resultado=round($suma_resultados/$cuenta_resultados);
-						//echo "<h3>Resultado No lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+
 					}
 					
 					
@@ -6292,8 +6018,7 @@ Cuadro Contable<br>
 			
 			
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
-			//print_r($Campos);
-			//exit();
+
 			
 			$array_lms_reportes_dado_completo = reportes_online_lms_reportes_dado_completo();
 			$handle = fopen('php://output', 'w');
@@ -6339,14 +6064,11 @@ Cuadro Contable<br>
 						$resultado = round($suma_resultados / $cuenta_resultados);
 						$Fecha_inicio = $Fechas_inicio;
 						$Fecha_termino = $Fechas_termino;
-						//$estado="FINALIZADO";
-						//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+						
 					}
 					elseif ($unico->avance > 0 and $unico->avance < 100) {
 						// Chequea Resultado
-						//$resultado=round($suma_resultados/$cuenta_resultados);
-						//echo "<h3>Resultado SI lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
-						$resultado = "-";
+												$resultado = "-";
 						$estado_en_proceso++;
 						$cuenta_usuarios_inscritos++;
 						//$estado="EN_PROCESO";
@@ -6359,9 +6081,7 @@ Cuadro Contable<br>
 						$resultado = "-";
 						$Fecha_inicio = "-";
 						$Fecha_termino = "-";
-						//$estado="NO_INICIADO";
-						//$resultado=round($suma_resultados/$cuenta_resultados);
-						//echo "<h3>Resultado No lo Muestra -> $resultado |  $suma_resultados / 	$cuenta_resultados</h3>";
+
 					}
 					
 					
@@ -6406,8 +6126,7 @@ Cuadro Contable<br>
 			
 			
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
-			//print_r($Campos);
-			//exit();
+
 			
 			$array_lms_reportes_dado_completo = reportes_online_lms_reportes_dado_completo();
 			$handle = fopen('php://output', 'w');
@@ -6473,17 +6192,12 @@ Cuadro Contable<br>
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
-			//print_r($Campos);
-			//exit();
+
 			
 			$array_lms_reportes_dado_id_agrupacion = reportes_online_lms_reportes_dado_id_agrupacion($get["id"]);
-			//print_r($array_lms_reportes_dado_id_agrupacion);	exit();
-			$handle = fopen('php://output', 'w');
 			
-			//if($get["vista"]=="graph"){
-			//$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/entorno.html"));
-			//$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_online/index_graf.html")), $PRINCIPAL);
-			//} else {
+			$handle = fopen('php://output', 'w');
+
 			
 			$cursos_nombres = reportes_online_ListaCursoDadoIdAgrupacion($array_lms_reportes_dado_id_agrupacion[0]->id_agrupacion);
 			$cuenta_cursos = count($cursos_nombres);
@@ -6502,12 +6216,12 @@ Cuadro Contable<br>
 			echo "rut;rut_completo;nombre_completo;cargo;email;empresa;" . $Campos[0]->c1_texto . ";" . $Campos[0]->c2_texto . ";" . $Campos[0]->c3_texto . ";" . $Campos[0]->c4_texto . ";rut_jefe;agrupacion;" . $row_cursos_nombres . "\r\n";
 			//}
 			
-			//echo "<br>".$row_query_curso."<br>";
+			
 			
 			
 			foreach ($array_lms_reportes_dado_id_agrupacion as $unico) {
 				$estado = "";
-				//echo "<br>unico->id_agrupacion ".$unico->id_agrupacion." nombre ".$unico->nombre;
+				
 				$Lista_Rut_Completa = reportes_onlines_usuarios_detalle_agrupaciones($row_query_curso);
 				foreach ($Lista_Rut_Completa as $unico_per) {
 					$estado = "";
@@ -6541,8 +6255,6 @@ Cuadro Contable<br>
 			header("Content-Disposition: attachment; filename=Reporte_Agrupacion_Historico_" . $get["tipo"] . ".csv");
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			$Campos = reportes_online_trae_c1c2c3c4($_SESSION["id_empresa"]);
-			//print_r($Campos);
-			//exit();
 			$array_lms_reportes_dado_id_agrupacion = reportes_online_lms_reportes_dado_id_agrupacion($get["id"]);
 			$handle = fopen('php://output', 'w');
 			$cursos_nombres = reportes_online_ListaCursoDadoIdAgrupacion($array_lms_reportes_dado_id_agrupacion[0]->id_agrupacion);
@@ -6593,7 +6305,7 @@ Cuadro Contable<br>
 		
 		if ($get["tipo"] == "AgrupacionesConsolidadoC1") {
 			$array_lms_reportes_dado_id_agrupacion = reportes_online_lms_reportes_dado_id_agrupacion($get["id"]);
-			//print_r($array_lms_reportes_dado_id_agrupacion);	exit();
+			
 			
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/csv');
@@ -6633,20 +6345,20 @@ Cuadro Contable<br>
 			echo $nombreC1 . ";" . $row_cursos_nombres_estadisticas . $row_total_nombres . "\r\n";
 			//}
 			
-			//echo "<br>".$row_query_curso."<br>";
+			
 			
 			
 			foreach ($array_lms_reportes_dado_id_agrupacion as $unico) {
 				$estado = "";
-				//echo "<br>unico->id_agrupacion ".$unico->id_agrupacion." nombre ".$unico->nombre;
+				
 				$Lista_Gerencias = reportes_onlines_usuarios_detalle_agrupaciones_groupbyC1($row_query_curso);
 				//solo agrupa gerencia
-				//print_r($Lista_Gerencias);
+
 				foreach ($Lista_Gerencias as $unico_per) {
 					$estado = "";
 					foreach ($cursos_nombres as $unico_curso) {
 						$Array_Inscritos = reportes_online_usuariosInscritosOnline($unico_curso->id_curso, $unico_per->c1);
-						//print_r($Array_Inscritos);
+						
 						$Inscritos = 0;
 						$Inscritos = count($Array_Inscritos);
 						$Finalizados = 0;
@@ -6693,8 +6405,6 @@ Cuadro Contable<br>
 			exit();
 		}
 		
-		//exit();
-		//echo "<h1>Fin</h1>";
 		
 		$PRINCIPAL = str_replace("{NUM_INSCRITOS}", $cuenta_usuarios_inscritos, $PRINCIPAL);
 		
@@ -6731,13 +6441,13 @@ Cuadro Contable<br>
 		exit;
 		
 		exit();
-	} //**reportes_online**
+	} 
 	elseif ($seccion == "notificaciones_email") {
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/notificaciones_email/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_instancia = $get["id_instancia"];
 		$tipo_instancia = $get["tipo_instancia"];
-		//print_r($get);    exit();
+		
 		
 		if ($id_instancia <> "") {
 			$PRINCIPAL = str_replace("{ENTORNO}", notificaciones_email_lista_notificaciones(FuncionesTransversalesAdmin(file_get_contents("views/notificaciones_email/entorno_notificaciones_sin_crear.html")), $id_empresa, $id_categoria, $id_instancia, $tipo_instancia), $PRINCIPAL);
@@ -6769,7 +6479,7 @@ Cuadro Contable<br>
 			//ob_clean();
 			echo "tipo;id_curso;curso;id_inscripcion;rut;nombre_completo;email;fecha\r\n";
 			$array_logemails_ = notificaciones_log_email_automaticas_lista_notificaciones_data($id_empresa, $id_instancia, $tipo_instancia);
-			//print_r($array_logemails_);
+			
 			foreach ($array_logemails_ as $unico) {
 				echo $unico->tipo . ";" . $unico->id_curso . ";" . $unico->nombre_curso . ";" . $unico->id_inscripcion . ";" . $unico->rut . ";" . $unico->nombre_completo . ";" . $unico->email . ";" . $unico->fecha . "\r\n";
 			}
@@ -6812,9 +6522,8 @@ Cuadro Contable<br>
 	elseif ($seccion == "notificaciones_email_descargar_usuarios") {
 		$id_notificacion = Decodear3($get["id"]);
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "<br>id_notificacion $id_notificacion";
 		$lista_usuarios_notificaciones = notificaciones_email_descargar_usuarios_data($id_empresa, $id_notificacion);
-		//print_r($lista_usuarios_notificaciones); exit();
+		
 		require_once 'clases/PHPExcel.php';
 		$datos_empresa = DatosEmpresa($id_empresa);
 		$objPHPExcel = new PHPExcel();
@@ -6930,7 +6639,7 @@ Cuadro Contable<br>
 			exit;
 		}
 		
-		//print_r($_DATOS_EXCEL);
+		
 		
 		for ($l = 1; $l <= count($_DATOS_EXCEL); $l++) {
 			outputProgress($l, $fila);
@@ -6942,7 +6651,7 @@ Cuadro Contable<br>
 				notificaciones_email_Inserta_Nueva_Encuesta_Usuario_Tipo_Editor_Visualizador($rut, $nombre, $email, $id_notificacion, $id_empresa);
 			}
 		}
-		//exit();
+		
 		echo "<script>location.href='?sw=notificaciones_email';</script>";
 		exit;
 	}
@@ -6951,10 +6660,9 @@ Cuadro Contable<br>
 		$id_notificacion = Decodear3($get["id"]);
 		$tipo = $get["tipo"];
 		$array_envios = notificaciones_email_envios_usuarios($id_notificacion, $tipo, $id_empresa);
-		//print_r($array_envios);
-		//echo "<br>id_notificacion $id_notificacion, tipo $tipo"; exit();
+		
 		$Notificacion = notificaciones_email_notificaciones_data($id_notificacion, $id_empresa);
-		//print_r($Notificacion);
+		
 		$subject = ($Notificacion[0]->subject);
 		$titulo = ($Notificacion[0]->titulo);
 		$texto = ($Notificacion[0]->texto);
@@ -6987,7 +6695,7 @@ Cuadro Contable<br>
 		$id_encuesta = $get["id_encuesta"];
 		$tipo_usuario = $get["tipo_usuario"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "<br>id_encuesta $id_encuesta tipo_usuario $tipo_usuario id_empresa $id_empresa";
+		
 		
 		if ($tipo_usuario == "Usuario") {
 			$lista_usuarios_encuesta = Lista_Encuestas_Tipo_Usuario($id_empresa, $id_encuesta, $tipo_usuario);
@@ -7041,7 +6749,7 @@ Cuadro Contable<br>
 		$id_cluster = $get["id_cluster"];
 		$tipo_usuario = $get["tipo_usuario"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "<br>id_encuesta $id_encuesta tipo_usuario $tipo_usuario id_empresa $id_empresa";
+		
 		if ($tipo_usuario == "Usuario") {
 			$lista_usuarios_cluster = Lista_Cluster_Tipo_Usuario($id_empresa, $id_cluster, $tipo_usuario);
 			$txt_usuario_descarga = "Visualizador";
@@ -7107,7 +6815,7 @@ Cuadro Contable<br>
 	elseif ($seccion == "Mediciones_Charts_Respuestas_EncuestaLB") {
 		$id_med = $get["idMed"];
 		$med = DatosMedicionAdmin($id_med);
-		//echo "<br>id_med<br>$id_med";
+		
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/graficos/grafico_entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
 		$PRINCIPAL = str_replace("{ENTORNO_GRAFICOS_MEDICIONES}", lista_respuestas_encuestas_grafico(FuncionesTransversalesAdmin(file_get_contents("views/graficos/grafico_entorno_global.html")), $id_empresa, $id_med), $PRINCIPAL);
@@ -7121,7 +6829,7 @@ Cuadro Contable<br>
 		$evaluador = Decodear3($get["evr"]);
 		$id_proceso = Decodear3($get["ip"]);
 		
-		//echo "$evaluado, $evaluador, $id_proceso";
+		
 		ActualizaPerfilEvaluacionNoEvaluable($evaluado, $evaluador, $id_proceso);;
 		
 		echo "
@@ -7162,7 +6870,7 @@ Cuadro Contable<br>
 		if ($arreglo_email[1] == "gop.cl") {
 			$key = $email;
 			$arrayEmpresa = BuscaEmpresaUserRut($rut);
-			//print_r($arrayEmpresa);
+			
 			$id_empresa = $arrayEmpresa[0]->id_empresa;
 			$_SESSION["id_empresa"] = $id_empresa;
 			$acceso = $arrayEmpresa[0]->acceso;
@@ -7172,7 +6880,7 @@ Cuadro Contable<br>
 			
 			$verifica_clave_Google = VerificoAccesoAdminGoogle($key);
 			
-			//exit();
+			
 			if ($verifica_clave_Google) {
 				$_SESSION["prefijo"] = $verifica_clave_Google[0]->prefijo;
 				$_SESSION["nombre"] = $verifica_clave_Google[0]->nombre;
@@ -7239,14 +6947,11 @@ Cuadro Contable<br>
 			$i++;
 		}
 		
-		//$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
-		//$objPHPExcel->getActiveSheet()->protectCells('A1:B1', 'php');
-		
 		$cursos = TraeCursosPorEmpresaParaSubidaMasiva($idEmpresa);
 		$i = 1;
 		
-		//echo count($usuarios);
-		//exit();
+		
+		
 		foreach ($cursos as $unico) {
 			$i++;
 			$lastColumn2 = "A";
@@ -7355,7 +7060,7 @@ Cuadro Contable<br>
 			$destino = "tmp_ev_" . $archivo;
 			
 			if (copy($_FILES['excel']['tmp_name'], $destino)) {
-				//echo "Archivo Cargado Con Éxito";
+			
 			}
 			else {
 				$error_grave = "Error Al subir Archivo<br>";
@@ -7413,17 +7118,15 @@ Cuadro Contable<br>
 				$parar = 0;
 				$error_grave = "";
 				$mensaje_errores = "";
-				//echo $key;
+				
 				
 				foreach ($item as $key2 => $valor) {
-					//print_r($valor);
+					
 					
 					$campoTabla = jCampoVisualCambioCampoTablaCursos($idEmpresa, $key2);
 					
 					$esObligatorio = jValidarObligatorioCampoCursos($idEmpresa, $key2);
 					
-					//echo $key2;
-					//echo "<br>";
 					if ($key2 == "Codigo Curso" && $valor != "") {
 						$codigo_curso = $valor;
 					}
@@ -7619,7 +7322,7 @@ Cuadro Contable<br>
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
-		//print_r($_SESSION);
+		
 	}
 	elseif ($seccion == "addnoticia") {
 		$id_noticia = Decodear3($get["i"]);
@@ -7637,13 +7340,12 @@ Cuadro Contable<br>
 			slider_delete($del_idfoto, $id_empresa);
 		}
 		
-		//echo  "del_idfoto $del_idfoto"; sleep(3);
 		$PRINCIPAL = FormularioNoticia(FuncionesTransversalesAdmin(file_get_contents("views/sliders/sliders_entorno.html")), $id_noticia);
 		$fotos = TraeLmsSliders($id_empresa);
 		
-		//print_r($fotos);
+		
 		foreach ($fotos as $unico) {
-			//print_r($unico);
+			
 			$row .= file_get_contents("views/sliders/sliders_row.html");
 			$row = str_replace("{ID}", ($unico->id), $row);
 			$row = str_replace("{IMAGEN}", ($unico->foto), $row);
@@ -7674,7 +7376,7 @@ Cuadro Contable<br>
 		exit;
 	}
 	elseif ($seccion == "pruebaBuscador") {
-		//echo "aca";
+	
 	}
 	elseif ($seccion == "reportdin") {
 		$id_empresa = $_SESSION["id_empresa"];
@@ -7941,7 +7643,7 @@ Cuadro Contable<br>
 		//traigo las respeustas de las pregutnas de esta empresa
 		
 		$Practicas = TraeMejoresPracticasPorEmpresa($idproceso, $id_empresa);
-		//print_r($Practicas);
+		
 		header("Content-Type: application/vnd.ms-excel");
 		header("Content-Disposition: attachment; filename=Lista_Mejores_Practicas.xls");
 		header("Pragma: no-cache");
@@ -8062,7 +7764,7 @@ location.href='?sw=veobj&i=$jefe';
 		$id_empresa = $_SESSION["id_empresa"];
 		NotificacionesBuscaPendientesAutomatico($id_empresa, $url_front, $url_front_admin_full, $logo, $from, $nombrefrom);
 		echo "pendientes Creadas";
-		//echo "Notificaciones Creadas";
+		
 	}
 	elseif ($seccion == "notificaciones_automaticas_envio") {
 		$id_empresa = $_SESSION["id_empresa"];
@@ -8129,10 +7831,10 @@ location.href='?sw=listProcesosCorreos';
 		
 		$hoy = date("Y-m-d");
 		$mediciones = BuscaMediciones_UnicaData($id_empresa, $idMed);
-		//print_r($mediciones); sleep(5);
+		
 		
 		foreach ($mediciones as $unico) {
-			//print_r($unico);
+			
 			
 			$array_encuesta = MedBuscaIdEncuestraMed($unico->id, $id_empresa);
 			$id_encuesta = $array_encuesta[0]->id_encuesta;
@@ -8167,7 +7869,7 @@ location.href='?sw=listProcesosCorreos';
 						$rut = $arr_usu->jefe;
 						$id_inscripcion = $unico->id;
 						
-						//echo "$to, $nombreto, $from, $nombrefrom, $tipo, $subject, $titulo1,$subtitulo1,$texto1,$url,$texto_url, $texto2, $texto3, $texto4, $logo, $id_empresa, $url, 'Email_Masivo_Med', $rut, $id_inscripcion";sleep(3);
+						
 						SendGrid_Email($to, $nombreto, $from, $nombrefrom, $tipo, $subject, $titulo1, $subtitulo1, $texto1, $url, $texto_url, $texto2, $texto3, $texto4, $logo, $id_empresa, $url, "Email_Masivo_Med", $rut, $id_inscripcion, "");
 					}
 				}
@@ -8192,10 +7894,10 @@ location.href='?sw=lista_Mediciones_med';
 		$hoy = date("Y-m-d");
 		$mediciones = BuscaMediciones_hoy($id_empresa, $hoy);
 		
-		//print_r($mediciones);
+		
 		
 		foreach ($mediciones as $unico) {
-			//print_r($unico);
+			
 			
 			$array_encuesta = MedBuscaIdEncuestraMed($unico->id, $id_empresa);
 			$id_encuesta = $array_encuesta[0]->id_encuesta;
@@ -8232,7 +7934,7 @@ location.href='?sw=lista_Mediciones_med';
 					$rut = $arr_usu->jefe;
 					$id_inscripcion = $unico->id;
 					
-					//echo "$to, $nombreto, $from, $nombrefrom, $tipo, $subject, $titulo1,$subtitulo1,$texto1,$url,$texto_url, $texto2, $texto3, $texto4, $logo, $id_empresa, $url, 'Email_Masivo_Med', $rut, $id_inscripcion";sleep(3);
+					
 					SendGrid_Email($to, $nombreto, $from, $nombrefrom, $tipo, $subject, $titulo1, $subtitulo1, $texto1, $url, $texto_url, $texto2, $texto3, $texto4, $logo, $id_empresa, $url, "Email_Masivo_Med", $rut, $id_inscripcion, "");
 					//ActualizoEstadoEnvioCorreoPorProceso($rut, $id_proceso);
 				}
@@ -8331,7 +8033,7 @@ location.href='?sw=lista_Mediciones_med';
 			}
 			
 			if ($u->id_tipo <> "") {
-				///echo "<h1>Id Tipo ".$u->id_tipo."</h1>";
+				
 				$Postulable = Lista_Postulable_por_id_full($u->id_tipo);
 				$Tipo = $Postulable[0]->nombre;
 				$Tipo_Desc = $Postulable[0]->descripcion;
@@ -8354,13 +8056,13 @@ location.href='?sw=lista_Mediciones_med';
 	}
 	elseif ($seccion == "Download_Respuestas_EncuestaLB_BK") {
 		$idMed = $get["idMed"];
-		//echo "Download_Respuestas_EncuestaLB $idMed";   exit();
+		
 		$DatosMed = DatosMedicionAdmin($idMed);
 		$nombre_medicion = $DatosMed[0]->nombre;
 		$tipo_individual = $DatosMed[0]->tipo_medicion;
 		//
 		
-		//print_r($DatosMed);    exit();
+		
 		
 		require_once 'clases/PHPExcel.php';
 		$objPHPExcel = new PHPExcel();
@@ -8419,30 +8121,26 @@ location.href='?sw=lista_Mediciones_med';
 		$letra = "F";
 		foreach ($TodasPreguntas as $pregunta) {
 			$letra++;
-			//print_r($pregunta);
+
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . "6", ($pregunta->pregunta));
 		}
 		
 		$letra = "F";
 		foreach ($TodasPreguntas as $pregunta) {
 			$letra++;
-			//print_r($pregunta);
+			
 			$questionid++;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . "4", ($pregunta->tipo));
 		}
 		
 		$GroupRuts = BuscaUsuariosRespondieronEncLBSinUsuario($idMed);
 		
-		//echo "<br>BuscaUsuariosRespondieronEncLBSinUsuario<br>";
-		// print_r($GroupRuts);
-		//echo "<br>";
 		
 		foreach ($GroupRuts as $user_unico) {
-			//print_r($user_unico);
+			
 			$Usu = TraeDatosUsuario($user_unico->rut);
 			$UsuJ = TraeDatosUsuario($Usu[0]->jefe);
-			//print_r($Usu);
-			//exit();
+
 			if ($Usu[0]->nombre_completo == "") {
 				$Usu[0]->nombre_completo = "";
 			}
@@ -8473,11 +8171,8 @@ location.href='?sw=lista_Mediciones_med';
 			
 			$letra = "F";
 			foreach ($TodasPreguntas as $pregunta) {
-				// echo "<br><br>ARREGLO PREGUNTA ".$pregunta->id_pregunta;    exit();
-				//print_r($pregunta);
 				$Respuestas_UsuariosIDPreg = BuscaRespuestasUsuarioMedEncLB($user_unico->rut, $pregunta->id_pregunta, $idMed, $array_fecha);
-				//echo "<br><br>ARREGLO RESPUESTAS ".$user_unico->rut;
-				//print_r($Respuestas_UsuariosIDPreg);
+
 				$letra++;
 				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . $i, ($Respuestas_UsuariosIDPreg[0]->respuesta));
 			}
@@ -8502,9 +8197,9 @@ location.href='?sw=lista_Mediciones_med';
 	elseif ($seccion == "Encuestas_Replicar") {
 		$id_empresa = $_SESSION["id_empresa"];
 		$idMed = $get["idMed"];
-		//echo "<br>idMed $idMed";
+		
 		$idMed_Max = Encuestas_Busca_IdUltimoMasunoDos();
-		//echo "oasi";
+		
 		$Med = BuscaMediciones_UnicaData($id_empresa, $idMed);
 		$idMedNuevo = $idMed_Max[0]->maximo + 1;
 		
@@ -8518,7 +8213,7 @@ location.href='?sw=lista_Mediciones_med';
 		$cuenta_preg = 0;
 		foreach ($Preg as $unico) {
 			$cuenta_preg++;
-			//echo "<br>$cuenta_preg<br>".print_r($unico);
+			
 			
 			
 			Insert_tbl_enc_elearning_preg($idMedNuevo, $cuenta_preg, $unico->pregunta, $id_empresa, $unico->tipo, $unico->dimension, $unico->alt1, $unico->alt2, $unico->alt3, $unico->alt4, $unico->alt5, $unico->alt6, $unico->alt7, $unico->alt8, $unico->alt9, $unico->alt10, $unico->dimension_descripcion, $unico->descripcion_pregunta, $unico->linkpregunta, $unico->linkopcion, $unico->alt11, $unico->alt12, $unico->alt13, $unico->alt14, $unico->alt15, $unico->alt16, $unico->alt17, $unico->alt18, $unico->alt19, $unico->alt20);
@@ -8604,7 +8299,7 @@ location.href='?sw=lista_Mediciones_med';
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/encuesta_lb/entorno.html"));
 		
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($get);
+		
 		$Encuesta_array = DatosMedicionAdminUsers($get["id_encuesta"], $id_empresa);
 		$num_usuarios = $Encuesta_array[0]->usuarios;
 		$num_editores = $Encuesta_array[0]->editores;
@@ -8648,7 +8343,7 @@ location.href='?sw=lista_Mediciones_med';
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/encuesta_lb/entorno.html"));
 		
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($get);
+		
 		$Clusterarray = DatosClusterAdminUsers($get["id_cluster"], $id_empresa);
 		$num_usuarios = $Clusterarray[0]->usuarios;
 		
@@ -8674,7 +8369,7 @@ location.href='?sw=lista_Mediciones_med';
 		exit();
 	}
 	elseif ($seccion == "lista_encuestas_lb_update") {
-		//print_r($post);
+		
 		$tipo_usuario = $post["tipo_usuario"];
 		$id_encuesta = $post["id_encuesta"];
 		$archivo = $_FILES['excel']['name'];
@@ -8682,7 +8377,7 @@ location.href='?sw=lista_Mediciones_med';
 		
 		$tipo = $_FILES['excel']['type'];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "<br>tipo_usuario $tipo_usuario, id_encuesta $id_encuesta";
+		
 		
 		if ($id_encuesta > 0) {
 			if ($tipo_usuario == "Usuario") {
@@ -8695,7 +8390,6 @@ location.href='?sw=lista_Mediciones_med';
 		
 		$fileName = $_FILES["excel"]["tmp_name"];
 		if ($_FILES["excel"]["size"] > 0) {
-			// echo "<h1>a</h1>";
 			$file = fopen($fileName, "r");
 			
 			
@@ -8730,9 +8424,6 @@ location.href='?sw=lista_Mediciones_med';
 				flush();
 				ob_flush();
 				
-				//$id_encuesta 	= ($_DATOS_EXCEL[$l - 1][2]);
-				//$tipo_usuario 			= ($_DATOS_EXCEL[$l - 1][3]);
-				//echo "<br>$rut $id_encuesta $tipo_usuario";
 				
 				
 			}
@@ -8802,13 +8493,13 @@ location.href='?sw=lista_Mediciones_med';
 		$fila = count($_DATOS_EXCEL);
 		for ($l = 1; $l <= count($_DATOS_EXCEL); $l++) {
 		}
-		//exit();
+		
 		
 	}
 	elseif ($seccion == "gestion_admin_lb") {
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/encuesta_lb/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "<br>id_empresa $id_empresa";
+		
 		$ie = $get["ie"];
 		$desactiva = $get["desactiva"];
 		$activa = $get["activa"];
@@ -8841,37 +8532,37 @@ location.href='?sw=lista_Mediciones_med';
 		$id_empresa = $_SESSION["id_empresa"];
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/galeria/entorno.html"));
 		if ($get["n"] == "1") {
-			// $PRINCIPAL=lista_carpetas(FuncionesTransversales(file_get_contents("views/admin/galeria/admin.html")));
+
 			
 			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", lista_carpetas(FuncionesTransversalesAdmin(file_get_contents("views/admin/galeria/entorno_categorias.html")), $id_empresa), $PRINCIPAL);
 		}
 		
 		if ($get["n"] == "2") {
-			// $PRINCIPAL=lista_subcarpetas(FuncionesTransversales(file_get_contents("views/admin/galeria/admin.html")),$get["id"],$get["cn"]);
+			
 			
 			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", lista_subcarpetas(FuncionesTransversalesAdmin(file_get_contents("views/admin/galeria/admin.html")), $get["id"], $get["cn"]), $PRINCIPAL);
 		}
 		
 		if ($get["n"] == "3") {
-			// $PRINCIPAL=lista_galeria_archivos(FuncionesTransversales(file_get_contents("views/admin/galeria/archivos.html")),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"]);
+			
 			
 			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", lista_galeria_archivos(FuncionesTransversalesAdmin(file_get_contents("views/admin/galeria/archivos.html")), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"]), $PRINCIPAL);
 		}
 		
 		if ($get["n"] == "fc") {
-			// $PRINCIPAL=nueva_carpeta(file_get_contents("views/admin/galeria/nueva_categoria.html"),$get["id_cat"]);
+			
 			
 			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", nueva_carpeta(file_get_contents("views/admin/galeria/nueva_categoria.html"), $get["id_cat"]), $PRINCIPAL);
 		}
 		
 		if ($get["n"] == "fs") {
-			// $PRINCIPAL=nuevo_album(file_get_contents("views/admin/galeria/nueva_sub_categoria.html"),$get["id_cat"],$get["cn"],$get["id_subcat"]);
+			
 			
 			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", nuevo_album(file_get_contents("views/admin/galeria/nueva_sub_categoria.html"), $get["id_cat"], $get["cn"], $get["id_subcat"]), $PRINCIPAL);
 		}
 		
 		if ($get["n"] == "fa") {
-			// $PRINCIPAL=subir_archivo_galeria(file_get_contents("views/admin/galeria/subir_archivo.html"),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"],$get["id_ar"]);
+			
 			
 			$PRINCIPAL = str_replace("{ENTORNO_GALERIA}", subir_archivo_galeria(file_get_contents("views/admin/galeria/subir_archivo.html"), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"], $get["id_ar"]), $PRINCIPAL);
 		}
@@ -8882,30 +8573,30 @@ location.href='?sw=lista_Mediciones_med';
 	elseif ($seccion == "admin_biblio") {
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/biblioteca/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo CleanHTMLWhiteList($PRINCIPAL);exit;
+		
 		
 		if ($get["n"] == "1") {
-			//$PRINCIPAL=lista_categorias(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")));
+			
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_categorias(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/entorno_categorias.html")), $id_empresa), $PRINCIPAL);
 		}
 		if ($get["n"] == "2") {
-			//$PRINCIPAL=lista_subcategorias(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$get["id"],$get["cn"]);
+			
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_subcategorias(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $get["id"], $get["cn"]), $PRINCIPAL);
 		}
 		if ($get["n"] == "3") {
-			//$PRINCIPAL=lista_archivos(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"]);
+			
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_archivos(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"]), $PRINCIPAL);
 		}
 		if ($get["n"] == "fc") {
-			//$PRINCIPAL=nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"),$get["id_cat"]);
+			
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"), $get["id_cat"]), $PRINCIPAL);
 		}
 		if ($get["n"] == "fs") {
-			//$PRINCIPAL=nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"),$get["id_cat"],$get["cn"],$get["id_subcat"]);
+			
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"), $get["id_cat"], $get["cn"], $get["id_subcat"]), $PRINCIPAL);
 		}
 		if ($get["n"] == "fa") {
-			//$PRINCIPAL=subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"],$get["id_ar"]);
+			
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"], $get["id_ar"]), $PRINCIPAL);
 		}
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -8914,31 +8605,31 @@ location.href='?sw=lista_Mediciones_med';
 	elseif ($seccion == "admin_preguntasyrespuestas") {
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/preguntasyrespuestas/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo CleanHTMLWhiteList($PRINCIPAL);exit;
+		
 		
 		if ($get["n"] == "1") {
-			//$PRINCIPAL=lista_categorias(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")));
+			
 			$PRINCIPAL = str_replace("{ENTORNO_PREGUNTASYRESPUESTAS}", lista_preguntasyrespuestas(FuncionesTransversalesAdmin(file_get_contents("views/preguntasyrespuestas/entorno_categorias.html")), $id_empresa, $id_categoria), $PRINCIPAL);
 		}
 		
 		if ($get["n"] == "2") {
-			//$PRINCIPAL=lista_subcategorias(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$get["id"],$get["cn"]);
+			
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_subcategorias(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $get["id"], $get["cn"]), $PRINCIPAL);
 		}
 		if ($get["n"] == "3") {
-			//$PRINCIPAL=lista_archivos(FuncionesTransversales(file_get_contents("views/admin/biblioteca/admin.html")),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"]);
+			
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", lista_archivos(FuncionesTransversalesAdmin(file_get_contents("views/admin/biblioteca/admin.html")), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"]), $PRINCIPAL);
 		}
 		if ($get["n"] == "fc") {
-			//$PRINCIPAL=nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"),$get["id_cat"]);
+			
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_cat(file_get_contents("views/admin/biblioteca/nueva_categoria.html"), $get["id_cat"]), $PRINCIPAL);
 		}
 		if ($get["n"] == "fs") {
-			//$PRINCIPAL=nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"),$get["id_cat"],$get["cn"],$get["id_subcat"]);
+			
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", nueva_sub_cat(file_get_contents("views/admin/biblioteca/nueva_sub_categoria.html"), $get["id_cat"], $get["cn"], $get["id_subcat"]), $PRINCIPAL);
 		}
 		if ($get["n"] == "fa") {
-			//$PRINCIPAL=subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"),$get["id"],$get["cn"],$get["id_sub"],$get["nsub"],$get["id_ar"]);
+			
 			$PRINCIPAL = str_replace("{ENTORNO_BIBLIOTECA}", subir_archivo(file_get_contents("views/admin/biblioteca/subir_archivo.html"), $get["id"], $get["cn"], $get["id_sub"], $get["nsub"], $get["id_ar"]), $PRINCIPAL);
 		}
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -8948,15 +8639,11 @@ location.href='?sw=lista_Mediciones_med';
 		InsertLogPrueba();
 	}
 	elseif ($seccion == "ordenarSliders") {
-		//print_r($post);
 		$id_empresa = Decodear3($post["id_emp"]);
-		//echo $id_empresa;
-		//Con el id empresa, traigo todos los sliders
+		
 		$tnoticias1 = TotalNoticiasSlider($id_empresa);
 		foreach ($tnoticias1 as $not) {
-			//echo $not->id." ".$post["orden_".$not->id];
-			//echo "<br>";
-			//Aca actualizo el campo Slider Activo
+
 			ActualizoSliderActivo($not->id, $post["orden_" . $not->id]);
 		}
 		echo "
@@ -8980,7 +8667,7 @@ location.href='?sw=linoticias#BloqueSlider';
 	}
 	elseif ($seccion == "ordenarNoticiasCampoOrden") {
 		//aca deberia traer todas las noticias con estado 4, y no son slider de la empresa correspondiente
-		//print_r($post);
+		
 		$noticias = TodasLasNoticiasPublicadasSinSlider($_SESSION["id_empresa"]);
 		foreach ($noticias as $not) {
 			if ($post["orden_" . $not->id] > 0) {
@@ -9098,7 +8785,7 @@ location.href='?sw=listmenus';
 			$link = "";
 		}
 		
-		//$link=($post["link"]);
+		
 		
 		$id_empresa = $_SESSION["id_empresa"];
 		
@@ -9117,7 +8804,7 @@ location.href='?sw=listmenus';
 		}
 		
 		if ($id_submenu) {
-			//InsertaMenuN2($nombre_submenu, $link_submenu, $id_menu, $tipo_link_submenu);
+			
 			//Actualiza Datos de Submenu
 			ActualizarSubMenu($id_submenu, $nombre_submenu, $link_submenu, $tipo_link_submenu);
 		}
@@ -9126,15 +8813,7 @@ location.href='?sw=listmenus';
 		}
 		
 		ActualizaDatosMenuN1($nombre, $link, $id_menu);
-		
-		//Recorro 5 vueltas, para ver si vienen sub menus por el nivel 1
-		/*for($i=1;$i<=5;$i++){
-    if($post["nombre".$i] && $post["link".$i]){
-    //Inserto Submenu n2
-    InsertaMenuN2(($post["nombre".$i]), ($post["link".$i]), $id_menu);
 
-    }
-    }*/
 		
 		echo "
 <script>
@@ -9290,8 +8969,6 @@ location.href='?sw=linoticias';
 	}
 	elseif ($seccion == "indicadores1") {
 		$id_empresa = $_SESSION["id_empresa"];
-		//$PRINCIPAL=FiltrosReportes(FuncionesTransversalesAdmin(file_get_contents("views/indicadores/index.html")), $arreglo_post);
-		//$PRINCIPAL = str_replace("{FILTROS}",FiltrosReportes(file_get_contents("views/reportes/encabezado_solo_filtros.html"), $arreglo_post, $id_empresa),$PRINCIPAL);
 		$DATOS = FiltrosIndicadores(FuncionesTransversalesAdmin(file_get_contents("views/indicadores/index.html")));
 		$PRINCIPAL = $DATOS[0];
 		$PRINCIPAL = str_replace("{BLOQUE_DATA}", "", $PRINCIPAL);
@@ -9302,7 +8979,6 @@ location.href='?sw=linoticias';
 	}
 	elseif ($seccion == "muestrasubfamilia") {
 		$id_familia = $post["elegido"];
-		//$total=CantidadCursosPorPrograma($id_programa);
 		$subfamilias = TraeSubFamilias($id_familia);
 		echo "<option value='-'>Todas</option>";
 		
@@ -9317,11 +8993,7 @@ location.href='?sw=linoticias';
 			$arreglo_datos_indicadores[$i]["valores"] = $valores;
 		}
 		
-		//print_r($arreglo_datos_indicadores);
-		//exit;
 		$id_empresa = $_SESSION["id_empresa"];
-		//$PRINCIPAL=FiltrosReportes(FuncionesTransversalesAdmin(file_get_contents("views/indicadores/index.html")), $arreglo_post);
-		//$PRINCIPAL = str_replace("{FILTROS}",FiltrosReportes(file_get_contents("views/reportes/encabezado_solo_filtros.html"), $arreglo_post, $id_empresa),$PRINCIPAL);
 		$DATOS = FiltrosIndicadores(FuncionesTransversalesAdmin(file_get_contents("views/indicadores/index.html")), $post, $numero_series);
 		$PRINCIPAL = $DATOS[0];
 		$PRINCIPAL = MuestraIndicadores($PRINCIPAL, $valores, $arreglo_datos_indicadores, $numero_series, $DATOS[1], $DATOS[2]);
@@ -9330,7 +9002,7 @@ location.href='?sw=linoticias';
 	}
 	elseif ($seccion == "nombreindicador") {
 		$nombre_indicador = $post["elegido"];
-		//$total=CantidadCursosPorPrograma($id_programa);
+
 		$indicadores = TraeIndicadoresSelect($nombre_indicador);
 		echo "<option value='-'>Todas</option>";
 		
@@ -9405,7 +9077,6 @@ location.href='?sw=linoticias';
 	elseif ($seccion == "muestra_unidad_negocio") {
 		$centro_costo = $post["elegido2"];
 		$datos = DatosParaCombo2($centro_costo);
-		//$datos=TotalCursos2();
 		
 		foreach ($datos as $da) {
 			echo "<option value='" . $da->centro_costo . "'>" . $da->unidad_negocio . "</option>";
@@ -9461,7 +9132,6 @@ location.href='?sw=linoticias';
 			$u->modulo = strip_tags(trim($u->modulo));
 			
 			
-			//$u->mensaje="Mensaje";
 			echo $u->fecha . ";" . $u->hora . ";" . $u->Curso . ";" . $u->modulo . ";" . $u->rating . ";" . $usu[0]->rut . ";" . $usu[0]->nombre_completo . ";" . $usu[0]->cargo . ";" . $usu[0]->division . ";" . $usu[0]->area . ";\r\n";
 		}
 	}
@@ -9471,7 +9141,7 @@ location.href='?sw=linoticias';
 		header('Content-type: text/plain');
 		$fechahoy = date("Y-m-d") . " " . date("H:i:s");
 		header('Content-Disposition: attachment; filename=Reporte_' . $id_objeto . '_' . $fechahoy . '.csv');
-		//echo "evaluado;evaluado_nombre_completo;evaluado_cargo;evaluado_email;evaluado_division;evaluado_gerencia;evaluado_zona;evaluado_dpto;evaluado_oficina;evaluado_region;evaluado_unidad;evaluador;evaluador_nombre_completo;evaluador_cargo;evaluador_email;evaluador_division;evaluador_gerencia;Autoevaluacion;Evaluado hizo evaluacion ascendente?;Lo evaluan ascendente?; Lo evaluaron minimo 3 ascendente?;Ev. Descendente ;Calibracion;Plan;Retro;Informe\r\n";
+		
 		echo "rut;nombre_completo;cargo;email;division;gerencia;zona;oficina;cui;unidad;Estado;Numero Intentos de Evaluacion;Nota;Fecha;Tipo; \r\n";
 		$datos = TotalUsuariosCompraCartera($id_objeto, $id_malla);
 		foreach ($datos as $dat) {
@@ -9529,23 +9199,15 @@ location.href='?sw=linoticias';
 				$json_a_enviar = str_replace("q5:", '"q5":', $json_a_enviar);
 				
 				$arreglo_json = json_decode($json_a_enviar);
-				//$arreglo_json= ($json_a_enviar);
-				//echo "<pre>";
-				//print_r($arreglo_json->complete);exit;
 				
-				//if($arreglo_json["complete"]){
+				
 				if ($arreglo_json->complete) {
-					/*if($arreglo_json["bestScore"]>=90){
+				
 					echo "Aprobado;";
-				}else{
-					echo " Reprobado;";
-				}*/
-					echo "Aprobado;";
-					//echo count($arreglo_json["attemps"]).";";
+					
 					echo count($arreglo_json->attemps) . ";";
 				}
 				else {
-					//if(count($arreglo_json["attemps"])>0){
 					if (count($arreglo_json->attemps) > 0) {
 						echo " Reprobado;";
 						echo count($arreglo_json->attemps) . ";";
@@ -9555,16 +9217,13 @@ location.href='?sw=linoticias';
 						echo "0;";
 					}
 				}
-				//print_r($arreglo_json["complete"]);
-				//echo "<br><br>";
+
 			}
 			else {
 				echo "No Iniciado;";
 				echo "0;";
 			}
-			//echo "nota;";
-			
-			//echo $arreglo_json["bestScore"].";";
+
 			echo $arreglo_json->bestScore . ";";
 			echo $dat->fecha . ";";
 			
@@ -9582,7 +9241,7 @@ location.href='?sw=linoticias';
 	elseif ($seccion == "reporte2019") {
 		header('Content-type: text/plain');
 		header('Content-Disposition: attachment; filename=Reporte_Evaluacion_' . $tipo . " " . $txt . '.csv');
-		//echo "evaluado;evaluado_nombre_completo;evaluado_cargo;evaluado_email;evaluado_division;evaluado_gerencia;evaluado_zona;evaluado_dpto;evaluado_oficina;evaluado_region;evaluado_unidad;evaluador;evaluador_nombre_completo;evaluador_cargo;evaluador_email;evaluador_division;evaluador_gerencia;Autoevaluacion;Evaluado hizo evaluacion ascendente?;Lo evaluan ascendente?; Lo evaluaron minimo 3 ascendente?;Ev. Descendente ;Calibracion;Plan;Retro;Informe\r\n";
+		
 		echo "evaluado;evaluado_nombre_completo;evaluado_cargo;evaluado_email;evaluado_division;evaluado_gerencia;evaluado_zona;evaluado_dpto;evaluado_oficina;evaluado_region;evaluado_unidad;evaluador;evaluador_nombre_completo;evaluador_cargo;evaluador_email;evaluador_division;evaluador_gerencia;Autoevaluacion;Ev. Ascendente (corresponde evaluacion);Ev. Ascendente (al menos 3 evaluaciones);Ev. Descendente ;Calibracion;Plan;Retro;Informe\r\n";
 		$datos = SGD_Reporte2019MT();
 		
@@ -9613,15 +9272,6 @@ location.href='?sw=linoticias';
 			
 			
 			$id_asc = BuscaAscRel2019Finalizado($dat->evaluado, $dat->rut_evaluador);
-			//echo "id asc $id_asc";
-			//exit();
-			/*	if($id_asc>0){
-			echo "SI;";
-		}else{
-			echo "NO;";
-		}
-
-		*/
 			
 			if ($dat->total_lo_evaluan_ascendente > 2) {
 				echo "si;";
@@ -9999,7 +9649,7 @@ location.href='?sw=linoticias';
 		}
 	}
 	elseif ($seccion == "actualizadatostblusuario") {
-		//echo "aca";
+
 		//Traigo los datos de la tabla de usuarios
 		$usuarios = DatosTablaUsuarioPorEmpresa2($_SESSION["id_empresa"]);
 		?>
@@ -10020,7 +9670,6 @@ location.href='?sw=linoticias';
 						
 						<?php
 						//Actualiza los datos
-						//print_r($esta_en_tabla_temporal);exit;
 						$gerencia = $esta_en_tabla_temporal[0]->gerencia;
 						$local = $esta_en_tabla_temporal[0]->local;
 						$zonal = $esta_en_tabla_temporal[0]->zonal;
@@ -10071,7 +9720,6 @@ location.href='?sw=linoticias';
 		}
 	}
 	elseif ($seccion == "SGD_Matriz_updateData") {
-		//print_r($post);
 		
 		$id_sgd_relaciones = $post["id_sgd_relaciones"];
 		$id_solicitud = $post["id_solicitud"];
@@ -10089,7 +9737,6 @@ location.href='?sw=linoticias';
 		$calibrador_original = $post["calibrador_original"];
 		$perfil_original = $post["perfil_original"];
 		
-		//SGD_borra_Sesion_finalizado($evaluado, $evaluador, $id_proceso);
 		SGD_MATRIZ_updateData($id_solicitud, $id_sgd_relaciones, $evaluado, $evaluador, $validador, $calibrador, $perfil_evaluacion);
 		SGD_ActualizaDatosEvaluacionRespuestas($evaluador_original, $evaluado, $evaluador, $id_proceso);
 		
@@ -10109,7 +9756,6 @@ location.href='?sw=SGD_Matriz&b=si&re=" . Encodear3($evaluado) . "&i=" . Encodea
 		exit;
 	}
 	elseif ($seccion == "SGD_Matriz_InsertData") {
-		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		$id_proceso = $post["id_proceso"];
@@ -10120,7 +9766,6 @@ location.href='?sw=SGD_Matriz&b=si&re=" . Encodear3($evaluado) . "&i=" . Encodea
 		$perfil = ($post["nuevo_perfil_eval"]);
 		$subperfil = ($post["nuevo_sub_perfil_eval"]);
 		
-		//SGD_MATRIZ_InsertData($id_proceso, $evaluado, $evaluador, $validador, $calibrador, $id_empresa);
 		SGD_MATRIZ_InsertDataFull($id_proceso, $evaluado, $evaluador, $validador, $calibrador, $id_empresa, $perfil, $subperfil);
 		
 		echo "
@@ -10132,8 +9777,7 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 	}
 	elseif ($seccion == "asignaUsuarioAMallaPrograma") {
 		$fechahoy = date("Y-m-d") . " " . date("H:i:s");
-		//echo $fechahoy;
-		//exit;
+
 		
 		$rut = $post["rut"];
 		$id_malla = $post["malla_seleccionada"];
@@ -10142,11 +9786,10 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		$opcional_inscripcion = $post["opcional"];
 		$id_programa = $post["id_programa"];
 		$hoy = date("Y-m-d");
-		//echo "rut $rut, $id_malla,$id_empresa,$opcional, $id_programa, opcional_inscripcion $opcional_inscripcion";
-		//exit();
+
 		
 		Ingresa_malla_personaConOpcional($rut, $id_malla, $id_empresa, $opcional, $hoy, $id_programa, $opcional_inscripcion);
-		//echo "<script>location.href='?sw=listProgramas';</script>";
+		
 	}
 	elseif ($seccion == "eliminaRelacionMallaUsuario") {
 		$rut = Decodear3($get["r"]);
@@ -10164,7 +9807,6 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 	elseif ($seccion == "ConsultaUsuarioPRogramaMalla") {
 		$fechahoy = date("Y-m-d") . " " . date("H:i:s");
 		$id_empresa = $_SESSION["id_empresa"];
-		//$id_malla=$post["id_malla"];
 		$codigo_programa = $post["codigo_programa"];
 		$rut = preg_replace("[\s+]", "", $post["rut"]);
 		
@@ -10175,11 +9817,8 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 			
 			//Veo si este rut tiene asociada la malla y programa asociada
 			$tiene_malla = BuscaUsuarioMallaPrograma($rut, $id_malla, $codigo_programa, $id_empresa);
-			//echo "<br>2339<pre>";
-			//print_r($tiene_malla);
+
 			$datos_usuario = DatosTablaUsuario($rut);
-			//echo "<br>2342<pre>";
-			//print_r($tiene_malla);
 			
 			if (!$datos_usuario) {
 				echo '<div class="etiqueta  label-danger">Usuario con rut <b>' . $rut . '</b>, no existe en la base de datos.</div>';
@@ -10240,7 +9879,6 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		$id_programa = $get["id_programa"];
 		$id_curso = $get["id_curso"];
 		//actualiza LMS Reportes de inscripcion usuario
-		//SActualizaLmsReporteInscripcionCierre($id_empresa);
 		ActualizaDatosLmsReportesUsuariosNull();
 		$PRINCIPAL = ListadoProgramasBBDD(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/programasbbdd/entorno_listado.html")), $id_empresa, $id_programa, $id_curso);
 		
@@ -10252,7 +9890,6 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		$id_programa = $get["id_programa"];
 		$id_curso = $get["id_curso"];
 		//actualiza LMS Reportes de inscripcion usuario
-		//SActualizaLmsReporteInscripcionCierre($id_empresa);
 		ActualizaDatosLmsReportesUsuariosNull();
 		$PRINCIPAL = ListadoProgramasBBDDI(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/programasbbddI/entorno_listado.html")), $id_empresa, $id_programa, $id_curso);
 		
@@ -10263,8 +9900,7 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_curso = $get["id_curso"];
 		
-		//actualiza LMS Reportes de inscripcion usuario
-		//SActualizaLmsReporteInscripcionCierre($id_empresa);//echo "id_empresa $id_empresa, id_programa $id_programa, id_curso $id_curso";
+		
 		$PRINCIPAL = ActualizaAsistenciaCursoExt(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/programasbbdd/entorno_listado_cursos_ext.html")), $id_empresa, $id_curso);
 		$PRINCIPAL = str_replace("{ID_CURSO}", ($id_curso), $PRINCIPAL);
 		
@@ -10341,10 +9977,10 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 			$tipo = $_FILES['excel_masivo']['type'];
 			$destino = "tmp_ev_" . $archivo;
 			if (copy($_FILES['excel_masivo']['tmp_name'], $destino)) {
-				//echo "Archivo Cargado Con Éxito";
+			
 			}
 			else {
-				//echo "Error Al Cargar el Archivo";
+			
 			}
 			if (file_exists("tmp_ev_" . $archivo)) {
 				/** Clases necesarias */
@@ -10357,8 +9993,6 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 				// Asignar hoja de excel activa
 				$objPHPExcel->setActiveSheetIndex(0);
 				//conectamos con la base de datos
-				//$cn = mysql_connect("localhost", "root", "") or die("ERROR EN LA CONEXION");
-				//$db = mysql_select_db("prueba2", $cn) or die("ERROR AL CONECTAR A LA BD");
 				// Llenamos el arreglo con los datos  del archivo xlsx
 				for ($i = 2; $i <= 15000; $i++) {
 					$_DATOS_EXCEL[$i]['rut'] = ($objPHPExcel->getActiveSheet()->getCell('A' . $i)->getCalculatedValue());
@@ -10484,7 +10118,6 @@ location.href='?sw=SGD_Matriz&i=" . Encodear33($id_proceso) . "&b=si';
 		$descripcion_proceso = ($post["descripcion_proceso"]);
 		$tipoCorreo = $post["tipoCorreo"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//print_r($post);
 		
 		$subject = ($post["subject"]);
 		$titulo1 = ($post["titulo1"]);
@@ -10684,26 +10317,6 @@ location.href='?sw=listProcesosCorreos';
 		echo "<script>location.href='?sw=vista_mallas_clasificaciones_cursos_objetos';</script>";
 	}
 	elseif ($seccion == "listusu") {
-		//echo "hola";//echo "1";//$var1=Encodear3("hol");//echo "<br>1<br>$var1";
-		
-		/*
-echo "<br>".Encodear3('bch_mi_1796');
-echo "<br>".Encodear3('bch_mi_1275');
-echo "<br>".Encodear3('bch_mi_1561');
-echo "<br>".Encodear3('bch_mi_1660');
-echo "<br>".Encodear3('bch_mi_1114');
-echo "<br>".Encodear3('bch_mi_1052');
-echo "<br>".Encodear3('bch_mi_1473');
-echo "<br>".Encodear3('bch_mi_1792');
-echo "<br>".Encodear3('bch_mi_1972');
-echo "<br>".Encodear3('bch_mi_1725');
-echo "<br>".Encodear3('bch_mi_1289');
-echo "<br>".Encodear3('bch_mi_1883');
-echo "<br>".Encodear3('bch_mi_1793');
-echo "<br>".Encodear3('bch_mi_1048');
-echo "<br>".Encodear3('bch_mi_1486');
-echo "<br>".Encodear3('bch_mi_1399');
-*/
 		
 		$id_empresa = $_SESSION["id_empresa"];
 		$ejecuta = $get["exe"];
@@ -10732,8 +10345,6 @@ echo "<br>".Encodear3('bch_mi_1399');
 				$PRINCIPAL = ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/" . $id_empresa . "_entorno_listado.html")), $_SESSION["id_empresa"], "", "", "", "", "", "", "", "", $rut_colaborador);
 			}
 			elseif ($ejecuta == 2) {
-				$PRINCIPAL = ListadoUsuariosUltimo(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/" . $id_empresa . "_entorno_listado.html")), $_SESSION["id_empresa"]);
-				//$PRINCIPAL=ListadoUsuariosUltimo(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/".$id_empresa."_entorno_listado.html")),$_SESSION["id_empresa"]);
 				$PRINCIPAL = ListadoUsuariosRutColaborador(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/" . $id_empresa . "_entorno_listado.html")), $_SESSION["id_empresa"], $rut_colaborador);
 			}
 			else {
@@ -10759,23 +10370,14 @@ echo "<br>".Encodear3('bch_mi_1399');
 			header("Content-Disposition: attachment; filename=" . $fechahoy . ".xls");
 			header("Pragma: no-cache");
 			header("Expires: 0");
-			//$PRINCIPAL=ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_listado_excel.html")),$arreglo_post, $pagina);
 			$PRINCIPAL = ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/" . $id_empresa . "_entorno_listado_excel.html")), $_SESSION["id_empresa"], "", "", "", "", "", "", "", $exportar_a_excel);
 			echo($PRINCIPAL);
 			exit;
 		}
 		else {
-			/*if($_SESSION["id_empresa"]==19){
-}else{
-$PRINCIPAL=FiltrosListadoCursos(ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_listado.html")),$arreglo_post, $pagina, "usuarios"),$arreglo_post);
-$PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_listado_filtros_dinamicos.html")),$arreglo_post, $pagina, "usuarios"), $arreglo_post, $_SESSION["id_empresa"]);
-}*/
-			
-			//if($_SESSION["id_empresa"]==28){
-			//$PRINCIPAL=FiltrosListadoCursos(ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_listado_chilquinta.html")),$arreglo_post, $pagina, "usuarios"),$arreglo_post);
-			///}else{
+
 			$PRINCIPAL = ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/" . $id_empresa . "_entorno_listado.html")), $_SESSION["id_empresa"]);
-			///}
+
 		}
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -10798,17 +10400,9 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 			exit;
 		}
 		else {
-			/*if($_SESSION["id_empresa"]==19){
-}else{
-$PRINCIPAL=FiltrosListadoCursos(ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_listado.html")),$arreglo_post, $pagina, "usuarios"),$arreglo_post);
-$PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_listado_filtros_dinamicos.html")),$arreglo_post, $pagina, "usuarios"), $arreglo_post, $_SESSION["id_empresa"]);
-}*/
-			
-			//if($_SESSION["id_empresa"]==28){
-			//$PRINCIPAL=FiltrosListadoCursos(ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_listado_chilquinta.html")),$arreglo_post, $pagina, "usuarios"),$arreglo_post);
-			///}else{
+
 			$PRINCIPAL = DNCListadoSolicitudesDetalle(FuncionesTransversalesAdmin(file_get_contents("views/dnc_solicitudes/" . $id_empresa . "_entorno_listado.html")), $_SESSION["id_empresa"]);
-			///}
+
 		}
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -10920,11 +10514,7 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 			$PRINCIPAL = ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/siga/entorno_listado_excel.html")), $arreglo_post, $pagina);
 		}
 		else {
-			/*if($_SESSION["id_empresa"]==19){
-}else{
-$PRINCIPAL=FiltrosListadoCursos(ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_listado.html")),$arreglo_post, $pagina, "usuarios"),$arreglo_post);
-$PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_listado_filtros_dinamicos.html")),$arreglo_post, $pagina, "usuarios"), $arreglo_post, $_SESSION["id_empresa"]);
-}*/
+
 			
 			$PRINCIPAL = FiltrosReportes(ListadoUsuariosSiga(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/siga/entorno_listado.html")), $arreglo_post, $pagina, "usuarios"), $arreglo_post, $id_empresa);
 		}
@@ -11025,7 +10615,6 @@ $PRINCIPAL=ColcaFiltrosDinamicosSegunTablaUuarios(ListadoUsuarios(FuncionesTrans
 		EncabezadoExcel("SabanaPlanes");
 		$ano = $get["agn"];
 		$PRINCIPAL = GeneraBitacora($_SESSION["id_empresa"], $ano);
-		//EncabezadoExcel("ReporteEvaluadoEvaluador");
 		$PRINCIPAL = GeneraPlanesDeAccion(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/resultadosVersion2/planes/entorno_listado_relaciones_excel.html")), $arreglo_post, $pagina, "usuarios", 1, "", 1);
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -11256,19 +10845,16 @@ location.href='?sw=ContenidosImportante';
 		$tabla = ListadoEvaluadoresPorProceso(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/tabla_superior_resumen.html")), $arreglo_post, $pagina, "usuarios", $id_proceso, "", $campo_criterio, "", "");
 		$tabla = str_replace("{ENCABEZADO_DINAMICO}", MuestraEncabezadoPorProceso($id_proceso), $tabla);
 		$tabla = str_replace("{CRITERIO}", $campo_criterio, $tabla);
-		//$tabla=ResumenListadoEvaluadoresPorProceso($tabla, $id_proceso);
 		echo $tabla;
 	}
 		else if ($seccion == "ResumenEvaluadoresPorCriterioFijacion") {
 		$id_proceso = $get["idproceso"];
 		$campo_criterio = $get["campo_criterio"];
 		
-		//$tabla=ListadoEvaluadoresPorProceso(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/".$_SESSION["id_empresa"]."_tabla_superior_resumen_fijacion.html")),$arreglo_post, $pagina, "usuarios", $id_proceso, "", $campo_criterio, "", "");
 		$tabla = ListadoEvaluadoresPorProcesoFijacion(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/" . $_SESSION["id_empresa"] . "_tabla_superior_resumen_fijacion.html")), $arreglo_post, $pagina, "usuarios", $id_proceso, $exportar_a_excel, "", $criterio, $valor_criterio, $_SESSION["id_empresa"], $campo_criterio);
 		
 		$tabla = str_replace("{ENCABEZADO_DINAMICO}", MuestraEncabezadoPorProceso($id_proceso), $tabla);
 		$tabla = str_replace("{CRITERIO}", $campo_criterio, $tabla);
-		//$tabla=ResumenListadoEvaluadoresPorProceso($tabla, $id_proceso);
 		echo $tabla;
 	}
 		else if ($seccion == "veEvaluadorPorProcesoResultados") {
@@ -11288,7 +10874,6 @@ location.href='?sw=ContenidosImportante';
 		}
 		
 		if ($exportar_a_excel == 1) {
-			//EncabezadoExcel("ReporteEvaluador");
 			$PRINCIPAL = ListadoEvaluadoresPorProcesoResultados(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/resultados/entorno_listado_evaluadores_excel.html")), $arreglo_post, $pagina, "usuarios", $id_proceso, $exportar_a_excel);
 			echo CleanHTMLWhiteList($PRINCIPAL);
 			exit;
@@ -11314,7 +10899,6 @@ location.href='?sw=ContenidosImportante';
 		$tipo_reporte = $post["tipo_reporte"];
 		
 		$arreglo_post = $post;
-		//$exportar_a_excel=$get["ex"];
 		$exportar_a_excel = $get["ex"];
 		$pagina = $get["p"];
 		$miarray = $get["arra"];
@@ -11352,13 +10936,8 @@ location.href='?sw=ContenidosImportante';
 				exit;
 			}
 			
-			//$PRINCIPAL = str_replace("{GRAFICO_LINEAL}",ConsolidadoLineal("", "", $id_proceso, $id_empresa, "admin", $arreglo_post),$PRINCIPAL);
-			//$PRINCIPAL = str_replace("{GRAFICO_BARRA}",GraficoPorCompetenciasPorEvaluadorCalibrador("", $id_proceso, "", "", "admin", $arreglo_post),$PRINCIPAL);
 			$PRINCIPAL = str_replace("{ID_PROCESO_ENCODEADO}", Encodear3($id_proceso), $PRINCIPAL);
 			$PRINCIPAL = str_replace("{ID_PROCESO}", Encodear3($id_proceso), $PRINCIPAL);
-			
-			//$PRINCIPAL=FuncionParaObtenerCalculoMientrasAvanzaPagina($PRINCIPAL, "", $id_proceso, $id_empresa, "", "", "admin", $arreglo_post, $filtro1, $filtro2);
-			//$PRINCIPAL=ColocaAvanceEvaluadorDadoLosFinalizados($PRINCIPAL, "", $id_proceso, $id_empresa, "admin", $arreglo_post);
 		}
 		
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -11395,7 +10974,6 @@ location.href='?sw=ContenidosImportante';
 		$valor_criterio = Decodear3($get["valcri"]);
 		
 		$arreglo_post = $post;
-		//$exportar_a_excel=$get["ex"];
 		$exportar_a_excel = $post["excel"];
 		$pagina = $get["p"];
 		$miarray = $get["arra"];
@@ -11444,7 +11022,7 @@ location.href='?sw=ContenidosImportante';
 		$rut_evaluado = Decodear3($get["re"]);
 		$rut_evaluador = Decodear3($get["revr"]);
 		$id_proceso = Decodear3($get["ip"]);
-		//echo "$rut_evaluado, $rut_evaluador, $id_proceso";
+		
 		ReseteaDataEvaluacion($rut_evaluado, $rut_evaluador, $id_proceso);
 		echo "
 <script>
@@ -11455,7 +11033,7 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 		$rut_evaluado = Decodear3($get["re"]);
 		$rut_evaluador = Decodear3($get["revr"]);
 		$id_proceso = Decodear3($get["ip"]);
-		//echo "$rut_evaluado, $rut_evaluador, $id_proceso";
+		
 		AbrirEvaluacion($rut_evaluado, $rut_evaluador, $id_proceso);
 		echo "
 <script>
@@ -11482,11 +11060,9 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 		
 		if ($exportar_a_excel == 1) {
 			EncabezadoExcel("ReporteEvaluadoEvaluador");
-			//$PRINCIPAL=ListadoRelacionesEvaluadoEvaluadorProProcesoResultados(FuncionesTransversalesAdmin(file_get_contents("views/sgd_relaciones/".$id_empresa."_entorno_listado_relaciones_excel.html")),$arreglo_post, $pagina, "usuarios", $id_proceso, $rut_evaluador, $exportar_a_excel);
 			$PRINCIPAL = GestionListadoRelacionesPorProceso(FuncionesTransversalesAdmin(file_get_contents("views/sgd_relaciones/" . $id_empresa . "_entorno_listado_relaciones_excel.html")), $id_proceso, $rut_evaluador, $exportar_a_excel, $id_empresa);
 		}
 		else {
-			//$PRINCIPAL=ListadoRelacionesEvaluadoEvaluadorProProcesoResultados(FuncionesTransversalesAdmin(file_get_contents("views/sgd_relaciones/entorno_listado_relaciones.html")),$arreglo_post, $pagina, "usuarios", $id_proceso, $rut_evaluador, $exportar_a_excel, "", $criterio, $valor_criterio);
 			$PRINCIPAL = GestionListadoRelacionesPorProceso(FuncionesTransversalesAdmin(file_get_contents("views/sgd_relaciones/" . $id_empresa . "_entorno_listado_relaciones.html")), $id_proceso, $rut_evaluador, $exportar_a_excel, $id_empresa);
 		}
 		
@@ -11536,12 +11112,7 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 			$PRINCIPAL = ListadoEvaluadoresPorProceso(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/entorno_listado_evaluadores_proceso_excel.html")), $arreglo_post, $pagina, "usuarios", $id_proceso, $exportar_a_excel, "", $criterio, $valor_criterio, $id_empresa);
 		}
 		else {
-			//if($id_empresa==28){
-			//    $PRINCIPAL=FiltrosReportesAvancesSgd(ListadoEvaluadoresPorProceso(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/28_entorno_listado_evaluadores_proceso.html")),$arreglo_post, $pagina, "usuarios", $id_proceso, $exportar_a_excel, "", $criterio, $valor_criterio, $id_empresa),  $arreglo_post,$id_empresa);
-			//}else{
-			//    $PRINCIPAL=FiltrosReportesAvancesSgd(ListadoEvaluadoresPorProceso(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/entorno_listado_evaluadores_proceso.html")),$arreglo_post, $pagina, "usuarios", $id_proceso, $exportar_a_excel, "", $criterio, $valor_criterio, $id_empresa),  $arreglo_post,$id_empresa);
-			//}
-			
+		
 			$PRINCIPAL = FiltrosReportesAvancesSgd(ListadoEvaluadoresPorProceso(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/" . $id_empresa . "_entorno_listado_evaluadores_proceso.html")), $arreglo_post, $pagina, "usuarios", $id_proceso, $exportar_a_excel, "", $criterio, $valor_criterio, $id_empresa), $arreglo_post, $id_empresa);
 			
 			$PRINCIPAL = colocaDatosInformeBoletin($PRINCIPAL, $arreglo_post, $id_empresa, $id_proceso);
@@ -11638,7 +11209,6 @@ $("#capa3").load('?sw=ResumenEvaluadoresPorCriterio&idproceso=<?php echo $id_pro
 	<?php
 		}
 		elseif ($tipo == 6) {
-			//$id_proceso=Decodear3($get["idprocesorel"]);
 			$id_proceso = Decodear3($get["i"]);
 			
 			$PRINCIPAL = ListadoEvaluadoresPorProcesoMediociclo(FuncionesTransversalesAdmin(file_get_contents("views/procesos/reportes/" . $id_empresa . "_entorno_listado_evaluadores_proceso_medio_ciclo.html")), $arreglo_post, $pagina, "usuarios", $id_proceso, $exportar_a_excel, "", $criterio, $valor_criterio, $id_empresa, "");
@@ -11888,7 +11458,6 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 		$id_empresa = $_SESSION["id_empresa"];
 		$buscar = ($get["q"]);
 		$allData = allPersonasPorNombrePorEmpresa($buscar, $id_empresa);
-		//$allData = allPersonasPorNombre($buscar);
 		echo $allData;
 	} else if ($seccion == "accionmalla") {
 		$id_malla = Decodear3($get["i"]);
@@ -11938,7 +11507,6 @@ location.href='?sw=listmallas';
 	}
 		else if ($seccion == "relmallaprog") {
 		$id_malla = Decodear3($get["i"]);
-		//$PRINCIPAL=ListadoRelacionesNivelCurso(FuncionesTransversalesAdmin(file_get_contents("views/nivel/formulario_rel_nivel_curso.html")), $id_nivel);
 		$PRINCIPAL = ListadoRelacionesMallaPrograma(FuncionesTransversalesAdmin(file_get_contents("views/malla/formulario_rel_malla_programa.html")), $id_malla);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
@@ -11978,8 +11546,6 @@ location.href='?sw=seguimiento&ic=" . Encodear3($id_categoria) . "#ROW_" . $rut_
 </script>";
 		exit;
 		
-		//echo "$rut_evaluado $id_categoria";
-		exit;
 	}
 		else if ($seccion == "seguimiento") {
 		$id_malla = Decodear3($get["i"]);
@@ -11990,7 +11556,6 @@ location.href='?sw=seguimiento&ic=" . Encodear3($id_categoria) . "#ROW_" . $rut_
 		if ($id_categoria_por_get) {
 			$categoria = $id_categoria_por_get;
 		}
-		//$PRINCIPAL=ListadoRelacionesNivelCurso(FuncionesTransversalesAdmin(file_get_contents("views/nivel/formulario_rel_nivel_curso.html")), $id_nivel);
 		if ($categoria) {
 			$datos_categoria = SeguimientoTotalCategoriasPorEmpresaDadoId($categoria);
 			if ($excel == "1") {
@@ -12023,8 +11588,6 @@ location.href='?sw=relPerfilesCompetencias&i=" . Encodear3($id_perfil) . "';
 	}
 		else if ($seccion == "relPerfilesCompetencias") {
 		$id_perfil = Decodear3($get["i"]);
-		//$PRINCIPAL=ListadoRelacionesNivelCurso(FuncionesTransversalesAdmin(file_get_contents("views/nivel/formulario_rel_nivel_curso.html")), $id_nivel);
-		//$PRINCIPAL=ListadoRelacionesMallaPrograma(FuncionesTransversalesAdmin(file_get_contents("views/malla/formulario_rel_malla_programa.html")), $id_malla);
 		$PRINCIPAL = ListadoRelacionesPerfilCompetencias(FuncionesTransversalesAdmin(file_get_contents("views/instrumentos/formulario_rel_perfil_competencia.html")), $id_perfil);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
@@ -12073,7 +11636,6 @@ location.href='?sw=relmallaprog&i=" . Encodear($id_malla) . "';
 		if ($post["competencias"]) {
 			for ($i = 0; $i < count($post["competencias"]); $i++) {
 				//Inserto un registro en la tabla rel nivel curso
-				//InsertaRelacionMallaPrograma($id_malla, $post["programas"][$i]);
 				InsertaCompetenciaPerfil($id_perfil, $post["competencias"][$i]);
 			}
 			
@@ -12090,7 +11652,6 @@ location.href='?sw=relPerfilesCompetencias&i=" . Encodear3($id_perfil) . "';
 		if ($post["competencias"]) {
 			for ($i = 0; $i < count($post["competencias"]); $i++) {
 				//Inserto un registro en la tabla rel nivel curso
-				//InsertaRelacionMallaPrograma($id_malla, $post["programas"][$i]);
 				InsertaPreguntaCompetencia($id_competencia, $post["competencias"][$i]);
 			}
 			
@@ -12183,7 +11744,7 @@ location.href='?sw=listusuSiga';
 		$id_empresa = $_SESSION["id_empresa"];
 		
 		if ($rut) {
-			//$PRINCIPAL=FormularioUsuario(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/formulario_editar.html")), $rut,$_SESSION["id_empresa"]);
+
 		}
 		else {
 			$PRINCIPAL = FormularioIngresoRelacionSGD(FuncionesTransversalesAdmin(file_get_contents("views/sgd_relaciones/" . $id_empresa . "_formulario_ingresa.html")), $id_empresa, $id_proceso);
@@ -12202,8 +11763,7 @@ location.href='?sw=listusuSiga';
 		}
 		
 		$clave_mod = buscaModificacionclave($rut);
-		//print_r($clave_mod);
-		//echo "word $word";
+		
 		
 		if ($clave_mod[0]->cambiado == 1) {
 			$txt = "Clave modificada el " . $clave_mod[0]->fecha_cambio;
@@ -12240,7 +11800,6 @@ location.href='?sw=listusuSiga';
 				$PRINCIPAL = str_replace("{MODIFICACIONCLAVE}", $txt, $PRINCIPAL);
 				
 				$PRINCIPAL = ColocaDatosPerfil($PRINCIPAL, $rut);
-				//$PRINCIPAL=ColocaCamposParaFormulario($PRINCIPAL, $id_empresa, "editar");
 			}
 		}
 		else {
@@ -12272,14 +11831,12 @@ location.href='?sw=listusuSiga';
 		else if ($seccion == "lms_lista_cursos_historicos_admin") {
 		$id_empresa = $_SESSION["id_empresa"];
 		$rut = $post["rut"];
-		//echo "rut $rut";
-		//echo "<br>";
+		
 		$array_usuario = TraeDatosUsuario($rut);
-		//print_r($post);
 		
 		foreach ($post as $unico) {
 			if ($unico != $rut and $unico != "Generar Certificados") {
-				//echo "<br>unico ".$unico;
+				
 				$data_array_insc = VistaCursosHistoricosDataAdminPorCurso($rut, $unico, $id_empresa);
 				$txt_cursos .= "<tr>
                 <td style='    TEXT-TRANSFORM: uppercase;'>" . $data_array_insc[0]->curso . "</td>
@@ -12300,7 +11857,6 @@ location.href='?sw=listusuSiga';
 		$PRINCIPAL = str_replace("{FECHA_ACTUAL}", $hoy, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{LISTA_CURSOS_HISTORICOS}", $txt_cursos, $PRINCIPAL);
 		
-		//    $PRINCIPAL = str_replace("{ENTORNO}",Lista_Certificados_Busca_Cursos_historicos_admin(FuncionesTransversalesAdmin(file_get_contents("views/historicos/".$id_empresa."_certificado_cursos.html")), $id_empresa, $rut, $post),$PRINCIPAL);
 		$datos_empresa = DatosEmpresa($id_empresa);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
@@ -12312,9 +11868,6 @@ location.href='?sw=listusuSiga';
 		$id_departamento = $post["id_departamento"];
 		$id_zona = $post["id_zona"];
 		$gerencia = $post["gerencia"];
-		//$rut_enc = Decodear3($get["rut_enc"]);
-		// echo "rut_enc $rut_enc";
-		// echo "$id_gerencia,$id_departamento,$id_zona";
 		$DatosUsuario = mp_buscaDATOSPERSONAS($rut, $id_empresa);
 		$PRINCIPAL = FuncionesTransversales(file_get_contents("views/historicos/" . $id_empresa . "_listado_historicos.html"));
 		if ($rut_enc != '') {
@@ -12323,7 +11876,7 @@ location.href='?sw=listusuSiga';
 		}
 		$listado_cursos_historicos = Busca_Cursos_historicos($PRINCIPAL, $id_empresa, $rut);
 		
-		// print_r($listado_cursos_historicos);
+
 		$PRINCIPAL = str_replace("{LISTADO_CURSOS_HISTORICOS}", $listado_cursos_historicos, $PRINCIPAL);
 		$PRINCIPAL = BarraNavegacion($PRINCIPAL, $seccion);
 		$PRINCIPAL = str_replace("{MENU_SECUNDARIO}", "", $PRINCIPAL);
@@ -12403,7 +11956,6 @@ location.href='?sw=ProcAnual';
 		$id_inscripcion = Decodear3($get["ii"]);
 		$rut_empresa_holding = Decodear3($get["reh"]);
 		
-		//$datos_inscripcion=DatosInscripcionConMasInfo($id_inscripcion, $rut_empresa_holding);
 		$datos_inscripcion = DatosInscripcionConMasInfoV2($id_inscripcion, $rut_empresa_holding);
 		
 		//Datos y Valores
@@ -12432,8 +11984,7 @@ location.href='?sw=ProcAnual';
 			$PRINCIPAL = str_replace("{LISTADO_PARTICIPANTES}", ($listado_usuarios_cerrados[0]), $PRINCIPAL);
 			$PRINCIPAL = str_replace("{VALOR_POR_PARTICIPANTE}", colocarPesos($datos_inscripcion[0]->numero_horas * $datos_inscripcion[0]->valor_h), $PRINCIPAL);
 			//Distinct de las Empresas para mostrarlas.
-			//$empresas=DistincEmpresasEnInscripcionesDeUsuariosPorInscripcion($id_inscripcion, $rut_empresa_holding);
-			$empresas = DistincEmpresasEnInscripcionesDeUsuariosPorInscripcionV2($id_inscripcion, $rut_empresa_holding);
+						$empresas = DistincEmpresasEnInscripcionesDeUsuariosPorInscripcionV2($id_inscripcion, $rut_empresa_holding);
 			foreach ($empresas as $emp) {
 				$html_empresas .= $emp->nombre_empresa . "<br>";
 			}
@@ -12544,12 +12095,7 @@ location.href='?sw=ProcAnual';
 			$PRINCIPAL = str_replace("{TITULO}", "Inasistencias o Casos Especiales", $PRINCIPAL);
 			
 			if ($casos_especiales) {
-				/*foreach($casos_especiales as $unico){
-$tot.=file_get_contents("views/reporte/row_inasistencias_caso_especial.html");
-$tot = str_replace("{POR_ASIS}",$unico->porcentaje_asistencia."%",$tot);
-$tot = str_replace("{OBSERVACION}",($unico->descripcion_caso_especial),$tot);
-$tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
-}*/
+
 				$listado_usuarios_casos_especiales = ListadoUsuariosCerradosPorInscripcion($id_inscripcion, "casos_especiales", "", "");
 				
 				$PRINCIPAL = str_replace("{ROW_CASOS_ESPECIALES}", ($listado_usuarios_casos_especiales[0]), $PRINCIPAL);
@@ -12649,7 +12195,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		$id_curso = Decodear3($i);
 		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "hola $i $id_curso";//exit();
+		
 		if ($excel == 1) {
 			$fechahoy = date("Y-m-d");
 			header("Content-Type: application/vnd.ms-excel");
@@ -12672,7 +12218,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		$id_curso = Decodear3($i);
 		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "hola $i $id_curso";//exit();
+		
 		
 		$sendemail = 0;
 		$id_inscripcion = $get["idinscripcion"];
@@ -12681,8 +12227,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		$rut_solo = $get["solorut"];
 		$rut_individual = $get["rut_individual"];
 		
-		//echo "id_inscripcion $id_inscripcion sendemail $sendemail rut_solo $rut_solo, $excel";
-		//echo "idinscripcion $id_inscripcion sendemail $sendemail";
+
 		
 		if ($excel == 1) {
 			$fechahoy = date("Y-m-d");
@@ -12709,8 +12254,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		else if ($seccion == "VeSesionXImp") {
 		$id_imparticion = Decodear3($get["i"]);
 		$id_curso = Decodear3($i);
-		//echo "hola $i $id_curso";
-		//exit();
+
 		
 		$PRINCIPAL = ListaSesionesPorImparticiones(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_listado_sesiones.html")), $id_imparticion, $_SESSION["id_empresa"]);
 		
@@ -12720,8 +12264,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		else if ($seccion == "subeNotasPorImparticion") {
 		$id_imparticion = Decodear3($get["i"]);
 		$id_curso = Decodear3($i);
-		//echo "hola $i $id_curso";
-		//exit();
+
 		
 		$PRINCIPAL = ListaSesionesPorImparticiones(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_subida_notas_imparticiones.html")), $id_imparticion, $_SESSION["id_empresa"]);
 		$PRINCIPAL = str_replace("{CODIGO_INSCRIPCION_ENCODEADO}", Encodear3($id_imparticion), $PRINCIPAL);
@@ -12734,27 +12277,23 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		$id_imparticion = $post["id_imparticion"];
 		$porcentaje_avance = round($post["porcentaje_avance"]);
 		$nota = round($post["nota"]);
-		//$nota=$post["nota"];
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
-		//print_r($post);exit;
 		$rut = $post["rut"];
 		//Veo si el usuario, con rut, empresa, curso, imparticion, está en inscripcion cierre, si no, lo agrego, si está, lo edito
 		$existe_en_cierre = VerificaEnTablaCierreCursoEmpresRutInscripcion($datos_imparticion[0]->id_curso, $rut, $id_empresa, $id_imparticion);
 		if ($existe_en_cierre) {
-			//echo "tiene cierre";
+			
 			actualizaTablaCierreRut($rut, $datos_imparticion[0]->id_curso, $id_imparticion, $porcentaje_avance, $id_empresa, $nota);
 		}
 		else {
-			//echo "no tiene cierre";
+			
 			InsertaTablaCierreRutCursoImparticionAsistenciaEmpresa($rut, $datos_imparticion[0]->id_curso, $id_imparticion, $porcentaje_avance, $id_empresa, $nota);
 		}
 		
 		$existe_en_cierre = VerificaEnTablaCierreCursoEmpresRutInscripcion($datos_imparticion[0]->id_curso, $rut, $id_empresa, $id_imparticion);
-		//$avance=CalculaAsistenciaEnBaseASesiones($rut, $id_imparticion, $id_empresa);
 		$bloque_asistencia = file_get_contents("views/capacitacion/imparticion/bloque_coloca_asistencia_total.html");
 		
-		//$bloque_asistencia=colocaPorcentajeAsistenciaPorImparticion($bloque_asistencia, $rut, $id_empresa, $datos_imparticion[0]->id_curso, $id_imparticion);
-		
+	
 		$bloque_asistencia = str_replace("{AVANCE_ACTUAL}", $existe_en_cierre[0]->porcentaje_asistencia, $bloque_asistencia);
 		$bloque_asistencia = str_replace("{ICONO}", "<img src='img/ok.ico' width='15px'>", $bloque_asistencia);
 		$bloque_asistencia = str_replace("{RUT_COLABORADOR}", $rut, $bloque_asistencia);
@@ -12784,20 +12323,15 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
   <div class="progress-bar progress-bar-striped" role="progressbar" style="width: ' . $avance . '%" aria-valuenow="' . $avance . '" aria-valuemin="0" aria-valuemax="100"></div>
 </div>';
 		
-		//$bloque_asistencia = str_replace("{VALOR_ASISTENCIA}",$avance,$bloque_asistencia);
-		//$bloque_asistencia = str_replace("{AVANCE_ACTUAL}",$avance,$bloque_asistencia);
 		$bloque_asistencia = str_replace("{AVANCE_ACTUAL}", round($existe_en_cierre[0]->porcentaje_asistencia), $bloque_asistencia);
 		$bloque_asistencia = str_replace("{ICONO}", "<img src='img/ok.ico' width='15px'> ", $bloque_asistencia);
 		$bloque_asistencia = str_replace("{RUT_COLABORADOR}", $rut, $bloque_asistencia);
 		
-		//echo $avance."%<br>";
+		
 		echo $bloque_asistencia;
-		//    echo $barra;
 	}
 		else if ($seccion == "ColocaAsistenciaPorSesionImparticion") {
-		//$fechahoy = date("Y-m-d")." ".date("H:i:s");
-		//print_r($post);
-		//echo "<br>$fechahoy";
+		
 		$id_imparticion = $post["id_imparticion"];
 		$id_sesion = $post["id_sesion"];
 		$rut = $post["rut"];
@@ -12806,7 +12340,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		if ($usuario_chequeado) {
 			//Elimino Registro
 			BorroRegistrosInscritosCheckinPorSesionImparticionPorUsuario($id_imparticion, $id_empresa, $id_sesion, $rut);
-			//echo "Ausente";
+			
 		}
 		else {
 			//Inserto Registro
@@ -12818,7 +12352,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 				$hora_inicio = $datos_sesion[0]->desde_pm;
 			}
 			InsertaRegistroCheckinSesionImparticion($rut, $id_imparticion, $id_empresa, $datos_sesion[0]->fecha, $hora_inicio, $id_sesion);
-			//echo "Asistió!!";
+			
 		}
 	}
 		else if ($seccion == "VeColaboradoresXImpXsessResumen") {
@@ -12826,8 +12360,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		$id_curso = Decodear3($i);
 		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
-		//echo "hola $i $id_curso";
-		//exit();
+		
 		
 		if ($excel == 1) {
 			header("Content-Type: application/vnd.ms-excel");
@@ -12853,28 +12386,19 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		exit;
 	}
 		else if ($seccion == "GuardaAsistenciasPorImparticion") {
-		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_imparticion = Decodear3($post["id_imparticion"]);
 		$id_curso = Decodear3($post["id_curso"]);
-		//echo "<br><br> id curso $id_curso id imparticion $id_imparticion";
-		
-		
-		// echo "<br><br>";
+
 		$total_sesiones = InsSesionesImparticion($id_empresa, $id_imparticion);
 		
 		$total_usuarios_por_inscripcion = IMPARTICION_UsuariosPorInscripcionConDatos($id_imparticion, $id_empresa);
-		//print_r($post);exit;
 		foreach ($total_usuarios_por_inscripcion as $usu) {
 			foreach ($total_sesiones as $sesion) {
 				if ($post["asistencia_" . $usu->rut . "_" . $sesion->id . "_" . $id_imparticion] == "on") {
-					//echo $post["asistencia_".$usu->rut."_".$sesion->id."_".$id_imparticion];
-					//echo "asistencia_".$usu->rut."_".$sesion."_".$id_imparticion." ";
 					$usuario_chequeado = TraigoRegistrosPorSesionDeCheckinPorUsuario($id_imparticion, $sesion->id, $id_empresa, $usu->rut);
 					if ($usuario_chequeado) {
-						//Elimino Registro
-						//BorroRegistrosInscritosCheckinPorSesionImparticionPorUsuario($id_imparticion, $id_empresa, $id_sesion, $rut);
-						//echo "Ausente";
+
 					}
 					else {
 						//Inserto Registro
@@ -12886,8 +12410,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 							$hora_inicio = $datos_sesion[0]->desde_pm;
 						}
 						InsertaRegistroCheckinSesionImparticion($usu->rut, $id_imparticion, $id_empresa, $datos_sesion[0]->fecha, $hora_inicio, $sesion->id);
-						//echo "Asistió!!";
-						//sleep(2);
+
 					}
 				}
 				else {
@@ -12918,8 +12441,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		else if ($seccion == "GuardaAsistenciasPorImparticionAsisNota"){
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_imparticion = Decodear3($post["id_imparticion"]);
-		//echo $id_imparticion;
-		//echo "<br>";
+
 		$total_usuarios_por_inscripcion = IMPARTICION_UsuariosPorInscripcionConDatos($id_imparticion, $id_empresa);
 		foreach ($total_usuarios_por_inscripcion as $usu) {
 			$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
@@ -12938,7 +12460,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		else if ($seccion == "GuardaAsistenciasPorImparticionAsisNota_2021"){
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_imparticion = Decodear3($post["id_imparticion"]);
-		//echo $id_imparticion;
+
 		
 		
 		$total_usuarios_por_inscripcion = IMPARTICION_UsuariosPorInscripcionConDatos($id_imparticion, $id_empresa);
@@ -12960,10 +12482,6 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 			UpdateLmsReportes_Insert_update_2021($usu->rut, $DatosCursoImparticion2021[0]->id_foco, $DatosCursoImparticion2021[0]->id_clasificacion, $datos_imparticion[0]->id_curso, $id_empresa, $DatosCursoImparticion2021[0]->modalidadcurso, $DatosCursoImparticion2021[0]->id_programa, $DatosCursoImparticion2021[0]->id_malla, $id_imparticion);
 			
 			if ($existe_en_cierre) {
-				// Evaluo solo Nota y Nota Aprobación
-				//echo $datos_imparticion[0]->minimo_nota_aprobacion;
-				//echo "<br>";
-				//echo $post["nota_".$usu->rut];
 				
 				if ($datos_imparticion[0]->minimo_nota_aprobacion > 0) {
 					if ($post["nota_" . $usu->rut] >= $datos_imparticion[0]->minimo_nota_aprobacion) {
@@ -12985,25 +12503,21 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		}
 		
 		$archivo = "";
-		//print_r($_FILES);
 		if (count($_FILES) > 0) {
 			foreach ($_FILES as $keyFile => $valueFile) {
 				$archivo = "";
-				//echo "<br><br>keyFile<br>";
-				//print_r($keyFile);
+
 				$keyFile_Array = explode("_", $keyFile);
 				$rut_save = Decodear3($keyFile_Array[1]);
-				//echo "<br>-->rut_save $rut_save<br>";
-				//echo "<br>valueFile<br>";//print_r($valueFile);
 				
 				if ($valueFile["name"] <> "") {
-					//echo "-----> Subr Archivo ".$valueFile["name"];
+					
 					VerificaExtensionFilesAdmin($valueFile["name"]);
 					$rand = rand(11111111, 99999999);
 					$destino_enc = "certificado_" . $id_imparticion . "_" . $rut_save . "_" . $rand . ".pdf";
 					if (copy($valueFile["tmp_name"], "../front/docs/" . $destino_enc)) {
 						$archivo = $destino_enc;
-						//echo "<--> $archivo $id_imparticion $rut_save";
+						
 						actualizaArchivoImparticionRut_2021($rut_save, $id_imparticion, $archivo);
 					}
 					else {
@@ -13012,7 +12526,6 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 				}
 			}
 		}
-		//	exit();
 		echo "<script>location.href='?sw=VeColaboradoresXImp2021&i=" . Encodear3($id_imparticion) . "';</script>";
 	}
 		
@@ -13020,23 +12533,13 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		$id_empresa = $_SESSION["id_empresa"];
 		$id_imparticion = Decodear3($post["id_imparticion"]);
 		
-		
-		//echo "<br>id_imparticion ".$id_imparticion;
-		//echo "<br>";echo "<preP>";print_r($post);echo "</pre>";echo "<br>";
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
 		$total_usuarios_por_inscripcion = IMPARTICION_UsuariosPorInscripcionConDatos($id_imparticion, $id_empresa);
 		foreach ($total_usuarios_por_inscripcion as $usu) {
-			//echo "<br><br>rut ".$usu->rut;
+			
 			$existe_en_cierre = VerificaEnTablaCierreCursoEmpresRutInscripcion($datos_imparticion[0]->id_curso, $usu->rut, $id_empresa, $id_imparticion);
-			/*echo " <br>estado ".$post["estado_".$usu->rut];
-        echo "estado ".$post["estado_".$usu->rut];
-        echo " <br>avance ".$post["avance_".$usu->rut];
-        echo " <br>avance ".$post["nota_".$usu->rut];
-        echo " <br>nota_diagnostico ".$post["nota_diagnostico_".$usu->rut];*/
 			$id_curso = $datos_imparticion[0]->id_curso;
-			//echo " <br>id curso $id_curso";
 			$DatosCursoImparticion2021 = DatosCursoImparticion2021($datos_imparticion[0]->id_curso, $id_imparticion);
-			//exit();
 			if ($existe_en_cierre) {
 				actualizaTablaCierreRut_2021_SoloEstado($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $AvanceSesion, $id_empresa, $post["nota_" . $usu->rut], $post["nota_diagnostico_" . $usu->rut], $estado, $post["estado_" . $usu->rut]);
 			}
@@ -13044,14 +12547,11 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 				InsertaTablaCierreRutCursoImparticionAsistenciaEmpresa_2021($usu->rut, $datos_imparticion[0]->id_curso, $id_imparticion, $post["avance_" . $usu->rut], $id_empresa, $post["nota_" . $usu->rut], $post["nota_diagnostico_" . $usu->rut], $estado, $post["estado_" . $usu->rut]);
 			}
 			
-			// observaciones
 			
-			//if($post["observaciones_".$usu->rut."_".$post["id_imparticion"]]<>""){
-			//echo "rut ".$usu->rut." -> id_imparticion ".$post["id_imparticion"]." -> ".$post["observaciones_".$usu->rut."_".$post["id_imparticion"]];
 			Update_Observaciones_RutIdImparticion_2023($usu->rut, $id_imparticion, $post["observaciones_" . $usu->rut . "_" . $post["id_imparticion"]]);
-			//}
+			
 		}
-		//exit();
+		
 		echo "<script>location.href='?sw=VeColaboradoresXImp2021&i=" . Encodear3($id_imparticion) . "&manual=1';</script>";
 	}
 		
@@ -13109,7 +12609,6 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 		$datos_empresa = DatosEmpresa($id_empresa);
 		$campos_Empresa = DatosEmpresaCampos($id_empresa);
 		
-		//print_r($campos_Empresa);
 		if (count($arreglo_post) > 0 && $exportar_a_excel != 1) {
 	?>
 
@@ -13151,8 +12650,6 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
     $array_para_enviar_via_url = urlencode($array_para_enviar_via_url);
     $filtros_superiores = "";
     $exportar_a_excel = $post["excel"];
-//print_r($arreglo_post);
-    //$arreglo_post=sgd_buscar_proceso($id_empresa);
 
     if ($arreglo_post["tipo_reporte"] == "detalle") {
         $fechahoy = date("Y-m-d");
@@ -13184,7 +12681,6 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
     $datos_empresa = DatosEmpresa($id_empresa);
     $campos_Empresa = DatosEmpresaCampos($id_empresa);
 
-//print_r($campos_Empresa);
     if (count($arreglo_post) > 0 && $exportar_a_excel != 1) {
         ?>
 
@@ -13213,9 +12709,7 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
     $nombre_campo = $get["nombre_campo"];
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
-    //$arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
-//$PRINCIPAL=ReporteResultadosGeneralesConsolidadoSGD(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_consolidado_resultados_generales.html")),$id_empresa, $arreglo_post, $criterio, $nombre_campo);
-
+    
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
         else if ($seccion == "lms_reportes_sgd_por_criterio") {
@@ -13224,11 +12718,10 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
     $miarray = $get["array_post"];
     $nombre_campo = $get["nombre_campo"];
 
-//echo "<br>$nombre_campo,$criterio";
+
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
     $arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
-//$PRINCIPAL=ReporteCapacitacion(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_por_criterio.html")),$id_empresa, $arreglo_post, $criterio);
     $PRINCIPAL = ReporteCapacitacionPorcriterioSGD(FuncionesTransversalesAdmin(file_get_contents("views/sgd/entorno_capacitacion_por_criterio.html")), $id_empresa, $arreglo_post, $criterio, $nombre_campo, "si");
 
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
@@ -13239,11 +12732,10 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
     $miarray = $get["array_post"];
     $nombre_campo = $get["nombre_campo"];
 
-//echo "<br>$nombre_campo,$criterio";
+
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
     $arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
-//$PRINCIPAL=ReporteCapacitacion(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_por_criterio.html")),$id_empresa, $arreglo_post, $criterio);
     $PRINCIPAL = ReporteCapacitacionPorcriterioSGDResultados(FuncionesTransversalesAdmin(file_get_contents("views/sgd/entorno_resultados_por_criterio.html")), $id_empresa, $arreglo_post, $criterio, $nombre_campo, "si");
 
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
@@ -13257,7 +12749,6 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
     $arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
-//$PRINCIPAL=ReporteCapacitacion(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_por_criterio.html")),$id_empresa, $arreglo_post, $criterio);
     $PRINCIPAL = ReporteCapacitacionPorcriterio(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_por_criterio.html")), $id_empresa, $arreglo_post, $criterio, $nombre_campo, "si");
 
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
@@ -13271,7 +12762,6 @@ $("#capa3").load('?sw=lms_reportes_sgd_por_criterio_resultados&campo_criterio=<?
     $array_para_recibir_via_url = stripslashes($miarray);
     $array_para_recibir_via_url = urldecode($array_para_recibir_via_url);
     $arreglo_post = unserialize($array_para_recibir_via_url,['allowed_classes' => false]);
-//$PRINCIPAL=ReporteResultadosGeneralesConsolidadoTrivias(FuncionesTransversalesAdmin(file_get_contents("views/sgd/box/principal.html")),$id_empresa, $arreglo_post, $criterio, $nombre_campo);
 
     $PRINCIPAL = ReporteSGDResultadosEvaluadoEvaluador(FuncionesTransversalesAdmin(file_get_contents("views/sgd/box/principal.html")), $id_empresa, $arreglo_post, "", "", "box");
 
@@ -13320,7 +12810,6 @@ else if ($seccion == "lms_reportes_capacitacion_por_criterio_resultados_genelesP
         }
     }
 
-//$PRINCIPAL=ReporteResultadosGeneralesConsolidado(FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_consolidado_resultados_generales.html")),$id_empresa, $arreglo_post, $criterio, $nombre_campo);
 
     echo $grafico_por_malla;
 }
@@ -13359,7 +12848,6 @@ else if ($seccion == "filtro_malla_por_PROGRAMAbbddo") {
     $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
-    //$programas = REL_MALLA_CURSO_TraeMallasDadoFoco($id_empresa, $arreglo_post);
     $programas = REL_MALLA_CURSO_TraeMallasDadoFoco($id_empresa, $arreglo_post);
     $options = "";
     $options .= "<option value='0'>Todas</option>";
@@ -13389,15 +12877,13 @@ else if ($seccion == "filtro_malla_por_PROGRAMAbbddo") {
     echo ($options);
 }
 else if ($seccion == "filtro_programabbdd_por_foco_creacion_cursosElearningDadoProgGlobal") {
-    // print_r($post);
-
+    
     $programa = $post["programa_bbdd_global"];
     $arreglo_post = $post;
     $id_empresa = $_SESSION["id_empresa"];
 
     // Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
 
-    //$programas = TraeProgramasDadoFocoDeTablaProgramaElearningDadoGlobal($id_empresa, $programa);
     $programas = TraeProgramasDadoFocoDeTablaProgramaElearningDadoGlobalDistinct($id_empresa, $programa);
     $options = '<script src="js/bootstrap-select.js"></script>';
     $options .= '<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />';
@@ -13407,7 +12893,6 @@ else if ($seccion == "filtro_programabbdd_por_foco_creacion_cursosElearningDadoP
     foreach ($programas as $prog) {
         $options .= "<option value='" . $prog->id_programa . "'>" . $prog->nombre_programa . "</option>";
     }
-    //$options .= "<option value='" . $prog->id_programa . "'>" . $prog->nombre_programa . "</option>";
 
     $options .= "</select>";
     echo ($options);
@@ -13463,7 +12948,6 @@ else if ($seccion == "filtro_programabbdd_elearning_por_foco_programa") {
     $foco = $post["foco"];
     $e = $post["ejecutivo"];
     $arreglo_post = $post;
-    //print_r($post);
     $id_empresa = $_SESSION["id_empresa"];
 
 //Traigo los programas, de la tabla rel_lms_malla_curso con foco y empresa
@@ -13562,7 +13046,7 @@ else if ($seccion == "filtro_curso_por_foco") {
 else if ($seccion == "filtro_ejecutivos_por_programas") {
     $ejecutivo = $post["ejecutivo"];
     $id_empresa = $_SESSION["id_empresa"];
-//traigo los cursos por ejecutivo
+
     $programas = ProgramasPorEjecutivoEmpresa($ejecutivo, $id_empresa);
     $options = "";
     $options .= "<option value='0'>Todos</option>";
@@ -13574,7 +13058,7 @@ else if ($seccion == "filtro_ejecutivos_por_programas") {
 else if ($seccion == "filtro_ejecutivos_por_mallas") {
     $ejecutivo = $post["ejecutivo"];
     $id_empresa = $_SESSION["id_empresa"];
-//traigo los cursos por ejecutivo
+
     $mallas = MallasPorEjecutivoEmpresa($ejecutivo, $id_empresa);
     $options = "";
     $options .= "<option value='0'>Todos</option>";
@@ -13586,7 +13070,7 @@ else if ($seccion == "filtro_ejecutivos_por_mallas") {
 else if ($seccion == "filtro_ejecutivos_por_clasificacion") {
     $ejecutivo = $post["ejecutivo"];
     $id_empresa = $_SESSION["id_empresa"];
-//traigo los cursos por ejecutivo
+
     $clasificaciones = ClasificacionPorEjecutivoEmpresa($ejecutivo, $id_empresa);
     $options = "";
     $options .= "<option value='0'>Todos</option>";
@@ -13598,7 +13082,7 @@ else if ($seccion == "filtro_ejecutivos_por_clasificacion") {
 else if ($seccion == "filtro_ejecutivos_por_foco") {
     $ejecutivo = $post["ejecutivo"];
     $id_empresa = $_SESSION["id_empresa"];
-//traigo los cursos por ejecutivo
+
     $focos = FocosPorEjecutivoEmpresa($ejecutivo, $id_empresa);
     $options = "";
     $options .= "<option value='0'>Todos</option>";
@@ -13610,7 +13094,7 @@ else if ($seccion == "filtro_ejecutivos_por_foco") {
 else if ($seccion == "filtro_ejecutivos_por_curso") {
     $ejecutivo = $post["ejecutivo"];
     $id_empresa = $_SESSION["id_empresa"];
-//traigo los cursos por ejecutivo
+
     $cursos = CursosPorEjecutivo($ejecutivo);
     $options = "";
     $options .= "<option value='0'>Todos</option>";
@@ -13655,7 +13139,6 @@ else if ($seccion == "filtros_dinamicos_por_campos") {
     $html_filtros = "";
     $vuelta = 1;
 
-//print_r($post);
     foreach ($campos_subida as $campo) {
         if ($vuelta == 1) {
             $html_filtros .= "<div class=''>";
@@ -13670,14 +13153,12 @@ else if ($seccion == "filtros_dinamicos_por_campos") {
         foreach ($valores_option as $valor) {
             if ($post[$campo->campo]) {
                 for ($contador_valores = 0; $contador_valores < count($post[$campo->campo]); $contador_valores++) {
-//echo $post[$campo->campo][$contador_valores]." - ".$valor->valor."<br>";
+
                     if ($post[$campo->campo][$contador_valores] == $valor->valor) {
                         $selected = "selected='selected'";
                         break;
                     } else {
                         $selected = "";
-//$selected="selected='selected'";
-                        //$selected="selected='selected'";
                     }
                 }
             }
@@ -13739,10 +13220,8 @@ else if ($seccion == "VeLinkEnc") {
 }
 else if ($seccion == "lms_reportes_capacitacion_por_ejecutivos") {
     $id_empresa = $_SESSION["id_empresa"];
-//print_r($post);
 
     if (isset($post['web'])) {
-        //web action
         $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes/capacitacion/entorno_capacitacion_ejecutivos_con_datos.html"));
         $PRINCIPAL = ColocaDatosPorEjecutivo($PRINCIPAL, $post["ejecutivo"], $post["fecha_inicio"], $post["fecha_termino"], $id_empresa);
     } else if (isset($post['web_txt'])) {
@@ -13773,8 +13252,7 @@ else if ($seccion == "lms_reportes_capacitacion_por_ejecutivos") {
         header('Content-Disposition: attachment; filename=Reporte_Completo_' . $txt . '.csv');
         echo "CORRELATIVO IMPARTICION;RUT PARTICIPANTE;NOMBRE COMPLETO;CARGO;UNIDAD (CENCO);DEPENDENCIA (R3);FONDO (R2);GERENCIA (R1);EMPRESA;JEFE PERS.;JEFE PERS. NOMBRE;EJECUTIVO; EJECUTIVO NOMBRE;FOCO ESTRATEGICO;PROGRAMA;PROGRAMA_ELEARNING;NOMBRE INTERNO IMPARTICION;TIPO CURSO;ANNO INICIO;MES INICIO;FECHA INICIO;ANNO FIN;MES TERMINO;FECHA TERMINO;FORMATO STATUS;ASISTENCIA;EVALUACION;HORAS TOTALES;LUGAR DE EJECUCION(DIRECCION);CURSO OPCIONAL; ID_CURSO;\r\n";
         $Total_Rows_full = Tragotb_DatosdesdeFull_Filtros($post["ejecutivo"], $post["fecha_inicio"], $post["fecha_termino"]);
-        //echo "<pre>";          print_r($Total_Rows_full);
-        //         exit();
+        
         foreach ($Total_Rows_full as $Unico) {
             if ($Unico->status == "Presencial") {
                 $Unico->programa_global = $Unico->programa;
@@ -13845,10 +13323,7 @@ else if ($seccion == "lms_reportes_capacitacion_por_relatores") {
         header('Content-Disposition: attachment; filename=Reporte_por_Relator_Imparticion_' . $txt . '.csv');
         echo "CODIGO IMPARTICION;RUT_RELATOR;NOMBRE_RELATOR;TIPO_RELATOR;EMPRESA_RELATOR;EJECUTIVO;EJECUTIVO NOMBRE;NOMBRE INTERNO IMPARTICION;FECHA INICIO;FECHA TERMINO;HORAS_RELATOR\r\n";
         $Total_Rows_full = ConsultaDataPorRelator($post["relator"], $post["fecha_inicio"], $post["fecha_termino"], "", $id_empresa);
-        //print_r($Total_Rows_full);
-        foreach ($Total_Rows_full as $Unico) {
-            //print_r($Unico);
-            //$numhoras=str_replace('.', ',', $Unico->$numero_horas);
+                foreach ($Total_Rows_full as $Unico) {
 
             echo $Unico->codigo_inscripcion . ";" . $Unico->RutRelator . ";" . $Unico->NombreRelator . ";" . $Unico->CargoRelator . ";" . $Unico->EmpresaRelator . ";" . $Unico->RutEjecutivo . ";" . $Unico->NombreEjecutivo . ";" . $Unico->NombreCurso . ";" . $Unico->fecha_inicio . ";" . $Unico->fecha_termino . ";" . $Unico->numero_horas . "\r\n";
         }
@@ -13863,10 +13338,7 @@ else if ($seccion == "lms_reportes_capacitacion_por_relatores") {
         header('Content-Disposition: attachment; filename=Reporte_por_Relator_Imparticion_' . $txt . '.csv');
         echo "RUT_RELATOR;NOMBRE_RELATOR;TIPO_RELATOR;EMPRESA_RELATOR;HORAS_RELATOR\r\n";
         $Total_Rows_full = ConsultaDataPorRelator($post["relator"], $post["fecha_inicio"], $post["fecha_termino"], "1", $id_empresa);
-        //print_r($Total_Rows_full);
         foreach ($Total_Rows_full as $Unico) {
-            //print_r($Unico);
-            //$numhoras=str_replace('.', ',', $Unico->$numero_horas);
 
             echo $Unico->RutRelator . ";" . $Unico->NombreRelator . ";" . $Unico->CargoRelator . ";" . $Unico->EmpresaRelator . ";" . $Unico->numero_horas . "\r\n";
         }
@@ -13901,7 +13373,6 @@ else if ($seccion == "lms_reportes_capacitacion_por_relatores") {
 else if ($seccion == "lms_reportes_capacitacion_por_persona") {
     $id_empresa = $_SESSION["id_empresa"];
     $rut_usuario = LimpiaRut($post["rut"]);
-//print_r($post);
 
     if (isset($post['web'])) {
         //web action
@@ -14037,17 +13508,14 @@ $PRINCIPAL = ReporteInscripcionCursos(FuncionesTransversalesAdmin(file_get_conte
         $PRINCIPAL = ReporteInscripcionCursos(FuncionesTransversalesAdmin(file_get_contents("views/reportes/inscripcionpresencial/entorno_capacitacion_previa.html")), $id_empresa, $arreglo_post, "", "");
     }
 
-//print_r($arreglo_post);
 
     if ($arreglo_post["malla"]) {
         $datos_malla = Datos_Malla($arreglo_post["malla"]);
-//print_r($datos_malla);
         if ($datos_malla[0]->nombre != '') {$filtros_superiores .= "Malla: " . ($datos_malla[0]->nombre) . " | ";}
     }
 
     if ($arreglo_post["curso"]) {
         $datos_curso = Datos_curso($arreglo_post["curso"]);
-//print_r($datos_curso);
         if ($datos_curso[0]->nombre != '') {$filtros_superiores .= "Curso: " . ($datos_curso[0]->nombre) . " | ";}
     }
 
@@ -14071,7 +13539,7 @@ else if ($seccion == "lms_reportes_encuesta_satisfaccion") {
     $array_para_enviar_via_url = urlencode($array_para_enviar_via_url);
     $filtros_superiores = "";
     $exportar_a_excel = $post["excel"];
-//echo $exportar_a_excel;
+
     if (count($arreglo_post) > 0) {
         if ($exportar_a_excel == 1) {
             $fechahoy = date("Y-m-d");
@@ -14084,7 +13552,7 @@ else if ($seccion == "lms_reportes_encuesta_satisfaccion") {
 <?php
 $PRINCIPAL = ReporteEncuestaSatisfaccion(FuncionesTransversalesAdmin(file_get_contents("views/reportes/enc_satisfaccion/entorno_capacitacion_excel.html")), $id_empresa, $arreglo_post, "", $exportar_a_excel);
             echo ($PRINCIPAL);
-//echo "aca";
+
             exit;
         } else {
             $PRINCIPAL = ReporteEncuestaSatisfaccion(FuncionesTransversalesAdmin(file_get_contents("views/reportes/enc_satisfaccion/entorno_capacitacion.html")), $id_empresa, $arreglo_post, "", "");
@@ -14097,17 +13565,14 @@ $PRINCIPAL = ReporteEncuestaSatisfaccion(FuncionesTransversalesAdmin(file_get_co
         $PRINCIPAL = ReporteEncuestaSatisfaccion(FuncionesTransversalesAdmin(file_get_contents("views/reportes/enc_satisfaccion/entorno_capacitacion_previa.html")), $id_empresa, $arreglo_post, "", "");
     }
 
-//print_r($arreglo_post);
 
     if ($arreglo_post["malla"]) {
         $datos_malla = Datos_Malla($arreglo_post["malla"]);
-//print_r($datos_malla);
         if ($datos_malla[0]->nombre != '') {$filtros_superiores .= "Malla: " . ($datos_malla[0]->nombre) . " | ";}
     }
 
     if ($arreglo_post["curso"]) {
         $datos_curso = Datos_curso($arreglo_post["curso"]);
-//print_r($datos_curso);
         if ($datos_curso[0]->nombre != '') {$filtros_superiores .= "Curso: " . ($datos_curso[0]->nombre) . " | ";}
     }
 
@@ -14189,12 +13654,11 @@ else if ($seccion == "Lms_reporte_MuestraInformeEncParticipantesExcel") {
     }
 
     if ($get["tipo_reporte"] == "listadocursos") {
-//print_R($arreglo_post);exit;
         $PRINCIPAL = Lms_reporte_MuestraListaCursosEnc($PRINCIPAL, $id_empresa, $arreglo_post, $excel);
     }
 
     if ($get["tipo_reporte"] == "resultadosencsatisfaccion") {
-//echo "resultados";
+
         $PRINCIPAL = Lms_reporte_MuestraInformeEnc($PRINCIPAL, $id_empresa, $arreglo_post_objetos, $arreglo_post, $valor, $excel);
     }
 
@@ -14230,9 +13694,7 @@ else if ($seccion == "admin_dashboard") {
     $fecha_inicio   = $post['fecha_inicio'];
     $fecha_termino  = $post['fecha_termino'];
 
-    // echo "fecha inicion $fecha_inicio, termino $fecha_termino" ;
-
-	//echo "15161785 ".Decodear3("QWhOcDRsanREelRNUkxXWjV5eVZVZz09");
+    
 
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/dashboard/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
@@ -14248,7 +13710,7 @@ else if ($seccion == "EmpresasExt_Save") {
     $descripcion = $post['descripcion'];
     $dominio = $post['dominio'];
     $malla = $post['malla'];
-    //echo "Eventos_Save";//print_r($post); exit();
+    
 
     Empresas_Ext_Save_data($rut, $nombre, $descripcion, $dominio, $malla, $ejecutivo, $id_empresa);
     echo "<script>        location.href='?sw=ext_empresas&id_dimension=" . $id_dimension . "';        </script>";
@@ -14261,9 +13723,6 @@ else if ($seccion == "EmpresasExtDivision_Save") {
     $division = ($post['division']);
     $sindicato = ($post['sindicato']);
 
-//print_r($post);   sleep(3);
-
-    //echo "Eventos_Save";//print_r($post); exit();
 
     EmpresasExtDivision_Save_data($rut, $codigo, $division, $sindicato, $ejecutivo, $id_empresa);
     echo "<script>        location.href='?sw=ext_empresas&id_dimension=" . $id_dimension . "';        </script>";
@@ -14290,8 +13749,6 @@ else if ($seccion == "Eventos_Save") {
     $link = $post['link'];
     $visible = $post['visible'];
 
-//echo "Eventos_Save";
-    //print_r($post); exit();
 
     Eventos_Save_data($codigo, $id_dimension, $nombre, $descripcion, $instruccion, $id_categoria, $postulable,
         $fecha_inicio, $hora_inicio, $fecha_termino, $hora_termino, $direccion, $region, $link, $visible, $id_empresa);
@@ -14339,8 +13796,7 @@ else if ($seccion == "emb_tareas_Save") {
 else if ($seccion == "notificaciones_Save") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    //print_r($post);
-
+    
     $id = $post['id'];
     $codigo = $post['codigo'];
     $nombre = $post['nombre'];
@@ -14370,7 +13826,6 @@ else if ($seccion == "notificaciones") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "notificaciones_a_buscar") {
-    //print_r($post) ;
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/notificaciones/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
 
@@ -14441,18 +13896,16 @@ else if ($seccion == "notificaciones_Edit") {
 else if ($seccion == "reportes_online_personas_2020") {
     $id_empresa = $_SESSION["id_empresa"];
 		$user_admin	=	$_SESSION["admin_"];
-		//print_r($post);
 
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/reportes_full/" . $id_empresa . "_entorno.html"));
 		$PRINCIPAL = str_replace("{ENTORNO}", FuncionesTransversalesAdmin(file_get_contents("views/reportes_full/" . $id_empresa . "_entorno_reportes_online.html")), $PRINCIPAL);
 		$rut_usuario	=	LimpiaRut($post["rut_usuario"]);
 
-		//echo "<br>rut_usuario $rut_usuario<br>";exit();
+		
 		$Usu=TraeUsuarioRut($rut_usuario);
 
 				if($rut_usuario<>""){
 
-					//Check2020_Reportes_IdProgramaNull_data($_SESSION["id_empresa"]);
 							// Existe usuario
 							$Usu						= TraeDatosUsuario($rut_usuario);
 
@@ -14484,7 +13937,6 @@ else if ($seccion == "reportes_online_personas_2020") {
 										</div>
 										<div class='row'>
 									";
-							//<div class='col-lg-4' style='background-color: #e7e7e7;    font-weight: 600;    padding-top: 10px;    padding-bottom: 10px;'>Programa</div>
 
 							$estado="";
 
@@ -14519,7 +13971,6 @@ else if ($seccion == "reportes_online_personas_2020") {
 										</div>
 									";
 
-							// <div class='col-lg-4'  style='padding-top: 10px;'>".($unico->programa)." ".$unico->id_programa."</div>
 
 							$row_ficha_personas=
 								"<strong>".$unico->rut_completo." ".($unico->nombre_completo)."</strong>, ".($unico->cargo).". <strong>$usuario_vigente</strong>";
@@ -14555,7 +14006,6 @@ else if ($seccion == "reportes_online_personas_2020") {
 else if ($seccion == "reportes_online_cursos_2020") {
 
     $id_empresa = $_SESSION["id_empresa"];
-    // print_r($post);	    // BUSCA DUPLICACIONES REPORTES FULL
 
 
     $array_duplicaciones=ReporteFull_Duplicados_data($id_empresa);
@@ -14585,10 +14035,10 @@ else if ($seccion == "reportes_online_cursos_2020") {
         $estado         = $post[estado];
 
         $txt= $id_foco.$id_programa.$id_programa_elearning.$id_malla.$id_curso. $fecha_inicio.$fecha_termino. $estado;
-		    //echo "<br>cursoscol $cursoscol";   exit();
+		    
 
     if ($vigente== "cursoscol") {
-        //echo "hola";
+        
         $id_foco        = $post[foco];
         $id_programa    = $post[programaglobal];
         $id_programa_elearning = $post[programabbdd];
@@ -14609,7 +14059,6 @@ else if ($seccion == "reportes_online_cursos_2020") {
 
 $array_rut_id_curso=lms_reportes_full_excel_solocurso_data($id_empresa, $id_foco, $id_programa, $id_programa_elearning, $id_malla, $id_curso,
 $tipo_filtro, $imparticion, $ejecutivo, $modalidad, $fecha_inicio, $fecha_termino, $estado, $Unico->rut);
-//print_r($array_rut_id_curso); exit();
 $k=0;
    foreach ($array_rut_id_curso as $Unico3){
 
@@ -14658,16 +14107,12 @@ $array_id_curso[$k]= $Unico3->id_curso;
                 $Unico->c3. ";" .
                 $Unico->c4. ";" ;
 
-//print_r($array_id_curso);
 
 
-//print_r($array_rut_id_curso);
 foreach ($array_id_curso as $Unico3){
-//echo "<br>";  print_r($Unico3);
-$array_rut_id_curso_l2=lms_reportes_full_excel_solocurso_rut_data($id_empresa, $id_foco, $id_programa, $id_programa_elearning, $id_malla,
+	$array_rut_id_curso_l2=lms_reportes_full_excel_solocurso_rut_data($id_empresa, $id_foco, $id_programa, $id_programa_elearning, $id_malla,
 $Unico3,
 $tipo_filtro, $imparticion, $ejecutivo, $modalidad, $fecha_inicio, $fecha_termino, $estado, $Unico->rut);
-//print_r($array_rut_id_curso);
 
 if(count($array_rut_id_curso_l2)==0){
                         echo  $Unico3.  ";" .
@@ -14802,7 +14247,6 @@ if(count($array_rut_id_curso_l2)==0){
 else if ($seccion == "reportes_online_cursos_2020_v2") {
 
     $id_empresa = $_SESSION["id_empresa"];
-    // print_r($post);	    // BUSCA DUPLICACIONES REPORTES FULL
 
 
     $array_duplicaciones=ReporteFull_Duplicados_data($id_empresa);
@@ -14832,7 +14276,7 @@ else if ($seccion == "reportes_online_cursos_2020_v2") {
         $estado         = $post[estado];
 
         $txt= $id_foco.$id_programa.$id_programa_elearning.$id_malla.$id_curso. $fecha_inicio.$fecha_termino. $estado;
-		    //echo "<br>cursoscol $cursoscol";   exit();
+		    
 
     if ($post[GeneraExcel] == "GeneraExcel") {
         $id_foco        = $post[foco];
@@ -14962,8 +14406,6 @@ foreach (range(1, 5) as $value)
 }
 else if ($seccion == "lms_reportes_full") {
     $id_empresa = $_SESSION["id_empresa"];
-    // print_r($post);
-    // BUSCA DUPLICACIONES REPORTES FULL
     $array_duplicaciones=ReporteFull_Duplicados_data($id_empresa);
     foreach ($array_duplicaciones as $unico){
         BorraDuplicacionesReporteFull($unico->rut, $unico->id_inscripcion, $unico->id_curso, $unico->asistencia, $unico->evaluacion);
@@ -14987,10 +14429,10 @@ else if ($seccion == "lms_reportes_full") {
         $estado         = $post[estado];
 
         $txt= $id_foco.$id_programa.$id_programa_elearning.$id_malla.$id_curso. $fecha_inicio.$fecha_termino. $estado;
-		    //echo "<br>cursoscol $cursoscol";   exit();
+		    
 
     if ($vigente== "cursoscol") {
-        //echo "hola";
+        
         $id_foco        = $post[foco];
         $id_programa    = $post[programaglobal];
         $id_programa_elearning = $post[programabbdd];
@@ -15011,7 +14453,6 @@ else if ($seccion == "lms_reportes_full") {
 
 $array_rut_id_curso=lms_reportes_full_excel_solocurso_data($id_empresa, $id_foco, $id_programa, $id_programa_elearning, $id_malla, $id_curso,
 $tipo_filtro, $imparticion, $ejecutivo, $modalidad, $fecha_inicio, $fecha_termino, $estado, $Unico->rut);
-//print_r($array_rut_id_curso); exit();
 $k=0;
    foreach ($array_rut_id_curso as $Unico3){
 
@@ -15060,17 +14501,11 @@ $array_id_curso[$k]= $Unico3->id_curso;
                 $Unico->c3. ";" .
                 $Unico->c4. ";" ;
 
-//print_r($array_id_curso);
-
-
-//print_r($array_rut_id_curso);
 foreach ($array_id_curso as $Unico3){
-//echo "<br>";  print_r($Unico3);
+
 $array_rut_id_curso_l2=lms_reportes_full_excel_solocurso_rut_data($id_empresa, $id_foco, $id_programa, $id_programa_elearning, $id_malla,
 $Unico3,
 $tipo_filtro, $imparticion, $ejecutivo, $modalidad, $fecha_inicio, $fecha_termino, $estado, $Unico->rut);
-//print_r($array_rut_id_curso);
-
 if(count($array_rut_id_curso_l2)==0){
                         echo  $Unico3.  ";" .
                     "".  ";" .
@@ -15224,7 +14659,7 @@ if(count($array_rut_id_curso_l2)==0){
 								$explode_ft	=	explode("/", $Unico_reporte->fecha_hasta);
 								$fi=$explode_fi[2]."-".$explode_fi[1]."-".$explode_fi[0];
 								$ft=$explode_ft[2]."-".$explode_ft[1]."-".$explode_ft[0];
-								//echo "<br>$hoy>=$fi and $hoy<=$ft and ".$Unico_reporte->estado;
+								
 								if($hoy>=$fi and $hoy<=$ft and ($Unico_reporte->estado=="NO_INICIADO" or $Unico_reporte->estado=="EN_PROCESO")){
 														$Ausentismo="Ausentismo";
 														$num_ausentismo++;
@@ -15247,7 +14682,7 @@ if(count($array_rut_id_curso_l2)==0){
 									$Ausentismo="";
 								}
 
-								//echo "<br>Rut AUSENTISMO $Ausentismo hoy $hoy ".$Unico_reporte->rut." fecha desde ".$Unico_reporte->fecha_desde." fi $fi hasta ".$Unico_reporte->fecha_hasta." ft $ft";
+								
 
 							} else {
 														if($Unico_reporte->estado=="NO_INICIADO"){$num_noiniciados++;
@@ -15286,9 +14721,6 @@ if(count($array_rut_id_curso_l2)==0){
 
 								echo "Division;Participantes;Ausentismo;Activos;Aprobados;Reprobados;En Proceso;No Iniciados\r\n";
 
-						/*echo "<pre>";
-								print_r($arreglo_division);
-						echo "</pre>";		*/
 									foreach ($arreglo_division as $key => $value){
 
 														$value["num_activos"]=$value["num_participantes"]-$value["num_ausentismo"];
@@ -15340,7 +14772,7 @@ if(count($array_rut_id_curso_l2)==0){
 								$explode_ft	=	explode("/", $Unico_reporte->fecha_hasta);
 								$fi=$explode_fi[2]."-".$explode_fi[1]."-".$explode_fi[0];
 								$ft=$explode_ft[2]."-".$explode_ft[1]."-".$explode_ft[0];
-								//echo "<br>$hoy>=$fi and $hoy<=$ft and ".$Unico_reporte->estado;
+								
 								if($hoy>=$fi and $hoy<=$ft){
 														$Ausentismo_Individual2="Ausentismo";
 
@@ -15391,7 +14823,6 @@ if(count($array_rut_id_curso_l2)==0){
 }
 else if ($seccion == "lms_reportes_full_v2") {
     $id_empresa = $_SESSION["id_empresa"];
-    // print_r($post);
     // BUSCA DUPLICACIONES REPORTES FULL
     $array_duplicaciones=ReporteFull_Duplicados_data($id_empresa);
     foreach ($array_duplicaciones as $unico){
@@ -15416,7 +14847,7 @@ else if ($seccion == "lms_reportes_full_v2") {
         $estado         = $post[estado];
 
         $txt= $id_foco.$id_programa.$id_programa_elearning.$id_malla.$id_curso. $fecha_inicio.$fecha_termino. $estado;
-		    //echo "<br>cursoscol $cursoscol";   exit();
+		    
 
 
     if ($post[GeneraExcel] == "GeneraExcel") {
@@ -15545,7 +14976,7 @@ else if ($seccion == "lms_reportes_full_v2") {
 										$explode_ft	=	explode("/", $Unico_reporte->fecha_hasta);
 										$fi=$explode_fi[2]."-".$explode_fi[1]."-".$explode_fi[0];
 										$ft=$explode_ft[2]."-".$explode_ft[1]."-".$explode_ft[0];
-										//echo "<br>$hoy>=$fi and $hoy<=$ft and ".$Unico_reporte->estado;
+										
 										if($hoy>=$fi and $hoy<=$ft){
 																$Ausentismo_Individual2="Ausentismo";
 
@@ -15606,7 +15037,6 @@ else if ($seccion == "ext_empresas_gestion") {
 else if ($seccion == "lista_notificaciones_textos") {
     $id_empresa = $_SESSION["id_empresa"];
 	$array_post=$post;
-     //print_r($post); //print_r($_FILES); //exit();
 
 $filtro_creador=$post["filtro_creador"];
 $filtro_mes_ano=$post["filtro_mes_ano"];
@@ -15632,7 +15062,7 @@ if($titulo<>"" and $asunto<>"" and $texto<>""){
 $texto=str_replace("_SaltoLinea_", "<br>", $texto);
 $texto=str_replace(" strong ", "<strong>", $texto);
 
-//echo "texto $texto";exit();
+
 
     Insert_notificaciones_creacion($titulo, $asunto, $texto, $id_empresa);
 
@@ -15652,11 +15082,6 @@ else if ($seccion == "lista_notificaciones") {
 $id_publicacion_envio	=	Decodear3($post["id_publicacion"]);
 $tipo_notificaciones	=	($post["tipo_notificaciones"]);
 
-//echo "<br>";
-//echo "<br>id_publicacion_envio $id_publicacion_envio";
-//echo "<br>tipo_notificaciones $tipo_notificaciones";
-//echo "<br>";
-//print_r($post);
 
 
 
@@ -15665,11 +15090,9 @@ if($id_publicacion_envio<>"" and $tipo_notificaciones<>"")
 {
 
 	$array_notificaciones	=	Notificaciones_Creacion_DadoId($tipo_notificaciones,$id_empresa);
-	//exit();
-	//echo "<br>id_publicacion_envio $id_publicacion_envio<br>";
+	
 	$array_publicacion	=AudienciaPublicacion($id_publicacion_envio,$id_empresa);
-	//print_r($array_publicacion);
-	//echo "<br>";
+	
 	$fecha        	=fechaCastellano($fecha_inicio);
 	$tipo        	="text/html";
 	$titulo1    	="";
@@ -15679,13 +15102,10 @@ if($id_publicacion_envio<>"" and $tipo_notificaciones<>"")
 	$texto2       	="";
 	$texto3        	="";
 
-	//echo "<br>id_publicacion envio $id_publicacion_envio";exit();
+	
 	$array_lista_audiencia=Audiencia_lista_tbl_audiencia_id_audiencia_rut_sinEnviar($array_publicacion[0]->id_audiencia, $id_publicacion_envio,  $id_empresa);
-	//echo "<br>array_lista_audiencia:<br>";
-	//print_r($array_lista_audiencia);
-	//echo "<br>";
-	//exit();
 
+	
 $titulo1			=	($array_notificaciones[0]->titulo);
 $subject			=	($array_notificaciones[0]->asunto);
 $subtitulo1			=	($array_notificaciones[0]->texto);
@@ -15710,7 +15130,7 @@ AudienciaInsertNotificaciones($arrayEnvioEmail->rut,$id_publicacion_envio,$id_em
 
 echo "<script>window.location.href = '?sw=lista_notificaciones'</script>";
 
-	//echo "<script>alert('Notificaciones Enviados');    window.close();    </script>";
+
 }
 
 	$nombre_publicacion			=$post["nombre_documento"];
@@ -15736,8 +15156,7 @@ echo "<script>window.location.href = '?sw=lista_notificaciones'</script>";
 else if ($seccion == "vista_usuario_matriz") {
     $id_empresa = $_SESSION["id_empresa"];
 	$array_post=$post;
-	//print_r($_SESSION);
-	$nombre_publicacion			=$post["nombre_documento"];
+		$nombre_publicacion			=$post["nombre_documento"];
 	$descripcion_documento		=$post["descripcion_documento"];
 
 	$id_documento					=$post["documento"];
@@ -15767,10 +15186,7 @@ else if ($seccion == "talent_perfiles") {
 else if ($seccion == "ReportesInscripcionesT") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    //procesa "Resultados".
-    //DeleteTbltbl_skills_resultados($id_empresa);
-    //talent_procesa($id_empresa);
-
+    
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/certificacionT/entorno.html"));
     $PRINCIPAL = str_replace("{ENTORNO}", lista_certificacionT(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/certificacionT/entorno_certificacion.html")), $id_empresa, $id_categoria), $PRINCIPAL);
 
@@ -15784,7 +15200,7 @@ else if ($seccion == "academia_lider_vista_gestion") {
     $r2 = $post['r2'];
     $r3 = $post['r3'];
 
-    //echo "academia_lider_vista";
+    
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/academia_lider/entorno.html"));
     $PRINCIPAL = str_replace("{ENTORNO}", lista_academia_lider(FuncionesTransversalesAdmin(file_get_contents("views/academia_lider/entorno_academia_gestion.html")), $id_empresa, $r1, $r2, $r3), $PRINCIPAL);
     $datos_empresa = DatosEmpresa($id_empresa);
@@ -15797,7 +15213,7 @@ else if ($seccion == "academia_lider_vista") {
     $r2 = $post['r2'];
     $r3 = $post['r3'];
 
-    //echo "academia_lider_vista";
+    
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/academia_lider/entorno.html"));
     $PRINCIPAL = str_replace("{ENTORNO}", lista_academia_lider(FuncionesTransversalesAdmin(file_get_contents("views/academia_lider/entorno_academia.html")), $id_empresa, $r1, $r2, $r3), $PRINCIPAL);
     $datos_empresa = DatosEmpresa($id_empresa);
@@ -15831,8 +15247,6 @@ else if ($seccion == "Clima_Encuesta_Reportes") {
     if ($id_malla != '') {$filtro2 = $id_malla;} else { $filtro2 = "";}
     if ($id_jefatura != '') {$filtro3 = $id_jefatura;} else { $filtro3 = "";}
 
-    // echo $id_tipo;
-
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/clima/entorno.html"));
     $PRINCIPAL = str_replace("{ENTORNO}", lista_clima_Reportes(FuncionesTransversalesAdmin(file_get_contents("views/clima/entorno_clima_reportes.html")), $id_empresa, $filtro1, $filtro2, $filtro3), $PRINCIPAL);
     $datos_empresa = DatosEmpresa($id_empresa);
@@ -15845,8 +15259,6 @@ else if ($seccion == "formacioncontinua_validacion_admin") {
     $idFC = Decodear3($get["idFC"]);
     $v = ($get["v"]);
 
-    //echo "<br>idenc $idenc v $v, idFC $idFC, id_tipo $id_tipo";   sleep(3);
-    //exit();
 
     FC_actualizaEstado($idenc, $id_tipo, $v, $id_empresa);
       echo "<script>        location.href='?sw=formacioncontinua_validacion&id=$id_tipo';        </script>";
@@ -15889,12 +15301,10 @@ else if ($seccion == "formacioncontinua_validacion") {
             echo "envio a $to";
             sleep(5);
 
-            //SendGrid_Email($to, $nombreto, $from, $nombrefrom, $tipo, $subject, $titulo1, $subtitulo1, $texto1, $url, $texto_url,
-            //$texto2, $texto3, $texto4, $logo, $id_empresa, $url, $tipomensaje, $rut, $key, $template);
         }
     }
 
-    //echo "$idenc<>'' and $v<>''";
+    
 
     if ($idenc != '' and $v != '') {
         if ($v == '1') {$estado = "SI";}
@@ -15919,11 +15329,7 @@ else if ($seccion == "formacioncontinua_validacion") {
             $tipomensaje = "Becas_DocsOk";
             $rut = $rut_usuario;
             $key = $rut_usuario;
-            //echo "envio a $to";              lms_reportes_full_excel_data
-            //sleep(5);
 
-            //SendGrid_Email($to, $nombreto, $from, $nombrefrom, $tipo, $subject, $titulo1, $subtitulo1, $texto1, $url, $texto_url,
-            //$texto2, $texto3, $texto4, $logo, $id_empresa, $url, $tipomensaje, $rut, $key, $template);
         }
     }
 
@@ -15942,19 +15348,19 @@ else if ($seccion == "eventos_gestion_detalle") {
     $rut_col=$get["rutcol"];
     $del=$get["del"];
 
-    //echo "rutcol $rut_col $del";
+    
 
     if($del<>'' and $rut_col<>''){
         EventosBorrarInscrito($rut_col,$codigo, $id_empresa);
     }
-    //print_r($post);
+    
     $id_tipo = $request["id"];
     $idenc = Decodear3($get["idenc"]);
     $d = $get["d"];
     $v = $get["v"];
 
     $send_emails = $get["send_emails"];
-    //echo "<br>$id_empresa codigo $codigo id_dimension $id_dimension send $send_emails";
+    
 
     if ($send_emails == 1) {
         $envioUsuarioEmail = TraeInscritosEventosEmails($codigo, $id_dimension, $id_empresa);
@@ -16007,27 +15413,17 @@ else if ($seccion == "eventos_gestion_detalle") {
 
             $texto_url = "Agrégalo a tu calendario ahora";
 
-            //$subject= "asunto ";$titulo1= "titulo1";$subtitulo1="Subtitulo";$texto1="texto1";$texto2="texto2";$texto3="texto3";        $texto4="texto4";
 
             $tipomensaje = "Email_invitacion_evento";
             $rut = $unico->rut;
             $key = $codigo;
             $template = "";
 
-            /*    echo "<br>to $to, nombre $nombreto, fro $from, nombrefrom $nombrefrom, tipo $tipo, subject $subject,  titulo1 $titulo1, subtitulo1 $subtitulo1,  texto1 $texto1, url $url,  texto_url $texto_url,
-            texto2 $texto2, texto3 $texto3,  texto4 $texto4, logo $logo, id_empresa $id_empresa, url $url, tipomensaje $tipomensaje, rut $rut,key $key, template $template";
-            sleep(5);   */
 
             SendGrid_Email($to, $nombreto, $from, $nombrefrom, $tipo, $subject, $titulo1, $subtitulo1, $texto1, $url, $texto_url,
                 $texto2, $texto3, $texto4, $logo, $id_empresa, $url, $tipomensaje, $rut, $key, $template);
-            // echo "<br>to $to, nombre $nombreto,$subject";
-        }
+                    }
     }
-
-    //    $array_usuario=TraeInscritosEventos($codigo, $id_dimension, $id_empresa);
-    //    foreach
-    //    rut_usuario=$array_usuario[0]->rut;
-    //    $unico=TraeDatosUsuario($rut_usuario);
 
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/eventos/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
@@ -16043,7 +15439,7 @@ else if ($seccion == "empresas_ext_Usuarios_Detalle") {
     $id_empresa = $_SESSION["id_empresa"];
     $id_dimension = $request["id_dimension"];
     $rut_ext = $request["rut_ext"];
-    //print_r($post);
+    
     $id_tipo = $request["id"];
     $idenc = Decodear3($get["idenc"]);
     $d = $get["d"];
@@ -16062,7 +15458,7 @@ else if ($seccion == "empresas_ext_Usuarios_Detalle") {
 else if ($seccion == "CertificacionT_vista") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    //print_r($post);
+    
     $id_tipo = $request["id"];
     $idenc = Decodear3($get["idenc"]);
     $d = $get["d"];
@@ -16079,7 +15475,7 @@ else if ($seccion == "CertificacionT_vista") {
 else if ($seccion == "talent_vista") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    //print_r($post);
+    
     $id_tipo = $request["id"];
     $idenc = Decodear3($get["idenc"]);
     $d = $get["d"];
@@ -16094,7 +15490,7 @@ else if ($seccion == "talent_vista") {
 else if ($seccion == "talent_vista_perfil") {
     $id_empresa = $_SESSION["id_empresa"];
 
-    //print_r($post);
+    
 
     $id_tipo = $request["id_tipo"];
     $rut_col = $request["rut_col"];
@@ -16113,13 +15509,13 @@ else if ($seccion == "notificaciones_asignacion_final") {
     $id_empresa = $_SESSION["id_empresa"];
 
     $notificaciones_no_enviadas = NotificacionesNoEnviadas($id_empresa);
-    //print_r($notificaciones_no_enviadas);
+    
 
     foreach ($notificaciones_no_enviadas as $unico) {
-        ///echo "<br>".$unico->rut;
+        
         $array_usuario = TraeDatosUsuario($unico->rut);
         $array_notificaciones = TraeDatosNotificaciones($unico->id_notificacion, $id_empresa);
-        //print_r($array_notificaciones);
+        
 
         Notificaciones_crea_not_automaticas($array_notificaciones[0]->tipo_mensaje,
             $array_notificaciones[0]->nombre, $array_usuario[0]->rut, $unico->fecha_envio, $id_empresa,
@@ -16143,7 +15539,7 @@ else if ($seccion == "notificaciones_asignacion_final") {
 }
 else if ($seccion == "usuarios_insert_tbl_usuario_temporal_empresa") {
     $id_empresa = $_SESSION["id_empresa"];
-    //echo "<br /><br />"; print_r($post); echo "<br /><br />";
+    
 
     DeleteFullTbl("tbl_usuario_temporal", $id_empresa);
 
@@ -16181,8 +15577,7 @@ else if ($seccion == "usuarios_insert_tbl_usuario_temporal_empresa") {
     $total_a_eliminar = 0;
     $lineaT = "";
     $linea = 2;
-    //echo "<br />10125";
-    //print_r($_DATOS_EXCEL);
+
 
 		$count_total_loop=count($_DATOS_EXCEL);
 		ini_set('output_buffering', 0);
@@ -16191,8 +15586,7 @@ else if ($seccion == "usuarios_insert_tbl_usuario_temporal_empresa") {
 		else { ob_end_clean(); ob_start(); }
 
 
-foreach ($_DATOS_EXCEL as $unico) { //echo "<br><br>";   print_r($unico);
-        //$emailUser=usernameEmail($unico['RUT Embajador'], $id_empresa);
+foreach ($_DATOS_EXCEL as $unico) {
 
 
 				$cuenta_loop++;
@@ -16203,7 +15597,7 @@ foreach ($_DATOS_EXCEL as $unico) { //echo "<br><br>";   print_r($unico);
         $jk++;
 
 				$l++;
-				//outputProgress($l, $fila);
+				
 
 
 		$rut            =LimpiaRut($unico['rut']);
@@ -16240,36 +15634,6 @@ foreach ($_DATOS_EXCEL as $unico) { //echo "<br><br>";   print_r($unico);
 		$dependencia    ="";
 		$fecha_ingreso  =FechaExcelPhp($unico['fec_ingreso']);
 
-/*
-if($rut=="9851837")    {$email="";} else {$email          =$unico['email'];}
-
-if($id_cargo=="9997" or $id_cargo=="6097" or $id_cargo=="8208" or $id_cargo=="6462" or $id_cargo=="7060" or $id_cargo=="7287" or
-$id_cargo=="6098" or $id_cargo=="7381" or $id_cargo=="6212" or $id_cargo=="6281" or $id_cargo=="6100" or $id_cargo=="6102" or
-$id_cargo=="8209" or $id_cargo=="7598" or $id_cargo=="7287" or $id_cargo=="7287")
-{
-	$email="";
-}
-
-
-if(	$cargo=="Gerente Division Ciberseguridad" or
-		$cargo=="Gerente Division Comercial"  or
-		$cargo=="Gerente Division Contraloria"  or
-		$cargo=="Gerente Division Corporativa"  or
-		$cargo=="Gerente Division Glob. de Cump"  or
-		$cargo=="Gerente Division Marketing y Bca.Digital"  or
-		$cargo=="Gerente Division Neg. Especiales"  or
-		$cargo=="Gerente Division Op y Tecnolog"  or
-		$cargo=="Gerente Division Personas y Organizacion"  or
-		$cargo=="Gerente Division Tesoreria" or
-		$cargo=="Gerente General"  or
-		$cargo=="Fiscal"  or
-		$cargo=="Presidente")
-			{
-				$email=".";
-			}
-
-
-*/
 			$email          =$unico['email'];
 			$emailBK        =$unico['email'];
 			$negocio        ="";
@@ -16549,7 +15913,7 @@ $sindi_glosa
 }
 else if ($seccion == "gestion_usuario_data") {
     require_once 'clases/PHPExcel.php';
-    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $post['id_eval'];   // $programa = $post['program'];    // Crea un nuevo objeto PHPExcel
+    $id_empresa = $_SESSION["id_empresa"];
     $objPHPExcel = new PHPExcel();
     $styleArray = array('font' => array('bold' => false, 'color' => array('rgb' => '222222'), ));
     $objPHPExcel->getProperties()->setCreator("GO")->setLastModifiedBy("GO")->setTitle("Plantilla")->setSubject("Plantilla")->setDescription("Plantilla")->setKeywords("Excel Office 2007 openxml php")->setCategory("Plantilla");
@@ -16621,8 +15985,6 @@ else if ($seccion == "gestion_usuario_data") {
     }
     $i = 1;
     $listas = listarRegistrosTablaGlobalFiltro("tbl_usuario", "id_empresa", $id_empresa, "");
-    //print_r($listas);
-    //exit();
 
     foreach ($listas as $row1) {
         $arr_usu = TraeDatosUsuario($row1->rut);
@@ -16630,7 +15992,7 @@ else if ($seccion == "gestion_usuario_data") {
         $i++;
         $cont = 1;
 
-        //echo "<br>$i";
+        
         $lastColumn2 = "A";
         $A = 0;
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue($lastColumn2 . $i, ($row1->rut));
@@ -16756,7 +16118,7 @@ else if ($seccion == "gestion_usuario_data") {
 }
 else if ($seccion == "gestion_usuario_clave") {
     require_once 'clases/PHPExcel.php';
-    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $post['id_eval'];   // $programa = $post['program'];    // Crea un nuevo objeto PHPExcel
+    $id_empresa = $_SESSION["id_empresa"];
     $objPHPExcel = new PHPExcel();
     $styleArray = array('font' => array('bold' => false, 'color' => array('rgb' => '222222'), ));
     $objPHPExcel->getProperties()->setCreator("GO")->setLastModifiedBy("GO")->setTitle("Plantilla")->setSubject("Plantilla")->setDescription("Plantilla")->setKeywords("Excel Office 2007 openxml php")->setCategory("Plantilla");
@@ -16799,7 +16161,6 @@ else if ($seccion == "gestion_usuario_clave") {
     }
     $i = 1;
     $sheet = $objPHPExcel->getActiveSheet();
-    //print_r($sheet);
     $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
     $cellIterator->setIterateOnlyExistingCells(true);
     /** @var PHPExcel_Cell $cell */
@@ -16817,7 +16178,7 @@ else if ($seccion == "gestion_usuario_clave") {
 }
 else if ($seccion == "puntos_descarga_asignacion") {
     require_once 'clases/PHPExcel.php';
-    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $post['id_eval'];   // $programa = $post['program'];    // Crea un nuevo objeto PHPExcel
+    $id_empresa = $_SESSION["id_empresa"];
     $objPHPExcel = new PHPExcel();
     $styleArray = array('font' => array('bold' => false, 'color' => array('rgb' => '222222'), ));
     $objPHPExcel->getProperties()->setCreator("GO")->setLastModifiedBy("GO")->setTitle("Plantilla")->setSubject("Plantilla")->setDescription("Plantilla")->setKeywords("Excel Office 2007 openxml php")->setCategory("Plantilla");
@@ -16836,8 +16197,6 @@ else if ($seccion == "puntos_descarga_asignacion") {
     }
     $i = 1;
     $listas = listarRegistrosTablaGlobalFiltro("tbl_premios_puntos_usuarios", "id_empresa", $id_empresa, "");
-    //print_r($listas);
-    //exit();
 
     foreach ($listas as $row1) {
         $arr_usu = TraeDatosUsuario($row1->rut);
@@ -16886,7 +16245,7 @@ else if ($seccion == "puntos_descarga_asignacion") {
 }
 else if ($seccion == "Cursos_Ext_Descarga_notas") {
     require_once 'clases/PHPExcel.php';
-    $id_empresa = $_SESSION["id_empresa"]; //$idEval = $post['id_eval'];   // $programa = $post['program'];    // Crea un nuevo objeto PHPExcel
+    $id_empresa = $_SESSION["id_empresa"];
     $id_curso = $post['id_curso'];
 
     $objPHPExcel = new PHPExcel();
@@ -16907,12 +16266,9 @@ else if ($seccion == "Cursos_Ext_Descarga_notas") {
     }
     $i = 1;
     $lineasCursos = CursosExtUsuariosNotasAsistencia($id_empresa, $id_curso);
-    //print_r($listas);
-    //exit();
 
     foreach ($listas as $row1) {
         $arr_usu = TraeDatosUsuario($row1->rut);
-        //$num_equipos=TraeDatosJefeNumEquipo($row1 -> rut);
 
         $i++;
         $cont = 1;
@@ -16958,7 +16314,7 @@ else if ($seccion == "Cursos_Ext_Descarga_notas") {
 }
 else if ($seccion == "usuarios_update_empresa") {
     $id_empresa = $_SESSION["id_empresa"];
-    //echo "<br /><br />"; print_r($post); echo "<br /><br />";
+    
     extract($post);
     $error_grave = "error";
     $archivo = $_FILES['excel']['name'];VerificaExtensionFilesAdmin($_FILES["excel"]);
@@ -16992,10 +16348,9 @@ else if ($seccion == "usuarios_update_empresa") {
     $total_desabilitar = 0;
     $total_a_eliminar = 0;
     $lineaT = "";
-    $linea = 2; // echo "<br />10125";     print_r($_DATOS_EXCEL);    echo "<hr>Delete Full";
+    $linea = 2;
 
-    foreach ($_DATOS_EXCEL as $unico) { //echo "<br><br>";   print_r($unico);
-        //$emailUser=usernameEmail($unico['RUT Embajador'], $id_empresa);
+    foreach ($_DATOS_EXCEL as $unico) {
         $l++;
         outputProgress($l, $fila);
 
@@ -17015,10 +16370,10 @@ else if ($seccion == "usuarios_update_empresa") {
     exit;
 }
 else if ($seccion == "Eventos_Inscritos_update") {
-    $id_empresa = $_SESSION["id_empresa"]; // echo "<br /><br />"; print_r($post); echo "<br /><br />";
+    $id_empresa = $_SESSION["id_empresa"];
     $codigo = $request["codigo"];
     $id_dimension = $request["id_dimension"];
-    //echo "<br>id_empresa $id_empresa  codigo $codigo  id_dimension $id_dimension";exit();
+    
     extract($post);
     $error_grave = "error";
     $archivo = $_FILES['excel']['name'];VerificaExtensionFilesAdmin($_FILES["excel"]);
@@ -17050,25 +16405,20 @@ else if ($seccion == "Eventos_Inscritos_update") {
     $total_desabilitar = 0;
     $total_a_eliminar = 0;
     $lineaT = "";
-    $linea = 2; // echo "<br />10125";     print_r($_DATOS_EXCEL);    echo "<hr>Delete Full";
+    $linea = 2;
 
     if ($codigo != '' and $id_dimension != '') {
         $id_categoria = BuscaIdCategoriaEvento($codigo, $id_dimension, $id_empresa);
         BorraInscritosEventos($codigo, $id_dimension, $id_empresa);
-        foreach ($_DATOS_EXCEL as $unico) { //echo "<br><br>";   print_r($unico);
+        foreach ($_DATOS_EXCEL as $unico) {
             ActualizaEventosInscritos($codigo, $id_categoria, $id_dimension, LimpiaRut($unico['RUT']), $id_empresa);
         }
     }
-    // exit();
     echo "<script> location.href='?sw=eventos_gestion_detalle&id_dimension=" . $id_dimension . "&codigo=" . $codigo . "';</script>";
     exit;
 }
 else if($seccion=="desbloq"){
 
-
-	//echo $_SESSION["rut_reset"];
-	//exit();
-	//Borrar los intentos fallidos del dia de hoy
 	EliminarIntentosFallidosDelDia($_SESSION["rut_reset"], $id_empresa);
 
 	//Dejar al usuario en vigencia 0
@@ -17090,7 +16440,7 @@ else if($seccion=="VCl"){
 
 }
 else if ($seccion == "notificaciones_update_asignacion") {
-    $id_empresa = $_SESSION["id_empresa"]; // echo "<br /><br />"; print_r($post); echo "<br /><br />";
+    $id_empresa = $_SESSION["id_empresa"];
     extract($post);
     $error_grave = "error";
     $archivo = $_FILES['excel']['name'];VerificaExtensionFilesAdmin($_FILES["excel"]);
@@ -17124,12 +16474,9 @@ else if ($seccion == "notificaciones_update_asignacion") {
     $total_desabilitar = 0;
     $total_a_eliminar = 0;
     $lineaT = "";
-    $linea = 2; // echo "<br />10125";     print_r($_DATOS_EXCEL);    echo "<hr>Delete Full";
+    $linea = 2;
 
     foreach ($_DATOS_EXCEL as $unico) {
-        //echo "<br><br>";   print_r($unico);
-
-        //$emailUser=usernameEmail($unico['RUT Embajador'], $id_empresa);
 
         $notificacion = BuscaNombreNotificacion($unico['Id_Notificacion'], $id_empresa);
 
@@ -17143,81 +16490,10 @@ else if ($seccion == "actualizacion_usuarios") {
     $id_empresa = $_SESSION["id_empresa"];
     $temporal_actualizar = $get["temporal_actualizar"];
     $procesar = $get["procesar"];
-		//echo "clave";
+		
 		$clave_nueva=$CLXIdDpw&_9255;
 		$clave_enc=Encriptar($clave_nueva);
 		 		$descargar_xls = $get["descargar_xls"];
-		 	/*	if($descargar_xls==1){
-
-		 		    header('Content-type: text/plain');
-		        header('Content-Disposition: attachment; filename=Base_Usuarios_' . $rut_enviado . '.csv');
-		        echo "rut;rut_completo;nombres;apell_paterno;apell_materno;nombre_completo;cargo;cod_cargo;rut_jefe;fec_ingreso;email;glosa_zona;glosa_area;glosa_depto;cod_Unidad;fono_Directo;glosa_unidad;cod_area;glosa_ext;dir_1_unidad;cod_secc;glosa_secc;fecha_cargo;Tipo_CTTO;empresa;glosa_division;cui_depen;glosa_ofi;glosa_emp;oficina;glosa_emp;anexo;cod_Unidad;region;jornada;Jor_HH;Jor_MM;Fec_indem;Control_jornada;Perfil;cod_sexo;tramo_edad;codigo_negociacion;fecha_reconocimiento;fecha_ingreso_vacaciones;dias_derecho;dias_pend;dias_pend_real;cod_cargo_ant;gls_cargo_ant;ant_agno_reconoci;tipo_renta\r\n";
-		        $Total_Rows_full = BuscaFullUsuario_SoloEmpresaNoExternos($id_empresa);
-		        foreach ($Total_Rows_full as $Unico) {
-
-		        	$perfil=Bch_2020_Perfil_Usuario($Unico->rut);
-
-								echo $Unico->rut
-									. ";"  . $Unico->rut_completo
-									. ";"  . $Unico->nombre
-									. ";"  . $Unico->apaterno
-									. ";"  . $Unico->amaterno
-									. ";"  . $Unico->nombre_completo
-									. ";"  . $Unico->cargo
-									. ";"  . $Unico->id_cargo
-									. ";"  . $Unico->jefe
-									. ";"  . $Unico->fecha_ingreso
-									. ";"  . $Unico->email
-									. ";"  . $Unico->zona
-									. ";"  . $Unico->area
-									. ";"  . $Unico->departamento
-									. ";"  . $Unico->local
-									. ";"  . $Unico->telefono
-									. ";"  . $Unico->unidad_negocio
-									. ";"  . $Unico->id_area
-									. ";"  . $Unico->seccion
-									. ";"  . $Unico->ubicacion
-									. ";"  . $Unico->id_centro_costo
-									. ";"  . $Unico->centro_costo
-									. ";"  . $Unico->fecha_antiguedad
-									. ";"  . $Unico->tipo_contrato
-									. ";"  . $Unico->empresa_holding
-									. ";"  . $Unico->division
-									. ";"  . $Unico->id_unidad_negocio
-									. ";"  . $Unico->sucursal
-									. ";"  . $Unico->nombre_empresa_holding
-									. ";"  . $Unico->servicio
-									. ";"  . $Unico->tipo_servicio
-									. ";"  . $Unico->anexo
-									. ";"  . $Unico->id_gerencia
-									. ";"  . $Unico->regional
-									. ";"  . $Unico->operador
-									. ";"  . $Unico->organica
-									. ";"  . $Unico->nivel_inicio
-									. ";"  . $Unico->familia_cargo
-									. ";"  . $Unico->tipo_cargo
-									. ";"  . $perfil
-									. ";"  . $Unico->genero
-									. ";"  . $Unico->codigo_nivel
-
-									. ";"  . $Unico->codigo_negociacion
-									. ";"  . $Unico->fecha_reconocimiento
-									. ";"  . $Unico->fecha_ingreso_vacaciones
-
-									. ";"  . $Unico->dias_derecho
-									. ";"  . $Unico->dias_pendientes
-									. ";"  . $Unico->dias_pendientes_real
-									. ";"  . $Unico->cod_cargo_ant
-									. ";"  . $Unico->gls_cargo_ant
-									. ";"  . $Unico->ant_agno_reconoci
-									. ";"  . $Unico->tipo_renta
-									. "\r\n";
-
-				}
-						exit();
-
-		 		}
-		 		*/
 
 		 		if($descargar_xls==1){
 		 			//MODIFICAR CAMPOS DE EMPRESA A EMPRESA
@@ -17267,9 +16543,7 @@ else if ($seccion == "actualizacion_usuarios") {
 					$intentos=TraeIntendosAccesosFallidos($rut_COL);
 					$_SESSION["rut_reset"]=$rut_COL;
 
-					//if(count($intentos)>2){
 						$bloqueo.="<br><br><a target='' href='?sw=desbloq'>Presiona para desbloquear clave</a>";
-					//}
 					$bloqueo.="<br>Rut: ".$rut_COL.".
 						Total de intentos fallidos el día de hoy: ".count($intentos)."
 					
@@ -17278,7 +16552,6 @@ else if ($seccion == "actualizacion_usuarios") {
 
 			if($post["idSap"]<>""){
 					$rut_COL=$post["idSap"];
-					//$rut_COL = limpiaRut($rut_COL);
 					$rut_col=BuscaRutDadoRutEmailIdSap_2021($rut_COL);
 					$Usu=TraeUsuarioRut($rut_col);
 					$datos_usuario="
@@ -17315,24 +16588,19 @@ else if ($seccion == "actualizacion_usuarios") {
 
 			}
 
-		//$array_admin_clave=ListaBchNuevasClavesRutTemp();
-    foreach ($array_admin_clave as $unico){
+		   foreach ($array_admin_clave as $unico){
 			$clave=randomPassword();
-			//print_r($clave);
+
 			$clave_nueva=$clave[0].$clave[1].$clave[2];
 			$clave_enc=Encriptar($clave_nueva);
-			//ListaBchNuevasClavesRutTemp_Insert($unico->rut, $clave_nueva, $clave_enc);
-    }
+			    }
 
-    //$array_sinclave=ListaBchSinClavesEncodeada($id_empresa);
-    foreach ($array_sinclave as $unico){
-           //echo "<br>".$unico->rut;
-           //echo "hola";
+        foreach ($array_sinclave as $unico){
+           
            $newstring = substr($unico->rut, -4);
-           //echo ". clave $newstring";
+           
            $clave_encodeada=Encriptar_2($newstring, $unico->rut);
-           //echo ". clave encodeada $clave_encodeada";
-           //Bch_InsertClaveEncodeada($unico->rut, $clave_encodeada, $id_empresa);
+
     }
 
 	$temporal_actualizar=1;
@@ -17350,10 +16618,9 @@ else if ($seccion == "actualizacion_usuarios") {
 else if ($seccion == "vista_incognita") {
 
 		global $url_vista_incognita;
-		//echo "<br>url_vista_incognita $url_vista_incognita<br>";
-		//print_r($post);
+
 		$rut_enc=Encodear3($post["bc"]);
-		//echo "<br>rut_enc $rut_enc<br>";
+		
 		$id_empresa = $_SESSION["id_empresa"];
 		$Datos_usu=TraeDatosUsuario($post["bc"]);
 		if($post["bc"]<>"" and $Datos_usu[0]->rut){
@@ -17496,22 +16763,21 @@ else if ($seccion == "actualizacion_control_dotacion_opciones") {
 }
 else if ($seccion == "usuarios_insert_tbl_usuario_ausentismo_empresa") {
     $id_empresa = $_SESSION["id_empresa"];
-    									//echo "<br /><br />"; print_r($post); echo "<br /><br />";print_r($_FILES); echo "<br /><br />";
+    
     VerificaExtensionFilesAdmin($_FILES["file"]);
     if ( isset($post["action"]) ) {
 			   if ( isset($_FILES["file"])) {
 			        if ($_FILES["file"]["error"] > 0) {	echo "Return Code: " . $_FILES["file"]["error"] . "<br />";	}
 			        else {
-			             		//echo "Upload: " . $_FILES["file"]["name"] . "<br />";			             echo "Type: " . $_FILES["file"]["type"] . "<br />";
-			             		//echo "Size: " . ($_FILES["file"]["size"] / 1024) . " Kb<br />";			             echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br />";
+
 			             if (file_exists("upload/" . $_FILES["file"]["name"])) {
-					            //	echo $_FILES["file"]["name"] . " already exists. ";
+					           
 			             }
 			             else {
-			                    //Store file in directory "upload" with the name of "uploaded_file.txt"
+			             
 			            $storagename = "uploaded_file.txt";
 			            move_uploaded_file($_FILES["file"]["tmp_name"], "upload/" . $storagename);
-			            					//echo "Stored in: " . "upload/" . $_FILES["file"]["name"] . "<br />";
+			            
 			            }
 			        }
 			     } else {
@@ -17522,7 +16788,7 @@ else if ($seccion == "usuarios_insert_tbl_usuario_ausentismo_empresa") {
 
 			     	 DeleteFullTbltbl_usuario_ausentismo();
 
-						    //echo "File opened.<br />";
+						    
 						    $firstline = fgets ($file, 10096 );
 						        //Gets the number of fields, in CSV-files the names of the fields are mostly given in the first line
 						    $num = strlen($firstline) - strlen(str_replace(";", "", $firstline));
@@ -17537,15 +16803,13 @@ else if ($seccion == "usuarios_insert_tbl_usuario_ausentismo_empresa") {
 						        $dsatz[$i] = explode( ";", $line[$i], ($num+1) );
 						        $i++;
 						    }
-						        //echo "<table>";						        //echo "<tr>";
+						        
 						         $cuentaK=0;
 						    for ( $k = 0; $k != ($num+1); $k++ ) {
-						        //echo "<td>AA " . $fields[$k] . "</td>";
+						       
 						       $cuentaK++;
 						    }
-						       // echo "</tr>";
 						    foreach ($dsatz as $key => $number) {
-						       // echo "<tr>";
 						       $row_csv="";
 						       $cuenta=0;
 						        foreach ($number as $k => $content) {
@@ -17560,7 +16824,6 @@ else if ($seccion == "usuarios_insert_tbl_usuario_ausentismo_empresa") {
 						        }
 						        Insert_Lista_ausentismo_data($row_csv);
 						    }
-						  // echo "</table>";
 						}
 			}
 
@@ -17608,22 +16871,21 @@ else if ($seccion == "actualizacion_usuarios_hhee") {
 }
 else if ($seccion == "usuarios_insert_tbl_usuario_hhee_empresa") {
     $id_empresa = $_SESSION["id_empresa"];
-    									//echo "<br /><br />"; print_r($post); echo "<br /><br />";print_r($_FILES); echo "<br /><br />";
+    
     VerificaExtensionFilesAdmin($_FILES["file"]);
     if ( isset($post["action"]) ) {
 			   if ( isset($_FILES["file"])) {
 			        if ($_FILES["file"]["error"] > 0) {	echo "Return Code: " . $_FILES["file"]["error"] . "<br />";	}
 			        else {
-			             		//echo "Upload: " . $_FILES["file"]["name"] . "<br />";			             echo "Type: " . $_FILES["file"]["type"] . "<br />";
-			             		//echo "Size: " . ($_FILES["file"]["size"] / 1024) . " Kb<br />";			             echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br />";
+
 			             if (file_exists("upload/" . $_FILES["file"]["name"])) {
-					            //	echo $_FILES["file"]["name"] . " already exists. ";
+					           
 			             }
 			             else {
 			                    //Store file in directory "upload" with the name of "uploaded_file.txt"
 			            $storagename = "uploaded_file.txt";
 			            move_uploaded_file($_FILES["file"]["tmp_name"], "upload/" . $storagename);
-			            					//echo "Stored in: " . "upload/" . $_FILES["file"]["name"] . "<br />";
+			            
 			            }
 			        }
 			     } else {
@@ -17634,7 +16896,7 @@ else if ($seccion == "usuarios_insert_tbl_usuario_hhee_empresa") {
 
 			     	 DeleteFullTbltbl_escritorio_horas_extras();
 
-						    //echo "File opened.<br />";
+						    
 						    $firstline = fgets ($file, 10096 );
 						        //Gets the number of fields, in CSV-files the names of the fields are mostly given in the first line
 						    $num = strlen($firstline) - strlen(str_replace(";", "", $firstline));
@@ -17649,10 +16911,10 @@ else if ($seccion == "usuarios_insert_tbl_usuario_hhee_empresa") {
 						        $dsatz[$i] = explode( ";", $line[$i], ($num+1) );
 						        $i++;
 						    }
-						        //echo "<table>";						        //echo "<tr>";
+						        
 						         $cuentaK=0;
 						    for ( $k = 0; $k != ($num+1); $k++ ) {
-						        //echo "<td>AA " . $fields[$k] . "</td>";
+						       
 						       $cuentaK++;
 						    }
 		ini_set('output_buffering', 0);
@@ -17662,10 +16924,7 @@ else if ($seccion == "usuarios_insert_tbl_usuario_hhee_empresa") {
 		else { ob_end_clean(); ob_start(); }
 		$count_total_loop=count($dsatz);
 
-
-						       // echo "</tr>";
 						    foreach ($dsatz as $key => $number) {
-						       // echo "<tr>";
 						       $row_csv="";
 						       $cuenta=0;
 						        foreach ($number as $k => $content) {
@@ -17687,7 +16946,7 @@ else if ($seccion == "usuarios_insert_tbl_usuario_hhee_empresa") {
 
 						        Insert_Lista_hhee_data($row_csv);
 						    }
-						  // echo "</table>";
+					  
 						}
 			}
 
@@ -17742,7 +17001,7 @@ else if ($seccion == "PP_save_relatores") {
     $id_empresa = $_SESSION["id_empresa"];
     $rut_experto = LimpiaRut($post['rut_experto']);
     $nombrecat = MP_BuscaCatDadoId($post['grupo_interes_mp_nuevo'], $id_empresa);
-    //echo $post['nuevogrupo_interes'];
+    
     MP_SavenuevoExpertogrupointeres(($post['grupo_interes_mp_nuevo']), $nombrecat, $rut_experto, $id_empresa);
     echo "
         <script>
@@ -18568,9 +17827,9 @@ OR rut = ''
 ORDER BY
 nombre_completo ASC");
 
- 	//echo "<br>$query_enc<br><br>";
+ 	
  	$query_dec=Decodear3($query_enc);
- 	//echo "<br>$query_dec<br><br>";
+ 	
 
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/mediciones/entorno.html"));
     $id_empresa = $_SESSION["id_empresa"];
@@ -18590,10 +17849,8 @@ else if ($seccion == "preguntados_usuario") {
         header('Content-Disposition: attachment; filename=Reporte_por_Usuario_Preguntados_' . $txt . '.csv');
         echo "RUT;NOMBRE_USUARIO;DESAFIOS_JUGADOS;DESAFIOS_GANADOS;PUNTOS;\r\n";
         $Total_Rows_full = lista_usuarios_preguntados_excel($id_empresa, $id_objeto, $excel);
-        //print_r($Total_Rows_full);
-        foreach ($Total_Rows_full as $Unico) {
-            //echo "<br>... UNICO.<br>";
-            //  print_r($Unico);
+                foreach ($Total_Rows_full as $Unico) {
+
             echo $Unico->rut_completo . ";" . ($Unico->nombre_completo) . ";" . $Unico->vecesjugado . ";" . $Unico->total_veces_ganado . ";" . $Unico->suma_correctas . "\r\n";
         }
     } else {
@@ -18614,10 +17871,9 @@ else if ($seccion == "preguntados_pregunta") {
         header('Content-Disposition: attachment; filename=Reporte_por_Preguntas_Preguntados_' . $txt . '.csv');
         echo "PREGUNTA;VECES_RESPONDIDA;VECES_CORRECTA;PORCENTAJE;\r\n";
         $Total_Rows_full = lista_preguntas_preguntados_excel($id_empresa, $id_objeto, $excel);
-        //print_r($Total_Rows_full);exit();
+        
         foreach ($Total_Rows_full as $Unico) {
-            //echo "<br>... UNICO.<br>";
-            //  print_r($Unico);
+
             echo $Unico->pregunta . ";" . ($Unico->Respondida) . ";" . $Unico->Correcta . ";" . $Unico->Porcentaje . "\r\n";
         }
     } else {
@@ -18637,7 +17893,7 @@ else if ($seccion == "usuarios_ejecutivos") {
 else if ($seccion == "intro") {
     $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/mejores_practicas/mp_estadisticas.html"));
     $id_empresa = $_SESSION["id_empresa"];
-//$PRINCIPAL = str_replace("{ENTORNO_ESTADISTICAS_MEJORES_PRACTICAS}",Mejores_Practicas_Estadisticas(FuncionesTransversalesAdmin(file_get_contents("views/mejores_practicas/entorno_practicas.html")), $id_empresa, $id_categoria),$PRINCIPAL);
+
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "mejores_practicas_estadisticas_Excel") {
@@ -18741,7 +17997,7 @@ else if ($seccion == "puntos_estadisticas_Excel") {
 }
 else if ($seccion == "adcurm") {
     $PRINCIPAL = FormularioCurso(FuncionesTransversalesAdmin(file_get_contents("views/curso/entorno_subida_excel.html")), $id_curso);
-//$PRINCIPAL = str_replace("{ENTORNO_PREVIA}",ListadoCursosMasivosPrevio(),$PRINCIPAL);
+
 
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
@@ -18756,7 +18012,7 @@ else if ($seccion == "procesa_excel") {
         $tipo = $_FILES['excel']['type'];
         $destino = "tmp_ev_" . $archivo;
         if (copy($_FILES['excel']['tmp_name'], $destino)) {
-//echo "Archivo Cargado Con Éxito";
+
         } else {
             echo "Error Al Cargar el Archivo";
         }
@@ -18771,8 +18027,6 @@ else if ($seccion == "procesa_excel") {
 // Asignar hoja de excel activa
             $objPHPExcel->setActiveSheetIndex(0);
 //conectamos con la base de datos
-            //$cn = mysql_connect("localhost", "root", "") or die("ERROR EN LA CONEXION");
-            //$db = mysql_select_db("prueba2", $cn) or die("ERROR AL CONECTAR A LA BD");
             // Llenamos el arreglo con los datos  del archivo xlsx
             for ($i = 2; $i <= 47; $i++) {
                 $_DATOS_EXCEL[$i]['numero_identificador'] = ($objPHPExcel->getActiveSheet()->getCell('A' . $i)->getCalculatedValue());
@@ -18817,9 +18071,7 @@ else if ($seccion == "procesa_excel") {
                 }
             }
         }
-//echo "<strong><center>ARCHIVO IMPORTADO CON EXITO, EN TOTAL $campo REGISTROS Y $errores ERRORES</center></strong>";
-        //una vez terminado el proceso borramos el archivo que esta en el servidor el tmp_ev_
-        //unlink($destino);
+
     }
     $PRINCIPAL = FormularioCurso(FuncionesTransversalesAdmin(file_get_contents("views/curso/entorno_subida_excel.html")), $id_curso);
 //CON ESTA FUNCION, GENERO EL LISTADO PREVIO, PARA QUE SE VISUALIZE LA INFORMACION DE LOS QUE SE VAN A SUBIR
@@ -18845,7 +18097,7 @@ else if ($seccion == "procesa_excel_u") {
         $destino = "back_temp_" . $archivo;
 
         if (copy($_FILES['excel']['tmp_name'], $destino)) {
-//echo "Archivo Cargado Con Éxito";
+
         } else {
             $error_grave = "Error al subir Excel<br>";
         }
@@ -18890,16 +18142,11 @@ else if ($seccion == "procesa_excel_u") {
         $lineaT = "";
         $linea = 2;
 
-//UpdateUsuarioVigencia1($idEmpresa);
 
-//borrarTblUsuarioRelMalla($idEmpresa);
+
+
 
         foreach ($_DATOS_EXCEL as $key => $item) {
-//if($_SESSION["id_empresa"]==28){
-            //    if($item["Rut Duplicado (0=no, 1=si)"]=="1"){
-            //        $item["Rut sin DV"]=$item["Codigo SAP"];
-            //    }
-            //}
 
             $coma = "";
             $values = "";
@@ -18926,25 +18173,24 @@ else if ($seccion == "procesa_excel_u") {
                         $cuerpoJefe = explode("-", $valor);
                         $valor = $cuerpoJefe[0]; // porción1
                         $valor = limpiarSimbolosExtranos($valor);
-//echo "<br> jefe $valor";
+
                     }
                     if ($campoTabla == "rut_completo") {
                         $valor = limpiarSimbolosExtranos($valor);
                     }
 
                     if ($campoTabla == "fecha_antiguedad") {
-//echo "$campoTabla";
-                        //echo "valor original $valor";
+
+                        
                         $FormatoFechaYYYYMMDD = validadFormatoFecha($valor);
-//echo "<br>Boolean $FormatoFechaYYYYMMDD";
+
 
                         if ($FormatoFechaYYYYMMDD == 1) {
                             $valor = $valor;
                         } else {
                             $valor = transformfechaexcelaphp($valor);
                         }
-//echo "<br>$valor";
-                        //exit();
+
                     }
 
                     if ($campoTabla != '' and $campoTabla != ' ') {
@@ -18968,7 +18214,7 @@ else if ($seccion == "procesa_excel_u") {
                     $error_columna .= $key2 . ", ";
                 }
 
-//echo "<br>$key2 $campoTabla $valor";
+
                 if ($campoTabla == "rut_completo") {
                     $cuerpoRut = explode("-", $valor);
                     $rut = $cuerpoRut[0]; // porción1
@@ -19003,7 +18249,7 @@ else if ($seccion == "procesa_excel_u") {
             $accion = DatosTablaUsuarioCompleto($userField, $userValue, $cuenta_campos_lineaA, $rut);
 
             if ($accion == "Insertar") {
-//    DeleteUsuarioEmpresa($rut,$idEmpresa);
+
                 $registrosReal = ($registrosReal);
                 InsertTblUsuarioEmpresa($valuesReal, $registrosReal, $idEmpresa);
             } elseif ($accion == "Actualizar") {
@@ -19038,7 +18284,7 @@ else if ($seccion == "procesa_excel_uBK") {
         $tipo = $_FILES['excel']['type'];
         $destino = "tmp_ev_" . $archivo;
         if (copy($_FILES['excel']['tmp_name'], $destino)) {
-//echo "Archivo Cargado Con Éxito";
+
         } else {
             $error_grave = "Error Al subir Archivo<br>";
         }
@@ -19198,7 +18444,7 @@ else if ($seccion == "procesa_excel_inscripciones") {
         $tipo = $_FILES['excel']['type'];
         $destino = "tmp_ev_" . $archivo;
         if (copy($_FILES['excel']['tmp_name'], $destino)) {
-//echo "Archivo Cargado Con Éxito";
+
         } else {
             echo "Error Al Cargar el Archivo";
         }
@@ -19213,8 +18459,6 @@ else if ($seccion == "procesa_excel_inscripciones") {
 // Asignar hoja de excel activa
             $objPHPExcel->setActiveSheetIndex(0);
 //conectamos con la base de datos
-            //$cn = mysql_connect("localhost", "root", "") or die("ERROR EN LA CONEXION");
-            //$db = mysql_select_db("prueba2", $cn) or die("ERROR AL CONECTAR A LA BD");
             // Llenamos el arreglo con los datos  del archivo xlsx
             for ($i = 2; $i <= 47; $i++) {
                 $_DATOS_EXCEL[$i]['rut'] = $objPHPExcel->getActiveSheet()->getCell('A' . $i)->getCalculatedValue();
@@ -19240,9 +18484,6 @@ location.href='?sw=accioninsc&ii=" . Encodear3($id_inscripcion) . "#seccionInscr
             echo "Necesitas primero importar el archivo";
         }
 
-//echo "<strong><center>ARCHIVO IMPORTADO CON EXITO, EN TOTAL $campo REGISTROS Y $errores ERRORES</center></strong>";
-        //una vez terminado el proceso borramos el archivo que esta en el servidor el tmp_ev_
-        //unlink($destino);
     }
     $PRINCIPAL = FormularioCurso(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_subida_excel.html")), $id_curso);
 //CON ESTA FUNCION, GENERO EL LISTADO PREVIO, PARA QUE SE VISUALIZE LA INFORMACION DE LOS QUE SE VAN A SUBIR
@@ -19264,7 +18505,7 @@ else if ($seccion == "procesa_excel_cierre_inscripciones") {
         $tipo = $_FILES['excel']['type'];
         $destino = "tmp_ev_" . $archivo;
         if (copy($_FILES['excel']['tmp_name'], $destino)) {
-//echo "Archivo Cargado Con Éxito";
+
         } else {
             echo "Error Al Cargar el Archivo";
         }
@@ -19279,8 +18520,6 @@ else if ($seccion == "procesa_excel_cierre_inscripciones") {
 // Asignar hoja de excel activa
             $objPHPExcel->setActiveSheetIndex(0);
 //conectamos con la base de datos
-            //$cn = mysql_connect("localhost", "root", "") or die("ERROR EN LA CONEXION");
-            //$db = mysql_select_db("prueba2", $cn) or die("ERROR AL CONECTAR A LA BD");
             // Llenamos el arreglo con los datos  del archivo xlsx
             for ($i = 2; $i <= 47; $i++) {
                 $_DATOS_EXCEL[$i]['rut'] = $objPHPExcel->getActiveSheet()->getCell('A' . $i)->getCalculatedValue();
@@ -19309,9 +18548,6 @@ location.href='?sw=accioninsc&ii=" . Encodear3($id_inscripcion) . "#seccionCierr
             echo "Necesitas primero importar el archivo";
         }
 
-//echo "<strong><center>ARCHIVO IMPORTADO CON EXITO, EN TOTAL $campo REGISTROS Y $errores ERRORES</center></strong>";
-        //una vez terminado el proceso borramos el archivo que esta en el servidor el tmp_ev_
-        //unlink($destino);
     }
     $PRINCIPAL = FormularioCurso(FuncionesTransversalesAdmin(file_get_contents("views/basepersonas/entorno_subida_excel.html")), $id_curso);
 //CON ESTA FUNCION, GENERO EL LISTADO PREVIO, PARA QUE SE VISUALIZE LA INFORMACION DE LOS QUE SE VAN A SUBIR
@@ -19436,7 +18672,7 @@ else if ($seccion == "adtexto") {
     $ultimo_id = ObtenerUltimaPregunta();
 }
 else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos") {
-//print_r($post);print_r($get);
+
     $id_malla = $post["malla"];
     $id_programa = $request["programa"];
     $rut = LimpiaRut($post["rut"]);
@@ -19445,7 +18681,6 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos") {
     $id_curso_sent = $get["id_curso_sent"];
     $id_empresa = $_SESSION["id_empresa"];
 
-    //print_r($post);
 
     if ($id_objeto != '' and $id_curso_sent == "") {
         $id_curso_sent_array = BuscaCursoDadoIdObjeto($id_objeto, $id_empresa);
@@ -19457,7 +18692,6 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos") {
     }
 
     $PRINCIPAL = ListadoLMSMallas(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/lms_malla_clas_cursos/entorno_listado_lms_mallas.html")), $_SESSION["id_empresa"], $id_malla, $id_programa, $rut, $url_objetos_corta, $id_curso_sent);
-//$PRINCIPAL=FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/lms_malla_clas_cursos/entorno_listado_lms_mallas.html"));
 
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
@@ -19541,8 +18775,6 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveObj") {
 
     VerificaExtensionFilesAdmin($_FILES["archivo"]);
 
-//print_r($_FILES);
-
     $prefijo = substr(md5(uniqid(rand())), 0, 6);
     $arreglo_archivo = explode(".", $archivo);
     $extension_archivo = $arreglo_archivo[1];
@@ -19552,16 +18784,13 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveObj") {
     $tipo_objeto = $objeto_tipo_array[0];
 
     if ($tipo_objeto == '5') {
-        //echo "-->EVALUACION $id_curso, $id_curso,$objeto_permitir_ver_nota";
-        //CreaIdEvaluacionNueva($id_evaluacion,$id_curso, $id_objeto, $nombre_objeto, $id_empresa);
         if ($accion_edita != 1) {
-            //echo "inset";sleep(5);
-            CreaNuevoObjetoEvaluacionSinEvaluacion($id_objeto, $nombre_objeto, $objeto_descripcion, $tipo_objeto, $extension_objeto, $objeto_url, $objeto_duracion,
+                        CreaNuevoObjetoEvaluacionSinEvaluacion($id_objeto, $nombre_objeto, $objeto_descripcion, $tipo_objeto, $extension_objeto, $objeto_url, $objeto_duracion,
                 $objeto_orden, $objeto_numpreguntas, $objeto_aprobacion, $id_curso, $objeto_permitir_ver_nota, $objeto_recalcular_notas,
                 $objeto_distribucion_opciones, $objeto_duracion_evaluacion_total, $objeto_permitir_ver_nota, $id_empresa, $titulo_cierre, $texto_cierre,
                 $objeto_intentos, $fecha_inicio, $hora_inicio, $fecha_termino, $hora_termino);
         } else {
-            //echo "edita Evaluacion $id_objeto_editar";sleep(3);
+            
             EditaObjetoEvaluacion($id_objeto, $nombre_objeto, $objeto_descripcion, $tipo_objeto, $extension_objeto, $objeto_url, $objeto_duracion,
                 $objeto_orden, $objeto_numpreguntas, $objeto_aprobacion, $id_curso, $objeto_permitir_ver_nota, $objeto_recalcular_notas,
                 $objeto_distribucion_opciones, $objeto_duracion_evaluacion_total, $objeto_permitir_ver_nota, $id_empresa, $titulo_cierre, $texto_cierre,
@@ -19638,7 +18867,6 @@ else if ($seccion == "vista_mallas_clasificaciones_cursos_objetos_saveObj_elimin
     $tipo = $_FILES["archivo"]['type'];
     $archivo = $_FILES["archivo"]['name'];
     VerificaExtensionFilesAdmin($_FILES["archivo"]);
-//print_r($_FILES);exit;
     $prefijo = substr(md5(uniqid(rand())), 0, 6);
     $arreglo_archivo = explode(".", $archivo);
     $extension_archivo = $arreglo_archivo[1];
@@ -19664,10 +18892,6 @@ else if ($seccion == "ListadoMantenedor") {
     if ($get["tipo"]) {
         $arreglo_post = $get;
     }
-//if ($get["orden"]!=""){
-    //ordena_campo($get["orden_anterior"],$get["orden"],$get["tabla"],$get["campo"],$_SESSION["id_empresa"]);
-
-//}
     $PRINCIPAL = FuncionListadoMantenedores(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/mantenedor/index.html")), $id_empresa, $arreglo_post);
     $PRINCIPAL = str_replace("{ID_EMPRESA}", $id_empresa, $PRINCIPAL);
 
@@ -19683,10 +18907,7 @@ else if ($seccion == "ListadoMantenedor") {
 else if ($seccion == "audiencias") {
     $id_empresa = $_SESSION["id_empresa"];
     $arreglo_post = $post;
-//if ($get["orden"]!=""){
-    //ordena_campo($get["orden_anterior"],$get["orden"],$get["tabla"],$get["campo"],$_SESSION["id_empresa"]);
 
-//}
     $PRINCIPAL = FuncionListadoMantenedores(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/audiencias/index.html")), $id_empresa, $arreglo_post);
     $PRINCIPAL = str_replace("{ID_EMPRESA}", $id_empresa, $PRINCIPAL);
 
@@ -19697,10 +18918,7 @@ else if ($seccion == "audiencias") {
 else if ($seccion == "programas") {
     $id_empresa = $_SESSION["id_empresa"];
     $arreglo_post = $post;
-//if ($get["orden"]!=""){
-    //ordena_campo($get["orden_anterior"],$get["orden"],$get["tabla"],$get["campo"],$_SESSION["id_empresa"]);
 
-//}
     $PRINCIPAL = FuncionListadoMantenedores(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/programas/index.html")), $id_empresa, $arreglo_post);
     $PRINCIPAL = str_replace("{ID_EMPRESA}", $id_empresa, $PRINCIPAL);
 
@@ -19709,10 +18927,7 @@ else if ($seccion == "programas") {
 else if ($seccion == "audiencias_programas") {
     $id_empresa = $_SESSION["id_empresa"];
     $arreglo_post = $post;
-//if ($get["orden"]!=""){
-    //ordena_campo($get["orden_anterior"],$get["orden"],$get["tabla"],$get["campo"],$_SESSION["id_empresa"]);
 
-//}
     $PRINCIPAL = FuncionListadoMantenedores(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/audiencias_programas/index.html")), $id_empresa, $arreglo_post);
     $PRINCIPAL = str_replace("{ID_EMPRESA}", $id_empresa, $PRINCIPAL);
 
@@ -19729,7 +18944,7 @@ else if ($seccion == "creacAudie") {
     $id_audiencia = $id_ultimo[0]->ultimo_id;
     foreach ($campos as $camp) {
         if ($post[$camp->campo]) {
-//echo $camp->campo." ".$post[$camp->campo]."<br>";
+
             //Lo guardo en la tabla de
             AUDIENCIA_InsertaCamposinAudiencia($id_empresa, $camp->campo, $id_audiencia);
         }
@@ -19754,7 +18969,7 @@ else if ($seccion == "GuardaCampoPorCampo") {
     $arreglo_post = $post;
 
     foreach ($campos as $camp) {
-//$detalle_campos=AUDIENCIA_SelectDistinc($id_empresa, $camp->campo);
+
         $detalle_campos = AUDIENCIA_SelectDistincSinTotalPorValor($id_empresa, $camp->campo);
 
         foreach ($detalle_campos as $det) {
@@ -19762,7 +18977,7 @@ else if ($seccion == "GuardaCampoPorCampo") {
             $valor_real = $det->valor;
             $valor = str_replace(" ", "_", $valor);
             if ($post[$valor]) {
-//echo " $valor, $valor_real ".$post[$valor]."<br>";
+
                 //aca inserto los valores
                 AUDIENCIA_InsertaCamposValores($id_audiencia, $id_empresa, $camp->campo, $valor_real);
             }
@@ -19777,7 +18992,7 @@ else if ($seccion == "GuardaCampoPorCampo") {
     $tipo = $_FILES['excel']['type'];
     $destino = "tmp_ev_" . $archivo;
     if (copy($_FILES['excel']['tmp_name'], $destino)) {
-//echo "Archivo Cargado Con Éxito";
+
     } else {
         $error_grave = "Error Al subir Archivo<br>";
     }
@@ -19808,7 +19023,7 @@ else if ($seccion == "GuardaCampoPorCampo") {
 //Obtengo datos de filas
         for ($fila = 2; $fila <= $total_filas; $fila++) {
             for ($columna = 0; $columna <= $total_columnas - 1; $columna++) {
-//$_DATOS_EXCEL[$j][$_campo[$columna]] = trim($HojaActiva->getCellByColumnAndRow($columna, $fila)->getCalculatedValue());
+
                 $_DATOS_EXCEL[$j][$columna + 1] = (trim($HojaActiva->getCellByColumnAndRow($columna, $fila)->getCalculatedValue()));
             }
             $j++;
@@ -19881,8 +19096,6 @@ else if ($seccion == "duplicaAudiencia") {
     //Obtengo lso campos de la audiencia, y los inserto a la nueva audiencia
     $campos_por_audiencia = AUDIENCIA_CamposPorAudiencia($id_empresa, $id_audiencia);
     $datos_audiencia = AUDIENCIA_TraeDatosPorId($id_empresa, $id_audiencia);
-//print_r($datos_audiencia);exit;
-    //AUDIENCIA_CreaAudiencia($id_empresa);
     AUDIENCIA_CreaAudienciaDuplicada($id_empresa, $datos_audiencia[0]->nombre . "_duplicado", $datos_audiencia[0]->descripcion);
     $id_ultimo = AUDIENCIA_TraeUltimo($id_empresa);
     $id_audiencia_ultimo = $id_ultimo[0]->ultimo_id;
@@ -19973,16 +19186,9 @@ else if ($seccion == "descargarTotalMasInscritosPorPrograma") {
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("H1", "id_malla");
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("I1", "nombre_malla");
 
-//$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
-    //$objPHPExcel->getActiveSheet()->protectCells('A1:B1', 'php');
-
-//$usuarios = TraeUsuariosCommboIn($idEmpresa);
-    //$usuarios=IMPARTICION_UsuariosPorInscripcionConDatosUsuario($id_imparticion, $id_empresa, $datos_empresa);
-    //print_r($usuarios);exit;
     $i = 1;
 
-//echo count($usuarios);
-    //exit();
+
     $id_malla = "";
     foreach ($total_usuarios_por_programa as $unico) {
         $i++;
@@ -20002,7 +19208,7 @@ else if ($seccion == "descargarTotalMasInscritosPorPrograma") {
 //AGREGA MALLA
         $lastColumn2++;
         $id_malla = TraeMallaUsuarioSubida($unico->rut, $idEmpresa);
-//echo "<br>".$unico->rut.",$idEmpresa -> $id_malla";
+
 
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("A" . $i, ($unico->rut));
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("B" . $i, ($unico->nombre_completo));
@@ -20092,16 +19298,6 @@ else if ($seccion == "descargarInscritosPorPrograma") {
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("C1", "Opcional");
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("D1", "Fecha Inscripcion");
 
-//$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
-    //$objPHPExcel->getActiveSheet()->protectCells('A1:B1', 'php');
-
-//$usuarios = TraeUsuariosCommboIn($idEmpresa);
-    //$usuarios=IMPARTICION_UsuariosPorInscripcionConDatosUsuario($id_imparticion, $id_empresa, $datos_empresa);
-    //print_r($usuarios);exit;
-    $i = 1;
-
-//echo count($usuarios);
-    //exit();
     $id_malla = "";
     foreach ($total_usuarios_por_programa as $unico) {
         $i++;
@@ -20121,7 +19317,7 @@ else if ($seccion == "descargarInscritosPorPrograma") {
 //AGREGA MALLA
         $lastColumn2++;
         $id_malla = TraeMallaUsuarioSubida($unico->rut, $idEmpresa);
-//echo "<br>".$unico->rut.",$idEmpresa -> $id_malla";
+
 
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("A" . $i, ($unico->rut));
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("B" . $i, ($unico->id_malla));
@@ -20161,8 +19357,7 @@ else if ($seccion == "descargarInscritosPorProgramaI") {
 
     $total_mallas_por_programa = TraeMallasDadoPrograma($id_empresa, $id_programa);
     $total_usuarios_por_programa = totalUsuariosPorInscripcionUsuarioProgramaConMallas($id_empresa, $total_mallas_por_programa);
-    //print_r($total_usuarios_por_programa); exit();
-    require_once 'clases/PHPExcel.php';
+        require_once 'clases/PHPExcel.php';
 
     $datos_empresa = DatosEmpresa($id_empresa);
 // Crea un nuevo objeto PHPExcel
@@ -20211,16 +19406,8 @@ else if ($seccion == "descargarInscritosPorProgramaI") {
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("F1", "Opcional");
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("G1", "Fecha Inscripcion");
 
-//$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
-    //$objPHPExcel->getActiveSheet()->protectCells('A1:B1', 'php');
-
-//$usuarios = TraeUsuariosCommboIn($idEmpresa);
-    //$usuarios=IMPARTICION_UsuariosPorInscripcionConDatosUsuario($id_imparticion, $id_empresa, $datos_empresa);
-    //print_r($usuarios);exit;
     $i = 1;
-
-//echo count($usuarios);
-    //exit();
+	
     $id_malla = "";
     foreach ($total_usuarios_por_programa as $unico) {
         $i++;
@@ -20240,7 +19427,7 @@ else if ($seccion == "descargarInscritosPorProgramaI") {
 //AGREGA MALLA
         $lastColumn2++;
         $id_malla = TraeMallaUsuarioSubida($unico->rut, $idEmpresa);
-//echo    "<br>".$unico->rut.",$idEmpresa -> $id_malla";
+
 
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("A" . $i, ($unico->rut));
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("B" . $i, ($unico->id_inscripcion));
@@ -20282,7 +19469,7 @@ else if ($seccion == "Download_Respuestas_EvalMedicion") {
     $DatosMed = DatosMedicionAdmin($idMed);
     $nombre_medicion = $DatosMed[0]->nombre;
     $tipo_individual = $DatosMed[0]->tipo_medicion;
-    //ECHO  "tipo_individual $tipo_individual"; EXIT();
+    
     $total_usuarios_por_medicion = totalUsuariosPorMedicion($id_empresa, $id_medicion);
     require_once 'clases/PHPExcel.php';
 
@@ -20349,10 +19536,9 @@ else if ($seccion == "Download_Respuestas_EvalMedicion") {
 
     $cuenta_arrayfecha++;
     $i++;
-         //echo "<br>$array_fecha $i";
+        
 
         $TodasPreguntas = BuscaPreguntaDadaMedicion($idMed);
-//print_r($TodasPreguntas); exit();
         $letra = "M";foreach ($TodasPreguntas as $pregunta) {
             $letra++;
             $questionid++;
@@ -20361,13 +19547,13 @@ else if ($seccion == "Download_Respuestas_EvalMedicion") {
 
         $letra = "M";foreach ($TodasPreguntas as $pregunta) {
             $letra++;
-            //print_r($pregunta);
+            
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . "6", ($pregunta->pregunta));
         }
 
         $letra = "M";foreach ($TodasPreguntas as $pregunta) {
             $letra++;
-            //print_r($pregunta);
+            
             $questionid++;
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . "4", ($pregunta->tipo));
         }
@@ -20376,7 +19562,6 @@ else if ($seccion == "Download_Respuestas_EvalMedicion") {
         $GroupRuts = BuscaUsuariosRespondieronMedSinUsuario($idMed);
 
              foreach ($GroupRuts as $user_unico) {
-                   // print_r($user_unico);exit();
         $Datos_usu=TraeDatosUsuario($user_unico->rut);
         $Datos_jef=TraeDatosUsuario($Datos_usu[0]->jefe);
 
@@ -20418,20 +19603,18 @@ else if ($seccion == "Download_Respuestas_EvalMedicion") {
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue("M" . $i, ($user_unico->comentario));
 
             $letra = "M";
-           // print_r($user_unico); exit();
 
             foreach ($TodasPreguntas as $pregunta) {
-                //echo "<br><br>";               // print_r($pregunta);   EXIT();
+                
                  if ($tipo_individual == "INDIVIDUAL") {
   $Respuestas_UsuariosIDPreg = BuscaRespuestasUsuarioMedSinFecha($user_unico->rut, $pregunta->id_pregunta, $idMed, $array_fecha);
                     } else {
        $Respuestas_UsuariosIDPreg = BuscaRespuestasUsuarioMedSinFechaRUT($user_unico->rut, $pregunta->id_pregunta, $idMed, $array_fecha);
 
                     }
-                //echo "<br><br> poregunta por rut ";
-                //print_r($Respuestas_UsuariosIDPreg);exit();
+
                 $letra++;
-                //echo "<br>rut ".$user_unico->rut." ".$pregunta->id_pregunta;
+                
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . $i, ($Respuestas_UsuariosIDPreg[0]->respuesta));
             }
             $i++;
@@ -20571,8 +19754,6 @@ else if ($seccion == "descargarInscritosPorMedicion") {
 }
 else if ($seccion == "descargarTotUsuariosPorEmpresa") {
     $id_empresa = $_SESSION["id_empresa"];
-//$total_mallas_por_programa=TraeMallasDadoPrograma($id_empresa, $id_programa);
-    //$total_usuarios_por_programa=totalUsuariosPorProgramaConMallas($id_empresa, $total_mallas_por_programa);
     $total_usuarios_por_empresa = DatosTablaUsuarioPorEmpresa2($id_empresa);
 
     require_once 'clases/PHPExcel.php';
@@ -20635,7 +19816,7 @@ else if ($seccion == "descargarTotUsuariosPorEmpresa") {
 
 //AGREGA MALLA
         $lastColumn2++;
-//echo "<br>".$unico->rut.",$idEmpresa -> $id_malla";
+
         $letra = "A";
         foreach ($campos_subida as $camp) {
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . $i, ($unico->{$camp->campo}));
@@ -20670,11 +19851,9 @@ else if ($seccion == "descargarTotUsuariosPorEmpresa") {
 else if ($seccion == "descargarInscritosPorSesion") {
     $codigo_inscripcion = Decodear3($get["ci"]);
     $id_sesion = Decodear3($get["i"]);
-//echo " id sesion $id_sesion id impartticion $codigo_inscripcion";exit;
+
     $id_empresa = $_SESSION["id_empresa"];
 
-//$total_mallas_por_programa=TraeMallasDadoPrograma($id_empresa, $id_programa);
-    //$total_usuarios_por_programa=totalUsuariosPorProgramaConMallas($id_empresa, $total_mallas_por_programa);
     $total_usuarios_por_sesion = TraigoRegistrosPorSesionDeCheckin($codigo_inscripcion, $id_sesion, $id_empresa);
 
     require_once 'clases/PHPExcel.php';
@@ -20726,16 +19905,8 @@ else if ($seccion == "descargarInscritosPorSesion") {
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("F1", $datos_empresa[0]->campo2);
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("G1", $datos_empresa[0]->campo3);
 
-//$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
-    //$objPHPExcel->getActiveSheet()->protectCells('A1:B1', 'php');
-
-//$usuarios = TraeUsuariosCommboIn($idEmpresa);
-    //$usuarios=IMPARTICION_UsuariosPorInscripcionConDatosUsuario($id_imparticion, $id_empresa, $datos_empresa);
-    //print_r($usuarios);exit;
     $i = 1;
 
-//echo count($usuarios);
-    //exit();
     $id_malla = "";
     foreach ($total_usuarios_por_sesion as $unico) {
         $i++;
@@ -20755,7 +19926,7 @@ else if ($seccion == "descargarInscritosPorSesion") {
 //AGREGA MALLA
         $lastColumn2++;
         $id_malla = TraeMallaUsuarioSubida($unico->rut, $idEmpresa);
-//echo "<br>".$unico->rut.",$idEmpresa -> $id_malla";
+
 
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("A" . $i, ($unico->rut));
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("B" . $i, ($unico->nombre_completo));
@@ -20843,15 +20014,9 @@ else if ($seccion == "GeneraExcelUsuarioPorInscripcionCurso") {
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("E1", $datos_empresa[0]->campo2);
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("F1", $datos_empresa[0]->campo3);
 
-//$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
-    //$objPHPExcel->getActiveSheet()->protectCells('A1:B1', 'php');
-
-//$usuarios = TraeUsuariosCommboIn($idEmpresa);
     $usuarios = IMPARTICION_UsuariosPorInscripcionConDatosUsuario($id_imparticion, $id_empresa, $datos_empresa);
     $i = 1;
 
-//echo count($usuarios);
-    //exit();
     $id_malla = "";
     foreach ($usuarios as $unico) {
         $i++;
@@ -20871,7 +20036,7 @@ else if ($seccion == "GeneraExcelUsuarioPorInscripcionCurso") {
 //AGREGA MALLA
         $lastColumn2++;
         $id_malla = TraeMallaUsuarioSubida($unico->rut, $idEmpresa);
-//echo "<br>".$unico->rut.",$idEmpresa -> $id_malla";
+
 
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("A" . $i, ($unico->rut));
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("B" . $i, ($unico->nombre_completo));
@@ -20955,16 +20120,10 @@ else if ($seccion == "GeneraExcelPostulantesPorInscripcionCurso") {
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("E1", $datos_empresa[0]->campo2);
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue("F1", $datos_empresa[0]->campo3);
 
-//$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
-    //$objPHPExcel->getActiveSheet()->protectCells('A1:B1', 'php');
-
-//$usuarios = TraeUsuariosCommboIn($idEmpresa);
     $usuarios = IMPARTICION_PostulantesPorInscripcionConDatosUsuario($id_imparticion, $id_empresa, $datos_empresa);
-//print_r($usuarios);exit;
+
     $i = 1;
 
-//echo count($usuarios);
-    //exit();
     $id_malla = "";
     foreach ($usuarios as $unico) {
         $i++;
@@ -20984,7 +20143,7 @@ else if ($seccion == "GeneraExcelPostulantesPorInscripcionCurso") {
 //AGREGA MALLA
         $lastColumn2++;
         $id_malla = TraeMallaUsuarioSubida($unico->rut, $idEmpresa);
-//echo "<br>".$unico->rut.",$idEmpresa -> $id_malla";
+
 
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("A" . $i, ($unico->rut));
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue("B" . $i, ($unico->nombre_completo));
@@ -21236,10 +20395,6 @@ location.href='?sw=ListadoMantenedor&tipo=" . $tipo . "';
 else if ($seccion == "accionCrea") {
     $id_empresa = $_SESSION["id_empresa"];
     $arreglo_post = $post;
-//if ($get["orden"]!=""){
-    //ordena_campo($get["orden_anterior"],$get["orden"],$get["tabla"],$get["campo"],$_SESSION["id_empresa"]);
-
-//}
 
     $PRINCIPAL = FuncionMantenedores(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/mantenedor/index.html")), $id_empresa, $arreglo_post);
     $PRINCIPAL = str_replace("{ID_EMPRESA}", $id_empresa, $PRINCIPAL);
@@ -21284,17 +20439,13 @@ else if ($seccion == "ListadoClasificacionesComboBox") {
     echo ($html_select);
 }
 else if ($seccion == "ResetarEvaluacionObjeto") {
-//print_r($post);
-
-//Array ( [id_objeto] => rf_c0_m2 [rut] => lafuerza1 )
 
     $id_objeto = $post[id_objeto];
     $rut = $post[rut];
 
-//echo "$id_objeto $rut";
+
     LmsReseteoEvaluacion($id_objeto, $rut);
 
-//exit();
 }
 else if ($seccion == "addRelMCC") {
     $id_curso = $post["idc"];
@@ -21313,7 +20464,6 @@ else if ($seccion == "ListadoCursosComboBox") {
     $id_malla = $post["id_malla"];
     $id_clasificacion = $post["id_clasificacion"];
     $id_empresa = $_SESSION["id_empresa"];
-//$cursos=CursosPorEmpresaV2($id_empresa);
     $cursos = CursosPorEmpresaV2SoloElearning($id_empresa);
 
     $html_select = "<form method='post' action='?sw=addRelMCC' name='$id_malla_$id_clasificacion'><select name='idc'>";
@@ -21424,7 +20574,7 @@ else if ($seccion == "relMallaCurso") {
 else if ($seccion == "relmallacurso_") {
     $id_malla = Decodear3($get["i"]);
 
-//$PRINCIPAL=ListadoRelacionesNivelCurso(FuncionesTransversalesAdmin(file_get_contents("views/nivel/formulario_rel_nivel_curso.html")), $id_nivel);
+
     $PRINCIPAL = ListadoRelacionesMallaCurso(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/malla/formulario_rel_malla_curso.html")), $id_malla, $_SESSION["id_empresa"]);
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
@@ -21539,7 +20689,7 @@ else if ($seccion == "accioncursoT") {
 }
 else if ($seccion == "accioncurso2Elearning") {
     $id_curso = Decodear3($get["i"]);
-//$id_curso2=Decodear3($get["i"]);
+
     //
 
     if ($id_curso) {
@@ -21551,7 +20701,7 @@ else if ($seccion == "accioncurso2Elearning") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "subeRelMallaPersonaPorMalla") {
-    //print_r($_FILES);     //echo "aca<br>";
+    
 
     if ($post["multi"] == "on") {$multimalla = "si";} else {$multimalla = "no";}
 
@@ -21612,7 +20762,7 @@ else if ($seccion == "subeRelMallaPersonaPorMalla") {
 
     if (count($_DATOS_EXCEL) < 1) {	echo "  <script>location.href='?sw=listProgramas';</script>";exit;	}
     		BorroRelacionesMallaPersonaPorempresaYPrograma($id_empresa, $total_mallas_por_programa);
-   			//print_r($_DATOS_EXCEL);
+   			
    ob_start();
  $total=count($_DATOS_EXCEL);
     for ($l = 1; $l <= count($_DATOS_EXCEL); $l++) {
@@ -21647,13 +20797,13 @@ else if ($seccion == "subeRelMallaPersonaPorMalla") {
                 InsertaRelacionInscripcionUsuarioMallaPersonaempresa($rut, $id_malla, $miListaCursoDadaMalla->id_curso, $id_empresa, $hoy, $id_programa, $multimalla, $fecha_inscripcion, $opcional_inscripcion);
             }
         }
-        //echo "<br /><br />$rut $id_malla $miListaCursoDadaMalla->id_curso<br />";
+        
         $array_reportes_inscripcion = ACT_BuscaRUTCursoMallaPrograma_Reportes_Inscripcion($rut, $miListaCursoDadaMalla->id_curso, $id_malla, $id_programa);
  		}
 
 
     $array_reportes_inscripcionNO = ACT_BuscaRUTCursoMallaPrograma_Reportes_NoEn_Inscripcion($id_programa);
-			// print_r($array_reportes_inscripcionNO);
+			
     	// busca en Reportes que no estén en Inscripcion Usuarios
     	// VERIFICA
 
@@ -21701,7 +20851,6 @@ else if ($seccion == "subeUsuariosporMedicion") {
         //Obtengo datos de filas
         for ($fila = 2; $fila <= $total_filas; $fila++) {
             for ($columna = 0; $columna <= $total_columnas - 1; $columna++) {
-                //$_DATOS_EXCEL[$j][$_campo[$columna]] = trim($HojaActiva->getCellByColumnAndRow($columna, $fila)->getCalculatedValue());
                 $_DATOS_EXCEL[$j][$columna + 1] = (trim($HojaActiva->getCellByColumnAndRow($columna, $fila)->getCalculatedValue()));
             }
             $j++;
@@ -21718,12 +20867,6 @@ else if ($seccion == "subeUsuariosporMedicion") {
     $linea = 2;
     $no_esta_en_tabla_usuario = 0;
 
-/*echo "<br><br>";
-print_r($_DATOS_EXCEL); sleep(2);
-echo "<br><br>";
-echo count($_DATOS_EXCEL);
-echo "<br><br>";
- */
 
     if (count($_DATOS_EXCEL) < 1) {
         echo "
@@ -21735,23 +20878,21 @@ echo "<br><br>";
 
     BorrarUsuarioMedicion($id_empresa, $id_medicion);
 
-//print_r($_DATOS_EXCEL);
+
     $array_encuesta = MedBuscaIdEncuestraMed($id_medicion, $id_empresa);
     $id_encuesta = $array_encuesta[0]->id_encuesta;
 
     for ($l = 1; $l <= count($_DATOS_EXCEL); $l++) {
-//echo "hola";
+
         $rut_colaborador = LimpiaRut($_DATOS_EXCEL[$l - 1][3]);
         $rut_jefe = LimpiaRut($_DATOS_EXCEL[$l - 1][5]);
         $fecha_carga = ($_DATOS_EXCEL[$l - 1][7]);
         $grupo = ($_DATOS_EXCEL[$l - 1][8]);
         $hoy = date('Y-m-d');
-//echo "<br>$rut_colaborador, $rut_jefe, $id_medicion, $id_encuesta, $hoy, $id_empresa";
+
 
         InsertaUsuarioMedicion($rut_colaborador, $rut_jefe, $id_medicion, $id_encuesta, $hoy, $id_empresa, $fecha_carga, $grupo);
     }
-
-//sleep(5);
 
     echo "
 <script>
@@ -21801,7 +20942,6 @@ else if ($seccion == "accionSubeNotasPorImparticion") {
 //Obtengo datos de filas
         for ($fila = 2; $fila <= $total_filas; $fila++) {
             for ($columna = 0; $columna <= $total_columnas - 1; $columna++) {
-//$_DATOS_EXCEL[$j][$_campo[$columna]] = trim($HojaActiva->getCellByColumnAndRow($columna, $fila)->getCalculatedValue());
                 $_DATOS_EXCEL[$j][$columna + 1] = (trim($HojaActiva->getCellByColumnAndRow($columna, $fila)->getCalculatedValue()));
             }
             $j++;
@@ -21821,28 +20961,24 @@ else if ($seccion == "accionSubeNotasPorImparticion") {
     $actualizados = 0;
     $insertados = 0;
 
-    //print_r($_DATOS_EXCEL); exit();
+    
     for ($l = 1; $l <= count($_DATOS_EXCEL); $l++) {
         $rut = LimpiaRut($_DATOS_EXCEL[$l - 1][1]);
-         //print_r($_DATOS_EXCEL[$l - 1]);
+        
         $nota = $_DATOS_EXCEL[$l - 1][8];
         $estado = $_DATOS_EXCEL[$l - 1][9];
         $porcentaje_asistencia = $_DATOS_EXCEL[$l - 1][10];
-           //echo "<br>nota $nota, estado $estado, porcentaje_asistencia $porcentaje_asistencia";
-//Veo si esta en la tabla tbl_inscripcion_usuarios con esta inscripcion y esta empresa, si no está, lo inserto
-        //echo "$rut ,  $nota ,  $estado  $id_imparticion";
-        //$esta_cierre=VerificaCursoEstaEnCierrePorEmpresa($id_curso, $rut, $id_empresa);
+
         $esta_cierre = VerificaCursoEstaEnCierrePorEmpresaImparticion($id_curso, $rut, $id_empresa, $id_imparticion);
-//print_r($esta_cierre);exit;
+
 
         if ($esta_cierre) {
-            //echo " esta en cierre<br>($rut, $id_curso, $id_empresa, $nota, estado $estado, $porcentaje_asistencia);";
+            
 
             LMS_ActualizaRegistroCierreCursoImparticion($rut, $id_curso, $id_empresa, $nota, $estado, $porcentaje_asistencia, $id_imparticion, $porcentaje_asistencia);
             $actualizados++;
         } else {
-            //echo " no esta en cierre<br>";
-            //LMS_InsertaRegistroCierreCurso($rut, $id_curso, $id_empresa, $nota, $estado, $avance);
+
             LMS_InsertaRegistroCierreCursoImparticion($rut, $id_curso, $id_empresa, $nota, $estado, $porcentaje_asistencia, $id_imparticion, $porcentaje_asistencia);
 
             $insertados++;
@@ -21850,7 +20986,7 @@ else if ($seccion == "accionSubeNotasPorImparticion") {
 //Veo si esta en Inscripcion Cierre1
     }
 
-//echo "<script>alert('Datos Actualizados. \nInsertados: ".$insertados."\nActualizados: ".$actualizados."');location.href='?sw=subeNotasPorImparticion&i=".Encodear3($id_imparticion)."';</script>";
+
     echo "<script>alert('Actualizado los datos. Insertados: " . $insertados . " - Actualizados: " . $actualizados . "');location.href='?sw=VeColaboradoresXImpXsess&i=" . Encodear3($id_imparticion) . "';</script>";
     exit;
 }
@@ -21888,7 +21024,6 @@ else if ($seccion == "subeUsuariosPorEmpresa") {
 //Obtengo datos de filas
         for ($fila = 2; $fila <= $total_filas; $fila++) {
             for ($columna = 0; $columna <= $total_columnas - 1; $columna++) {
-//$_DATOS_EXCEL[$j][$_campo[$columna]] = trim($HojaActiva->getCellByColumnAndRow($columna, $fila)->getCalculatedValue());
                 $_DATOS_EXCEL[$j][$columna + 1] = (trim($HojaActiva->getCellByColumnAndRow($columna, $fila)->getCalculatedValue()));
             }
             $j++;
@@ -21904,9 +21039,7 @@ else if ($seccion == "subeUsuariosPorEmpresa") {
     $linea = 2;
     $no_esta_en_tabla_usuario = 0;
 
-//$total_mallas_por_programa=TraeMallasDadoPrograma($id_empresa, $id_programa);
     //Aca borro los usuarios de la tabla de relacion checkin imparticion por sesion
-    //BorroRegistrosInscritosCheckinPorSesionImparticion($id_imparticion, $id_empresa, $id_sesion);
     BorrarUsuariosPorEmpresa2($id_empresa);
     $campos_empresa = listarEmpresaSubidaUsuarios($id_empresa);
 //Borro lo de la tabla usuario
@@ -21921,15 +21054,8 @@ else if ($seccion == "subeUsuariosPorEmpresa") {
     }
     $query1 .= ")";
 
-//echo "<br> ".$query1;
-
-//echo "<br>campos ".$query1;
-    //print_r($_DATOS_EXCEL);
-    ////echo "<br>datos";
-    //exit();
-
     for ($l = 1; $l <= count($_DATOS_EXCEL); $l++) {
-//echo "hola";
+
         $letra_excel = "A";
         $rut_limpio = LimpiaRut($_DATOS_EXCEL[$l - 1][1]);
         $query_por_usuario = "values('" . $id_empresa . "', '" . $rut_limpio . "', ";
@@ -21981,14 +21107,12 @@ else if ($seccion == "subeUsuariosPorEmpresa") {
         }
         $query_por_usuario .= ")";
 
-//$rut=LimpiaRut($_DATOS_EXCEL[$l-1][1]);
+
         $query_completa = $query1 . $query_por_usuario;
-//echo "<br".$query_completa;
+
         InsertaConQuery(($query_completa));
 
-//InsertaRegistroCheckinSesionImparticion($rut, $id_imparticion, $id_empresa, $datos_sesion[0]->fecha, $hora_inicio, $id_sesion);
-        //Veo si esta en la tabla tbl_inscripcion_usuarios con esta inscripcion y esta empresa, si no está, lo inserto
-    }
+         }
 
     echo "
 <script>
@@ -22041,7 +21165,7 @@ else if ($seccion == "descargaPreInscritos") {
     $id_imparticion = Decodear3($get["ci"]);
     $id_curso = Decodear3($get["idc"]);
     $nombreCurso = BuscaCursoDadoImp($id_imparticion);
-//print_r($nombreCurso);exit;
+
 
     $id_empresa = $_SESSION["id_empresa"];
     $datos_empresa = DatosEmpresa($id_empresa);
@@ -22055,7 +21179,6 @@ else if ($seccion == "descargaPreInscritos") {
 
     header("Content-Type: application/vnd.ms-excel");
 
-    //header("Content-Disposition: attachment; filename=".($nombreCurso[0]->id_curso)."_".($nombreCurso[0]->nombre_curso)."_".$id_imparticion."_Preinscritos_".$fechahoy.".xls");
     header("Content-Disposition: attachment; filename=" . ($nombreCurso[0]->id_curso) . "_" . $id_imparticion . "_Preinscritos_" . $fechahoy . ".xls");
 
     header("Pragma: no-cache");
@@ -22158,7 +21281,7 @@ else if ($seccion == "DescargaPresencialImparticion") {
 //Traigo el listado de usuarios de la tabla inscripcion_usuarios
     $total_usuarios = IMPARTICION_DatosPorInscripcionEstado($id_imparticion, $id_empresa, $datos_empresa, $id_curso, $asistentes);
 
-//print_r($total_usuarios);
+
 
     $datos_curso = VerificoCursoPorEmpresa($id_curso, $id_empresa);
     $datos_rel_malla_curso = TraeMallaCursoConDatos($id_curso, $id_empresa);
@@ -22205,7 +21328,6 @@ else if ($seccion == "adimpartiEl") {
 
     $total_usuarios = $datos_audiencia[3];
     foreach ($total_usuarios as $usu) {
-//InsertaRelacionMallaPersona($usu->rut, $id_empresa, $id_malla);
         InsertaRelacionMallaPersonaImparticion($usu->rut, $id_empresa, $id_malla, $codigo_imparticion);
     }
 
@@ -22288,7 +21410,6 @@ else if ($seccion == "Duplicarcurso") {
         $datos_curso_a_duplicar[0]->cod_identificador,
         $datos_curso_a_duplicar[0]->valor_hora,
         $datos_curso_a_duplicar[0]->valor_hora_sence,
-//$total_cursos[0]->prefijo."_".(count($total_cursos)),
         $nuevo_id_curso,
         $datos_curso_a_duplicar[0]->id_empresa,
         $datos_curso_a_duplicar[0]->contenidos_cursos,
@@ -22301,7 +21422,7 @@ else if ($seccion == "Duplicarcurso") {
         InsertaRelacionMallaClasificacionCursoAdmin("presencial", $nuevo_id_curso, "presencial", $id_empresa, $datos_curso_a_duplicar[0]->id_foco, $datos_curso_a_duplicar[0]->id_empresa_programa);
     }
 
-//echo "<script>location.href='?sw=listcursos2';</script>";exit;
+
     echo "<script>location.href='?sw=accioncurso2&i=" . Encodear($nuevo_id_curso) . "';</script>";exit;
 }
 else if ($seccion == "Duplicarcurso") {
@@ -22334,7 +21455,6 @@ else if ($seccion == "Duplicarcurso") {
         $datos_curso_a_duplicar[0]->cod_identificador,
         $datos_curso_a_duplicar[0]->valor_hora,
         $datos_curso_a_duplicar[0]->valor_hora_sence,
-//$total_cursos[0]->prefijo."_".(count($total_cursos)),
         $nuevo_id_curso,
         $datos_curso_a_duplicar[0]->id_empresa,
         $datos_curso_a_duplicar[0]->contenidos_cursos,
@@ -22347,7 +21467,7 @@ else if ($seccion == "Duplicarcurso") {
         InsertaRelacionMallaClasificacionCursoAdmin("presencial", $nuevo_id_curso, "presencial", $id_empresa, $datos_curso_a_duplicar[0]->id_foco, $datos_curso_a_duplicar[0]->id_empresa_programa);
     }
 
-//echo "<script>location.href='?sw=listcursos2';</script>";exit;
+
     echo "<script>location.href='?sw=accioncurso2&i=" . Encodear($nuevo_id_curso) . "';</script>";exit;
 }
 else if ($seccion == "DuplicarcursoT") {
@@ -22380,7 +21500,6 @@ else if ($seccion == "DuplicarcursoT") {
         $datos_curso_a_duplicar[0]->cod_identificador,
         $datos_curso_a_duplicar[0]->valor_hora,
         $datos_curso_a_duplicar[0]->valor_hora_sence,
-//$total_cursos[0]->prefijo."_".(count($total_cursos)),
         $nuevo_id_curso,
         $datos_curso_a_duplicar[0]->id_empresa,
         $datos_curso_a_duplicar[0]->contenidos_cursos,
@@ -22393,16 +21512,16 @@ else if ($seccion == "DuplicarcursoT") {
         InsertaRelacionMallaClasificacionCursoAdmin("e_p_f", $nuevo_id_curso, "e_p_f", $id_empresa, $datos_curso_a_duplicar[0]->id_foco, $datos_curso_a_duplicar[0]->id_empresa_programa);
     }
 
-//echo "<script>location.href='?sw=listcursos2';</script>";exit;
+
     echo "<script>location.href='?sw=accioncursoT&i=" . Encodear($nuevo_id_curso) . "';</script>";exit;
 }
 else if ($seccion == "listcursosT") {
-    //echo "hola";
+    
     $id_empresa = $_SESSION["id_empresa"];
     $exportar_a_excel = $post["ex"];
     $pagina = $get["p"];
     $excel = $get["excel"];
-    //echo $excel; exit();
+    
     if ($exportar_a_excel == "1" or $excel == "1") {
         $arreglo_post = $post;
         $fechahoy = date("Y-m-d") . " " . date("H:i:s");
@@ -22420,13 +21539,13 @@ else if ($seccion == "listcursosT") {
     }
 }
 else if ($seccion == "listcursos2elearning") {
-//echo "hola";
+
     $id_empresa = $_SESSION["id_empresa"];
     $exportar_a_excel = $post["ex"];
     $pagina = $get["p"];
     $excel = $get["excel"];
 
-//echo $excel; exit();
+
     if ($exportar_a_excel == "1" or $excel == "1") {
         $arreglo_post = $post;
         $fechahoy = date("Y-m-d") . " " . date("H:i:s");
@@ -22471,10 +21590,10 @@ else if ($seccion == "LmsexportarCursosXLS") {
     exit;
 }
 else if ($seccion == "MuestraBloqueDetalleCurso") {
-//echo date("H:i:s");
+
     $id_curso = $post["id_curso"];
     $id_empresa = $_SESSION["id_empresa"];
-//echo "aca";
+
     $PRINCIPAL = ListadoCursosAdmin2(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/cursospresenciales/entorno_listado_imparticion.html")), $id_empresa, "", $id_curso);
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
@@ -22503,7 +21622,6 @@ else if ($seccion == "MuestraBloqueCursoSeleccionado") {
     } else if ($datos_curso[0]->modalidad == 2 && $datos_curso[0]->sence == "no") {
         $formulario = file_get_contents("views/capacitacion/imparticion/formulario_ingresa_presencial.html");
     } else if ($datos_curso[0]->modalidad == 2) {
-//$formulario=file_get_contents("views/capacitacion/imparticion/formulario_ingresa_presencial_sence.html");
         $formulario = file_get_contents("views/capacitacion/imparticion/formulario_ingresa_presencial.html");
     }
 
@@ -22525,7 +21643,6 @@ else if ($seccion == "MuestraBloqueCursoSeleccionadot") {
     } else if ($datos_curso[0]->modalidad == 2 && $datos_curso[0]->sence == "no") {
         $formulario = file_get_contents("views/capacitacion/imparticion/formulario_ingresa_presencial.html");
     } else if ($datos_curso[0]->modalidad == 2) {
-//$formulario=file_get_contents("views/capacitacion/imparticion/formulario_ingresa_presencial_sence.html");
         $formulario = file_get_contents("views/capacitacion/imparticion/formulario_ingresa_presencial.html");
     }
 
@@ -22560,7 +21677,7 @@ else if ($seccion == "addNuevaRelacionMasivo") {
         $tipo = $_FILES['excel']['type'];
         $destino = "tmp_ev_" . $archivo;
         if (copy($_FILES['excel']['tmp_name'], $destino)) {
-//echo "Archivo Cargado Con Éxito";
+
         } else {
             $error_grave = "Error Al subir Archivo<br>";
         }
@@ -22619,12 +21736,7 @@ else if ($seccion == "addNuevaRelacionMasivo") {
 
             if ($rut != "") {
                 $verifico_registro = DatosTablaRelacion($rut);
-/*if($verifico_registro[0]->id==""){
-exit("aca2");
-$total_insertar++;
-$error_grave=InsertaRelacionTemporal($values,$registros,$id_empresa,Decodear3($id_proceso));
 
-}*/
                 InsertaRelacionTemporal($values, $registros, $id_empresa, Decodear3($id_proceso));
                 $total_insertar++;
 
@@ -22711,7 +21823,7 @@ else if ($seccion == "addIncripcionesCierre") {
         $tipo = $_FILES['excel']['type'];
         $destino = "tmp_ev_" . $archivo;
         if (copy($_FILES['excel']['tmp_name'], $destino)) {
-//echo "Archivo Cargado Con Éxito";
+
         } else {
             $error_grave = "Error Al subir Archivo<br>";
         }
@@ -22740,7 +21852,6 @@ else if ($seccion == "addIncripcionesCierre") {
 //Obtengo datos de filas
             for ($fila = 2; $fila <= $total_filas; $fila++) {
                 for ($columna = 0; $columna <= $total_columnas - 1; $columna++) {
-//$_DATOS_EXCEL[$j][$_campo[$columna]] = trim($HojaActiva->getCellByColumnAndRow($columna, $fila)->getCalculatedValue());
                     $_DATOS_EXCEL[$j][$columna + 1] = (trim($HojaActiva->getCellByColumnAndRow($columna, $fila)->getCalculatedValue()));
                 }
                 $j++;
@@ -22763,7 +21874,6 @@ else if ($seccion == "addIncripcionesCierre") {
             $Arrayid_curso = explode(".", $porcionidcurso);
             $id_curso = $Arrayid_curso[0];
 
-//$id_curso=$_DATOS_EXCEL[$l-1][2];
             $nota = $_DATOS_EXCEL[$l - 1][3];
             $porcentaje_asistencia = $_DATOS_EXCEL[$l - 1][4];
             $estado = ($_DATOS_EXCEL[$l - 1][5]);
@@ -22781,7 +21891,7 @@ else if ($seccion == "addIncripcionesCierre") {
 //Veo si existe el usuario
             $existe_usuario = DatosTablaUsuarioPorEmpresaV2($rut, $_SESSION["id_empresa"]);
             if (!$existe_usuario) {
-//echo $rut."<br>";
+
                 $usuario_inexistente++;
                 $accion = "NoExisteUsuario";
             } else {
@@ -22807,12 +21917,10 @@ else if ($seccion == "addIncripcionesCierre") {
                 $estado, $comentario, $fecha_inicio, $fecha_termino, $ubicacion, $region, $lugar_ejecucion, $rut_jefe,
                 $nombre_jefe, $rut_entrenador, $nombre_entrenador, $observaciones, $accion, $_SESSION["id_empresa"]);
         }
-//echo "usuarios inexistentes $usuario_inexistente no existe curso $curso_inexistente actualiza $total_actualizar inserta $total_insertar";
-        //exit;
+
 
 //CARGA VISTA
 
-//$PRINCIPAL=FuncionesTransversalesAdmin(file_get_contents("views/sgd_relaciones/formulario_relaciones_masivo.html"));
         $PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/inscripcion/cierre/formulario_inscripcion_cierre_masivo_previa.html"));
         $PRINCIPAL = str_replace("{ID_EMPRESA}", $_SESSION["id_empresa"], $PRINCIPAL);
         $PRINCIPAL = str_replace("{ID_PROCESO}", $get["i"], $PRINCIPAL);
@@ -22822,7 +21930,6 @@ else if ($seccion == "addIncripcionesCierre") {
         $PRINCIPAL = str_replace("{ID_PROCESO}", $id_proceso, $PRINCIPAL);
         $totalrelaciones = CuentaRelaciones($_SESSION["id_empresa"], Decodear3($id_proceso));
 
-//$PRINCIPAL = str_replace("{ENTORNO_PREVIA}","",$PRINCIPAL);
         $PRINCIPAL = str_replace("{TITULO2}", "Formulario de subida", $PRINCIPAL);
 
         $PRINCIPAL = str_replace("{TOTALU}", count(TotalCierresInscripcionesPorEmpresa($id_empresa)), $PRINCIPAL);
@@ -22836,12 +21943,6 @@ else if ($seccion == "addIncripcionesCierre") {
         $PRINCIPAL = str_replace("{ERRORES}", "", $PRINCIPAL);
         $PRINCIPAL = str_replace("{DISPLAYERROR}", "display:none;", $PRINCIPAL);
 
-/*
-if (!$error_grave){
-$PRINCIPAL = str_replace("{ENTORNO_PREVIA}",(ListadoRelacionesMasivosPrevio($id_empresa)),$PRINCIPAL);
-}else{
-$PRINCIPAL = str_replace("{ENTORNO_PREVIA}","",$PRINCIPAL);
-}*/
 
         $PRINCIPAL = str_replace("{ENTORNO_PREVIA}", ListadoCierresMasivosPrevio($id_empresa), $PRINCIPAL);
         echo CleanHTMLWhiteList($PRINCIPAL);exit;
@@ -22882,7 +21983,7 @@ else if ($seccion == "licomentarios") {
 }
 else if ($seccion == "sabanaRespuestasTrivias") {
     $id_evaluacion = $get["idEval"];
-//echo "id evaluacion $id_evaluacion";
+
     //Traigo las respuestas de esta evaluacion
     $preguntas = ListadoDePreguntasDadaEvaluacionOrdenadas($id_evaluacion);
     header("Content-Type: application/vnd.ms-excel");
@@ -22933,7 +22034,7 @@ else if ($seccion == "viewEval") {
         $id_empresa = $_SESSION["id_empresa"];
         InsertaEvaluacionDesdeAdmin("Trivia " . $id_objeto . " " . $id_curso, $id_empresa, $id_curso, $id_objeto);
     }
-    //echo "programa $programa"; exit();
+    
     if ($programa != '{ID_PROGRAMA}') {
         $PRINCIPAL = jListarPreguntas(FuncionesTransversalesAdmin(file_get_contents("views/evaluaciones/admin/listPreg.html")), $idEval, $programa);
     } else {
@@ -22975,7 +22076,7 @@ else if ($seccion == "ActualizarNotasEval") {
     $datosobjeto = Datos_objeto($id_objeto);
     $id_empresa = $_SESSION["id_empresa"];
 
-//echo "ActualizarNotasEval idEval $idEval  id_objeto $id_objeto id_curso $id_curso";
+
     ActualizarnotasIdObjeto($id_objeto, $id_curso, $idEval, $id_empresa);
 }
 else if ($seccion == "Download_Respuestas_Eval") {
@@ -23051,7 +22152,7 @@ else if ($seccion == "Download_Respuestas_Eval") {
     $letra = "K";
     foreach ($TodasPreguntas as $pregunta) {
         $letra++;
-        //print_r($pregunta);
+        
         $questionid++;
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . "4", ($questionid));
     }
@@ -23059,24 +22160,24 @@ else if ($seccion == "Download_Respuestas_Eval") {
     $letra = "K";
     foreach ($TodasPreguntas as $pregunta) {
         $letra++;
-        //print_r($pregunta);
+        
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . "5", ($pregunta->pregunta));
     }
 
     $letra = "K";
     foreach ($TodasPreguntas as $pregunta) {
         $letra++;
-        //print_r($pregunta);
+        
         $questionid++;
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . "6", ($pregunta->Altcorrecta));
     }
 
     $i = 10;
 
-//echo "id_objeto $id_objeto id eval $idEval<> and iud opbeto $id_objeto== and id curso $id_curso==";
+
 
     if ($idEval != "" and $id_objeto == "" and $id_curso == "") {
-//echo "2";
+
         $cuenta = 0;
         $ArrayObjetos = BuscaObjetosEval_IDeEval($idEval);
         foreach ($ArrayObjetos as $ArrayObjeto) {
@@ -23089,8 +22190,7 @@ else if ($seccion == "Download_Respuestas_Eval") {
         $esarreglo = 0;
     }
 
-//echo "<br>arreglo $ArregloObj";
-    //echo "<br>arrelo "; print_r($ArregloObj);
+
     $GroupRuts = BuscaUsuariosRespondieronEval($ArregloObj, $esarreglo);
     foreach ($GroupRuts as $user_unico) {
         $i++;
@@ -23117,7 +22217,7 @@ else if ($seccion == "Download_Respuestas_Eval") {
         foreach ($TodasPreguntas as $pregunta) {
             $Respuestas_UsuariosIDPreg = BuscaRespuestasUsuarioObjetoIdPregunta($user_unico->rut, $pregunta->id, $ArregloObj, $esarreglo);
 
-            //print_r($Respuestas_UsuariosIDPreg);
+            
             $letra++;
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . $i, ($Respuestas_UsuariosIDPreg[0]->alternativa . $Respuestas_UsuariosIDPreg[0]->comentarios));
         }
@@ -23172,7 +22272,7 @@ else if ($seccion == "Download_Respuestas_Eval") {
             $letra++;
             $txt = "";
 
-            //echo $Respuestas_UsuariosIDPreg[0]->correcta;
+            
             if ($Respuestas_UsuariosIDPreg[0]->correcta === '1') {
                 $txt = "1";
                 $arreglo_preguntas_correctas_pregunta[$pregunta->id]++;
@@ -23236,11 +22336,11 @@ else if ($seccion == "Download_Respuestas_Eval") {
 }
 else if ($seccion == "Download_Respuestas_EvalMedicion_BK") {
     $idMed = $get["idMed"];
-    // echo "$idMed";
+    
     $DatosMed = DatosMedicionAdmin($idMed);
     $nombre_medicion = $DatosMed[0]->nombre;
     $tipo_individual = $DatosMed[0]->tipo_medicion;
-    //print_r($DatosMed); sleep(5);
+    
 
     require_once 'clases/PHPExcel.php';
     $objPHPExcel = new PHPExcel();
@@ -23317,10 +22417,10 @@ else if ($seccion == "Download_Respuestas_EvalMedicion_BK") {
 
         $cuenta_arrayfecha++;
         $i++;
-        //echo "<br>$array_fecha $i";
+        
 
         $TodasPreguntas = BuscaPreguntaDadaMedicion($idMed);
-        //print_r($TodasPreguntas); exit();
+        
         $letra = "M";foreach ($TodasPreguntas as $pregunta) {
             $letra++;
             $questionid++;
@@ -23329,13 +22429,13 @@ else if ($seccion == "Download_Respuestas_EvalMedicion_BK") {
 
         $letra = "M";foreach ($TodasPreguntas as $pregunta) {
             $letra++;
-            //print_r($pregunta);
+            
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . "6", ($pregunta->pregunta));
         }
 
         $letra = "M";foreach ($TodasPreguntas as $pregunta) {
             $letra++;
-            //print_r($pregunta);
+            
             $questionid++;
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . "4", ($pregunta->tipo));
         }
@@ -23366,13 +22466,12 @@ else if ($seccion == "Download_Respuestas_EvalMedicion_BK") {
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue("M" . $i, ($user_unico->comentario));
 
             $letra = "M";
-           // print_r($user_unico); exit();
 
             foreach ($TodasPreguntas as $pregunta) {
-                //echo "<br><br>";               // print_r($pregunta);   EXIT();
+                
                 $Respuestas_UsuariosIDPreg = BuscaRespuestasUsuarioMedSinFecha($user_unico->rut, $pregunta->id_pregunta, $idMed, $array_fecha);
                 echo "<br><br> poregunta por rut ";
-                //print_r($Respuestas_UsuariosIDPreg);exit();
+                
                 $letra++;
                 echo "<br>rut ".$user_unico->rut." ".$pregunta->id_pregunta;
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue($letra . $i, ($Respuestas_UsuariosIDPreg[0]->respuesta));
@@ -23404,9 +22503,9 @@ else if ($seccion == "Download_Respuestas_EvalMedicion_BK") {
 }
 else if ($seccion == "dltPreg") {
     $id_pregunta = $get["idPreg"];
-    //echo "se borra id pregunta $id_pregunta";
+    
     $datos_pregunta = EVALUACION_DatosPregunta($id_pregunta);
-    //print_r($datos_pregunta);
+    
     $orden = $datos_pregunta[0]->orden;
     $id_grupo_alternativas = $datos_pregunta[0]->id_grupo_alternativas;
     $id_evaluacion = $datos_pregunta[0]->evaluacion;
@@ -23418,10 +22517,10 @@ else if ($seccion == "dltPreg") {
 }
 else if ($seccion == "clave_update_empresa_uno_a_uno") {
     $id_empresa = $_SESSION["id_empresa"];
-//print_r($post);sleep(3);
+
     $rut = $post["rut"];
     $clave = $post["clave"];
-//echo "id_empresa $id_empresa";sleep(3);
+
 
     clave_update_empresa_uno_a_uno_data($rut, $clave, $id_empresa);
 
@@ -23440,7 +22539,6 @@ else if ($seccion == "veInformeBoletin") {
     $id_proceso = Decodear3($get["i"]);
 
     $arreglo_post = $post;
-//$exportar_a_excel=$get["ex"];
 
     $PRINCIPAL = FiltrosReportesAvancesSgd
         (FuncionesTransversalesAdmin
@@ -23469,7 +22567,7 @@ else if (strpos($seccion, "editBibliObj|") !== false) {
 else if ($seccion == "subirPreg") {
     $idEval = $get["idEval"];
     $programa = $get["programa"];
-//echo $programa;
+
     $PRINCIPAL = SubirPreguntasMasivo(FuncionesTransversalesAdmin(file_get_contents("views/evaluaciones/admin/subirPreg.html")), $idEval, $programa);
 
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
@@ -23481,9 +22579,6 @@ else if ($seccion == "subirExcelPreg") {
     $idEvalPrograma = $idEval . "__" . $programa;
     $idEmpresa = $_SESSION["id_empresa"];
 
-//echo "<br><br>";
-    //print_r($post);
-    //echo "<br><br>";
 
     EliminarDatosPreguntasAlternativasTmp();
 
@@ -23499,7 +22594,7 @@ else if ($seccion == "subirExcelPreg") {
         $destino = "tmp_ev_" . $archivo;
 
         if (copy($_FILES['excel']['tmp_name'], $destino)) {
-//echo "Archivo Cargado Con Ã‰xito";
+
         } else {
             $error_grave = "Error Al subir Archivo<br>";
         }
@@ -23545,13 +22640,8 @@ else if ($seccion == "subirExcelPreg") {
         $lineaT = "";
         $linea = 2;
 
-//var_dump($_DATOS_EXCEL);
-
         InsertarRegistroParaCalculoTablaPreguntasTmp();
 
-//echo "<br>14655";
-        //print_r($_DATOS_EXCEL);
-        //echo "<hr>";
         foreach ($_DATOS_EXCEL as $key => $item) {
             $error_columna = "";
             $error_grave = "";
@@ -23578,7 +22668,7 @@ else if ($seccion == "subirExcelPreg") {
                 if (strpos($key2, "Alternativa ") !== false) {
                     $valuesAlternativas .= $separador1 . $valor;
 
-                    //echo "<br>".$separador1.$valor;
+                    
                     $separador1 = "|";
 
                     if ($key2 == "Alternativa Correcta" && $valor == "" || $valor == " ") {
@@ -23625,7 +22715,7 @@ else if ($seccion == "subirExcelPreg") {
                     $valuesPregunta .= $separador2 . $valor;
                     $separador2 = "|";
 
-                    //echo "<br>$key2 $separador2.$valor";
+                    
                     if ($key2 == "Texto de la pregunta") {
                         if ($valor == "" || $valor == " ") {
                             $error_columna .= $coma . $key2;
@@ -23635,10 +22725,6 @@ else if ($seccion == "subirExcelPreg") {
                 }
             }
 
-//echo "preg<br>";
-            //var_dump($valuesPregunta);
-            //echo "alt<br>";
-            //var_dump($valuesAlternativas);
 
             if (ExistePregunta($idEval, $idPregunta)) {
                 $accion = "ACTUALIZAR";
