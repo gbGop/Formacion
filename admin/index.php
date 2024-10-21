@@ -2187,6 +2187,7 @@
 		$datos_post = $post;
 		Lista_curso_Crea_IMPARTICION_CreaImparticion($id_empresa, $codigo_imparticion, $datos_curso[0]->id, $fecha_inicio, $fecha_termino, $direccion, $ciudad, $cupos, $id_malla, $post["tipo_horario"], $datos_post, $sesiones, $ejecutivo, $comentarios, $observacion, $hora_desde, $hora_hasta, $nombre, $relator, $streaming, $minimo_asistencia, $minimo_nota_aprobacion, $post["ejecutivo_externo"]);
 		$id_curso_enc = isset($post["id_curso_enc"]) ? htmlspecialchars($post["id_curso_enc"], ENT_QUOTES) : ''; // Sanitizar
+		$id_imparticion_encoded = htmlspecialchars($id_imparticion_encoded, ENT_QUOTES, 'UTF-8');
 		echo "<script>location.href='?sw=MuestraBloqueCursoSeleccionadoDesdeCurso&i=" . $id_curso_enc . "&id_imparticion=" . $id_imparticion_encoded . "';</script>";
 		exit;
 	}
@@ -5246,7 +5247,8 @@ Cuadro Contable<br>
 			
 			
 			unlink("upload/" . $storagename);
-			echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_inscripcion=" . $post["id_inscripcion"] . "';</script>";
+			$id_inscripcion= isset($post["id_inscripcion"]) ? htmlspecialchars($post["id_inscripcion"], ENT_QUOTES) : ''; // Sanitizar
+			echo "<script> alert('base actualizada correctamente'); location.href='?sw=rel_id_inscripcion_rut_curso&id_inscripcion=" . $id_inscripcion . "';</script>";
 			exit;
 		}
 		
