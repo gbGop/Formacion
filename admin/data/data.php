@@ -4386,7 +4386,7 @@ function InsertaRelacionInscripcionUsuarioFull2021($rut, $id_programa, $id_inscr
             $modalidad_idCurso = ModalidadCurso($id_curso, $id_empresa);
 
             $sqlOp = "SELECT opcional from rel_lms_malla_curso
-								where id_curso='$id_curso' and id_malla='$id_malla' and id_programa='$id_programa' and id_empresa='$id_empresa' limit 1";
+								where id_curso='$id_curso' and id_malla='{$Imp[0]->id_malla}' and id_programa='$id_programa' and id_empresa='$id_empresa' limit 1";
             
 			
 					    $connexion->query($sqlOp);

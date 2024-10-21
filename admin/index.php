@@ -505,7 +505,7 @@
 		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
 		
-		$id_curso = Decodear(Decodear($post["id"]));
+		$id_curso = Decodear3($post["id"]);
 		$nombre_curso = (trim($post["nombre_curso"]));
 		$descripcion_curso = ($post["descripcion_curso"]);
 		$modalidad = ($post["modalidad"]);
@@ -1338,7 +1338,7 @@
 		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
 		
-		$id_curso = Decodear(Decodear($post["id"]));
+		$id_curso = Decodear3($post["id"]);
 		$nombre_curso = (trim($post["nombre_curso"]));
 		$descripcion_curso = ($post["descripcion_curso"]);
 		$modalidad = ($post["modalidad"]);
@@ -2548,7 +2548,7 @@
 	}
 	elseif ($seccion == "addImparticion") {
 		$id_empresa = $_SESSION["id_empresa"];
-		$id_curso = Decodear($get["i"]);
+		$id_curso = Decodear3($get["i"]);
 		
 		if ($id_curso) {
 		}
@@ -3012,7 +3012,7 @@
 		$id_imparticion = Decodear3($get["i"]);
 		//echo "<br>->VeProveedoresXImp2021 -> id_imparticion $id_imparticion";
 		if (Decodear3($get["dl"]) <> "") {
-			Updatetbl_id_inscripcion_proveedores(Decodear3($get["dl"]), "0");
+			Updatetbl_id_inscripcion_proveedores(Decodear3($get["dl"]));
 		}
 		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
@@ -3076,7 +3076,7 @@
 		$id_imparticion = Decodear3($get["i"]);
 		//echo "<br>->VeNotificarCuadroContable -> id_imparticion $id_imparticion";
 		if (Decodear3($get["dl"]) <> "") {
-			Updatetbl_id_inscripcion_proveedores(Decodear3($get["dl"]), "0");
+			Updatetbl_id_inscripcion_proveedores(Decodear3($get["dl"]));
 		}
 		//print_r($post);
 		$id_empresa = $_SESSION["id_empresa"];
@@ -3161,7 +3161,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "VeDocsXImp2021") {
 		$id_imparticion = Decodear3($get["i"]);
-		//echo "<br>->id_imparticion $id_imparticion";$id_curso = Decodear($i);
+		//echo "<br>->id_imparticion $id_imparticion";$id_curso = Decodear3($i);
 		if (Decodear3($get["dl"]) <> "") {
 			Updatetbl_id_inscripcion_documentos(Decodear3($get["dl"]), "0");
 		}
@@ -3206,7 +3206,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "VeColaboradoresXImp2021") {
 		$id_imparticion = Decodear3($get["i"]);
-		//$id_curso = Decodear($i);   //print_r($post);
+		//$id_curso = Decodear3($i);   //print_r($post);
 		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola id_imparticion $id_imparticion";exit();print_r($get);
@@ -3301,7 +3301,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "LibroClasesXImp2021") {
 		$id_imparticion = Decodear3($get["i"]);
-		//$id_curso = Decodear($i);   //print_r($post);
+		//$id_curso = Decodear3($i);   //print_r($post);
 		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
 		$PRINCIPAL = ListaColaboradoresPorImparticiones_LibroClases_2024(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/imparticion/entorno_libro_clases.html")), $id_imparticion, $_SESSION["id_empresa"], "");
@@ -3337,7 +3337,7 @@ Cuadro Contable<br>
 	}
 	elseif ($seccion == "VeColaboradoresXImpXsess") {
 		$id_imparticion = Decodear3($get["i"]);
-		$id_curso = Decodear($i);
+		$id_curso = Decodear3($i);
 		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola $i $id_curso";
@@ -7622,7 +7622,7 @@ Cuadro Contable<br>
 		//print_r($_SESSION);
 	}
 	elseif ($seccion == "addnoticia") {
-		$id_noticia = Decodear($get["i"]);
+		$id_noticia = Decodear3($get["i"]);
 		
 		$PRINCIPAL = FormularioNoticia(FuncionesTransversalesAdmin(file_get_contents("views/noticias/form_add.html")), $id_noticia);
 		
@@ -9015,7 +9015,7 @@ location.href='?sw=lipaginas';
 		exit;
 	}
 	elseif ($seccion == "edinoti") {
-		$id_empresa = Decodear($get["i"]);
+		$id_empresa = Decodear3($get["i"]);
 		$PRINCIPAL = FormularioNoticia(FuncionesTransversalesAdmin(file_get_contents("views/noticias/form_add.html")), $id_empresa);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
@@ -11891,7 +11891,7 @@ location.href='?sw=GestionRelacionesPorProceso&i=" . Encodear3($id_proceso) . "'
 		//$allData = allPersonasPorNombre($buscar);
 		echo $allData;
 	} else if ($seccion == "accionmalla") {
-		$id_malla = Decodear($get["i"]);
+		$id_malla = Decodear3($get["i"]);
 		
 		if ($id_malla) {
 			$PRINCIPAL = FormularioMalla(FuncionesTransversalesAdmin(file_get_contents("views/malla/formulario_malla.html")), $id_malla);
@@ -11918,7 +11918,7 @@ alert('Malla ingresada exitosamente');
 location.href='?sw=listmallas';
 </script>";
 	} else if ($seccion == "accionprograma") {
-		$id_programa = Decodear($get["i"]);
+		$id_programa = Decodear3($get["i"]);
 		if ($id_programa) {
 			$PRINCIPAL = FormularioPrograma(FuncionesTransversalesAdmin(file_get_contents("views/programa/formulario_edita.html")), $id_programa);
 		}
@@ -11930,14 +11930,14 @@ location.href='?sw=listmallas';
 		exit;
 	}
 		else if ($seccion == "relcursonivel") {
-		$id_nivel = Decodear($get["i"]);
+		$id_nivel = Decodear3($get["i"]);
 		
 		$PRINCIPAL = ListadoRelacionesNivelCurso(FuncionesTransversalesAdmin(file_get_contents("views/nivel/formulario_rel_nivel_curso.html")), $id_nivel);
 		echo CleanHTMLWhiteList($PRINCIPAL);
 		exit;
 	}
 		else if ($seccion == "relmallaprog") {
-		$id_malla = Decodear($get["i"]);
+		$id_malla = Decodear3($get["i"]);
 		//$PRINCIPAL=ListadoRelacionesNivelCurso(FuncionesTransversalesAdmin(file_get_contents("views/nivel/formulario_rel_nivel_curso.html")), $id_nivel);
 		$PRINCIPAL = ListadoRelacionesMallaPrograma(FuncionesTransversalesAdmin(file_get_contents("views/malla/formulario_rel_malla_programa.html")), $id_malla);
 		echo CleanHTMLWhiteList($PRINCIPAL);
@@ -11982,7 +11982,7 @@ location.href='?sw=seguimiento&ic=" . Encodear3($id_categoria) . "#ROW_" . $rut_
 		exit;
 	}
 		else if ($seccion == "seguimiento") {
-		$id_malla = Decodear($get["i"]);
+		$id_malla = Decodear3($get["i"]);
 		$id_empresa = $_SESSION["id_empresa"];
 		$categoria = $get["categoria"];
 		$id_categoria_por_get = Decodear3($get["ic"]);
@@ -12103,7 +12103,7 @@ location.href='?sw=relCompetenciasPreguntas&i=" . Encodear3($id_competencia) . "
 		}
 	}
 		else if ($seccion == "ednivel") {
-		$id_nivel = Decodear(Decodear($post["id"]));
+		$id_nivel = Decodear3($post["id"]);
 		$nombre_nivel = (trim($post["nombre_nivel"]));
 		$descripcion_nivel = ($post["descripcion_nivel"]);
 		$programa = ($post["programa"]);
@@ -12388,7 +12388,7 @@ location.href='?sw=ProcAnual';
 		exit;
 	}
 		else if ($seccion == "accioncurso") {
-		$id_curso = Decodear($get["i"]);
+		$id_curso = Decodear3($get["i"]);
 		if ($id_curso) {
 			$PRINCIPAL = FormularioCurso(FuncionesTransversalesAdmin(file_get_contents("views/curso/formulario_edita.html")), $id_curso);
 		}
@@ -12646,7 +12646,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 	}
 		else if ($seccion == "listaInscripcionesT") {
 		$i = $get["i"];
-		$id_curso = Decodear($i);
+		$id_curso = Decodear3($i);
 		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola $i $id_curso";//exit();
@@ -12669,7 +12669,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 	}
 		else if ($seccion == "listaEncuestasSatisfaccion") {
 		$i = $get["i"];
-		$id_curso = Decodear($i);
+		$id_curso = Decodear3($i);
 		$excel = $get["excel"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola $i $id_curso";//exit();
@@ -12708,7 +12708,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 	}
 		else if ($seccion == "VeSesionXImp") {
 		$id_imparticion = Decodear3($get["i"]);
-		$id_curso = Decodear($i);
+		$id_curso = Decodear3($i);
 		//echo "hola $i $id_curso";
 		//exit();
 		
@@ -12719,7 +12719,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 	}
 		else if ($seccion == "subeNotasPorImparticion") {
 		$id_imparticion = Decodear3($get["i"]);
-		$id_curso = Decodear($i);
+		$id_curso = Decodear3($i);
 		//echo "hola $i $id_curso";
 		//exit();
 		
@@ -12823,7 +12823,7 @@ $tot = str_replace("{NOMBRE}",($unico->nombre_completo),$tot);
 	}
 		else if ($seccion == "VeColaboradoresXImpXsessResumen") {
 		$id_imparticion = Decodear3($get["i"]);
-		$id_curso = Decodear($i);
+		$id_curso = Decodear3($i);
 		$excel = $get["exc"];
 		$id_empresa = $_SESSION["id_empresa"];
 		//echo "hola $i $id_curso";
@@ -19388,7 +19388,7 @@ location.href='?sw=listusu&exe=1';
     exit;
 }
 else if ($seccion == "accionobjeto") {
-    $id_objeto = Decodear($get["i"]);
+    $id_objeto = Decodear3($get["i"]);
     if ($id_objeto) {
         $PRINCIPAL = FormularioObjeto(FuncionesTransversalesAdmin(file_get_contents("views/objeto/formulario_edita.html")), $id_objeto);
     } else {
@@ -21333,7 +21333,7 @@ else if ($seccion == "ListadoCursosComboBox") {
     echo ($html_select);
 }
 else if ($seccion == "accioncmalla") {
-    $id_malla = Decodear($get["i"]);
+    $id_malla = Decodear3($get["i"]);
 
     if ($id_malla) {
         $PRINCIPAL = FormulariocMalla(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/malla/formulario_malla.html")), $id_malla);
@@ -21394,7 +21394,7 @@ else if ($seccion == "edcmallla") {
     $certificable = ($post["certificable"]);
     $ponderacion = ($post["ponderacion"]);
     $tipo_fecha = ($post["tipo_fecha"]);
-    $id_malla = Decodear(Decodear($post["id"]));
+    $id_malla = Decodear3($post["id"]);
 //Edita Malla
     ActualizaMalla2($codigo_malla, $nombre_malla, $descripcion_malla, $tipo_malla, $certificable, $ponderacion, $tipo_fecha, $id_malla, $_SESSION["id_empresa"]);
     echo "
@@ -21405,7 +21405,7 @@ location.href='?sw=listcmallas';
 }
 else if ($seccion == "relMallaCurso") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_curso = Decodear($get["i"]);
+    $id_curso = Decodear3($get["i"]);
 
     if ($id_curso) {
     } else {
@@ -21422,7 +21422,7 @@ else if ($seccion == "relMallaCurso") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "relmallacurso_") {
-    $id_malla = Decodear($get["i"]);
+    $id_malla = Decodear3($get["i"]);
 
 //$PRINCIPAL=ListadoRelacionesNivelCurso(FuncionesTransversalesAdmin(file_get_contents("views/nivel/formulario_rel_nivel_curso.html")), $id_nivel);
     $PRINCIPAL = ListadoRelacionesMallaCurso(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/malla/formulario_rel_malla_curso.html")), $id_malla, $_SESSION["id_empresa"]);
@@ -21529,7 +21529,7 @@ location.href='?sw=listclasificacion';
 </script>";
 }
 else if ($seccion == "accioncursoT") {
-    $id_curso = Decodear($get["i"]);
+    $id_curso = Decodear3($get["i"]);
     if ($id_curso) {
         $PRINCIPAL = FormularioCursoT(FuncionesTransversalesAdmin(file_get_contents("views/capacitacion/cursoT/formulario_edita.html")), $id_curso, $_SESSION["id_empresa"]);
     } else {
@@ -21538,7 +21538,7 @@ else if ($seccion == "accioncursoT") {
     echo CleanHTMLWhiteList($PRINCIPAL);exit;
 }
 else if ($seccion == "accioncurso2Elearning") {
-    $id_curso = Decodear($get["i"]);
+    $id_curso = Decodear3($get["i"]);
 //$id_curso2=Decodear3($get["i"]);
     //
 
@@ -22039,7 +22039,7 @@ foreach ($total_usuarios as $usu) {
 }
 else if ($seccion == "descargaPreInscritos") {
     $id_imparticion = Decodear3($get["ci"]);
-    $id_curso = Decodear($get["idc"]);
+    $id_curso = Decodear3($get["idc"]);
     $nombreCurso = BuscaCursoDadoImp($id_imparticion);
 //print_r($nombreCurso);exit;
 
@@ -22150,7 +22150,7 @@ else if ($seccion == "descargaPreInscritos") {
 }
 else if ($seccion == "DescargaPresencialImparticion") {
     $id_imparticion = Decodear3($get["ci"]);
-    $id_curso = Decodear($get["idc"]);
+    $id_curso = Decodear3($get["idc"]);
     $nombreCurso = BuscaCursoDadoImp($id_imparticion);
     $asistentes = ($get["asistentes"]);
     $id_empresa = $_SESSION["id_empresa"];
@@ -22260,7 +22260,7 @@ else if ($seccion == "listcursos2Presenciales") {
 }
 else if ($seccion == "Duplicarcurso") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_curso = Decodear($get["i"]);
+    $id_curso = Decodear3($get["i"]);
 
     $total_cursos = Audiencias_totalcursosPorEmpresa($id_empresa);
 //traigo los datos dado el id del curso
@@ -22306,7 +22306,7 @@ else if ($seccion == "Duplicarcurso") {
 }
 else if ($seccion == "Duplicarcurso") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_curso = Decodear($get["i"]);
+    $id_curso = Decodear3($get["i"]);
 
     $total_cursos = Audiencias_totalcursosPorEmpresa($id_empresa);
 //traigo los datos dado el id del curso
@@ -22352,7 +22352,7 @@ else if ($seccion == "Duplicarcurso") {
 }
 else if ($seccion == "DuplicarcursoT") {
     $id_empresa = $_SESSION["id_empresa"];
-    $id_curso = Decodear($get["i"]);
+    $id_curso = Decodear3($get["i"]);
 
     $total_cursos = Audiencias_totalcursosPorEmpresa($id_empresa);
 //traigo los datos dado el id del curso
