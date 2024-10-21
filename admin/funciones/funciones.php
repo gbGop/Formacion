@@ -4,7 +4,6 @@
 		if ($html === null) {
 			return '';
 		}
-		//echo $html;
 		$listaBlanca = ['a', 'abbr', 'acronym', 'address', 'applet', 'area', 'article', 'aside', 'audio', 'b', 'base', 'basefont', 'bdi', 'bdo', 'bgsound', 'big', 'blink', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'command', 'content', 'data', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'dir', 'div', 'dl', 'dt', 'element', 'em', 'embed', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form', 'frame', 'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'header', 'hgroup', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'isindex', 'kbd', 'label', 'legend', 'li', 'link', 'listing', 'main', 'map', 'mark', 'marquee', 'menu', 'menuitem', 'meta', 'meter', 'nav', 'nobr', 'noembed', 'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param', 'picture', 'plaintext', 'pre', 'progress', 'q', 'rb', 'rp', 'rt', 'rtc', 'ruby', 's', 'samp', 'script', 'section', 'select', 'shadow', 'slot', 'small', 'source', 'spacer', 'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr', 'xmp'];
 		$doc = new DOMDocument();
 		libxml_use_internal_errors(false); // Suprimir errores de an�lisis
@@ -226,7 +225,6 @@
 				//recorrer relatores
 				$suma_respuestas = 0;
 				$cuenta_respuestas = 0;
-				//echo "<br>id_imparticion $id_imparticion";
 				$R = EncuestaCheckRespuestasDetailEncSatQRFull($id_encuesta, $id_pregunta, $id_imparticion);
 				$cuenta_respuestas_relatores = 0;
 				$suma_respuestas_relatores = 0;
@@ -686,7 +684,6 @@
 						$alerta_horas_strpos = strpos($alerta_horas, "alert alert-danger");
 				
 						if ($alerta_horas_strpos <> "") {
-							//echo "MUESTRA ALERTA y oculta Participantes";
 							$muestra_alerta_row = $alerta_horas;
 							$display_none_participantes = "display:none!important";
 						}
@@ -1755,8 +1752,6 @@
 		$datetime1 = new DateTime('2014-02-11 ' . $t1_hour);
 		$datetime2 = new DateTime('2014-02-11 ' . $t2_hour);
 		$interval = $datetime1->diff($datetime2);
-		$tiempo = $interval->format('%h') . ":" . $interval->format('%i') . "";
-		//echo "<br>$t1_hour, $t2_hour -> tiempo $tiempo";
 		$hora = $interval->format('%h');
 		$minuto = $interval->format('%i');
 		$hora_enMinutos = round($hora * 60);
@@ -2219,7 +2214,6 @@
 			$row1 = str_replace("{NUMERO_HORAS_SESION}", "", $row1);
 		}
 		
-		//echo "<h3>cuenta_sesiones $cuenta_sesiones</h3>";
 		$nueva_sesion = $cuenta_sesiones + 1;
 		$rowNew .= file_get_contents("views/capacitacion/imparticion/row_imparticion_por_sesion_new.html");
 		$rowNew = str_replace("{ID_LINEA_ENC}", Encodear3($ses->id), $rowNew);
@@ -2386,7 +2380,6 @@
 		$row = str_replace("{ID_IMPARTICION_ENC}", ($_GET["i"]), $row);
 		
 		$Resultados_Tu_Avance = Dashboard_Training_IdImparticion_idCurso_MiRut($id_imparticion, $id_curso, $rut);
-		//print_r($Resultados_Tu_Avance);
 		$row = str_replace("{NUM_FINALIZADOS}", $Resultados_Tu_Avance[0], $row);
 		$row = str_replace("{NUM_EN_PROCESO}", $Resultados_Tu_Avance[3], $row);
 		$row = str_replace("{NUM_NO_INICIADOS}", $Resultados_Tu_Avance[4], $row);
