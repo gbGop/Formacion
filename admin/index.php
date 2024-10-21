@@ -86,8 +86,6 @@
 		exit;
 	}
 	elseif ($seccion == "home_landing_admin") {
-		//fill_contingencia_tbl_cron_sillas_data();
-		//UpdateLmsReportes2020();
 		
 		$PRINCIPAL = FuncionesTransversalesAdmin(file_get_contents("views/home_landing/entorno.html"));
 		$id_empresa = $_SESSION["id_empresa"];
