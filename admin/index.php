@@ -93,7 +93,7 @@
 		
 		$Adm = DatosUsuarioAdmin($_SESSION["user_"]);
 		
-		$PRINCIPAL = str_replace("{NOMBRE_ADMIN}", ($Adm[0]->nombre_completo), $PRINCIPAL);
+		$PRINCIPAL = str_replace("{NOMBRE_ADMIN}", $Adm[0]->nombre_completo, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{NOMBRE_ADMINISTRADOR}", ($Adm[0]->nombre_completo), $PRINCIPAL);
 		$PRINCIPAL = str_replace("{PERFIL_ADMINISTRADOR}", ($Adm[0]->perfil), $PRINCIPAL);
 		
