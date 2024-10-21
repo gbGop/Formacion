@@ -136,31 +136,13 @@
 		$html = str_replace("{FOOTER_DINAMICO_v2}", file_get_contents("views/head/" . $id_empresa . "_footer_2020_v2.html"), $html);
 		
 		
-		/*  if($esjefe>0 or $esjefeResponsabl>0 or $esliderEjecutivo>0){
-                              $html = str_replace("{MI_EQUIPO_VISTA}",$boton_miequipo_vista, $html);
-          } else {            $html = str_replace("{MI_EQUIPO_VISTA}","", $html);
-
-      }*/
 		$html = str_replace("{MENU_DINAMICO_BOTON_PERSONAS}", "<li><a href='?sw=personas_2020'><span class='title'>  #BuscaPersonas</span></a> </li>", $html);
 		$html = str_replace("{MENU_DINAMICO_BOTON_PERSONAS_MOB}", "<li><a href='?sw=personas_2020'><span class='title'>  #BuscaPersonas</span></a> </li>", $html);
-		/*                      $esjefe=0;
-                      if($rut<>""){
-                          $esjefe            = EsJefeLidertblUsuario($rut, $id_empresa);
-                      }*/
 		
-		
-		/*
-    if($esjefe>0  ){
-                            $html = str_replace("{MENU_DINAMICO_BOTON_MI_EQUIPO}","<li><a href='?sw=mi_equipo_consolidado_2020'><span class='title'>Mi Equipo</span></a></li>", $html);
-                            $html = str_replace("{MENU_DINAMICO_BOTON_MI_EQUIPO_MOB}","<li><a href='?sw=mi_equipo_consolidado_2020'><span class='title'>Mi Equipo</span></a></li>", $html);
-                         $html = str_replace("{MENU_DINAMICO_BOTON_MI_EQUIPO2}","<li><a href='?sw=mi_equipo_lider'><i class='fas fa-caret-right'></i> Mi Equipo</a></li>", $html);
-
-
-    } else {*/
 		$html = str_replace("{MENU_DINAMICO_BOTON_MI_EQUIPO}", "", $html);
 		$html = str_replace("{MENU_DINAMICO_BOTON_MI_EQUIPO_MOB}", "", $html);
 		$html = str_replace("{MENU_DINAMICO_BOTON_MI_EQUIPO2}", "", $html);
-		/*}*/
+	
 		
 		$html = str_replace("{MENU_DINAMICO_BOTON_MI_PERFIL}", "<li><a href='?sw=mi_perfil_2020'><span class='title'>Mi Perfil</span></a></li>", $html);
 		$html = str_replace("{MENU_DINAMICO_BOTON_MI_PERFIL_MOB}", "<li><a href='?sw=mi_perfil_2020'><span class='title'>Mi Perfil</span></a></li>", $html);
@@ -183,24 +165,21 @@
 	
 	function Insert_Imparticion_Tbl_Usuarios_Datos_Dotacion_FN_2023($id_imparticion)
 	{
-		$id_empresa = $_SESSION["id_empresa"];
+
 		$hoy = date("Y-m-d");
 		$part = IMPARTICION_UsuariosPorInscripcion_DotacionIniciales($id_imparticion);
-		//print_r($part);
+
 		foreach ($part as $p) {
 			$Usu = TraeDatosUsuario($p->rut);
 			Imparticion_Tbl_Usuarios_Datos_Dotacion_2023($id_imparticion, $p->id_curso, $p->rut, $Usu[0]->nombre_completo, $Usu[0]->cargo, $Usu[0]->silla_id_cargo, $Usu[0]->silla_id_division, $Usu[0]->silla_id_area, $Usu[0]->silla_id_unidad, $_SESSION["id_empresa"], $hoy);
 		}
-		//exit();
+
 	}
 	
 	function QR_Dashboard($PRINCIPAL, $id_imparticion)
 	{
-		//echo "<br>QR_Dashboard $id_imparticion";
-		$SesRelatores = QR_IdInscripcion_Sesiones_Relatores($id_imparticion);
-		//echo "<pre>";        print_r($SesRelatores);    echo "</pre>";
+
 		$Preg_Respuestas = EncuestaCheckRespuestasEncSatQRFull($id_imparticion);
-		//echo "<pre>";        print_r($Preg_Respuestas);    echo "</pre>";
 		$ultima_dimension = "";
 		
 		$suma_respuestas_niv_1_7 = 0;
@@ -211,22 +190,19 @@
 		foreach ($Preg_Respuestas as $P) {
 			$id_encuesta = $P->id_encuesta;
 			$id_pregunta = $P->id_pregunta;
-			$respuesta = $P->respuesta;
 			$dimension = $P->dimension;
 			$pregunta = $P->pregunta;
 			if ($dimension <> $ultima_dimension) {
 				$row_encuestas_notas_2023 .= "<div class='col-lg-12'>" . ($dimension) . "</div>";
 			}
-			//echo "<br>$id_pregunta<br>".$P->tipo_pregunta."<br>";
 			if ($P->tipo_pregunta == "NIV1_7") {
-				//echo "<br>A NIV1_7<br>";
+
 				$suma_respuestas = 0;
 				$cuenta_respuestas = 0;
 				//recorro respuestas
 				$R = EncuestaCheckRespuestasDetailEncSatQRFull($id_encuesta, $id_pregunta, $id_imparticion);
 				foreach ($R as $resp) {
 					$cuenta_respuestas++;
-					//echo "<br>respuesta ".$resp->respuesta;
 					$suma_respuestas = $resp->respuesta + $suma_respuestas;
 					$suma_respuestas_niv_1_7 = $resp->respuesta + $suma_respuestas_niv_1_7;
 					$cuenta_respuestas_niv_1_7++;
@@ -257,12 +233,9 @@
 				
 				foreach ($R as $resp) {
 					$cuenta_respuestas++;
-					//echo "<br>respuesta " . $resp->respuesta;
 					$respuestas_relator_array = explode(";", $resp->respuesta);
-					//print_r($respuestas_relator_array);
 					$cuenta_linea_respuestas = 0;
 					foreach ($respuestas_relator_array as $resp_relator) {
-						//echo "<br>-> " . $resp_relator;
 						$cuenta_linea_respuestas++;
 						$respuestas_relatores[$cuenta_linea_respuestas][] = $resp_relator;
 						
@@ -279,12 +252,9 @@
 						continue;
 					}
 					$cuenta_linea_relatores++;
-					//echo "<br>-> ".$R->rut_relator;
-					//echo "<br>-> ".$R->relator;
 					$relatores[$cuenta_linea_relatores] = $R->rut_relator;
 					$relatores_nombre[$cuenta_linea_relatores] = $R->relator;
 				}
-				//echo "<br>Relatores ";print_r($relatores);echo "<br>Relatores Nombre";print_r($relatores_nombre);echo "<br>Relatores Respuesta";print_r($respuestas_relatores);
 				$promedios_relatores = array();
 				foreach ($respuestas_relatores as $key => $arreglo) {
 					$suma = array_sum($arreglo); // Suma de los valores en el arreglo
@@ -292,15 +262,11 @@
 					$promedio = $suma / $cantidad; // Calcula el promedio
 					$promedios_relatores[$key] = $promedio; // Almacena el promedio en un nuevo arreglo
 				}
-				//echo "<br>Promedios ";
-				//print_r($promedios_relatores);
 				foreach ($Relatores as $R) {
 					if ($R->rut_relator == "creada") {
 						continue;
 					}
 					$cuenta_linea_relatores_promedio++;
-					//echo "<br>-> ".$R->rut_relator;
-					//echo "<br>-> ".$R->relator;
 					$relatores[$cuenta_linea_relatores] = $R->rut_relator;
 					$relatores_nombre[$cuenta_linea_relatores] = $R->relator;
 					$row_encuestas_notas_2023 .= "<div class='col-lg-6 bg-white'>" . $R->rut_relator . " " . $R->relator . "</div>
@@ -309,17 +275,12 @@
 				}
 			}
 			elseif ($P->tipo_pregunta == "LIKE_NO_LIKE") {
-				//recorro SI
-				//recorro NO
-				//echo "<br>B LIKE_NO_LIKE<br>";
-				$suma_respuestas = 0;
 				$cuenta_respuestas = 0;
 				$cuenta_si = 0;
 				$cuenta_no = 0;
 				$R = EncuestaCheckRespuestasDetailEncSatQRFull($id_encuesta, $id_pregunta, $id_imparticion);
 				foreach ($R as $resp) {
 					$cuenta_respuestas++;
-					//echo "<br>respuesta ".$resp->respuesta;
 					if ($resp->respuesta == "SI") {
 						$cuenta_si++;
 					}
@@ -342,16 +303,11 @@
                                         <div class='col-lg-3 bg-white' >" . $promedio_respuestas . "</div>";
 			}
 			elseif ($P->tipo_pregunta == "TEXTAREA") {
-				$suma_respuestas = 0;
-				$cuenta_respuestas = 0;
-				$cuenta_si = 0;
-				$cuenta_no = 0;
 				$promedio_respuestas = "";
 				continue;
 			}
 			$ultima_dimension = $dimension;
 		}
-		//echo     "niv 1 7 $suma_respuestas_niv_1_7 / $cuenta_respuestas_niv_1_7";echo     "Relatores $suma_respuestas_relatores / $cuenta_respuestas_relatores";
 		$promedio_niv_1_7 = 0; // Initialize the result to a default value
 		$promedio_relatores = 0; // Initialize the result to a default value
 		
@@ -373,8 +329,6 @@
 		if ($cuenta_final != 0) {
 			$promedio_final = round($suma_final / $cuenta_final, 1);
 		}
-		
-		//echo "<br> Promedio Niv 1 y 7 $promedio_niv_1_7";    echo "<br> Promedio promedio_relatores $promedio_relatores";    echo "<br> Promedio promedio_final $promedio_final";
 		
 		$row_totales_notas_2023 .= "<div class='col-lg-6 bg-white'><strong>Promedio Curso</strong></div>
                                         <div class='col-lg-3 bg-white' ></div>
@@ -450,8 +404,7 @@
 	
 	function Tickets_SubirArchivosTickets($FILES, $extension_doc, $prefijo, $ruta, $numero, $nombre_file)
 	{
-		//echo "<br>Tickets_SubirArchivosTickets extension ".$extension_doc."                prefijo ".$prefijo." ruta ".$ruta." numero ".$numero." nombre_file ".$nombre_file;
-		
+	
 		$ruta_con_archivo = $ruta . "/" . $prefijo . "." . $extension_doc;
 		copy($FILES["archivo"]['tmp_name'], $ruta_con_archivo);
 		$nombre_imagen_video = $prefijo . "." . $extension_doc;
@@ -466,25 +419,21 @@
 	
 	function ListaDocsPorImparticiones_2021($PRINCIPAL, $id_imparticion, $id_empresa)
 	{
-		//print_r($datos_imparticion);
 		return ($PRINCIPAL);
 	}
 	
 	function ListaProveedoresPorImparticiones_2021($PRINCIPAL, $id_imparticion, $id_empresa)
 	{
-		//print_r($datos_imparticion);
 		return ($PRINCIPAL);
 	}
 	
 	function ListaCuadroContablePorImparticiones_2021($PRINCIPAL, $id_imparticion, $id_empresa)
 	{
-		//print_r($datos_imparticion);
 		return ($PRINCIPAL);
 	}
 	
 	function VerificaExtensionFilesAdmin($FILE)
 	{
-		//echo "<br>file $file";
 		
 		/*FUNCION LIMPIA CABECERA*/
 		$fileDir = $FILE['tmp_name'];
@@ -513,7 +462,6 @@
 		
 		$arreglo_archivo = explode(".", $file_name);
 		$extension_archivo = $arreglo_archivo[1];
-		//echo "<br>cuenta ".count($arreglo_archivo);		//print_r($arreglo_archivo);		//echo "<br>ex $extension_archivo";
 		
 		
 		if (count($arreglo_archivo) <> 2) {
@@ -525,7 +473,7 @@
 		if (
 			$extension_archivo == "pdf" or $extension_archivo == "PDF" or $extension_archivo == "ppt" or $extension_archivo == "PPT" or $extension_archivo == "pptx" or $extension_archivo == "PPTX" or $extension_archivo == "doc" or $extension_archivo == "DOC" or $extension_archivo == "docx" or $extension_archivo == "DOCX" or $extension_archivo == "xls" or $extension_archivo == "XLS" or $extension_archivo == "xlsx" or $extension_archivo == "XLSX" or $extension_archivo == "jpg" or $extension_archivo == "JPG" or $extension_archivo == "jpeg" or $extension_archivo == "JPEG" or $extension_archivo == "zip" or $extension_archivo == "ZIP" or $extension_archivo == "png" or $extension_archivo == "PNG" or $extension_archivo == "CSV" or $extension_archivo == "csv"
 		) {
-			//echo "<br>archivo valido";
+
 		}
 		else {
 			echo "<br>archivo invalido";
@@ -536,9 +484,7 @@
 	
 	function ReporteFullSincronico_2023($PRINCIPAL, $id_curso, $id_empresa)
 	{
-		//echo "FormularioCurso2 id_curso $id_curso";
 		$datos_curso = DatosCurso_2($id_curso);
-		//print_r($datos_curso);
 		if ($datos_curso) {
 			$id_curso = $datos_curso[0]->id;
 		}
@@ -620,7 +566,6 @@
 			}
 		}
 		$PRINCIPAL = str_replace("{OPTIONS_FOCOS}", ($options_focos), $PRINCIPAL);
-		//$programas_bbdd=IMPARTCION_ObtieneProgramasBBDD($id_empresa);
 		$programas_bbdd = ListaProgramasDadoFocoDeTabla_2022_data_sinanidacion($id_empresa);
 		
 		$options_programas_bbdd = "";
@@ -656,28 +601,21 @@
 		$Id_inscripciones = Id_cursos_id_Inscripcion_por_id_inscripcion_idMalla_2022($id_inscripcion_malla);
 		foreach ($Id_inscripciones as $u) {
 			$u->nombre_imparticion = ($u->nombre_imparticion);
-			//echo "<br>--> ";print_r($u);
 			$Usu = DescargaRut_IdMalla_IdInscripcion2022($id_inscripcion_malla);
 			BorraUsuariosParaVolveraCrearlos($u->id_inscripcion);
 			foreach ($Usu as $us) {
 				$check1 = Verifica_Aprobacion_2023($u->id_curso, $us->rut);
-				//echo "<br>check1 $check1";
 				$check2 = Verifica_Ota_Activa_2023($u->id_curso, $us->rut, $u->id_inscripcion);
-				//echo "<br>check2 $check2";
 				$check3 = Verifica_Ota_Futura_2023($u->id_curso, $us->rut, $u->id_inscripcion);
-				//echo "<br>check3 $check3";
 				$check4 = Verifica_Otra_malla_Futura_2023($us->rut, $id_inscripcion_malla);
 				
 				if ($check1 > 0 or $check2 > 0 or $check3 > 0) {
 					echo "<script>alert('El rut ' + '" . $us->rut . "' + ' en el curso ' + '" . $u->id_curso . "' + ' y OTA ' + '" . $u->id_inscripcion . "' + ' ya está aprobado o bien tiene una inscripción activa');</script>";
 				}
 				else {
-					//cvaso alerta 4.
 					if ($check4[0]->id > 0) {
-						//echo "alerta 4 rut ".$us->rut." malla antigua ".$check4[0]->id_malla_inscrita." id malla ".$check4[0]->id_malla_inscribir." curso ".$u->id_curso;
 						echo "<script>alert('El rut ' + '" . $us->rut . "' + ' se modificara su malla a  ' + '" . $check4[0]->id_malla_inscribir . "' + '');</script>";
 						Update_lms_Malla_2023_full($us->rut, $check4[0]->id_malla_inscribir, $check4[0]->id_malla_inscrita, $u->id_curso);
-						//exit();
 					}
 					Inserta_rel_lms_rut_id_curso_id_inscripcion_2022($us->rut, $u->id_curso, $u->id_inscripcion, $u->nombre_imparticion, $u->fecha_inicio, $u->fecha_termino, $_SESSION["id_empresa"], $u->opcional, $activa, $u->ejecutivo);
 				}
@@ -688,9 +626,7 @@
 	
 	function NuevoCodigoImparticion_2021($codigo_anterior)
 	{
-		//echo "<br>codigo_anterior $codigo_anterior";
 		$cuentaCaracteres = strlen($codigo_anterior);
-		//echo "<br>-> cuentaCaracteres $cuentaCaracteres";
 		if ($cuentaCaracteres == "10") {
 		}
 		else {
@@ -713,14 +649,7 @@
 		elseif ($cuentaCaracteres4Digitos == 1) {
 			$cuatrodigitosmasuno = "000" . $ultimos4DigitosMasUno;
 		}
-		//echo "<br>-> YYYY $Y";
-		//echo "<br>-> MM $M";
-		//echo "<br>-> Ultimos4Digitos $Ultimos4Digitos";
-		//echo "<br>-> ultimos4DigitosMasUno $ultimos4DigitosMasUno";
 		$nuevo_codigo = $Y . $M . $cuatrodigitosmasuno;
-		//yyymm0001
-		//echo "<br>-> <h4>nuevo_codigo $nuevo_codigo</h4>";
-		//exit();
 		return $nuevo_codigo;
 	}
 	
@@ -728,20 +657,14 @@
 	function ListaImparticiones($PRINCIPAL, $id_curso, $Empresa, $excel, $id_modalidad)
 	{
 		$Imparticiones = TraeImparticionEmpresa($id_curso, $Empresa, $id_modalidad);
-		//print_r($Imparticiones);
 		$perfil = AdminPerfil2021($_SESSION["admin_"]);
 		
 		$acceso = AdminPerfilAcceso2024($_SESSION["admin_"]);
-		
-		$rows_ = "";
-		$rows1_ = "";
 		foreach ($Imparticiones as $unico) {
 			$muestra_alerta_row = "";
 			$display_none_participantes = "";
 			if ($perfil == "relator") {
 				$vista_id = AdminPerfilVistaImparticion($_SESSION["admin_"], $unico->codigo_inscripcion);
-				
-				//echo "<br>dista id<br>";//print_r($vista_id);
 				if ($vista_id == 0) {
 					continue;
 				}
@@ -758,14 +681,10 @@
 				}
 				else {
 					if ($unico->modalidad == "2") {
-						//echo "<br>->Modalidad 2";
 						$alerta_horas = DatosImparticiones_SumaHoras($id_curso, $unico->codigo_inscripcion, $unico->tipo_audiencia, $unico->fecha_inicio, $unico->fecha_termino, $unico->hora_inicio, $unico->hora_termino, $unico->modalidad, $unico->numero_horas);
-						//echo " -> alerta $alerta_horas";
-						
+					
 						$alerta_horas_strpos = strpos($alerta_horas, "alert alert-danger");
-						//echo "<br>";
-						//print_r($alerta_horas_strpos);
-						
+				
 						if ($alerta_horas_strpos <> "") {
 							//echo "MUESTRA ALERTA y oculta Participantes";
 							$muestra_alerta_row = $alerta_horas;
@@ -779,7 +698,6 @@
 			}
 			
 			if ($acceso == "133") {
-				//echo "<br> numero dias ".$unico->numero_dias;
 				if ($unico->numero_dias == "1") {
 					$boton_cierra_ota = "<BR><a href='?sw=listaInscripciones2&aOTA=" . encodear3($unico->codigo_inscripcion) . "' class='btn btn-link'>Abrir OTA</a>";
 				}
@@ -798,16 +716,11 @@
 			$rows_ = str_replace("{CODIGOINCRIPCION}", $unico->codigo_inscripcion, $rows_);
 			$rows_ = str_replace("{NOMBRE_INSCRIPCION}", ($unico->nombre_imparticion), $rows_);
 			$rows_ = str_replace("{ID_INSCRIPCION_ENCODEADO}", Encodear3($unico->codigo_inscripcion), $rows_);
-			//$arreglo_objetos[0]->codigo_inscripcion=$unico->codigo_inscripcion;
 			$arreglo_post["id_empresa"] = $Empresa;
 			$arreglo_post["codigo_imparticion_escrito"] = $unico->codigo_inscripcion;
 			$arreglo_post["imparticion"] = $unico->codigo_inscripcion;
-			//$arreglo_objetos=Lms_Busca_Objetos_Enc_sat_Imparticion($arreglo_post, $Empresa);
-			//$rows_=Lms_reporte_MuestraInformeDimEncNota($rows_, $Empresa, $arreglo_objetos, "", "", $excel, $arreglo_post);
 			$arreglo_post_objeto = $arreglo_objetos;
 			$array_para_enviar_via_url_objetos = serialize($arreglo_post_objeto);
-			$array_para_enviar_via_url_objetos = urlencode($array_para_enviar_via_url_objetos);
-			//$rows_ = str_replace("{ARREGLO_OBJETO}",$array_para_enviar_via_url_objetos ,$rows_);
 			$array_para_enviar_via_url_post = serialize($arreglo_post);
 			$array_para_enviar_via_url_post = urlencode($array_para_enviar_via_url_post);
 			$rows_ = str_replace("{ARREGLO_POST}", $array_para_enviar_via_url_post, $rows_);
@@ -855,11 +768,8 @@
 			}
 			$rows_ = str_replace("{MODALIDAD_CURSO}", $modalidad_curso, $rows_);
 			
-			//echo "<br>codigo_inscripcion $unico->codigo_inscripcion,";
 			$Prog_Foco = data_rel_id_inscripcion_curso_groupby_id_imparticion_data($unico->codigo_inscripcion);
-			//print_r($Prog_Foco);
-			
-			
+		
 			$rows_ = str_replace("{FOCO}", $Prog_Foco[0]->foco, $rows_);
 			$rows_ = str_replace("{PROGRAMA}", $Prog_Foco[0]->programa, $rows_);
 			$rows_ = str_replace("{NUM_PARTICIPANTES}", $unico->num_participantes, $rows_);
@@ -898,25 +808,15 @@
 			$rows_ = str_replace("{CIUDAD}", ($unico->nombre_proveedor), $rows_);
 			$rows_ = str_replace("{EJECUTIVO}", $unico->nombre_ejecutivo . "", $rows_);
 			$rows_ = str_replace("{CUPOS}", ($unico->cupos), $rows_);
-			//echo $unico->numero_horas;echo "<br>";
-			$segundos = TransformaHoraASegundos($unico->numero_horas);
-			//echo $segundos;echo " segundos del curso <br>";
-			//$rows_ = str_replace("{NUMSESIONES}",($unico->sesiones),$rows_);
-			$lista_sesiones_reales = "";
-			$lista_sesiones_reales_XLS = "";
 			$lista_objetos_reales = "";
 			
 			$rows_ = str_replace("{DETALLE_OBJETOS}", ($lista_objetos_reales), $rows_);
-			$Incripcion2 = Total_Inscripciones($Empresa, $unico->codigo_inscripcion);
 			$total_html2 = "";
-			$rows1_ = "";
-			$cuenta = "";
-			$relator = "";
 			$nombre_relator = "";
 			$lista_sesiones = "";
 			$Sesiones = DatosImparticiones_Sesiones_data_2021($unico->codigo_inscripcion);
 			foreach ($Sesiones as $UniSes) {
-				$lista_sesiones .= "" . formatearFechaSmall($UniSes->fecha) . " " . $UniSes->hora_desde . " - " . $UniSes->hora_hasta . "<br>";
+				$lista_sesiones .= formatearFechaSmall($UniSes->fecha) . " " . $UniSes->hora_desde . " - " . $UniSes->hora_hasta . "<br>";
 			}
 			
 			if ($unico->tipo_audiencia == "fecha_inicio_termino") {
@@ -924,10 +824,9 @@
 					$relator = TraeRelatores2021porId($unico->id_audiencia);
 					$nombre_relator = $relator[0]->nombre . " (" . $relator[0]->tipo . ")";
 				}
-				$lista_sesiones .= "" . formatearFechaSmall($unico->fecha_inicio) . " " . $unico->hora_inicio . " <br>" . formatearFechaSmall($unico->fecha_termino) . " " . $unico->hora_termino . "<br>$nombre_relator
+				$lista_sesiones .=formatearFechaSmall($unico->fecha_inicio) . " " . $unico->hora_inicio . " <br>" . formatearFechaSmall($unico->fecha_termino) . " " . $unico->hora_termino . "<br>$nombre_relator
 							";
 			}
-			//echo "<br>-->".$unico->tipo_audiencia;
 			$rows_ = str_replace("{FECHAS_SESIONES}", $lista_sesiones, $rows_);
 			$rows_ = str_replace("{TABLA}", $cab . $total_html2 . "</tbody></table>", $rows_);
 			$fecha_actual = date("Y-m-d");
@@ -953,7 +852,6 @@
 				$row_excel .= $asistentes_numero . ";";
 				$row_excel .= $inscritos_numero . "";
 				$row_excel .= "\r\n";
-				//$EstadoImparticion2022[1];
 				echo $row_excel;
 			}
 		}
@@ -972,20 +870,14 @@
 	
 	function ListaImparticiones_malla($PRINCIPAL, $id_malla, $Empresa, $excel, $id_modalidad)
 	{
-		$Imparticiones = BuscaIdImparticiondadoMalla($id_malla, $id_empresa);
-		//echo "<pre>";print_r($Imparticiones);echo "</pre>";
+		$Imparticiones = BuscaIdImparticiondadoMalla($id_malla);
 		$perfil = AdminPerfil2021($_SESSION["admin_"]);
-		//print_r($_SESSION);  				//echo "perfil $perfil";
-		$rows_ = "";
-		$rows1_ = "";
 		foreach ($Imparticiones as $unico) {
 			$muestra_alerta_row = "";
 			$display_none_participantes = "";
 			if ($perfil == "relator") {
 				$vista_id = AdminPerfilVistaImparticion($_SESSION["admin_"], $unico->codigo_inscripcion);
-				//echo "<br>dista id<br>";//print_r($vista_id);
 				if ($vista_id > 0) {
-					//echo "->muestra";
 				}
 				else {
 					continue;
@@ -1012,11 +904,9 @@
 			$id_programa = IdProgramaIdMalla_2022($unico->id_malla);
 			$malla_array = DatosMalla_2022($unico->id_malla);
 			$programa_adday = DatosPrograma_2022($id_programa);
-			//   echo "<br>-> id_programa $id_programa";
 			$PRINCIPAL = str_replace("{NOMBRE_MALLA}", ($malla_array[0]->nombre), $PRINCIPAL);
 			$PRINCIPAL = str_replace("{NOMBRE_PROGRAMA}", ($programa_adday[0]->nombre_programa), $PRINCIPAL);
 			
-			//echo "<br>-> ejecutivo ".$unico->ejecutivo;
 			$ejecutivo_relator = TraeDatosEjecutivos($unico->ejecutivo);
 			$rows_ = str_replace("{EJECUTIVO_MALLA}", ($ejecutivo_relator[0]->nombre), $rows_);
 			$arreglo_post["id_empresa"] = $Empresa;
@@ -1024,7 +914,6 @@
 			$arreglo_post["imparticion"] = $unico->codigo_inscripcion;
 			$arreglo_post_objeto = $arreglo_objetos;
 			$array_para_enviar_via_url_objetos = serialize($arreglo_post_objeto);
-			$array_para_enviar_via_url_objetos = urlencode($array_para_enviar_via_url_objetos);
 			$array_para_enviar_via_url_post = serialize($arreglo_post);
 			$array_para_enviar_via_url_post = urlencode($array_para_enviar_via_url_post);
 			$rows_ = str_replace("{ARREGLO_POST}", $array_para_enviar_via_url_post, $rows_);
@@ -1073,9 +962,7 @@
 				$modalidad_curso = "PRESENCIAL";
 			}
 			$rows_ = str_replace("{MODALIDAD_CURSO}", $modalidad_curso, $rows_);
-			//echo "<br>codigo_inscripcion $unico->codigo_inscripcion,";
 			$Prog_Foco = data_rel_id_inscripcion_curso_groupby_id_imparticion_data($unico->codigo_inscripcion);
-			//print_r($Prog_Foco);
 			$rows_ = str_replace("{FOCO}", $Prog_Foco[0]->foco, $rows_);
 			$rows_ = str_replace("{PROGRAMA}", $Prog_Foco[0]->programa, $rows_);
 			$rows_ = str_replace("{NUM_PARTICIPANTES}", $unico->num_participantes, $rows_);
@@ -1114,25 +1001,15 @@
 			$rows_ = str_replace("{CIUDAD}", ($unico->nombre_proveedor), $rows_);
 			$rows_ = str_replace("{EJECUTIVO}", $unico->nombre_ejecutivo . "", $rows_);
 			$rows_ = str_replace("{CUPOS}", ($unico->cupos), $rows_);
-			//echo $unico->numero_horas;echo "<br>";
-			$segundos = TransformaHoraASegundos($unico->numero_horas);
-			//echo $segundos;echo " segundos del curso <br>";
-			//$rows_ = str_replace("{NUMSESIONES}",($unico->sesiones),$rows_);
-			$lista_sesiones_reales = "";
-			$lista_sesiones_reales_XLS = "";
 			$lista_objetos_reales = "";
 			
 			$rows_ = str_replace("{DETALLE_OBJETOS}", ($lista_objetos_reales), $rows_);
-			$Incripcion2 = Total_Inscripciones($Empresa, $unico->codigo_inscripcion);
 			$total_html2 = "";
-			$rows1_ = "";
-			$cuenta = "";
-			$relator = "";
 			$nombre_relator = "";
 			$lista_sesiones = "";
 			$Sesiones = DatosImparticiones_Sesiones_data_2021($unico->codigo_inscripcion);
 			foreach ($Sesiones as $UniSes) {
-				$lista_sesiones .= "" . formatearFechaSmall($UniSes->fecha) . " " . $UniSes->hora_desde . " - " . $UniSes->hora_hasta . "<br>";
+				$lista_sesiones .= formatearFechaSmall($UniSes->fecha) . " " . $UniSes->hora_desde . " - " . $UniSes->hora_hasta . "<br>";
 			}
 			
 			if ($unico->tipo_audiencia == "fecha_inicio_termino") {
@@ -1140,13 +1017,11 @@
 					$relator = TraeRelatores2021porId($unico->id_audiencia);
 					$nombre_relator = $relator[0]->nombre . " (" . $relator[0]->tipo . ")";
 				}
-				$lista_sesiones .= "" . formatearFechaSmall($unico->fecha_inicio) . " " . $unico->hora_inicio . " <br>" . formatearFechaSmall($unico->fecha_termino) . " " . $unico->hora_termino . "<br>$nombre_relator
+				$lista_sesiones .= formatearFechaSmall($unico->fecha_inicio) . " " . $unico->hora_inicio . " <br>" . formatearFechaSmall($unico->fecha_termino) . " " . $unico->hora_termino . "<br>$nombre_relator
 							";
 			}
-			//echo "<br>-->".$unico->tipo_audiencia;
 			$rows_ = str_replace("{FECHAS_SESIONES}", $lista_sesiones, $rows_);
 			$rows_ = str_replace("{TABLA}", $cab . $total_html2 . "</tbody></table>", $rows_);
-			$fecha_actual = date("Y-m-d");
 			$rows_ = str_replace("{ESTADO}", $estado, $rows_);
 			$rows_ = str_replace("{ESTADONOMBRE}", $estadonom, $rows_);
 			$EstadoImparticion2022 = EstadoImparticion2022($unico->fecha_inicio, $unico->fecha_termino);
@@ -1169,7 +1044,6 @@
 				$row_excel .= $asistentes_numero . ";";
 				$row_excel .= $inscritos_numero . "";
 				$row_excel .= "\r\n";
-				//$EstadoImparticion2022[1];
 				echo $row_excel;
 			}
 		}
@@ -1228,7 +1102,6 @@
 	function FormularioImparticion($PRINCIPAL, $id_empresa, $id_imparticion)
 	{
 		if (!$id_imparticion) {
-			//si no hay codigo de imparticion creo uno
 			$trae_imparticiones = IMPARTICIONES_traeImparticionesCreadas($id_empresa);
 			$trae_imparticiones_ultima = IMPARTICIONES_traeImparticionesCreadasUltima_2021($id_empresa);
 			$codigo_ultima = $trae_imparticiones_ultima;
@@ -1237,14 +1110,10 @@
 			
 			//traigo la ultima imparticion
 			if ($trae_imparticiones) {
-				//$codigo_imparticion=$trae_imparticiones[0]->prefijo."_impart_".(count($trae_imparticiones)+1);
-				$codigo_imparticion = $trae_imparticiones[0]->prefijo . "_impart_" . $siguiente_codigo;
 				$codigo_imparticion = $siguiente_codigo;
 			}
 			else {
 				$datos_empresa = DatosEmpresa($id_empresa);
-				//$codigo_imparticion=$datos_empresa[0]->prefijo."_impart_".(count($trae_imparticiones)+1);
-				$codigo_imparticion = $datos_empresa[0]->prefijo . "_impart_" . $siguiente_codigo;
 				$codigo_imparticion = $siguiente_codigo;
 			}
 		}
@@ -1252,15 +1121,11 @@
 			$codigo_imparticion = $id_imparticion;
 		}
 		
-		//echo " codigo_imparticion ".$codigo_imparticion." id imparticion ".$id_imparticion;
-		//$datos_imparticion=DatosInscripcionImparticiones($id_imparticion, $id_empresa);
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
-		// print_r($datos_imparticion);
 		
 		$cursos = TraeCursos("-1", $id_empresa, "");
 		$option_cursos = "";
 		foreach ($cursos as $curso) {
-			//if($arreglo_post["curso"]==$curso->id){
 			if ($datos_imparticion[0]->id_curso == $curso->id) {
 				$option_cursos .= '<option value="' . $curso->id . '" selected>' . $curso->id . ' - ' . $curso->nombre . '</option>';
 			}
@@ -1270,7 +1135,6 @@
 		}
 		$PRINCIPAL = str_replace("{OPCIONES_CURSOS}", ($option_cursos), $PRINCIPAL);
 		
-		//$ejecutivos=TraeEjecutivosPorEmpresa($id_empresa);
 		$ejecutivos = TraeEjecutivos2021($id_empresa);
 		$options_ejecutivos = "";
 		foreach ($ejecutivos as $ejec) {
@@ -1337,7 +1201,6 @@
 			$options_direcciones .= '<option value="' . $direccion->nombre . '" ' . $checkedDireccion . '>' . $direccion->nombre . '</option>';
 		}
 		
-		//echo $datos_imparticion[0]->id_modalidad_imparticion;
 		if ($datos_imparticion[0]->id_modalidad_imparticion == "1") {
 			$select_modalidad_01 = " selected ";
 		}
@@ -1388,7 +1251,6 @@
 		$PRINCIPAL = str_replace("{TOTAL_POSTULANTES_POR_INSCRIPCION}", count($postulantes_por_inscripcion), $PRINCIPAL);
 		
 		$nombre_Curso_array = BuscaNombreCursoDadoID($datos_imparticion[0]->id_curso);
-		$nombre_curso = $nombre_Curso_array[0]->nombre;
 		
 		$PRINCIPAL = str_replace("{VALUE_COD_IMPARTICION_FECHA}", $datos_imparticion[0]->fecha_inicio, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{VALUE_COD_IMPARTICION_FECHA_HASTA}", $datos_imparticion[0]->fecha_termino, $PRINCIPAL);
@@ -1406,30 +1268,18 @@
 		if ($_GET["dup"] == 1) {
 			$trae_imparticiones = IMPARTICIONES_traeImparticionesCreadas($id_empresa);
 			$trae_imparticiones_ultima = IMPARTICIONES_traeImparticionesCreadasUltima_2021($id_empresa);
-			//$codigo_ultima=$trae_imparticiones_ultima[0]->codigo_inscripcion;
-			//$codigo_ultima=$trae_imparticiones_ultima[0]->id;
-			
-			// echo "<br>trae_imparticiones_ultima $trae_imparticiones_ultima<br>";
 			$codigo_ultima = $trae_imparticiones_ultima;
-			///////////////$arreglo=explode("_", $codigo_ultima);
-			//print_r($arreglo);
-			///////////////$siguiente_codigo=$arreglo[2]+1;
 			$siguiente_codigo = NuevoCodigoImparticion_2021($codigo_ultima);
 			
 			
 			//traigo la ultima imparticion
 			if ($trae_imparticiones) {
-				//$codigo_imparticion=$trae_imparticiones[0]->prefijo."_impart_".(count($trae_imparticiones)+1);
-				$codigo_imparticion = $trae_imparticiones[0]->prefijo . "_impart_" . $siguiente_codigo;
 				$codigo_imparticion = $siguiente_codigo;
 			}
 			else {
 				$datos_empresa = DatosEmpresa($id_empresa);
-				//$codigo_imparticion=$datos_empresa[0]->prefijo."_impart_".(count($trae_imparticiones)+1);
-				$codigo_imparticion = $datos_empresa[0]->prefijo . "_impart_" . $siguiente_codigo;
 				$codigo_imparticion = $siguiente_codigo;
 			}
-			//$codigo_imparticion="000022222";
 		}
 		
 		$PRINCIPAL = str_replace("{VALUE_COD_IMPARTICION}", $codigo_imparticion, $PRINCIPAL);
@@ -1448,7 +1298,6 @@
 		}
 		else {
 			$id_curso = Decodear3($_GET["i"]);
-			//echo "<br>id_curso $id_curso";
 			$PRINCIPAL = str_replace("{VALUE_COD_CURSO}", $id_curso, $PRINCIPAL);
 		}
 		
@@ -1489,43 +1338,27 @@
 			//si no hay codigo de imparticion creo uno
 			$trae_imparticiones = IMPARTICIONES_traeImparticionesCreadas($id_empresa);
 			$trae_imparticiones_ultima = IMPARTICIONES_traeImparticionesCreadasUltima_2021($id_empresa);
-			//$codigo_ultima=$trae_imparticiones_ultima[0]->codigo_inscripcion;
-			//$codigo_ultima=$trae_imparticiones_ultima[0]->id;
-			
-			// echo "<br>trae_imparticiones_ultima $trae_imparticiones_ultima<br>";
 			$codigo_ultima = $trae_imparticiones_ultima;
-			///////////////$arreglo=explode("_", $codigo_ultima);
-			//print_r($arreglo);
-			///////////////$siguiente_codigo=$arreglo[2]+1;
 			$siguiente_codigo = NuevoCodigoImparticion_2021($codigo_ultima);
 			
 			
 			//traigo la ultima imparticion
 			if ($trae_imparticiones) {
-				//$codigo_imparticion=$trae_imparticiones[0]->prefijo."_impart_".(count($trae_imparticiones)+1);
-				$codigo_imparticion = $trae_imparticiones[0]->prefijo . "_impart_" . $siguiente_codigo;
 				$codigo_imparticion = $siguiente_codigo;
 			}
 			else {
 				$datos_empresa = DatosEmpresa($id_empresa);
-				//$codigo_imparticion=$datos_empresa[0]->prefijo."_impart_".(count($trae_imparticiones)+1);
-				$codigo_imparticion = $datos_empresa[0]->prefijo . "_impart_" . $siguiente_codigo;
 				$codigo_imparticion = $siguiente_codigo;
 			}
 		}
 		else {
 			$codigo_imparticion = $id_imparticion;
 		}
-		
-		//echo " codigo_imparticion ".$codigo_imparticion." id imparticion ".$id_imparticion;
-		//$datos_imparticion=DatosInscripcionImparticiones($id_imparticion, $id_empresa);
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
-		// print_r($datos_imparticion);
 		
 		$cursos = TraeCursos("-1", $id_empresa, "");
 		$option_cursos = "";
 		foreach ($cursos as $curso) {
-			//if($arreglo_post["curso"]==$curso->id){
 			if ($datos_imparticion[0]->id_curso == $curso->id) {
 				$option_cursos .= '<option value="' . $curso->id . '" selected>' . $curso->id . ' - ' . $curso->nombre . '</option>';
 			}
@@ -1535,7 +1368,6 @@
 		}
 		$PRINCIPAL = str_replace("{OPCIONES_CURSOS}", ($option_cursos), $PRINCIPAL);
 		
-		//$ejecutivos=TraeEjecutivosPorEmpresa($id_empresa);
 		$ejecutivos = TraeEjecutivos2021($id_empresa);
 		$options_ejecutivos = "";
 		foreach ($ejecutivos as $ejec) {
@@ -1602,8 +1434,6 @@
 			$options_direcciones .= '<option value="' . $direccion->tipo . '-' . $direccion->nombre . '" ' . $checkedDireccion . '>' . $direccion->tipo . "-" . $direccion->nombre . '</option>';
 		}
 		
-		
-		//echo $datos_imparticion[0]->id_modalidad_imparticion;
 		if ($datos_imparticion[0]->id_modalidad_imparticion == "1") {
 			$select_modalidad_01 = " selected ";
 		}
@@ -1654,7 +1484,6 @@
 		$PRINCIPAL = str_replace("{TOTAL_POSTULANTES_POR_INSCRIPCION}", count($postulantes_por_inscripcion), $PRINCIPAL);
 		
 		$nombre_Curso_array = BuscaNombreCursoDadoID($datos_imparticion[0]->id_curso);
-		$nombre_curso = $nombre_Curso_array[0]->nombre;
 		
 		$PRINCIPAL = str_replace("{VALUE_COD_IMPARTICION_FECHA}", $datos_imparticion[0]->fecha_inicio, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{VALUE_COD_IMPARTICION_FECHA_HASTA}", $datos_imparticion[0]->fecha_termino, $PRINCIPAL);
@@ -1672,30 +1501,19 @@
 		if ($_GET["dup"] == 1) {
 			$trae_imparticiones = IMPARTICIONES_traeImparticionesCreadas($id_empresa);
 			$trae_imparticiones_ultima = IMPARTICIONES_traeImparticionesCreadasUltima_2021($id_empresa);
-			//$codigo_ultima=$trae_imparticiones_ultima[0]->codigo_inscripcion;
-			//$codigo_ultima=$trae_imparticiones_ultima[0]->id;
-			
-			// echo "<br>trae_imparticiones_ultima $trae_imparticiones_ultima<br>";
 			$codigo_ultima = $trae_imparticiones_ultima;
-			///////////////$arreglo=explode("_", $codigo_ultima);
-			//print_r($arreglo);
-			///////////////$siguiente_codigo=$arreglo[2]+1;
 			$siguiente_codigo = NuevoCodigoImparticion_2021($codigo_ultima);
 			
 			
 			//traigo la ultima imparticion
 			if ($trae_imparticiones) {
-				//$codigo_imparticion=$trae_imparticiones[0]->prefijo."_impart_".(count($trae_imparticiones)+1);
-				$codigo_imparticion = $trae_imparticiones[0]->prefijo . "_impart_" . $siguiente_codigo;
+
 				$codigo_imparticion = $siguiente_codigo;
 			}
 			else {
 				$datos_empresa = DatosEmpresa($id_empresa);
-				//$codigo_imparticion=$datos_empresa[0]->prefijo."_impart_".(count($trae_imparticiones)+1);
-				$codigo_imparticion = $datos_empresa[0]->prefijo . "_impart_" . $siguiente_codigo;
 				$codigo_imparticion = $siguiente_codigo;
 			}
-			//$codigo_imparticion="000022222";
 		}
 		
 		$PRINCIPAL = str_replace("{VALUE_COD_IMPARTICION}", $codigo_imparticion, $PRINCIPAL);
@@ -1717,7 +1535,6 @@
 		}
 		else {
 			$id_curso = Decodear3($_GET["i"]);
-			//echo "<br>id_curso $id_curso";
 			$PRINCIPAL = str_replace("{VALUE_COD_CURSO}", $id_curso, $PRINCIPAL);
 		}
 		
@@ -1758,41 +1575,25 @@
 			//si no hay codigo de imparticion creo uno
 			$trae_imparticiones = IMPARTICIONES_traeImparticionesCreadas($id_empresa);
 			$trae_imparticiones_ultima = IMPARTICIONES_traeImparticionesCreadasUltima_2021($id_empresa);
-			//$codigo_ultima=$trae_imparticiones_ultima[0]->codigo_inscripcion;
-			//$codigo_ultima=$trae_imparticiones_ultima[0]->id;
-			
-			// echo "<br>trae_imparticiones_ultima $trae_imparticiones_ultima<br>";
 			$codigo_ultima = $trae_imparticiones_ultima;
-			///////////////$arreglo=explode("_", $codigo_ultima);
-			//print_r($arreglo);
-			///////////////$siguiente_codigo=$arreglo[2]+1;
 			$siguiente_codigo = NuevoCodigoImparticion_2021($codigo_ultima);
 			
 			
 			//traigo la ultima imparticion
 			if ($trae_imparticiones) {
-				//$codigo_imparticion=$trae_imparticiones[0]->prefijo."_impart_".(count($trae_imparticiones)+1);
-				$codigo_imparticion = $trae_imparticiones[0]->prefijo . "_impart_" . $siguiente_codigo;
 				$codigo_imparticion = $siguiente_codigo;
 			}
 			else {
 				$datos_empresa = DatosEmpresa($id_empresa);
-				//$codigo_imparticion=$datos_empresa[0]->prefijo."_impart_".(count($trae_imparticiones)+1);
-				$codigo_imparticion = $datos_empresa[0]->prefijo . "_impart_" . $siguiente_codigo;
 				$codigo_imparticion = $siguiente_codigo;
 			}
 		}
 		else {
 			$codigo_imparticion = $id_imparticion;
 		}
-		
-		//echo " codigo_imparticion ".$codigo_imparticion." id imparticion ".$id_imparticion;
-		//$datos_imparticion=DatosInscripcionImparticiones($id_imparticion, $id_empresa);
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
-		// print_r($datos_imparticion);
 		
 		$datos_curso = VerificoCursoPorEmpresa($id_curso, $id_empresa);
-		//$ejecutivos=TraeEjecutivosPorEmpresa($id_empresa);
 		$ejecutivos = TraeEjecutivos2021($id_empresa);
 		$options_ejecutivos = "";
 		foreach ($ejecutivos as $ejec) {
@@ -1869,7 +1670,6 @@
 		$PRINCIPAL = str_replace("{TOTAL_POSTULANTES_POR_INSCRIPCION}", count($postulantes_por_inscripcion), $PRINCIPAL);
 		
 		$nombre_Curso_array = BuscaNombreCursoDadoID($datos_imparticion[0]->id_curso);
-		$nombre_curso = $nombre_Curso_array[0]->nombre;
 		
 		$PRINCIPAL = str_replace("{VALUE_COD_IMPARTICION_FECHA}", $datos_imparticion[0]->fecha_inicio, $PRINCIPAL);
 		$PRINCIPAL = str_replace("{VALUE_COD_IMPARTICION_FECHA_HASTA}", $datos_imparticion[0]->fecha_termino, $PRINCIPAL);
@@ -1905,7 +1705,6 @@
 		}
 		else {
 			$id_curso = Decodear3($_GET["i"]);
-			//echo "<br>id_curso $id_curso";
 			$PRINCIPAL = str_replace("{VALUE_COD_CURSO}", $id_curso, $PRINCIPAL);
 		}
 		
@@ -1962,24 +1761,18 @@
 		$minuto = $interval->format('%i');
 		$hora_enMinutos = round($hora * 60);
 		$minutos_enminutos = round($minuto * 1);
-		//e/cho "<br>hora_enMinutos $hora_enMinutos";
-		//echo "<br>minutos_enminutos $minutos_enminutos";
 		$total_minutos = round($hora_enMinutos) + round($minutos_enminutos);
-		
-		//echo "<br>total_minutos $total_minutos<br>";
-		
+	
 		return $total_minutos;
 	}
 	
 	function DatosImparticiones_SumaHoras($id_curso, $id_inscripcion, $tipo_horario, $fecha_inicio, $fecha_termino, $hora_inicio, $hora_termino, $modalidad, $numero_horas)
 	{
 		$suma_tiempo = 0;
-		//echo "<h3>DatosImparticiones_SumaHoras($id_curso, $id_inscripcion, $tipo_horario, $fecha_inicio, $fecha_termino, $hora_inicio, $hora_termino, modalidad $modalidad, numero horas $numero_horas)</h3>";
 		if ($tipo_horario == "fecha_sesiones") {
 			$InscripcionCursoSesiones = DatosImparticiones_Sesiones_data_2021($id_inscripcion);
 			foreach ($InscripcionCursoSesiones as $ses) {
 				$tiempo = TiempoTranscurrido_Full_2021($ses->hora_desde, $ses->hora_hasta);
-				//echo "<br>-Minutos ".($tiempo);
 				if ($tiempo > 0) {
 					$suma_tiempo = $suma_tiempo + $tiempo;
 				}
@@ -1988,13 +1781,11 @@
 			$numero_horas_minutos = round(60 * $numero_horas);
 		}
 		else {
-			//echo "<h2>b $fecha_inicio==$fecha_termino modalidad $modalidad</h2>";
 			if ($fecha_inicio == $fecha_termino) {
 				$tiempo = TiempoTranscurrido_Full_2021($hora_inicio, $hora_termino);
 				if ($tiempo > 0) {
 					$suma_tiempo = $suma_tiempo + $tiempo;
 				}
-				//echo "<br>-Minutos ".($suma_tiempo);
 				$numero_horas_imparticiones = $suma_tiempo;
 				$numero_horas_minutos = round(60 * $numero_horas);
 			}
@@ -2032,8 +1823,7 @@
 	function DatosImparticiones_SinASistenciaSinHoras($id_curso, $id_inscripcion, $tipo_horario, $fecha_inicio, $fecha_termino, $hora_inicio, $hora_termino, $modalidad, $numero_horas)
 	{
 		$Imp = BuscaIdImparticionFull_2021($id_inscripcion);
-		//print_r($Imp);
-		
+	
 		if ($Imp[0]->id > 0) {
 			if (($Imp[0]->minimo_asistencia == "" or $Imp[0]->minimo_asistencia == "0") and ($Imp[0]->minimo_nota_aprobacion == "" or $Imp[0]->minimo_nota_aprobacion == "0")) {
 				$alerta = "<div class='alert alert-warning'><strong>Importante</strong>:
@@ -2049,12 +1839,9 @@
 	
 	function DatosImparticiones_Sesiones_2021($PRINCIPAL, $id_inscripcion, $id_curso)
 	{
-		//echo "<h3>DatosImparticiones_Sesiones_2021(, $id_inscripcion</h3>";
 		$InscripcionCursoSesiones = DatosImparticiones_Sesiones_data_2021($id_inscripcion);
-		//print_r($InscripcionCursoSesiones);
 		$i = $_GET["i"];
 		$idpbbdd = $_GET["idpbbdd"];
-		//echo "<br>-->i $i, idpbbdd $idpbbdd";
 		
 		$options_relatores .= "";
 		$Rel = TraeRelatores2021();
@@ -2062,13 +1849,8 @@
 			$options_relatores .= "<option value='" . Encodear3($uniRel->rut) . "'>" . ($uniRel->nombre) . " (" . $uniRel->tipo . ")</option>";
 		}
 		
-		
-		//echo "<h4>Cuenta Sesiones </h4>".count($InscripcionCursoSesiones)."<br>";
-		
 		if (count($InscripcionCursoSesiones) > 0) {
-			//echo "<h1>a</h1>";
 			foreach ($InscripcionCursoSesiones as $ses) {
-				//print_r($ses);
 				$cuenta_sesiones++;
 				if ($cuenta_sesiones == "1") {
 					$row1 .= file_get_contents("views/capacitacion/imparticion/row_imparticion_por_sesion.html");
@@ -2420,7 +2202,6 @@
 			}
 		}
 		else {
-			//echo "<h1>b</h1>";
 			$row1 .= file_get_contents("views/capacitacion/imparticion/row_imparticion_por_sesion.html");
 			$row1 = str_replace("{ID_LINEA_ENC}", "", $row1);
 			$row1 = str_replace("{VALUE_COD_IMPARTICION_FECHA}", "", $row1);
@@ -2433,9 +2214,8 @@
 			$row1 = str_replace("{ID_CURSO_ENC}", Encodear3($id_curso), $row1);
 			$row1 = str_replace("{ID_IMPARTICION_ENC}", Encodear3($id_inscripcion), $row1);
 			$row1 = str_replace("{OPTION_RELATOR_NOMBRE_TIPO}", $options_relatores, $row1);
-			$row1 = str_replace("{RELATOR_SES}", $rut_relator, $row1);
+			$row1 = str_replace("{RELATOR_SES}", '', $row1);
 			$row1 = str_replace("{RELATOR_nombre_SES}", "", $row1);
-			//$tiempo_transcurrido=TiempoTranscurrido_2021($ses->hora_desde, $ses->hora_hasta);
 			$row1 = str_replace("{NUMERO_HORAS_SESION}", "", $row1);
 		}
 		
@@ -2454,11 +2234,9 @@
 		$rowNew = str_replace("{ID_CURSO_ENC}", Encodear3($id_curso), $rowNew);
 		$rowNew = str_replace("{ID_IMPARTICION_ENC}", Encodear3($id_inscripcion), $rowNew);
 		$rowNew = str_replace("{DISPLAY_AGREGAR_MAS}", "", $rowNew);
-		//echo "<br>-->options_relatores $options_relatores<br>";
 		$rowNew = str_replace("{OPTION_RELATOR_NOMBRE_TIPO}", $options_relatores, $rowNew);
 		$rowNew = str_replace("{RELATOR_SES}", "", $rowNew);
 		$rowNew = str_replace("{RELATOR_nombre_SES}", "", $rowNew);
-		//$tiempo_transcurrido=TiempoTranscurrido_2021($ses->hora_desde, $ses->hora_hasta);
 		$rowNew = str_replace("{NUMERO_HORAS_SESION}", "", $rowNew);
 		
 		
@@ -2514,7 +2292,6 @@
 		
 		
 		$Elearning_opcional = BuscaOpcional_rel_lms_id_curso_id_inscripcion($id_inscripcion);
-		//echo "<br>Elearning_opcional $Elearning_opcional";
 		
 		if ($Elearning_opcional == "1") {
 			$rowFiFTewELEARNING = str_replace("{CHECKED_OPCIONAL}", " checked ", $rowFiFTewELEARNING);
@@ -2529,17 +2306,6 @@
 			$PRINCIPAL = str_replace("{SELECT_OPCIONAL}", " ", $PRINCIPAL);
 			$PRINCIPAL = str_replace("{SELECT_OBLIGATORIA}", " selected ", $PRINCIPAL);
 		}
-		
-		
-		/*$ejecutivos=TraeEjecutivos2021($_SESSION["id_empresa"]);
-    //print_r($ejecutivos);
-    $options_ejecutivos="";
-    foreach($ejecutivos as $ejec){
-            $options_ejecutivos.='<option value="'.$ejec->rut.'" >'.$ejec->nombre.'</option>';
-    }
-    $rowFiFTewELEARNING = str_replace("{OPTIONS_EJECUTIVOS}",($options_ejecutivos),$rowFiFTewELEARNING);
-		*/
-		
 		$PRINCIPAL = str_replace("{FORMULARIO_HORARIOS_LINEA_FECHA_INICIO_TERMINO_ELEARNING}", $rowFiFTewELEARNING, $PRINCIPAL);
 		
 		
@@ -2548,22 +2314,14 @@
 	
 	function Dashboard_Training_IdImparticion_idCurso_MiRut($id_imparticion, $id_curso, $rut)
 	{
-		$Num_Cursos_Pendientes = 0;
 		$Num_Cursos_Aprobados = 0;
 		$Num_Cursos_Reprobados = 0;
 		$Num_Cursos_NoIniciado = 0;
 		$Num_Cursos_Proceso = 0;
-		$Num_Programas_Finalizados = 0;
 		$Inscritos = Dashboard_Training_IdImparticion_idCurso_MiRut_data($id_imparticion, $id_curso, $rut);
-		//print_r($Inscritos);
-		
-		//echo count($Inscritos);
+
 		foreach ($Inscritos as $unico) {
-			$cuenta_inscritos++;
 			$Reporte = Dashboard_check_Lms_InscripcionCierre_data($id_imparticion, $id_curso, $unico->rut);
-			//echo "<br>".$cuenta_inscritos." ".$unico->rut." - ".$Reporte[0]->estado_descripcion;
-			
-			//echo "<br>Estado ".$Reporte[0]->estado;
 			if ($Reporte[0]->estado_descripcion == "NO_INICIADO" or $Reporte[0]->estado_descripcion == "") {
 				$Num_Cursos_NoIniciado++;
 			}
@@ -2574,8 +2332,6 @@
 				$Num_Cursos_Aprobados++;
 			}
 			
-			//echo  $Num_Cursos_Aprobados;
-			
 			if ($Reporte[0]->estado_descripcion == "REPROBADO" or $Reporte[0]->estado_descripcion == "REPROBADO_INASISTENCIA" or $Reporte[0]->estado_descripcion == "REPROBADO_POR_INASISTENCIA") {
 				$Num_Cursos_Reprobados++;
 			}
@@ -2585,15 +2341,6 @@
 		$suma_cursos = $Num_Cursos_NoIniciado + $Num_Cursos_Proceso + $Num_Cursos_Aprobados + $Num_Cursos_Reprobados;
 		$Num_Cursos_Pendientes = $Num_Cursos_NoIniciado + $Num_Cursos_Proceso;
 		$Num_Curso_Finalizados = $Num_Cursos_Aprobados + $Num_Cursos_Reprobados;
-		
-		/* echo "<br><br>--> Num_Cursos_Pendientes $Num_Cursos_Pendientes, Num_Cursos_Aprobados $Num_Cursos_Aprobados, Num_Cursos_Reprobados $Num_Cursos_Reprobados<br>
-	    					suma cursos $suma_cursos<br>";*/
-		
-		
-		//echo "<h3>Estado Programa ".$Estado_Programa."</h3><h4>suma_cursos $suma_cursos </h4>";
-		
-		
-		//echo "<br>- Num Total ".count($Prog)." aprobados $Num_Programas_Aprobados, reprobados $Num_Programas_Reprobados, pendientes $Num_Programas_Pendientes";
 		$row_dash_equipo_directo .= file_get_contents("views/dashboard_equipo_training/row_dashboard_equipo_directo.html");
 		
 		if ($suma_cursos == 0) {
@@ -2613,20 +2360,6 @@
 			$avance_noiniciados = round(100 * $Num_Cursos_NoIniciado / $suma_cursos);
 			$avance_pendientes = round(100 * $Num_Cursos_Pendientes / $suma_cursos);
 		}
-		
-		/* echo "<br>avance_finalizados $avance_finalizados,
-				avance_aprobados $avance_aprobados,
-				avance_reprobados $avance_reprobados,
-				avance_enproceso $avance_enproceso,
-				avance_noiniciados $avance_noiniciados,
-				avance_pendientes $avance_pendientes";
-
-				echo "<br><br>finalizados $Num_Programas_Finalizados,
-				aprobados $Num_Programas_Aprobados,
-				reprobados $Num_Programas_Reprobados,
-				enproceso $Num_Programas_Proceso,
-				noiniciados $Num_Programas_NoIniciado,
-				Pendientes $avance_pendientes";	*/
 		
 		$arreglo[0] = round($avance_finalizados);
 		$arreglo[1] = round($avance_aprobados);
@@ -2648,9 +2381,8 @@
 	
 	function VeReportesXImp2021_fn($PRINCIPAL, $id_imparticion, $id_curso, $rut)
 	{
-		//echo "<br>VeReportes $id_imparticion, $id_curso, $rut<br>";exit();
-		$row .= file_get_contents("views/capacitacion/reportes/dashboard.html");
-		$row = str_replace("{FECHA_SESION}", ($ses->fecha), $row);
+		$row = file_get_contents("views/capacitacion/reportes/dashboard.html");
+		$row = str_replace("{FECHA_SESION}", (''), $row);
 		$row = str_replace("{ID_IMPARTICION_ENC}", ($_GET["i"]), $row);
 		
 		$Resultados_Tu_Avance = Dashboard_Training_IdImparticion_idCurso_MiRut($id_imparticion, $id_curso, $rut);
@@ -2668,9 +2400,8 @@
 		$row = str_replace("{NUM_INSCRITOS_TXT}", $Resultados_Tu_Avance[16], $row);
 		
 		$datos_imparticion_V2 = DatosInscripcionImparticionesV2($id_imparticion, $_SESSION["id_empresa"]);
-		//echo "id_imparticion $id_imparticion";print_r($datos_imparticion_V2);
 		
-		$row_excel_enc_sat .= "id_curso;curso;id_imparticion;fecha_inicio;fecha_termino\r\n";
+		$row_excel_enc_sat = "id_curso;curso;id_imparticion;fecha_inicio;fecha_termino\r\n";
 		$row_excel_enc_sat .= "" . $datos_imparticion_V2[0]->id_curso . ";" . $datos_imparticion_V2[0]->nombre_curso . ";" . $datos_imparticion_V2[0]->codigo_inscripcion . ";" . $datos_imparticion_V2[0]->fecha_inicio . ";" . $datos_imparticion_V2[0]->fecha_termino . "\r\n";
 		
 		$EncSat = EncuestaSatisfaccion_IdImparticionIdCurso_data($id_imparticion, $id_curso);
@@ -2680,9 +2411,8 @@
 		$row_excel_enc_sat .= "encuestas respondidas;$cuenta\r\n";
 		$row_excel_enc_sat .= "\r\n";
 		
-		//echo "<br>encuestas_contestadas ".$cuenta;
 		$Preg = EncuestaSatisfaccion_BuscaPreguntas($EncSat[0]->id_encuesta);
-		$row_encuesta_satisfaccion_pregunta .= "
+		$row_encuesta_satisfaccion_pregunta = "
 							<div class='row'>
 									<div class='col-lg-6'>
 										<div class='card text-white bg-primary  text-dark mb-3' style='max-width: 100%'>
@@ -2703,7 +2433,6 @@
 		
 		$row_excel_enc_sat .= "pregunta;cantidad1;porcentaje1;cantidad2;porcentaje2;cantidad3;porcentaje3;cantidad4;porcentaje5;cantidad5;porcentaje5\r\n";
 		foreach ($Preg as $unico) {
-			//Respuestas por Pregunta
 			$Resp = EncuestaSatisfaccion_BuscaRespuestas($EncSat[0]->id_encuesta, $unico->id_pregunta, $id_imparticion, $id_curso);
 			$cuenta1 = 0;
 			$cuenta2 = 0;
@@ -2836,10 +2565,8 @@
 	
 	function ListadoMallasAdmin1($PRINCIPAL, $id_empresa, $excel, $id_curso, $llamada)
 	{
-		//echo "$id_empresa, excel $excel, $id_curso, $llamada";
 		$mallas = Listado_TotalMallas1($id_empresa, $id_curso, $llamada);
 		$total_html = "";
-		//echo "<br><pre>";    print_r($mallas);    echo "</pre>";
 		$i = 1;
 		foreach ($mallas as $unico) {
 			if ($excel == 1) {
@@ -2863,7 +2590,7 @@
 			$row = str_replace("{NOMBRE_XLS}", ($unico->nombre), $row);
 			$row = str_replace("{FOCO}", $unico->nombre_foco, $row);
 			$row = str_replace("{FOCO_XLS}", ($unico->nombre_foco), $row);
-			$busca_imparticiones_array = BuscaIdImparticiondadoMalla($unico->id_malla, $id_empresa);
+			$busca_imparticiones_array = BuscaIdImparticiondadoMalla($unico->id_malla);
 			if (count($busca_imparticiones_array) > 0) {
 				$row = str_replace("{EJECUTIVO}", $unico->ejecutivo, $row);
 			}
@@ -2876,8 +2603,6 @@
 			$row = str_replace("{DESCRIPCION}", $unico->descripcion, $row);
 			$row = str_replace("{OBJETIVO_CURSO}", $unico->objetivo_curso, $row);
 			$row = str_replace("{CLASIFICACION}", $unico->nombre_clasificacion, $row);
-			//$row = str_replace("{NUM_IMPARTICIONES}",$unico->total_inscripciones_curso,$row);
-			//print_r($busca_imparticion_array);
 			$lista_imparticion = "";
 			$lista_imparticion_xls = "";
 			$suma_asistentes = 0;
@@ -2888,13 +2613,10 @@
 				$lista_imparticion_xls .= $buscimpart->codigo_inscripcion . ",";
 				$cuenta_Asistententes = BuscaAsistentesImparticion($buscimpart->codigo_inscripcion, $id_empresa);
 				$suma_asistentes = $suma_asistentes + $cuenta_Asistententes[0]->asistentes;
-				//print_r($cuenta_Asistententes);
 			}
 			if ($cuentaimp == 0) {
 				$lista_imparticion = "<small>[SIN_IMPARTICIONES]</small><br>";
 			}
-			//cuentaparticipantes
-			//$cuenta_Asistententes=BuscaAsistentesCursoImparticion($unico->id, $id_empresa);
 			$Asistententes = $cuenta_Asistententes[0]->asistentes;
 			$row = str_replace("{NUM_IMPARTICIONES}", $lista_imparticion, $row);
 			$row = str_replace("{NUM_IMPARTICIONES_XLS}", $lista_imparticion_xls, $row);
@@ -2910,7 +2632,6 @@
 			$row = str_replace("{OTEC}", $unico->nombre_otec, $row);
 			$row = str_replace("{CBC}", $unico->cbc, $row);
 			$row = str_replace("{MODALIDAD}", "<span class='label bg-blue'>" . $unico->nombre_modalidad . "</span>", $row);
-			//$row = str_replace("{TIPO}",$unico->tipo,$row);
 			$row = str_replace("{TIPO}", $unico->nombre_tipo_curso, $row);
 			$row = str_replace("{PREREQUISITOS}", $unico->prerequisito, $row);
 			
@@ -2966,8 +2687,6 @@
 		
 		$perfil = PerfilAdmin($_SESSION["perfil"]);
 		$acceso_admin_perfil = VerificaTipoDePerfilAdminAcceso($_SESSION["user_"]);
-		//echo "<h1>".$acceso_admin_perfil[0]->template."</h1>";
-		//$html = str_replace("{MENU_IZQUIERDO}",file_get_contents("views/menu_izquierdo/".$perfil[0]->template.""),$html);
 		$html = str_replace("{MENU_IZQUIERDO}", file_get_contents("views/menu_izquierdo/" . $acceso_admin_perfil[0]->template . ""), $html);
 		$random = rand(5, 100005);
 		
@@ -2980,11 +2699,7 @@
 			$ul = str_replace("{CASE_REPORTE}", $unico->case, $ul);
 		}
 		$html = str_replace("{REPORTES_CAPACITACION}", $ul, $html);
-		//$html = str_replace("{MENU_INFERIOR}",file_get_contents("views/menu_inferior.html"),$html);
-		//$html = str_replace("{FOOTER}",file_get_contents("views/footer.html"),$html);
-		//$html = str_replace("{LOGO}",file_get_contents("views/logo.html"),$html);
 		$html = str_replace("{HEAD}", file_get_contents("views/head.html"), $html);
-		//$html = str_replace("{HEAD_FOOTER}",file_get_contents("views/head_footer.html"),$html);
 		$html = str_replace("{HEADER}", file_get_contents("views/header.html"), $html);
 		$html = str_replace("{NAVEGACION}", file_get_contents("views/navegacion.html"), $html);
 		$html = str_replace("{USER_TEMPLATE}", file_get_contents("views/menu_izquierdo/user_menu.html"), $html);
@@ -2993,9 +2708,6 @@
 		$html = str_replace("{HOME_INICIAL}", $perfil[0]->home, $html);
 		
 		$html = str_replace("{RANDOM}", $random, $html);
-		
-		
-		//$html = str_replace("{STATUS_SUPERIOR_DERECHA}",file_get_contents("views/status_superior_derecha.html"),$html);
 		$html = str_replace("{TITTLE}", "Administracion", $html);
 		$html = str_replace("{NOMBRE_USUARIO}", ($_SESSION["nombre"]), $html);
 		$html = str_replace("{PERFIL_ADMIN}", ($perfil[0]->nombre_perfil), $html);
@@ -3051,7 +2763,6 @@
 	function lista_proveedores_ejecutivos_fn($html, $id_empresa, $tipo)
 	{
 		$Lista = lista_proveedores_ejecutivos_data($id_empresa, $tipo);
-		//print_r($Lista);
 		foreach ($Lista as $unico) {
 			if ($tipo == "ejecutivos") {
 				$row = file_get_contents("views/proveedores_otec/row_ejecutivos.html");
@@ -3266,7 +2977,6 @@
 		$html = str_replace("{OPTIONS_CATEGORIAS_MEJORES_PRACTICAS_NUEVO}", ($categorias_options), $html);
 		
 		$lista_otec = lista_otec_vista_data($id_empresa);
-		//print_r($lista_otec);
 		foreach ($lista_otec as $unico) {
 			$options_otec .= "<option value='" . $unico->rut . "'>" . $unico->nombre . " (" . $unico->rut . ")</option>";
 		}
@@ -3334,7 +3044,6 @@
 	
 	function ListadoCursosAdmin2($PRINCIPAL, $id_empresa, $excel, $id_curso, $llamada)
 	{
-		//echo "$id_empresa, excel $excel, $id_curso, $llamada";
 		$cursos = Listado_TotalCursos2($id_empresa, $id_curso, $llamada);
 		$total_html = "";
 		$i = 1;
@@ -3379,8 +3088,6 @@
 			$row = str_replace("{DESCRIPCION}", $unico->descripcion, $row);
 			$row = str_replace("{OBJETIVO_CURSO}", $unico->objetivo_curso, $row);
 			$row = str_replace("{CLASIFICACION}", $unico->nombre_clasificacion, $row);
-			//$row = str_replace("{NUM_IMPARTICIONES}",$unico->total_inscripciones_curso,$row);
-			//print_r($busca_imparticion_array);
 			$lista_imparticion = "";
 			$lista_imparticion_xls = "";
 			$suma_asistentes = 0;
@@ -3391,13 +3098,10 @@
 				$lista_imparticion_xls .= $buscimpart->codigo_inscripcion . ",";
 				$cuenta_Asistententes = BuscaAsistentesImparticion($buscimpart->codigo_inscripcion, $id_empresa);
 				$suma_asistentes = $suma_asistentes + $cuenta_Asistententes[0]->asistentes;
-				//print_r($cuenta_Asistententes);
 			}
 			if ($cuentaimp == 0) {
 				$lista_imparticion = "<small>[SIN_IMPARTICIONES]</small><br>";
 			}
-			//cuentaparticipantes
-			//$cuenta_Asistententes=BuscaAsistentesCursoImparticion($unico->id, $id_empresa);
 			$Asistententes = $cuenta_Asistententes[0]->asistentes;
 			$row = str_replace("{NUM_IMPARTICIONES}", $lista_imparticion, $row);
 			$row = str_replace("{NUM_IMPARTICIONES_XLS}", $lista_imparticion_xls, $row);
@@ -3413,7 +3117,6 @@
 			$row = str_replace("{OTEC}", $unico->nombre_otec, $row);
 			$row = str_replace("{CBC}", $unico->cbc, $row);
 			$row = str_replace("{MODALIDAD}", "<span class='label bg-blue'>" . $unico->nombre_modalidad . "</span>", $row);
-			//$row = str_replace("{TIPO}",$unico->tipo,$row);
 			$row = str_replace("{TIPO}", $unico->nombre_tipo_curso, $row);
 			$row = str_replace("{PREREQUISITOS}", $unico->prerequisito, $row);
 			
@@ -3476,10 +3179,8 @@
 			}
 			$row = str_replace("{VALOR_HORA_SENCE}", colocarPesos($unico->valor_hora_sence), $row);
 			$row = str_replace("{NUM_HORAS}", $unico->numero_horas, $row);
-			//$row = str_replace("{VALOR_CURSO}", colocarPesos($unico->numero_horas * $unico->valor_hora), $row);
 			$row = str_replace("{EJECUTIVO}", ($unico->ejecutivocapacitacion), $row);
 			$row = str_replace("{PARTICIPANTE}", ($unico->participantes), $row);
-			//$row = str_replace("{VALOR_CURSO}", colocarPesos($unico->numero_horas * $unico->valor_hora), $row);
 			$row = str_replace("{FECHAI}", ($unico->fecha_inicio), $row);
 			$row = str_replace("{FECHAT}", ($unico->fecha_finalizacion), $row);
 			$total_html .= $row;
@@ -3496,8 +3197,7 @@
 	function ListaColaboradoresPorImparticiones_LibroClases_2024($PRINCIPAL, $id_imparticion, $id_empresa, $excel)
 	{
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
-		//print_r($datos_imparticion); exit();
-		
+
 		
 		$Num_sesiones = ImparticionesNumSesiones_2021($id_imparticion);
 		if ($datos_imparticion[0]->id_modalidad == "1") {
@@ -3508,10 +3208,9 @@
 			$total_usuarios_por_inscripcion = IMPARTICION_UsuariosPorInscripcionConDatos($id_imparticion, $id_empresa);
 		}
 		$estado_ejecucion = EstadoImparticion2022($datos_imparticion[0]->fecha_inicio, $datos_imparticion[0]->fecha_termino);
-		//print_r($estado);
+
 		$PRINCIPAL = str_replace("{ESTADO_EJECUCION}", $estado_ejecucion[0], $PRINCIPAL);
 		$cuenta_inscritos = count($total_usuarios_por_inscripcion);
-		//if($cuenta_inscritos>0 and ($estado_ejecucion[1]=="Ejecutando" or $estado_ejecucion[1]=="Finalizada")){
 		
 		if ($cuenta_inscritos > 0) {
 		}
@@ -3521,15 +3220,6 @@
 		
 		$PRINCIPAL = str_replace("{display_asistencia_none}", ($display_asistencia_none), $PRINCIPAL);
 		
-		if ($Num_sesiones > 0) {
-			$num_sesiones = $Num_sesiones;
-			//echo "sesiones $num_sesiones";
-		}
-		else {
-			$num_sesiones = 0;
-			//echo "sesiones $num_sesiones";
-		}
-		
 		if ($datos_imparticion[0]->id_modalidad == "1") {
 			$total_usuarios_por_inscripcion = "";
 		}
@@ -3537,8 +3227,6 @@
 		$inscritos_numero = "";
 		// preinscritos modalidad 1 es rel_lms_rut_id_curso_id_inscripcion
 		if ($datos_imparticion[0]->id_modalidad == "1") {
-			//$cuenta_preinscritos_2021=Cuenta_PreInscritos_2021($id_imparticion, $datos_imparticion[0]->id_modalidad, $id_empresa);
-			//$inscritos_numero.="<span class='label label-sm label-info' style='margin-bottom: 1px;'> PreInscritos </span> ".$cuenta_preinscritos_2021." Preinscritos<BR>";
 		}
 		// preinscritos autoinscripcion 1 es tbl_inscripcion_postulantes
 		if ($datos_imparticion[0]->id_modalidad == "3") {
@@ -3554,13 +3242,9 @@
 		
 		
 		$PRINCIPAL = str_replace("{CUPOS_INSCRITOS}", ($inscritos_numero), $PRINCIPAL);
-		//print_r($total_usuarios_por_inscripcion);
-		
+		$cuentaA=0;
 		foreach ($total_usuarios_por_inscripcion as $usu) {
 			$cuentaA++;
-			//echo "<br>$cuentaA $cuentaA";
-			
-			
 			if ($excel == 1) {
 				$row_listado_colaboradores .= file_get_contents("views/capacitacion/imparticion/row_colaboradores_sesiones_excel.html");
 			}
@@ -3594,8 +3278,7 @@
 	function ListaColaboradoresPorImparticiones_2021($PRINCIPAL, $id_imparticion, $id_empresa, $excel)
 	{
 		$datos_imparticion = DatosInscripcionImparticionesV2($id_imparticion, $id_empresa);
-		//print_r($datos_imparticion); exit();
-		
+	
 		
 		$Num_sesiones = ImparticionesNumSesiones_2021($id_imparticion);
 		if ($datos_imparticion[0]->id_modalidad == "1") {
@@ -3606,11 +3289,9 @@
 			$total_usuarios_por_inscripcion = IMPARTICION_UsuariosPorInscripcionConDatos($id_imparticion, $id_empresa);
 		}
 		$estado_ejecucion = EstadoImparticion2022($datos_imparticion[0]->fecha_inicio, $datos_imparticion[0]->fecha_termino);
-		//print_r($estado);
 		$PRINCIPAL = str_replace("{ESTADO_EJECUCION}", $estado_ejecucion[0], $PRINCIPAL);
 		$cuenta_inscritos = count($total_usuarios_por_inscripcion);
-		//if($cuenta_inscritos>0 and ($estado_ejecucion[1]=="Ejecutando" or $estado_ejecucion[1]=="Finalizada")){
-		
+	
 		if ($cuenta_inscritos > 0) {
 		}
 		else {
@@ -3621,11 +3302,9 @@
 		
 		if ($Num_sesiones > 0) {
 			$num_sesiones = $Num_sesiones;
-			//echo "sesiones $num_sesiones";
 		}
 		else {
 			$num_sesiones = 0;
-			//echo "sesiones $num_sesiones";
 		}
 		
 		if ($datos_imparticion[0]->id_modalidad == "1") {
@@ -3633,10 +3312,8 @@
 		}
 		
 		$inscritos_numero = "";
-		// preinscritos modalidad 1 es rel_lms_rut_id_curso_id_inscripcion
 		if ($datos_imparticion[0]->id_modalidad == "1") {
-			//$cuenta_preinscritos_2021=Cuenta_PreInscritos_2021($id_imparticion, $datos_imparticion[0]->id_modalidad, $id_empresa);
-			//$inscritos_numero.="<span class='label label-sm label-info' style='margin-bottom: 1px;'> PreInscritos </span> ".$cuenta_preinscritos_2021." Preinscritos<BR>";
+
 		}
 		// preinscritos autoinscripcion 1 es tbl_inscripcion_postulantes
 		if ($datos_imparticion[0]->id_modalidad == "3") {
@@ -3652,14 +3329,13 @@
 		
 		
 		$PRINCIPAL = str_replace("{CUPOS_INSCRITOS}", ($inscritos_numero), $PRINCIPAL);
-		//print_r($total_usuarios_por_inscripcion);
-		
+		$cuentaA=0;
 		foreach ($total_usuarios_por_inscripcion as $usu) {
 			$cuentaA++;
-			//echo "<br>$cuentaA $cuentaA";
+
 			
 			if ($cuentaA > 1000) {
-				// exit("3006");
+
 			}
 			if ($excel == 1) {
 				$row_listado_colaboradores .= file_get_contents("views/capacitacion/imparticion/row_colaboradores_sesiones_excel.html");
@@ -3668,17 +3344,13 @@
 				$row_listado_colaboradores .= file_get_contents("views/capacitacion/imparticion/row_colaboradores_sesiones.html");
 			}
 			$existe_en_cierre = VerificaEnTablaCierreCursoEmpresRutInscripcion2021($usu->rut, $id_empresa, $id_imparticion);
-			//ECHO "<BR>";PRINT_R($existe_en_cierre);
-			//echo "<br><h4>1 existe_en_cierre[0]->estado_descripcion ".$existe_en_cierre[0]->estado_descripcion." select_aprobado $select_aprobado</h4>";
 			
 			$row_listado_colaboradores = str_replace("{RUT_COL_ENC}", Encodear3($usu->rut), $row_listado_colaboradores);
 			$row_listado_colaboradores = str_replace("{TEXT_AREA_OBS_2023}", ($existe_en_cierre[0]->observaciones), $row_listado_colaboradores);
 			if ($existe_en_cierre[0]->observaciones <> "") {
-				//echo "<br>A";
 				$icon_obs_svg = "<i class='bi bi-info-circle-fill'></i>";
 			}
 			else {
-				//echo "<br>B";
 				
 				$icon_obs_svg = "<i class='bi bi-info-circle'></i>";
 			}
@@ -3808,15 +3480,10 @@
 				if ($checked_ses12 == "checked") {
 					$suma_sesiones++;
 				}
-				//$porcentaje_asistencia_sesiones	= round(100*$suma_sesiones/$num_sesiones);
-				//echo "<br>porcentaje_asistencia_sesiones $porcentaje_asistencia_sesiones, "
-				
-				
 			}
 			else {
 				$readonly_asistencia = "";
 			}
-			//echo "<br><h4>2 existe_en_cierre[0]->estado_descripcion ".$existe_en_cierre[0]->estado_descripcion." select_aprobado $select_aprobado</h4>";
 			
 			
 			$row_listado_colaboradores = str_replace("{SESIONES_1_td}", $sesion_1_td, $row_listado_colaboradores);
@@ -3846,29 +3513,11 @@
 			$row_listado_colaboradores = str_replace("{CARGO_COLABORADOR}", $usu->cargo_colaborador, $row_listado_colaboradores);
 			$row_listado_colaboradores = str_replace("{ID_IMPARTICION}", $id_imparticion, $row_listado_colaboradores);
 			$row_listado_colaboradores = str_replace("{ID_IMPARTICION_ENC}", Encodear3($id_imparticion), $row_listado_colaboradores);
-			//$avance_actual=CalculaAsistenciaEnBaseASesiones($usu->rut, $id_imparticion, $id_empresa);
-			//echo "<br>holla ".$usu->rut." <br> "; print_r($existe_en_cierre);
-			//if($existe_en_cierre[0]->porcentaje_asistencia<>''){$icono_asistencia="<i class='fas fa-check-square fa-2x' style='color: #3eae29;'></i>";} else {$icono_asistencia="";}
-			//if($existe_en_cierre[0]->nota<>''){$icono_nota="<i class='fas fa-check-square fa-2x'  style='color: #3eae29;'></i>";} else {$icono_nota="";}
-			//$row_listado_colaboradores = str_replace("{AVANCE_ACTUAL}",$avance_actual,$row_listado_colaboradores);
 			$row_listado_colaboradores = str_replace("{AVANCE_ACTUAL}", $existe_en_cierre[0]->porcentaje_asistencia, $row_listado_colaboradores);
-			
-			/*if($num_sesiones>0){
-					if($existe_en_cierre[0]->estado_descripcion=="DESISTE"	or $existe_en_cierre[0]->estado_descripcion=="JUSTIFICADO"){
-
-					} else {
-					$existe_en_cierre[0]->estado_descripcion="";
-					}
-
-
-				}*/ //echo "<br><h4>3 existe_en_cierre[0]->estado_descripcion ".$existe_en_cierre[0]->estado_descripcion." select_aprobado $select_aprobado</h4>";
-			
-			//print_r($existe_en_cierre);
 			
 			$display_notas = "";
 			// ESTADO AUTOMATICO
 			if ($datos_imparticion[0]->minimo_asistencia > 0) {
-				//echo "<br>-> aaaa";
 				if ($datos_imparticion[0]->minimo_nota_aprobacion > 0) {
 				}
 				else {
@@ -3883,7 +3532,6 @@
 				}
 			}
 			
-			//print_r($existe_en_cierre);
 			if ($existe_en_cierre[0]->estado_descripcion == "") {
 				$select_aprobado = "";
 				$select_reprobado = "";
@@ -3891,7 +3539,6 @@
 				$select_justificado = "";
 			}
 			elseif ($existe_en_cierre[0]->estado_descripcion == "APROBADO") {
-				//echo "<br>a</br>";
 				$select_aprobado = " selected ";
 				$select_reprobado = "";
 				$select_desiste = "";
@@ -3915,12 +3562,10 @@
 				$select_desiste = "";
 				$select_justificado = " selected ";
 			}
-			//echo "<br><h4>existe_en_cierre[0]->estado_descripcion ".$existe_en_cierre[0]->estado_descripcion." select_aprobado $select_aprobado</h4>";
 			
 			$row_listado_colaboradores = str_replace("{display_notas}", $display_notas, $row_listado_colaboradores);
 			$PRINCIPAL = str_replace("{display_notas}", $display_notas, $PRINCIPAL);
-			
-			//print_r($existe_en_cierre);
+
 			
 			$row_listado_colaboradores = str_replace("{NOTA_ACTUAL}", $existe_en_cierre[0]->nota, $row_listado_colaboradores);
 			$row_listado_colaboradores = str_replace("{NOTA_DIAGNOSTICO_ACTUAL}", $existe_en_cierre[0]->caso_especial, $row_listado_colaboradores);
@@ -3946,7 +3591,6 @@
 					<br>";
 			}
 			else {
-				$archivo_certificado = "";
 				$ver_certificado = "";
 			}
 			
@@ -3965,8 +3609,7 @@
 			$row_listado_colaboradores = str_replace("{ROW_SESIONES_POR_COLABORADOR}", ($listado_sesiones_por_colaborador), $row_listado_colaboradores);
 		}
 		
-		
-		//echo "<br>num_sesiones $num_sesiones";
+
 		if ($num_sesiones > 0) {
 			$sesion_1 = "";
 			$sesion_2 = "";
@@ -4066,9 +3709,7 @@
 	
 	function FormularioCurso1($PRINCIPAL, $id_curso, $id_empresa)
 	{
-		//echo "FormularioCurso2 id_curso $id_curso";
 		$datos_curso = DatosCurso_1_2024($id_curso);
-		//print_r($datos_curso);
 		if ($datos_curso) {
 			$id_curso = $datos_curso[0]->id;
 		}
@@ -4155,7 +3796,6 @@
 			}
 		}
 		$PRINCIPAL = str_replace("{OPTIONS_FOCOS}", ($options_focos), $PRINCIPAL);
-		//$programas_bbdd=IMPARTCION_ObtieneProgramasBBDD($id_empresa);
 		$programas_bbdd = ListaProgramasDadoFocoDeTabla_2022_data_sinanidacion($id_empresa);
 		
 		$options_programas_bbdd = "";
@@ -4198,9 +3838,9 @@
 	
 	function FormularioCurso2($PRINCIPAL, $id_curso, $id_empresa)
 	{
-		//echo "FormularioCurso2 id_curso $id_curso";
+
 		$datos_curso = DatosCurso_2($id_curso);
-		//print_r($datos_curso);
+
 		if ($datos_curso) {
 			$id_curso = $datos_curso[0]->id;
 		}
@@ -4281,7 +3921,6 @@
 			}
 		}
 		$PRINCIPAL = str_replace("{OPTIONS_FOCOS}", ($options_focos), $PRINCIPAL);
-		//$programas_bbdd=IMPARTCION_ObtieneProgramasBBDD($id_empresa);
 		$programas_bbdd = ListaProgramasDadoFocoDeTabla_2022_data_sinanidacion($id_empresa);
 		
 		$options_programas_bbdd = "";
@@ -4392,7 +4031,6 @@
 		$optionsProyectos = "";
 		$servicios = ListarProyectosFinanzaData();
 		foreach ($servicios as $row) {
-			$idEncodeado = Encodear3($row->id);
 			$cuenta = $row->cuenta;
 			$proyecto = (strtoupper($row->nombre_programa));
 			$optionsProyectos .= "<option class='optionProyecto optionProyecto{$cuenta}' value='{$proyecto}'>{$proyecto}</option>";
@@ -4467,8 +4105,6 @@
 	
 	function saveDatosGeneralesReembolso($reembo_numdoc, $reembo_tipdocid, $reembo_tipdocOtro, $reembo_proveerut, $reembo_servid, $reembo_servotro, $reembo_montoto, $reembo_fecemision, $reembo_ota, $reembo_numota, $reembo_cuenta, $reembo_proyecto, $reembo_curso, $reembo_otanombre, $reembo_cui, $reembo_respgast, $reembo_observacion, $reembo_mes, $reembo_anual, $reembo_status, $reemboa_proveenom, $rut_created, $reembo_cuenta_nombre)
 	{
-		$result = array("code" => 1, "mensage" => "Actualizado");
-		//Se validan los datos recibidos antes de ser guardados
 		
 		//Se verifica el numero de documento proporcionado no se repita
 		$consulNumDocReemb = reembolsoFinanzaByNumdoc($reembo_numdoc);
@@ -4625,9 +4261,7 @@
 	
 	function NuevoCodigoImparticion_2021_bk($codigo_anterior)
 	{
-		//echo "<br>codigo_anterior $codigo_anterior";
 		$cuentaCaracteres = strlen($codigo_anterior);
-		//echo "<br>-> cuentaCaracteres $cuentaCaracteres";
 		if ($cuentaCaracteres == "10") {
 		}
 		else {
@@ -4650,29 +4284,18 @@
 		elseif ($cuentaCaracteres4Digitos == 1) {
 			$cuatrodigitosmasuno = "000" . $ultimos4DigitosMasUno;
 		}
-		//echo "<br>-> YYYY $Y";
-		//echo "<br>-> MM $M";
-		//echo "<br>-> Ultimos4Digitos $Ultimos4Digitos";
-		//echo "<br>-> ultimos4DigitosMasUno $ultimos4DigitosMasUno";
 		$nuevo_codigo = $Y . $M . $cuatrodigitosmasuno;
-		//yyymm0001
-		//echo "<br>-> <h4>nuevo_codigo $nuevo_codigo</h4>";
-		//exit();
 		return $nuevo_codigo;
 	}
 	
 	function ListadoCursosAdmin1($PRINCIPAL, $id_empresa, $excel, $id_curso, $llamada)
 	{
-		//echo "$id_empresa, excel $excel, $id_curso, $llamada";
+
 		$cursos = Listado_TotalCursos1_2024($id_empresa, $id_curso, $llamada);
 		$total_html = "";
-		//print_r($cursos);
-		
+
 		$i = 1;
 		foreach ($cursos as $unico) {
-			/*if ($excel == 1) {
-            $row = file_get_contents("views/capacitacion/curso/row_listado_excel.html");
-        } else */
 			if ($llamada == "imparticion_solo_preenciales") {
 				$row = file_get_contents("views/capacitacion/curso/row_listado_imparticion.html");
 			}
@@ -4703,8 +4326,6 @@
 			$row = str_replace("{DESCRIPCION}", $unico->descripcion, $row);
 			$row = str_replace("{OBJETIVO_CURSO}", $unico->objetivo_curso, $row);
 			$row = str_replace("{CLASIFICACION}", $unico->nombre_clasificacion, $row);
-			//$row = str_replace("{NUM_IMPARTICIONES}",$unico->total_inscripciones_curso,$row);
-			//print_r($busca_imparticion_array);
 			$lista_imparticion = "";
 			$lista_imparticion_xls = "";
 			$suma_asistentes = 0;
@@ -4715,13 +4336,10 @@
 				$lista_imparticion_xls .= $buscimpart->codigo_inscripcion . ",";
 				$cuenta_Asistententes = BuscaAsistentesImparticion($buscimpart->codigo_inscripcion, $id_empresa);
 				$suma_asistentes = $suma_asistentes + $cuenta_Asistententes[0]->asistentes;
-				//print_r($cuenta_Asistententes);
 			}
 			if ($cuentaimp == 0) {
 				$lista_imparticion = "<small>[SIN_IMPARTICIONES]</small><br>";
 			}
-			//cuentaparticipantes
-			//$cuenta_Asistententes=BuscaAsistentesCursoImparticion($unico->id, $id_empresa);
 			$Asistententes = $cuenta_Asistententes[0]->asistentes;
 			$row = str_replace("{NUM_IMPARTICIONES}", $lista_imparticion, $row);
 			$row = str_replace("{NUM_IMPARTICIONES_XLS}", $lista_imparticion_xls, $row);
@@ -4738,7 +4356,6 @@
 			$row = str_replace("{RUT_OTEC}", $unico->rut_otec, $row);
 			$row = str_replace("{CBC}", $unico->cbc, $row);
 			$row = str_replace("{MODALIDAD}", "<span class='label bg-blue'>" . $unico->nombre_modalidad . "</span>", $row);
-			//$row = str_replace("{TIPO}",$unico->tipo,$row);
 			$row = str_replace("{TIPO}", $unico->nombre_tipo_curso, $row);
 			$row = str_replace("{PREREQUISITOS}", $unico->prerequisito, $row);
 			
@@ -4868,8 +4485,6 @@
 	
 	function VerificaArregloSQLInjectionV2($arreglo)
 	{
-		$total_arreglo = count($arreglo);
-		
 		foreach ($arreglo as $clave => $valor) {
 			if (strtoupper(trim($valor)) == "") {
 				continue;
@@ -4903,7 +4518,6 @@
 			$valor = str_replace('tables', "", $valor);
 			$valor = str_replace('union', "", $valor);
 			$valor = str_replace('information_schema', "", $valor);
-			//$valor = str_replace('', "", $valor);
 			$valor = str_replace('delete', "", $valor);
 			$valor = str_replace('update', "", $valor);
 			$valor = str_replace('show', "", $valor);
@@ -4943,7 +4557,6 @@
 		$valor = str_replace('tables', "", $valor);
 		$valor = str_replace('union', "", $valor);
 		$valor = str_replace('information_schema', "", $valor);
-		//$valor = str_replace('', "", $valor);
 		$valor = str_replace('delete', "", $valor);
 		$valor = str_replace('update', "", $valor);
 		$valor = str_replace('show', "", $valor);
@@ -5096,7 +4709,6 @@
 	
 	function Encodear3($valor)
 	{
-		//$valor=Encodear(Encodear(Encodear($valor)));
 		$valor = my_simple_crypt_encodear($valor, 'e');
 		return ($valor);
 	}
@@ -5129,15 +4741,12 @@
 	
 	function Encodear4($valor)
 	{
-		//$valor=Encodear(Encodear(Encodear($valor)));
 		$valor = my_simple_crypt_encodear4($valor, 'e');
 		return ($valor);
 	}
 	
 	function Decodear4($valor)
 	{
-		//$valor=Decodear(Decodear(Decodear($valor)));
-		//print_r($valor);
 		$valor = my_simple_crypt_decodear4($valor, 'd');
 		$valor = VerificaArregloSQLInjectionDecodear($valor);
 		
@@ -5146,8 +4755,6 @@
 	
 	function Decodear3($valor)
 	{
-		//$valor=Decodear(Decodear(Decodear($valor)));
-		//print_r($valor);
 		$valor = my_simple_crypt_decodear($valor, 'd');
 		$valor = VerificaArregloSQLInjectionDecodear($valor);
 		return ($valor);
@@ -5155,43 +4762,13 @@
 	
 	function Decodear5($valor)
 	{
-		//$valor=Decodear(Decodear(Decodear($valor)));
-		//print_r($valor);
 		$valor = my_simple_crypt_decodear5($valor, 'd');
-		//echo $valor;
-		
-		if ($_SESSION["user_"] == "12345") {
-			//	echo "valor $valor";
-			
-		}
-		
-		/* if($_SESSION["user_"]=="12345"){
-         echo "valor $valor";
-
-         echo "<br>Encodear5";
-
-         $encodear5_var=Encodear5("xx' union all select
- 1,2,3,4,5,6,7,user(),9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,
- 7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6, 7,8,9,0, 1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5
- ,6,7,8,9 from information_schema.tables limit 1 -- -");
- echo "<br><br>$encodear5_var<br>";
- echo "<br>valor<br> $valor<br>";
-
-     }*/
-		
-		
 		$valor = VerificaArregloSQLInjectionDecodear($valor);
-		if ($_SESSION["user_"] == "12345") {
-			// echo "<br>valor Luego de Verifica <br> $valor<br>";
-			
-		}
 		return ($valor);
 	}
 	
 	function Decodear6($valor)
 	{
-		//$valor=Decodear(Decodear(Decodear($valor)));
-		//print_r($valor);
 		$valor = my_simple_crypt_decodear6($valor, 'd');
 		$valor = VerificaArregloSQLInjectionDecodear($valor);
 		
@@ -5226,7 +4803,6 @@
 	
 	function Encodear5($valor)
 	{
-		//$valor=Encodear(Encodear(Encodear($valor)));
 		$valor = my_simple_crypt_encodear5($valor, 'e');
 		return ($valor);
 	}
@@ -5260,7 +4836,6 @@
 	
 	function Encodear6($valor)
 	{
-		//$valor=Encodear(Encodear(Encodear($valor)));
 		$valor = my_simple_crypt_encodear6($valor, 'e');
 		return ($valor);
 	}
@@ -5294,15 +4869,13 @@
 	
 	function Encodear7($valor)
 	{
-		//$valor=Encodear(Encodear(Encodear($valor)));
 		$valor = my_simple_crypt_encodear7($valor, 'e');
 		return ($valor);
 	}
 	
 	function Decodear7($valor)
 	{
-		//$valor=Decodear(Decodear(Decodear($valor)));
-		//print_r($valor);
+
 		$valor = my_simple_crypt_decodear7($valor, 'd');
 		$valor = VerificaArregloSQLInjectionDecodear($valor);
 		return ($valor);
@@ -5337,32 +4910,16 @@
 	
 	function Encodear8($valor)
 	{
-		//$valor=Encodear(Encodear(Encodear($valor)));
 		$valor = my_simple_crypt_encodear8($valor, 'e');
 		return ($valor);
 	}
 	
 	function Decodear8($valor)
 	{
-		//$valor=Decodear(Decodear(Decodear($valor)));
-		//print_r($valor);
 		$valor = my_simple_crypt_decodear8($valor, 'd');
-		//$valor      = VerificaArregloSQLInjectionDecodear($valor);
 		return ($valor);
 	}
-	
-	function Encodear($valor)
-	{
-		// $valor = my_simple_crypt_decodear($valor, 'd');
-		//  return ($valor);
-	}
-	
-	function Decodear($valor)
-	{
-		// $valor = my_simple_crypt_decodear($valor, 'd');
-		//  return ($valor);
-	}
-	
+
 	function my_simple_crypt_decodearEmail($string)
 	{
 		// you may change these values to your own
@@ -5393,15 +4950,12 @@
 	
 	function EncodearEmail($valor)
 	{
-		//$valor=Encodear(Encodear(Encodear($valor)));
 		$valor = my_simple_crypt_encodearEmail($valor, 'e');
 		return ($valor);
 	}
 	
 	function DecodearEmail($valor)
 	{
-		//$valor=Decodear(Decodear(Decodear($valor)));
-		//print_r($valor);
 		$valor = my_simple_crypt_decodearEmail($valor, 'd');
 		$valor = VerificaArregloSQLInjectionDecodear($valor);
 		
@@ -5414,7 +4968,4 @@
 		$m = date("m", strtotime($valor_fecha));
 		$a = date("Y", strtotime($valor_fecha));
 		return ($d . "-" . $m . "-" . $a);
-		//return($fecha2=date("d-m",strtotime($valor_fecha)));
 	}
-
-?>

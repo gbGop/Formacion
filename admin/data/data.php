@@ -1914,7 +1914,7 @@ function IdProgramaIdMalla_2022($id_malla)
     return $cod[0]->id_programa;
 }
 
-function BuscaIdImparticiondadoMalla($id_malla, $id_empresa)
+function BuscaIdImparticiondadoMalla($id_malla)
 {
     $connexion = new DatabasePDO();
 
